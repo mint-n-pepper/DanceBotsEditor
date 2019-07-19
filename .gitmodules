@@ -1,0 +1,3 @@
+[submodule "lib/qm-vamp-plugins"]
+	path = lib/qm-vamp-plugins
+	url = git@github.com:philippReist/qm-vamp-plugins.git
