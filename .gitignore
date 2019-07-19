@@ -1,0 +1,8 @@
+# ignore build dir
+**/build
+
+# ignore cmake generated include files of libraries
+lib/include/**
+
+# ignore all mp3 files
+**/*.mp3
