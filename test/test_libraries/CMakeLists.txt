@@ -9,6 +9,7 @@ target_link_libraries(${PROJECT_NAME}
                         samplerate
                         mp3lame
                         sndfile
+						tag
                         Qt5::Widgets)
 
 # copy visual studio user file to binary folder to have

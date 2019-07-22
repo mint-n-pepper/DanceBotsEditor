@@ -10,3 +10,6 @@
 [submodule "lib/libsndfile"]
 	path = lib/libsndfile
 	url = https://github.com/erikd/libsndfile.git
+[submodule "lib/taglib"]
+	path = lib/taglib
+	url = https://github.com/taglib/taglib.git

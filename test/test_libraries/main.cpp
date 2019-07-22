@@ -1,5 +1,6 @@
 #include <iostream>
 #include <lame.h>
+#include <fileref.h>
 #include <BeatTrack.h>
 #include <samplerate.h>
 #include <sndfile.h>
@@ -8,6 +9,7 @@
 #include <QtCore/QFile>
 #include <QtCore/QDataStream>
 #include <QtCore/QDebug>
+#include <string>
 
 int main(int argc, char* argv[]) {
 	lame_t enc_gfp;
@@ -34,7 +36,22 @@ int main(int argc, char* argv[]) {
 
 	qDebug() << "lame major " << lame_version.major << " minor: " << lame_version.minor;
 
-	QFile in_file("../../../test/test_libraries/in.mp3");
+	std::string file_name{ "../../../test/test_libraries/in.mp3" };
+
+	// test taglib:
+	TagLib::FileRef tag_file{ file_name.c_str() };
+	TagLib::String artist = tag_file.tag()->artist(); // artist == "Frank Zappa"
+	TagLib::String title = tag_file.tag()->title();
+	TagLib::String comment = tag_file.tag()->comment();
+	quint32 year = tag_file.tag()->year();
+
+	qDebug() << "MP3 Tag Artist: " << artist.toCString();
+	qDebug() << "MP3 Tag Title: " << title.toCString();
+	qDebug() << "MP3 Tag Comment: " << comment.toCString();
+	qDebug() << "MP3 Tag Year: " << year;
+
+	QFile in_file(file_name.c_str());
+
 	if (in_file.exists()) {
 		qDebug() << "mp3 file found";
 	}
