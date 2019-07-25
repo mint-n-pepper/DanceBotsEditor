@@ -13,3 +13,6 @@
 [submodule "lib/taglib"]
 	path = lib/taglib
 	url = https://github.com/taglib/taglib.git
+[submodule "lib/googletest"]
+	path = lib/googletest
+	url = https://github.com/google/googletest.git

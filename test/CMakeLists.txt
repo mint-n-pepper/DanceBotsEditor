@@ -1,1 +1,2 @@
 add_subdirectory(test_libraries)
+add_subdirectory(test_gtest)

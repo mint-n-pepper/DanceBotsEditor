@@ -34,7 +34,16 @@ add_subdirectory(taglib)
 target_compile_definitions(tag PUBLIC -DTAGLIB_STATIC)
 target_include_directories(tag PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/taglib/taglib)
 target_include_directories(tag PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/taglib/taglib/toolkit)
+target_include_directories(tag PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/taglib/taglib/mpeg)
+target_include_directories(tag PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/taglib/taglib/mpeg/id3v1)
+target_include_directories(tag PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/taglib/taglib/mpeg/id3v2)
 target_include_directories(tag PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/taglib/3rdparty)
 target_include_directories(tag PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
 FILE(COPY ${CMAKE_CURRENT_BINARY_DIR}/taglib/taglib_config.h
      DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/include)
+
+# add Google Test
+add_subdirectory(googletest)
+
+# group libraries in IDE folder:
+set_target_properties(lame_enc lib-qm-dsp lib-qm-vamp mp3lame samplerate sndfile tag uninstall docs gtest gtest_main gmock gmock_main PROPERTIES FOLDER libs)
