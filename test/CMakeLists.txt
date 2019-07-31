@@ -1,6 +1,7 @@
 add_subdirectory(test_libraries)
 add_subdirectory(test_audiofile)
 add_subdirectory(test_gtest)
+add_subdirectory(test_lame)
 
 # COPY TEST MP3 to build test folder
 FILE(COPY ${CMAKE_CURRENT_SOURCE_DIR}/test_mp3_files
