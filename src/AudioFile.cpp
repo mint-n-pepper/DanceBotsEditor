@@ -3,6 +3,8 @@
 #include <lame.h>
 #include <QDataStream>
 #include <sndfile.h>
+#include <limits.h>
+#include <math.h>
 
 // typedef sample_t to be able to include encoder.h that contains the en-/decoder
 // delay defines
@@ -323,7 +325,7 @@ int AudioFile::Decode(void)
   quint64 average = sum / pcm_music_.size();
 
   const double target_average = kMusicRMSTarget * kMusicRMSTarget
-    * static_cast<double>(MINSHORT) * static_cast<double>(MINSHORT);
+    * static_cast<double>(SHRT_MIN) * static_cast<double>(SHRT_MIN);
 
   mp3_music_gain_ = sqrt(target_average / average);
 
