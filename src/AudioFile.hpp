@@ -26,7 +26,20 @@ public:
   explicit AudioFile(const QString file_path);
 
   // constants:
+  // string code at beginning and end of pre-pended header data
   static const QByteArray kDanceFileHeaderCode;
+  // sample rate used internally and for MP3 output.
+  // inputs that are not at that sample rate will be up- or downsampled to that
+  // rate
+  static const int kSampleRate{ 44100 };
+  // Lame MP3 compression quality parameter
+  static const int kMP3Quality{ 3 };
+  // Lame output bitrate
+  static const int kBitRateKB{ 160 };
+  // using 44.1k will be MPEG 1 Layer III, which has a sample block size of 1152
+  static const size_t kMP3BlockSize{ 1152 };
+  // target RMS level of music [0.0 1.0] that music is normalized to:
+  static const double kMusicRMSTarget;
 
   const bool is_dancefile(void) const {
     return is_dancefile_;
@@ -69,7 +82,7 @@ public:
   QByteArray mp3_prepend_data_;
   std::vector<qint16> pcm_music_;
   std::vector<qint16> pcm_data_;
-  std::vector<double> double_music_;
+  std::vector<float> float_music_;
 
   int SavePCM(const QString file);
 
@@ -98,6 +111,7 @@ private:
   int length_ms_{ 0 };
 	std::string artist_;
 	std::string title_;
+  double mp3_music_gain_ = 1.0;
 
   // private functions:
   int ReadTag(void);

@@ -4,8 +4,14 @@
 #include <QDataStream>
 #include <sndfile.h>
 
+// typedef sample_t to be able to include encoder.h that contains the en-/decoder
+// delay defines
+typedef float sample_t;
+#include <encoder.h>
+
 // class constants:
 const QByteArray AudioFile::kDanceFileHeaderCode("DancebotsDancefile");
+const double AudioFile::kMusicRMSTarget = 0.2f;
 
 extern "C" {
   static void lame_print_f(const char* format, va_list ap) {
@@ -233,7 +239,7 @@ int AudioFile::Decode(void)
   const size_t kNSamples = sample_rate_ * (length_ms_ + 1) / 1000;
   pcm_music_.reserve(kNSamples);
   pcm_data_.reserve(kNSamples);
-  double_music_.reserve(kNSamples);
+  float_music_.reserve(kNSamples);
 
   const size_t kDecodeStepSize = 4096;
 
@@ -256,8 +262,10 @@ int AudioFile::Decode(void)
   auto end = raw_mp3_data_.end();
   auto buf = raw_mp3_data_.begin();
 
-  // number of samples to skip initially for a dancefile
-  const size_t N_SKIP = 2112 + 142 + 3;
+  // Number of samples to cut from beginning that stem from encoder and decoder
+  // delays
+
+  const size_t N_SKIP = ENCDELAY + DECDELAY + 1;
   size_t skip_count = 0;
 
   while (buf != end) {
@@ -279,7 +287,6 @@ int AudioFile::Decode(void)
         for (size_t i = 0; i < n_read; ++i) {
           qint32 average = (static_cast<qint32>(pcm_l_buf[i]) + pcm_r_buf[i]) / 2;
           pcm_music_.push_back(static_cast<qint16>(average));
-          double_music_.push_back(static_cast<double>(average) / 32768.0);
         }
       }
       else {
@@ -290,7 +297,6 @@ int AudioFile::Decode(void)
             continue;
           }
           pcm_music_.push_back(pcm_l_buf[i]);
-          double_music_.push_back(pcm_l_buf[i] / 32768.0);
         }
       }
     }
@@ -299,12 +305,27 @@ int AudioFile::Decode(void)
 
   std::cout << "decoded " << pcm_music_.size() << " samples" << std::endl;
 
-  // cut off 900 samples at end:
+  // cut off extra sample block at end:
   if (is_dancefile_) {
-    pcm_music_.resize(pcm_music_.size());
+    pcm_music_.resize(pcm_music_.size() - kMP3BlockSize);
   }
   // resize data to same length:
   pcm_data_.resize(pcm_music_.size());
+
+  // calculate rms of music pcm data:
+  quint64 sum = 0u;
+
+  for (auto s : pcm_music_) {
+    sum += static_cast<quint64>((static_cast<qint64>(s)
+                                * static_cast<qint64>(s)));
+  }
+
+  quint64 average = sum / pcm_music_.size();
+
+  const double target_average = kMusicRMSTarget * kMusicRMSTarget
+    * static_cast<double>(MINSHORT) * static_cast<double>(MINSHORT);
+
+  mp3_music_gain_ = sqrt(target_average / average);
 
   hip_decode_exit(dc_gfp);
   return 0;
@@ -320,16 +341,17 @@ auto AudioFile::Encode(void) -> LameEncCodes
   if (pcm_data_.size() != pcm_music_.size()) {
     return LameEncCodes::kPCMDataNotSameLength;
   }
-
+  
   lame_t gfp;
   gfp = lame_init();
   lame_set_mode(gfp, STEREO);
-  lame_set_quality(gfp, 3);
-  lame_set_in_samplerate(gfp, 44100);
-  lame_set_brate(gfp, 128);
-  lame_set_out_samplerate(gfp, 44100);
+  lame_set_quality(gfp, kMP3Quality);
+  lame_set_in_samplerate(gfp, kSampleRate);
+  lame_set_brate(gfp, kBitRateKB);
+  lame_set_out_samplerate(gfp, kSampleRate);
   lame_set_bWriteVbrTag(gfp, 1);
   lame_set_VBR(gfp, vbr_off);
+  lame_set_scale_left(gfp, static_cast<float>(mp3_music_gain_));
 
   lame_report_function dummy_report_fun = &lame_print_f;
   lame_set_errorf(gfp, dummy_report_fun);
@@ -341,12 +363,18 @@ auto AudioFile::Encode(void) -> LameEncCodes
     return LameEncCodes::kLameInitFailed;
   }
 
+  // resize pcm data to integer multiple of mp3 block size:
+  const size_t kNBlocks = (pcm_music_.size() / kMP3BlockSize) + 1;
+  pcm_music_.resize(kNBlocks * kMP3BlockSize, 0); // w. zero padding
+  pcm_data_.resize(kNBlocks * kMP3BlockSize, 0);
+  
   // create temporary mp3 data ByteVector:
   TagLib::ByteVector temp_mp3;
-  const size_t kTempMP3Size = pcm_data_.size() * 128000 / 44100 + 500000;
+  const size_t kTempMP3Size = pcm_data_.size() * kBitRateKB * 1'000 / kSampleRate 
+                              + 50'000;
   temp_mp3.resize(kTempMP3Size);
 
-  const size_t kPCMEncodeStepSize = 44100;
+  const size_t kPCMEncodeStepSize = 40 * kMP3BlockSize;
   const size_t kMP3BufferSize = static_cast<size_t>(kPCMEncodeStepSize * 1.25
                                                     + 7200.0);
 
@@ -372,56 +400,45 @@ auto AudioFile::Encode(void) -> LameEncCodes
         // cast the return error code to the enum class return type
         return static_cast<LameEncCodes>(n_encode);
       }
-      for (size_t i = 0; i < n_encode; ++i) {
-        *mp3_out_it = encode_buffer[i];
-        ++mp3_out_it;
-      }
+      // otherwise, copy the buffer to the temp mp3 data:
+      size_t pre = std::distance(temp_mp3.begin(), mp3_out_it);
+      std::copy(encode_buffer.begin(),
+                encode_buffer.begin() + n_encode,
+                mp3_out_it);
+      size_t post = std::distance(temp_mp3.begin(), mp3_out_it);
+      mp3_out_it += n_encode;
     }
     music_it += n_feed;
     data_it += n_feed;
   }
 
+  std::cout << "encoded " << std::distance(pcm_music_.begin(), music_it) << " samples" << std::endl;
+
   // flush lame buffers:
-  int n_flush = lame_encode_flush_nogap(gfp, encode_buffer.data(), kMP3BufferSize);
+  const int n_flush = lame_encode_flush(gfp, encode_buffer.data(), kMP3BufferSize);
   if (n_flush > 0) {
-    for (size_t i = 0; i < n_flush; ++i) {
-      *mp3_out_it = encode_buffer[i];
-      ++mp3_out_it;
-    }
+    std::copy(encode_buffer.begin(), encode_buffer.begin() + n_flush, mp3_out_it);
+    mp3_out_it += n_flush;
   }
+
+  // get lame tag:
+  const size_t tag_size = lame_get_lametag_frame(gfp,
+                                                 encode_buffer.data(),
+                                                 kMP3BufferSize);
+
+  // and copy it to the first frame:
+  std::copy(encode_buffer.begin(),
+            encode_buffer.begin() + tag_size,
+            temp_mp3.begin());
 
   // if all went well, truncate temp mp3 to number of bytes written
   const size_t n_bytes_out = std::distance(temp_mp3.begin(), mp3_out_it);
+  temp_mp3.resize(n_bytes_out);
 
-  // trim empty first frame and resize to n_bytes_out:
-  // start seeking for 
-  // check length of first frame:
-  size_t cut_off = 0;
-  size_t frame_length = 417;
+  // and swap it into the raw_mp3 data:
+  raw_mp3_data_.swap(temp_mp3);
 
-  if (0x92 == temp_mp3.at(2)) {
-    frame_length = 418;
-  }
-  
-  // check for beginning of next frame
-  if (temp_mp3.at(frame_length) == -1
-      && temp_mp3.at(frame_length + 1) == -5) {
-    cut_off = frame_length;
-  }
-
-  cut_off = 0;
-
-  // resize raw mp3 to correct length:
-  raw_mp3_data_.resize(n_bytes_out - cut_off);
-
-  std::cout << "N bytes written after cut off = " << n_bytes_out - cut_off << std::endl;
-
-  auto start = temp_mp3.begin() + cut_off;
-  auto end = temp_mp3.begin() + n_bytes_out;
-
-  std::copy(start,
-            end,
-            raw_mp3_data_.begin());
+  std::cout << "N MP3 Encode bytes written = " << n_bytes_out << std::endl;
 
   lame_close(gfp);
   return LameEncCodes::kEncodeSuccess;

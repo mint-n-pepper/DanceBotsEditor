@@ -21,7 +21,7 @@ FILE(COPY ${CMAKE_CURRENT_BINARY_DIR}/libsndfile/src/sndfile.h
 target_include_directories(sndfile PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 # add lame lib:
-add_subdirectory(libmp3lame-CMAKE)
+add_subdirectory(lame-3.100)
 
 # pull in lib-qm-vamp
 add_subdirectory(qm-vamp-plugins)
@@ -46,4 +46,4 @@ FILE(COPY ${CMAKE_CURRENT_BINARY_DIR}/taglib/taglib_config.h
 add_subdirectory(googletest)
 
 # group libraries in IDE folder:
-set_target_properties(lame_enc lib-qm-dsp lib-qm-vamp mp3lame samplerate sndfile tag uninstall docs gtest gtest_main gmock gmock_main PROPERTIES FOLDER libs)
+set_target_properties(lib-qm-dsp lib-qm-vamp mp3lame samplerate sndfile tag uninstall docs gtest gtest_main gmock gmock_main PROPERTIES FOLDER libs)

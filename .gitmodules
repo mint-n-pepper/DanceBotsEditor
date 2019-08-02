@@ -4,9 +4,6 @@
 [submodule "lib/libsamplerate"]
 	path = lib/libsamplerate
 	url = https://github.com/erikd/libsamplerate.git
-[submodule "lib/libmp3lame-CMAKE"]
-	path = lib/libmp3lame-CMAKE
-	url = https://github.com/Iunusov/libmp3lame-CMAKE.git
 [submodule "lib/libsndfile"]
 	path = lib/libsndfile
 	url = https://github.com/erikd/libsndfile.git
