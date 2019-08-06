@@ -36,19 +36,17 @@ int main(int argc, char* argv[]) {
     }
 
     // clear the pcm data:
-    mp3_file.pcm_data_.clear();
-    mp3_file.pcm_music_.clear();
+    mp3_file.float_data_.clear();
+    mp3_file.float_music_.clear();
 
-    mp3_file.pcm_music_.resize(n_file_samples);
-    mp3_file.pcm_data_.resize(n_file_samples);
+    mp3_file.float_music_.resize(n_file_samples);
+    mp3_file.float_data_.resize(n_file_samples);
     const double dt = 1 / fs;
     double t = 0.0;
-    for (auto& i : mp3_file.pcm_music_) {
+    for (auto& i : mp3_file.float_music_) {
       double theta = 2.0 * PI * ftone * t;
       t = t + dt;
-      double vald = amplitude * sin(theta);
-      qint16 pcm = vald * SHRT_MAX;
-      i = pcm;
+      i = static_cast<float>(amplitude * sin(theta));
     }
   }
 

@@ -80,8 +80,7 @@ public:
   }
 
   QByteArray mp3_prepend_data_;
-  std::vector<qint16> pcm_music_;
-  std::vector<qint16> pcm_data_;
+  std::vector<float> float_data_;
   std::vector<float> float_music_;
 
   int SavePCM(const QString file);

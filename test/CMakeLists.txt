@@ -1,4 +1,3 @@
-add_subdirectory(test_libraries)
 add_subdirectory(test_audiofile)
 add_subdirectory(test_gtest)
 add_subdirectory(test_lame)

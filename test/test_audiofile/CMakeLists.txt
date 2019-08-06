@@ -14,8 +14,10 @@ add_executable(${PROJECT_NAME} main.cpp ${AUDIOFILE_SRC} ${HEADERS_SRC})
 
 target_link_libraries(${PROJECT_NAME}
 						gtest
+						gmock
 						lib-qm-dsp
                         mp3lame
+						sndfile
                         tag
                         Qt5::Widgets)
 

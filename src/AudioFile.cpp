@@ -1,5 +1,5 @@
 #include "AudioFile.hpp"
-
+#include "dsp/rateconversion/Resampler.h"
 #include <lame.h>
 #include <QDataStream>
 #include <sndfile.h>
@@ -239,8 +239,7 @@ int AudioFile::Decode(void)
   // estimate number of samples and reserve enough data in pcm vector
   // add 1 to ms in case it is rounded down (as s is in documentation)
   const size_t kNSamples = sample_rate_ * (length_ms_ + 1) / 1000;
-  pcm_music_.reserve(kNSamples);
-  pcm_data_.reserve(kNSamples);
+  float_data_.reserve(kNSamples);
   float_music_.reserve(kNSamples);
 
   const size_t kDecodeStepSize = 4096;
@@ -269,6 +268,7 @@ int AudioFile::Decode(void)
 
   const size_t N_SKIP = ENCDELAY + DECDELAY + 1;
   size_t skip_count = 0;
+  quint64 sum = 0u; // running sum of ^2 pcm samples for rms calculation
 
   while (buf != end) {
     size_t dist_to_end = std::distance(buf, end);
@@ -288,7 +288,9 @@ int AudioFile::Decode(void)
       if (!is_dancefile_) {
         for (size_t i = 0; i < n_read; ++i) {
           qint32 average = (static_cast<qint32>(pcm_l_buf[i]) + pcm_r_buf[i]) / 2;
-          pcm_music_.push_back(static_cast<qint16>(average));
+          float_music_.push_back(static_cast<float>(average) / 32768.f);
+          sum += static_cast<quint64>((static_cast<qint64>(average)
+                                       * static_cast<qint64>(average)));
         }
       }
       else {
@@ -298,36 +300,35 @@ int AudioFile::Decode(void)
             ++skip_count;
             continue;
           }
-          pcm_music_.push_back(pcm_l_buf[i]);
+          float_music_.push_back(static_cast<float>(pcm_l_buf[i]) / 32768.f);
+          sum += static_cast<quint64>((static_cast<qint64>(pcm_l_buf[i])
+                                       * static_cast<qint64>(pcm_l_buf[i])));
         }
       }
     }
     buf += n_feed;
   }
 
-  std::cout << "decoded " << pcm_music_.size() << " samples" << std::endl;
-
-  // cut off extra sample block at end:
-  if (is_dancefile_) {
-    pcm_music_.resize(pcm_music_.size() - kMP3BlockSize);
-  }
-  // resize data to same length:
-  pcm_data_.resize(pcm_music_.size());
-
   // calculate rms of music pcm data:
-  quint64 sum = 0u;
-
-  for (auto s : pcm_music_) {
-    sum += static_cast<quint64>((static_cast<qint64>(s)
-                                * static_cast<qint64>(s)));
-  }
-
-  quint64 average = sum / pcm_music_.size();
+  quint64 average = sum / float_music_.size();
 
   const double target_average = kMusicRMSTarget * kMusicRMSTarget
     * static_cast<double>(SHRT_MIN) * static_cast<double>(SHRT_MIN);
 
   mp3_music_gain_ = sqrt(target_average / average);
+
+  std::cout << "decoded " << float_music_.size() << " samples" << std::endl;
+
+  // cut off extra sample block at end:
+  if (is_dancefile_) {
+    float_music_.resize(float_music_.size() - kMP3BlockSize);
+  }
+
+  // resample the data if the sample rate is not 44.1kHz
+
+
+  // resize data to same length:
+  float_data_.resize(float_music_.size());
 
   hip_decode_exit(dc_gfp);
   return 0;
@@ -337,10 +338,10 @@ auto AudioFile::Encode(void) -> LameEncCodes
 {
   // in order to encode, both pcm buffers need to be non-empty
   // and of the same length:
-  if (!pcm_data_.size()) {
+  if (!float_data_.size()) {
     return LameEncCodes::kNoPCMData;
   }
-  if (pcm_data_.size() != pcm_music_.size()) {
+  if (float_data_.size() != float_music_.size()) {
     return LameEncCodes::kPCMDataNotSameLength;
   }
   
@@ -365,14 +366,14 @@ auto AudioFile::Encode(void) -> LameEncCodes
     return LameEncCodes::kLameInitFailed;
   }
 
-  // resize pcm data to integer multiple of mp3 block size:
-  const size_t kNBlocks = (pcm_music_.size() / kMP3BlockSize) + 1;
-  pcm_music_.resize(kNBlocks * kMP3BlockSize, 0); // w. zero padding
-  pcm_data_.resize(kNBlocks * kMP3BlockSize, 0);
+  // resize music and data to integer multiple of mp3 block size:
+  const size_t kNBlocks = (float_music_.size() / kMP3BlockSize) + 1;
+  float_music_.resize(kNBlocks * kMP3BlockSize, 0); // w. zero padding
+  float_data_.resize(kNBlocks * kMP3BlockSize, 0);
   
   // create temporary mp3 data ByteVector:
   TagLib::ByteVector temp_mp3;
-  const size_t kTempMP3Size = pcm_data_.size() * kBitRateKB * 1'000 / kSampleRate 
+  const size_t kTempMP3Size = float_data_.size() * kBitRateKB * 1'000 / kSampleRate
                               + 50'000;
   temp_mp3.resize(kTempMP3Size);
 
@@ -383,9 +384,9 @@ auto AudioFile::Encode(void) -> LameEncCodes
   std::vector<unsigned char> encode_buffer;
   encode_buffer.resize(kMP3BufferSize);
 
-  const auto music_end = pcm_music_.end();
-  auto music_it = pcm_music_.begin();
-  auto data_it = pcm_data_.begin();
+  const auto music_end = float_music_.end();
+  auto music_it = float_music_.begin();
+  auto data_it = float_data_.begin();
 
   auto mp3_out_it = temp_mp3.begin();
 
@@ -394,7 +395,7 @@ auto AudioFile::Encode(void) -> LameEncCodes
     size_t n_feed = kPCMEncodeStepSize > dist_to_end ?
       dist_to_end : kPCMEncodeStepSize;
 
-    int n_encode = lame_encode_buffer(gfp, &*music_it, &*data_it, n_feed,
+    int n_encode = lame_encode_buffer_ieee_float(gfp, &*music_it, &*data_it, n_feed,
                        encode_buffer.data(), kMP3BufferSize);
 
     if (n_encode) {
@@ -414,7 +415,7 @@ auto AudioFile::Encode(void) -> LameEncCodes
     data_it += n_feed;
   }
 
-  std::cout << "encoded " << std::distance(pcm_music_.begin(), music_it) << " samples" << std::endl;
+  std::cout << "encoded " << std::distance(float_music_.begin(), music_it) << " samples" << std::endl;
 
   // flush lame buffers:
   const int n_flush = lame_encode_flush(gfp, encode_buffer.data(), kMP3BufferSize);
@@ -462,15 +463,15 @@ int AudioFile::SavePCM(const QString file) {
   }
 
   // prepare write buffer for stereo file:
-  std::vector<qint16> write_buf;
-  write_buf.reserve(2 * pcm_data_.size());
+  std::vector<float> write_buf;
+  write_buf.reserve(2 * float_data_.size());
   
-  for (size_t i = 0; i < pcm_data_.size(); ++i) {
-    write_buf.push_back(pcm_music_[i]);
-    write_buf.push_back(pcm_data_[i]);
+  for (size_t i = 0; i < float_data_.size(); ++i) {
+    write_buf.push_back(float_music_[i]);
+    write_buf.push_back(float_data_[i]);
   }
 
-  sf_count_t n_write = sf_write_short(snd_file,
+  sf_count_t n_write = sf_write_float(snd_file,
                                       write_buf.data(),
                                       write_buf.size());
   sf_write_sync(snd_file);
