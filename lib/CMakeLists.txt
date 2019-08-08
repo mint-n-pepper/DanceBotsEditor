@@ -1,10 +1,3 @@
-# Override options in libsamplerate CMakeLists:
-set(LIBSAMPLERATE_TESTS OFF CACHE BOOL "en/disable test building for libsamplerate")
-set(LIBSAMPLERATE_INSTALL OFF CACHE BOOL "en/disable install for libsamplerate")
-set(BUILD_SHARED_LIBS OFF CACHE BOOL "en/disable shared lib building for libsamplerate")
-
-add_subdirectory(libsamplerate)
-
 # Override options in libsndfile CMakeLists:
 set(MAKE_DOCS OFF CACHE BOOL "en/disable doc building for libsndfile")
 set(BUILD_TESTING OFF CACHE BOOL "en/disable test building for libsndfile")
@@ -46,4 +39,4 @@ FILE(COPY ${CMAKE_CURRENT_BINARY_DIR}/taglib/taglib_config.h
 add_subdirectory(googletest)
 
 # group libraries in IDE folder:
-set_target_properties(lib-qm-dsp lib-qm-vamp mp3lame samplerate sndfile tag uninstall docs gtest gtest_main gmock gmock_main PROPERTIES FOLDER libs)
+set_target_properties(lib-qm-dsp lib-qm-vamp mp3lame sndfile tag uninstall docs gtest gtest_main gmock gmock_main PROPERTIES FOLDER libs)

@@ -325,7 +325,28 @@ int AudioFile::Decode(void)
   }
 
   // resample the data if the sample rate is not 44.1kHz
+  if (sample_rate_ != kSampleRate) {
+    std::vector<double> resample_data_in;
+    resample_data_in.reserve(float_music_.size());
 
+    std::transform(float_music_.cbegin(),
+                   float_music_.cend(),
+                   std::back_inserter(resample_data_in),
+                   [](float in) -> double {return static_cast<double>(in);});
+
+    const auto resample_data_out = Resampler::resample(sample_rate_,
+                                                       kSampleRate,
+                                                       resample_data_in.data(),
+                                                       resample_data_in.size());
+    // and write to float data vector:
+    float_music_.clear();
+    float_music_.reserve(resample_data_out.size());
+
+    std::transform(resample_data_out.cbegin(),
+                   resample_data_out.cend(),
+                   std::back_inserter(float_music_),
+                   [](double in)->float {return static_cast<float>(in); });
+  }
 
   // resize data to same length:
   float_data_.resize(float_music_.size());
