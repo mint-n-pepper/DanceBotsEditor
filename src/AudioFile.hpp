@@ -11,21 +11,21 @@
 
 class AudioFile {
 public:
-  enum class FileStatus {
-    kOk = 0,
-    kEmpty,
+  //** CONSTANTS ** //
+  // Result enums that indicate processing outcomes
+  enum class Result {
+    kSuccess,
     kNotAnMP3File,
     kCorruptHeader,
     kIOError,
+    kFileWriteError,
+    kFileOpenError,
     kFileDoesNotExist,
     kMP3DecodingError,
     kMP3EncodingError,
     kTagWriteError
   };
   
-  explicit AudioFile(const QString file_path);
-
-  // constants:
   // string code at beginning and end of pre-pended header data
   static const QByteArray kDanceFileHeaderCode;
   // sample rate used internally and for MP3 output.
@@ -41,12 +41,47 @@ public:
   // target RMS level of music [0.0 1.0] that music is normalized to:
   static const double kMusicRMSTarget;
 
+  //** PUBLIC METHODS **//
+  // default constructor that returns an empty AudioFile object
+  explicit AudioFile(void);
+
+  // Loads a file from an absoulte file_path and returns result of process.
+  // Discards previous file data in object
+  // Usage:
+  // const QString kFilePath{ "C:/Users/philipp/Desktop/test.mp3" };
+  // AudioFile file{};
+  // const auto result = file.Load(kFilePath);
+  // if(result != AudioFile::Result::kSuccess){
+  //   // file failed to load, process error:
+  //  process_load_error(result);
+  // }
+  //
+  Result Load(const QString file_path);
+
+  // Saves an MP3 file to an absoulte file_path and returns result of process.
+  //
+  // Usage:
+  // const QString kFilePath{ "C:/Users/philipp/Desktop/test.mp3" };
+  // const auto result = file.Save(kFilePath);
+  // if(result != AudioFile::Result::kSuccess){
+  //   // file failed to save, process error:
+  //  process_save_error(result);
+  // }
+  //
+  Result Save(const QString file_path);
+
+  // Clears all data
+  void Clear(void);
+
+  // Flag that indicates whether the file is a dancefile as id'd by a valid
+  // header present
   const bool is_dancefile(void) const {
     return is_dancefile_;
   }
 
-  const FileStatus GetStatus(void) const {
-    return status_;
+  // Flag that indicates whether the file contains data or not
+  const bool has_data(void) const {
+    return has_data_;
   }
 
   const char* GetRawMP3Data(void) const {
@@ -73,17 +108,14 @@ public:
     return sample_rate_;
   }
 
-  void Save(const QString file);
-
-  QByteArray& GetPrePendData(void) {
-    return mp3_prepend_data_;
-  }
-
+  // public data members
   QByteArray mp3_prepend_data_;
   std::vector<float> float_data_;
   std::vector<float> float_music_;
 
-  int SavePCM(const QString file);
+  // saves music and data channels to PCM (WAV) file given by absoulte file_path
+  // returns 0 if success and 1 if failure
+  int SavePCM(const QString file_name);
 
 private:
   enum class LameEncCodes {
@@ -96,6 +128,7 @@ private:
     kNoPCMData = -6,
     kLameInitFailed = -7
   };
+
   // file data containers:
   TagLib::ByteVector raw_mp3_data_;
 
@@ -103,7 +136,7 @@ private:
   QString path_;
   bool is_dancefile_ = false;
   static const size_t kHeaderSizeNBytes{ 4 };
-  FileStatus status_{ FileStatus::kEmpty };
+  bool has_data_{ false };
 
 	// audio file parameters:
   int sample_rate_ { 0 };

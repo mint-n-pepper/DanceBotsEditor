@@ -30,19 +30,21 @@ namespace {
     // test opening a fake file:
     const QString kFakeFileName("fakefakefile.mp3");
 
-    AudioFile fake_file{ kFileFolderPath + kFakeFileName };
+    AudioFile fake_file{};
+    auto result = fake_file.Load(kFileFolderPath + kFakeFileName);
     
-    EXPECT_EQ(fake_file.GetStatus(),
-              AudioFile::FileStatus::kFileDoesNotExist);
+    EXPECT_EQ(result,
+              AudioFile::Result::kFileDoesNotExist);
   }
 
   TEST_F(AudioFileTest, testSave) {
-    AudioFile mp3_file_44k{ kFile_music_44k };
+    AudioFile mp3_file_44k{ };
+    mp3_file_44k.Load(kFile_music_44k);
 
     const size_t kNPrePendData = 1024 + 128 + 16 + 2;
 
     for (size_t i = 0; i < kNPrePendData; ++i) {
-      mp3_file_44k.GetPrePendData().append(static_cast<char>(i));
+      mp3_file_44k.mp3_prepend_data_.append(static_cast<char>(i));
     }
 
     // set artist and title:
@@ -55,9 +57,11 @@ namespace {
   TEST_F(AudioFileTest, test44kFile) {
     // test opening a music mp3 file:
 
-    AudioFile mp3_file_44k{ kFile_music_44k};
+    AudioFile mp3_file_44k{};
+    auto result = mp3_file_44k.Load(kFile_music_44k);
 
-    ASSERT_EQ(mp3_file_44k.GetStatus(), AudioFile::FileStatus::kOk);
+    ASSERT_EQ(result, AudioFile::Result::kSuccess);
+    ASSERT_TRUE(mp3_file_44k.has_data());
 
     EXPECT_FALSE(mp3_file_44k.is_dancefile());
 
@@ -83,18 +87,21 @@ namespace {
   }
 
   TEST_F(AudioFileTest, testHeaderFile) {
-    AudioFile mp3_file_header_test{ kFile_header_test };
+    AudioFile mp3_file_header_test{ };
+    auto result = mp3_file_header_test.Load(kFile_header_test);
   
-    EXPECT_EQ(mp3_file_header_test.GetStatus(), AudioFile::FileStatus::kOk);
+    EXPECT_EQ(result, AudioFile::Result::kSuccess);
     EXPECT_TRUE(mp3_file_header_test.is_dancefile());
   }
 
   TEST_F(AudioFileTest, test_many_en_decodes) {
-    AudioFile mp3_file_header_test{ kFile_header_test };
+    AudioFile mp3_file_header_test{};
+    mp3_file_header_test.Load(kFile_header_test);
     mp3_file_header_test.Save(kFileFolderPath + "cycle_test.mp3");
 
     for (uint a = 0; a < 10; ++a) {
-      AudioFile mp3_file_cycle_test{ kFileFolderPath + "cycle_test.mp3" };
+      AudioFile mp3_file_cycle_test{};
+      mp3_file_cycle_test.Load(kFileFolderPath + "cycle_test.mp3");
       mp3_file_cycle_test.Save(kFileFolderPath + "cycle_test.mp3");
     }
   }

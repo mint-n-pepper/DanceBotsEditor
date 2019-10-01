@@ -21,15 +21,18 @@ extern "C" {
   }
 }
 
-AudioFile::AudioFile(const QString file_path)
-  : path_(file_path) {
+AudioFile::AudioFile(void) {};
+
+auto AudioFile::Load(const QString file_path) -> Result
+{
+
+  path_ = file_path;
 
   // check if file exists:
   QFile file{ path_ };
 
   if (!file.exists()) {
-    status_ = FileStatus::kFileDoesNotExist;
-    return;
+    return Result::kFileDoesNotExist;
   }
 
   // the file exists, so load it:
@@ -43,11 +46,13 @@ AudioFile::AudioFile(const QString file_path)
     // check number of bytes in header data:
     const QByteArray header_n_data = file.read(kHeaderSizeNBytes);
 
+    // check if we could read all header-size bytes:
     if (header_n_data.size() < kHeaderSizeNBytes) {
-      status_ = FileStatus::kCorruptHeader;
-      return;
+      // could not read them, header "corrupt", i.e file ends prematurely
+      return Result::kCorruptHeader;
     }
 
+    // convert size bytes to size int n_data
     const unsigned char* size_data = reinterpret_cast<const unsigned char*>(
       header_n_data.data());
 
@@ -58,21 +63,27 @@ AudioFile::AudioFile(const QString file_path)
 
     // verify that n_data is shorter than the file is long:
     if (file.pos() + n_data > file.size()) {
-      status_ = FileStatus::kCorruptHeader;
-      return;
+      // file is too small to contain header size as given in n_data
+      return Result::kCorruptHeader;
     }
 
-    // otherwise read header data:
+    // at this point the data will be loaded and we purge any exising data
+    Clear();
+
+    // Read header data:
     mp3_prepend_data_ = file.read(n_data);
 
-    // ensure that the header is valid:
+    // ensure that the header is valid by checking header code at end of
+    // header
     const QByteArray header_end = file.read(kDanceFileHeaderCode.size());
     if (kDanceFileHeaderCode == header_end) {
+      // code match
       is_dancefile_ = true;
     }
     else {
-      status_ = FileStatus::kCorruptHeader;
-      return;
+      // code mismatch, report corrupt header
+      Clear();
+      return Result::kCorruptHeader;
     }
   }
 
@@ -87,46 +98,48 @@ AudioFile::AudioFile(const QString file_path)
   size_t n_read = file.read(raw_mp3_data_.data(), file.size() - file.pos());
   // ensure all is read:
   if (n_read < file.size() - file.pos()) {
-    status_ = FileStatus::kIOError;
-    return;
+    Clear();
+    return Result::kIOError;
   }
 
   // read out the MP3 Tags:
   if (ReadTag()) {
     // the file is not an mp3 / mpeg file
-    status_ = FileStatus::kNotAnMP3File;
-    return;
+    Clear();
+    return Result::kNotAnMP3File;
   };
 
   // decode the MP3 data
   if (Decode() < 0) {
-    // if Decode returns -1, there was a decoding error:
-    status_ = FileStatus::kMP3DecodingError;
-    return;
+    // if Decode returns -1, there was a decoding error
+    Clear();
+    return Result::kMP3DecodingError;
   };
 
-  status_ = FileStatus::kOk;
+  has_data_ = true;
+  return Result::kSuccess;
+  // do not need to close the file as the QFile destructor will take care of this
 }
 
-void AudioFile::Save(const QString file)
+auto AudioFile::Save(const QString file) -> Result
 {
   // 1. Encode MP3, 2. Write TAG info, 3. write to file with header pre-pend
   if (LameEncCodes::kEncodeSuccess != Encode()) {
-    status_ = FileStatus::kMP3EncodingError;
-    return;
+    return Result::kMP3EncodingError;
   }
 
   // write tag info:
   if (WriteTag()) {
     // something went wrong with writing the tag
-    status_ = FileStatus::kTagWriteError;
-    return;
+    return Result::kTagWriteError;
   }
 
   // otherwise save:
   QFile out_file(file);
 
-  out_file.open(QIODevice::WriteOnly);
+  if (!out_file.open(QIODevice::WriteOnly)) {
+    return Result::kFileOpenError;
+  }
 
   // write header data:
   out_file.write(kDanceFileHeaderCode);
@@ -152,13 +165,33 @@ void AudioFile::Save(const QString file)
     size_t dist_to_end = std::distance(data_it, end);
     size_t n_feed = kWriteStep > dist_to_end ? dist_to_end : kWriteStep;
 
-    out_file.write(&*data_it, n_feed);
+    const qint64 res = out_file.write(&*data_it, n_feed);
 
-    data_it += n_feed;
+    if (res < 0) {
+      return Result::kFileWriteError;
+    }
+    data_it += res;
   }
 
-  out_file.close();
+  // do not need to close file as QFile destructor will take care of it
+  return Result::kSuccess;
+}
 
+void AudioFile::Clear(void)
+{
+  // clear all data containers
+  has_data_ = false;
+  mp3_prepend_data_.clear();
+  raw_mp3_data_.clear();
+  float_data_.clear();
+  float_music_.clear();
+
+  // clear the mp3 info:
+  sample_rate_ = 0;
+  length_ms_ = 0;
+  artist_.clear();
+  title_.clear();
+  path_.clear();
 }
 
 int AudioFile::ReadTag(void) {
@@ -187,9 +220,16 @@ int AudioFile::ReadTag(void) {
   if (!tag->artist().isNull()) {
     artist_ = tag->artist().to8Bit(true);
   }
+  else {
+    // if no tag is present, set to Unknown
+    artist_ = "Unknown";
+  }
 
   if (!tag->title().isNull()) {
     title_ = tag->title().to8Bit(true);
+  }
+  else {
+    title_ = "Unknown";
   }
 
   return 0;
@@ -468,7 +508,7 @@ auto AudioFile::Encode(void) -> LameEncCodes
   return LameEncCodes::kEncodeSuccess;
 }
 
-int AudioFile::SavePCM(const QString file) {
+int AudioFile::SavePCM(const QString file_name) {
 
   SF_INFO out_format;
   out_format.channels = 2;
@@ -476,7 +516,9 @@ int AudioFile::SavePCM(const QString file) {
   out_format.samplerate = 44100;
 
   // otherwise save:
-  SNDFILE* snd_file = sf_open(file.toStdString().c_str(), SFM_WRITE, &out_format);
+  SNDFILE* snd_file = sf_open(file_name.toStdString().c_str(),
+                              SFM_WRITE,
+                              &out_format);
 
   if (!snd_file) {
     // opening failed, return:

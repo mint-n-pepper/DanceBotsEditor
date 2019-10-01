@@ -10,7 +10,8 @@ int main(int argc, char* argv[]) {
   const QString kFile_music_44k{ kFileFolderPath + "in44100.mp3" };
   const QString kFile_header_test{ kFileFolderPath + "header_test.mp3" };
 
-  AudioFile mp3_file{ kFile_music_44k };
+  AudioFile mp3_file{};
+  mp3_file.Load(kFile_music_44k);
 
   bool use_sinusoid = false;
 
@@ -65,7 +66,8 @@ int main(int argc, char* argv[]) {
   const size_t N_CYCLES = 100;
 
   for (size_t i = 0; i < N_CYCLES; ++i) {
-    AudioFile mp3_file{ kFileFolderPath + "encode_test_dc.mp3" };
+    AudioFile mp3_file{ };
+    mp3_file.Load(kFileFolderPath + "encode_test_dc.mp3");
     if (i == N_CYCLES - 1) {
       mp3_file.SavePCM(kFileFolderPath + "encode_test_dc.wav");
     }
