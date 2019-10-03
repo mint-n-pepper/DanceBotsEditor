@@ -1,0 +1,46 @@
+cmake_minimum_required(VERSION 3.15 FATAL_ERROR)
+
+project(dancebots_gui)
+
+set(CMAKE_CXX_STANDARD 14)
+
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTORCC ON)
+
+find_package(Qt5 COMPONENTS Core Quick Qml Concurrent REQUIRED)
+
+# Telling CMake location of our app .qrc file
+#qt5_add_resources(APP_RESOURCES ${CMAKE_CURRENT_SOURCE_DIR}/qml.qrc)
+
+set(SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/../src/AudioFile.cpp
+            ${CMAKE_CURRENT_SOURCE_DIR}/../src/BackEnd.cpp
+            ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp)
+
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../src)
+
+file(GLOB HEADERS ${CMAKE_CURRENT_SOURCE_DIR}/../src/*.hpp)
+source_group("Header Files" FILES ${HEADERS})
+
+file(GLOB QMLS ${CMAKE_CURRENT_SOURCE_DIR}/../gui/*.qml)
+source_group("QML Files" FILES ${QMLS})
+
+add_executable(${PROJECT_NAME} ${SOURCES} ${APP_RESOURCES} ${HEADERS})
+
+# copy visual studio user file to binary folder to have
+# qt in debug path:
+if(WIN32)
+  file(COPY template.vcxproj.user
+       DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+  file(RENAME ${CMAKE_CURRENT_BINARY_DIR}/template.vcxproj.user
+              ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.vcxproj.user)
+endif()
+
+target_link_libraries(${PROJECT_NAME}
+                        Qt5::Core
+                        Qt5::Quick
+                        Qt5::Qml
+						Qt5::Concurrent
+                        lib-qm-dsp
+                        mp3lame
+						sndfile
+                        tag)
