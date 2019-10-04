@@ -7,6 +7,7 @@
 #include <QFutureWatcher>
 
 #include "AudioFile.hpp"
+#include "BeatDetector.hpp"
 
 class BackEnd : public QObject
 {
@@ -38,6 +39,8 @@ private:
 
     QString mLoadStatus;
     AudioFile mAudioFile;
+    BeatDetector mBeatDetector;
+    std::vector<long> mBeatFrames;
     QFuture<bool> mLoadFuture;
     QFutureWatcher<bool> mLoadFutureWatcher;
 

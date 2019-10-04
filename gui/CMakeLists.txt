@@ -14,6 +14,7 @@ find_package(Qt5 COMPONENTS Core Quick Qml Concurrent REQUIRED)
 
 set(SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/../src/AudioFile.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/../src/BackEnd.cpp
+			${CMAKE_CURRENT_SOURCE_DIR}/../src/BeatDetector.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../src)
@@ -41,6 +42,7 @@ target_link_libraries(${PROJECT_NAME}
                         Qt5::Qml
 						Qt5::Concurrent
                         lib-qm-dsp
+						lib-qm-vamp
                         mp3lame
 						sndfile
                         tag)

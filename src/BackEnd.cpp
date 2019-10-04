@@ -5,8 +5,9 @@
 #include <QEventLoop>
 #include <QtConcurrent>
 
-BackEnd::BackEnd(QObject *parent) :
+BackEnd::BackEnd(QObject* parent) :
   QObject{ parent }, mAudioFile{},
+  mBeatDetector{ mAudioFile.kSampleRate },
   mLoadStatus{ "Idle" }, mLoadFutureWatcher{},
   mLoadFuture{}
 {
@@ -63,6 +64,7 @@ bool BackEnd::loadMP3Worker(const QString& filePath) {
   mLoadStatus = "Reading and decoding MP3...";
   emit loadStatusChanged();
 
+  mAudioFile.Clear();
   const AudioFile::Result res = mAudioFile.Load(filePath);
 
   if (!(AudioFile::Result::kSuccess == res)) {
@@ -77,7 +79,8 @@ bool BackEnd::loadMP3Worker(const QString& filePath) {
 
   mLoadStatus = "Detecting Beats...";
   emit loadStatusChanged();
-  QThread::msleep(2000);
+  mBeatFrames = mBeatDetector.detectBeats(mAudioFile.float_music_);
+  qDebug() << "detected " << mBeatFrames.size() << " beats";
   mLoadStatus = "Done.";
   emit loadStatusChanged();
   QThread::msleep(1000);
