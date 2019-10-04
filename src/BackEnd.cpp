@@ -10,6 +10,9 @@ BackEnd::BackEnd(QObject *parent) :
   mLoadStatus{ "Idle" }, mLoadFutureWatcher{},
   mLoadFuture{}
 {
+  // connect load thread finish signal to backend load handling slot
+  connect(&mLoadFutureWatcher, &QFutureWatcher<bool>::finished,
+          this, &BackEnd::handleDoneLoading);
 }
 
 //** PROPERTY SETTERS GETTERS AND NOTIFIERS **//
@@ -47,9 +50,6 @@ void BackEnd::setSongTitle(const QString& name)
 Q_INVOKABLE void BackEnd::loadMP3(const QString& filePath) {
   // convert to qurl and localized file path:
   QUrl localFilePath{ filePath };
-  qDebug() << "starting load thread";
-  connect(&mLoadFutureWatcher, &QFutureWatcher<bool>::finished,
-          this, &BackEnd::handleDoneLoading);
   mLoadFuture = QtConcurrent::run(this, &BackEnd::loadMP3Worker,
                                   localFilePath.toLocalFile());
   mLoadFutureWatcher.setFuture(mLoadFuture);
@@ -62,6 +62,7 @@ void BackEnd::handleDoneLoading(void) {
 bool BackEnd::loadMP3Worker(const QString& filePath) {
   mLoadStatus = "Reading and decoding MP3...";
   emit loadStatusChanged();
+
   const AudioFile::Result res = mAudioFile.Load(filePath);
 
   if (!(AudioFile::Result::kSuccess == res)) {
