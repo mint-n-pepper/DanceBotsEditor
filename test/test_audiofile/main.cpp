@@ -1,4 +1,4 @@
-#include <AudioFile.hpp>
+#include <AudioFile.h>
 
 #include <gtest/gtest.h>
 #include <QtCore/QFile>

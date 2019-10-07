@@ -6,8 +6,8 @@
 #include <QFuture>
 #include <QFutureWatcher>
 
-#include "AudioFile.hpp"
-#include "BeatDetector.hpp"
+#include "AudioFile.h"
+#include "BeatDetector.h"
 
 class BackEnd : public QObject
 {

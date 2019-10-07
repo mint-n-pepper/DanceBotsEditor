@@ -2,7 +2,8 @@
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
 
-#include "BackEnd.hpp"
+#include "BackEnd.h"
+#include "Primitive.h"
 
 int main(int argc, char *argv[])
 {
@@ -13,7 +14,7 @@ int main(int argc, char *argv[])
 
     BackEnd backend{&app};
 
-    qmlRegisterType<BackEnd>("io.qt.examples.backend", 1, 0, "BackEnd");
+    qmlRegisterType<MotorPrimitive>("dancebots.backend", 1, 0, "MotorPrimitive");
 
     QQmlApplicationEngine engine;
     engine.rootContext()->setContextProperty("backend", &backend);

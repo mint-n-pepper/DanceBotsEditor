@@ -1,4 +1,4 @@
-#include "BeatDetector.hpp"
+#include "BeatDetector.h"
 
 BeatDetector::BeatDetector(const unsigned int sample_rate) :
   mSampleRate{sample_rate},

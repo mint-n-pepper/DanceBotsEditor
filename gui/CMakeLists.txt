@@ -19,7 +19,7 @@ set(SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/../src/AudioFile.cpp
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../src)
 
-file(GLOB HEADERS ${CMAKE_CURRENT_SOURCE_DIR}/../src/*.hpp)
+file(GLOB HEADERS ${CMAKE_CURRENT_SOURCE_DIR}/../src/*.h)
 source_group("Header Files" FILES ${HEADERS})
 
 file(GLOB QMLS ${CMAKE_CURRENT_SOURCE_DIR}/../gui/*.qml)

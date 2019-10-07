@@ -1,4 +1,4 @@
-#include "AudioFile.hpp"
+#include "AudioFile.h"
 #include "dsp/rateconversion/Resampler.h"
 #include <lame.h>
 #include <QDataStream>
