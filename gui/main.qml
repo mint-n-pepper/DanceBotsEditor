@@ -21,4 +21,9 @@ ApplicationWindow {
 	MP3FileControl{
 		id: fileControl
 	}
+
+	MotorPrimitiveControl{
+		id: motorPrimitiveControl
+		anchors.left: fileControl.right
+	}
 }
