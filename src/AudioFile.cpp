@@ -278,7 +278,9 @@ int AudioFile::Decode(void)
 {
   // estimate number of samples and reserve enough data in pcm vector
   // add 1 to ms in case it is rounded down (as s is in documentation)
-  const size_t kNSamples = sample_rate_ * (length_ms_ + 1) / 1000;
+  // cast to size_t before calculation to avoid arithmethic overflow
+  const size_t kNSamples = static_cast<size_t>(sample_rate_)
+    * (static_cast<size_t>(length_ms_) + 1) / 1000;
   float_data_.reserve(kNSamples);
   float_music_.reserve(kNSamples);
 

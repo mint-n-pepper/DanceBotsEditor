@@ -35,7 +35,7 @@ Rectangle{
 	    }
 	    RadioButton {
 	        text: qsTr("Twist")
-	        onToggled: motorPrimitive.type=MotorPrimitive.Type.eSpin
+	        onToggled: motorPrimitive.type=MotorPrimitive.Type.eTwist
 	    }
 	}
 
@@ -52,25 +52,30 @@ Rectangle{
 
 		MotorPrimitive{
 			id: dragPrimitive
+			type: MotorPrimitive.Type.eStraight
+			onTypeChanged: motorPrimitive.updatePrimitive();
+		}
+
+		function updatePrimitive(){
+			switch(dragPrimitive.type)
+			{
+				case MotorPrimitive.Type.eSpin:
+					typeID.text="Spin";
+					break;
+				case MotorPrimitive.Type.eStraight:
+					typeID.text="Drive Straight";
+					break;
+				default:
+					typeID.text="default";
+					break;
+			}
 		}
 
 		Text
 		{
 			id: typeID
-			text:
-			{
-			switch(dragPrimitive.type){
-				case MotorPrimitive.eSpin:
-					return "Spin";
-					break;
-				case MotorPrimitive.eStraight:
-					return "Drive Straight";
-					break;
-				default:
-					return "default";
-					break;
-				}
-			}
+			Component.onCompleted: motorPrimitive.updatePrimitive();
+			text: "Test"
 		}
 	}
 
