@@ -81,6 +81,10 @@ bool BackEnd::loadMP3Worker(const QString& filePath) {
   emit loadStatusChanged();
   mBeatFrames = mBeatDetector.detectBeats(mAudioFile.float_music_);
   qDebug() << "detected " << mBeatFrames.size() << " beats";
+  size_t i = 0;
+  for (const auto& e : mBeatFrames) {
+    std::cout << "beat " << i << " is at " << e << std::endl;
+  }
   mLoadStatus = "Done.";
   emit loadStatusChanged();
   QThread::msleep(1000);

@@ -1,6 +1,7 @@
 #include<vector>
 #include<memory>
 #include <BeatTrack.h>
+#include "kissfft.hh"
 
 class BeatDetector {
 public:
@@ -11,11 +12,18 @@ public:
   // check if init was successful
   bool isInitialized(void) { return mInitSuccess; };
 private:
-  unsigned int mSampleRate;
+  const unsigned int mSampleRate;
   BeatTracker mBeatTracker;
-  size_t mStepSize;
-  size_t mBlockSize;
+  const size_t mStepSize;
+  const size_t mBlockSize;
+  std::vector<float> mPluginBuffer;
+  std::vector<float> mHanningWindow;
+  std::vector<float> mWindowedData;
+  std::vector<kissfft<float>::cpx_t> mFFTOutput;
   Vamp::RealTime mRtAdjustment;
+  kissfft<float> mKissFFT;
+
   bool mInitSuccess = false;
-  std::unique_ptr<float[]> mPluginBuffer;
+
+  static const float mPI;
 };

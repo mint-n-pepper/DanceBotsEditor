@@ -17,9 +17,18 @@ set(SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/../src/AudioFile.cpp
 			${CMAKE_CURRENT_SOURCE_DIR}/../src/BeatDetector.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp)
 
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../src)
+set(INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/../src
+	${CMAKE_CURRENT_SOURCE_DIR}/../lib/kissfft)
 
-file(GLOB HEADERS ${CMAKE_CURRENT_SOURCE_DIR}/../src/*.h)
+include_directories(${INCLUDE_DIRS})
+
+set(HEADERS)
+
+foreach(subdir ${INCLUDE_DIRS})
+	file(GLOB TMP ${subdir}/*.h ${subdir}/*.hh)
+	list(APPEND HEADERS ${TMP})
+endforeach(subdir)
+
 source_group("Header Files" FILES ${HEADERS})
 
 file(GLOB_RECURSE QMLS ${CMAKE_CURRENT_SOURCE_DIR}/../gui/ *.qml)
