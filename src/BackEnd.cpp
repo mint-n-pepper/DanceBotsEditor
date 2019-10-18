@@ -7,7 +7,7 @@
 
 BackEnd::BackEnd(QObject* parent) :
   QObject{ parent }, mAudioFile{},
-  mBeatDetector{ mAudioFile.kSampleRate },
+  mBeatDetector{ mAudioFile.sampleRate },
   mLoadStatus{ "Idle" }, mLoadFutureWatcher{},
   mLoadFuture{}
 {
@@ -64,27 +64,33 @@ bool BackEnd::loadMP3Worker(const QString& filePath) {
   mLoadStatus = "Reading and decoding MP3...";
   emit loadStatusChanged();
 
-  mAudioFile.Clear();
-  const AudioFile::Result res = mAudioFile.Load(filePath);
+  mAudioFile.clear();
+  const AudioFile::Result res = mAudioFile.load(filePath);
 
-  if (!(AudioFile::Result::kSuccess == res)) {
+  if (!(AudioFile::Result::eSuccess == res)) {
     // loading failed
 
     return false;
   }
 
   // otherwise, loading succeeded, set song and artist name:
-  mSongArtist = QString{ mAudioFile.GetArtist().c_str() };
-  mSongTitle = QString{ mAudioFile.GetTitle().c_str() };
+  mSongArtist = QString{ mAudioFile.getArtist().c_str() };
+  mSongTitle = QString{ mAudioFile.getTitle().c_str() };
 
   mLoadStatus = "Detecting Beats...";
   emit loadStatusChanged();
-  mBeatFrames = mBeatDetector.detectBeats(mAudioFile.float_music_);
+  mBeatFrames = mBeatDetector.detectBeats(mAudioFile.mFloatMusic);
+  
+  /*
   qDebug() << "detected " << mBeatFrames.size() << " beats";
   size_t i = 0;
   for (const auto& e : mBeatFrames) {
     std::cout << "beat " << i << " is at " << e << std::endl;
   }
+
+  mAudioFile.SavePCMBeats("beatBeep.wav", mBeatFrames);
+  */
+
   mLoadStatus = "Done.";
   emit loadStatusChanged();
   QThread::msleep(1000);

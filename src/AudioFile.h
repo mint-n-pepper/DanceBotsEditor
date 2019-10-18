@@ -9,147 +9,196 @@
 #include <mpegheader.h>
 #include <id3v2tag.h>
 
+/** \class AudioFile
+* \brief Loads, de- and encodes, and saves Dancebot audio MP3 files
+*/
 class AudioFile {
 public:
-  //** CONSTANTS ** //
-  // Result enums that indicate processing outcomes
+  // CONSTANTS //
+  /** Result enum that indicates file processing outcomes
+  */
   enum class Result {
-    kSuccess,
-    kNotAnMP3File,
-    kCorruptHeader,
-    kIOError,
-    kFileWriteError,
-    kFileOpenError,
-    kFileDoesNotExist,
-    kMP3DecodingError,
-    kMP3EncodingError,
-    kTagWriteError
+    eSuccess,
+    eNotAnMP3File,
+    eCorruptHeader,
+    eIOError,
+    eFileWriteError,
+    eFileOpenError,
+    eFileDoesNotExist,
+    eMP3DecodingError,
+    eMP3EncodingError,
+    eTagWriteError
   };
   
-  // string code at beginning and end of pre-pended header data
-  static const QByteArray kDanceFileHeaderCode;
-  // sample rate used internally and for MP3 output.
-  // inputs that are not at that sample rate will be up- or downsampled to that
-  // rate
-  static const int kSampleRate{ 44100 };
-  // Lame MP3 compression quality parameter
-  static const int kMP3Quality{ 3 };
-  // Lame output bitrate
-  static const int kBitRateKB{ 160 };
-  // using 44.1k will be MPEG 1 Layer III, which has a sample block size of 1152
-  static const size_t kMP3BlockSize{ 1152 };
-  // target RMS level of music [0.0 1.0] that music is normalized to:
-  static const double kMusicRMSTarget;
+  /** String code at beginning and end of pre-pended header data */
+  static const QByteArray danceFileHeaderCode;
+  /** Sample rate used internally and for MP3 output.
+  *
+  * Inputs that are not at sampleRate will be up- or downsampled to match
+  */
+  static const int sampleRate{ 44100 };
+  /** Lame MP3 compression quality parameter */
+  static const int mp3Quality{ 3 };
+  /** Lame output bitrate */
+  static const int bitRateKB{ 160 };
+  /** MP3 block size. Using 44.1k will be MPEG 1 Layer III, which has a sample
+  * block size of 1152
+  */
+  static const size_t mp3BlockSize{ 1152 };
+  /** target RMS level of music [0.0 1.0] that music is normalized to: */
+  static const double musicRMSTarget;
 
-  //** PUBLIC METHODS **//
-  // default constructor that returns an empty AudioFile object
+  // PUBLIC METHODS //
+  /** \brief Default constructor that returns an empty AudioFile object
+   */
   explicit AudioFile(void);
 
-  // Loads a file from an absoulte file_path and returns result of process.
-  // Discards previous file data in object
-  // Usage:
-  // const QString kFilePath{ "C:/Users/philipp/Desktop/test.mp3" };
-  // AudioFile file{};
-  // const auto result = file.Load(kFilePath);
-  // if(result != AudioFile::Result::kSuccess){
-  //   // file failed to load, process error:
-  //  process_load_error(result);
-  // }
-  //
-  Result Load(const QString file_path);
+  /**
+  * \brief Loads an MP3 file from a file path and returns processing result
+  * Discards previous file data in object.
+  *
+  * Usage:
+  * const QString kFilePath{ "C:/Users/philipp/Desktop/test.mp3" };
+  * AudioFile file{};
+  * const auto result = file.load(kFilePath);
+  * if(result != AudioFile::Result::eSuccess){
+  *   // file failed to load, process error:
+  *   process_load_error(result);
+  * }
+  *
+  * \param filePath absolute path to MP3 file
+  * \return Result enum of processing
+  */
+  Result load(const QString filePath);
 
-  // Saves an MP3 file to an absoulte file_path and returns result of process.
-  //
-  // Usage:
-  // const QString kFilePath{ "C:/Users/philipp/Desktop/test.mp3" };
-  // const auto result = file.Save(kFilePath);
-  // if(result != AudioFile::Result::kSuccess){
-  //   // file failed to save, process error:
-  //  process_save_error(result);
-  // }
-  //
-  Result Save(const QString file_path);
+  /**
+  * \brief Saves an MP3 file and returns result of process
+  *
+  * Usage:
+  * const QString kFilePath{ "C:/Users/philipp/Desktop/test.mp3" };
+  * const auto result = file.save(kFilePath);
+  * if(result != AudioFile::Result::eSuccess){
+  *   // file failed to save, process error:
+  *   process_save_error(result);
+  * }
+  *
+  * \param filePath absolute path to MP3 file
+  * \return Result enum of processing
+  */
+  Result save(const QString filePath);
 
-  // Clears all data
-  void Clear(void);
+  /** \brief Clears all audio file data
+  */
+  void clear(void);
 
-  // Flag that indicates whether the file is a dancefile as id'd by a valid
-  // header present
-  const bool is_dancefile(void) const {
-    return is_dancefile_;
+  /** \brief Flag that indicates whether the file is a dancefile as id'd by
+  * a valid header present.
+  */
+  const bool isDancefile(void) const {
+    return mIsDanceFile;
   }
 
-  // Flag that indicates whether the file contains data or not
-  const bool has_data(void) const {
-    return has_data_;
+  /** \brief Flag that indicates whether the file contains data or not
+  */
+  const bool hasData(void) const {
+    return mHasData;
   }
 
-  const char* GetRawMP3Data(void) const {
-    return raw_mp3_data_.data();
+  /** \brief Sets artist string
+  */
+  void setArtist(const std::string& artist) {
+    mArtist = artist;
   }
 
-  void SetArtist(const std::string& artist) {
-    artist_ = artist;
+  /** \brief Sets song title string
+  */
+  void setTitle(const std::string& title) {
+    mTitle = title;
   }
 
-  void SetTitle(const std::string& title) {
-    title_ = title;
+  /** \brief Get artist string
+  */
+  const std::string& getArtist(void) const {
+    return mArtist;
   }
 
-  const std::string& GetArtist(void) const {
-    return artist_;
+  /** \brief Get song title string
+  */
+  const std::string& getTitle(void) const{
+    return mTitle;
   }
 
-  const std::string& GetTitle(void) const{
-    return title_;
+  /** MP3 prepend data containing dance-file header, if available */
+  QByteArray mMP3PrependData;
+  /** Data channel of audio file (R) */
+  std::vector<float> mFloatData;
+  /** Music channel of audio file (L) */
+  std::vector<float> mFloatMusic;
+
+  /** \brief Saves music and data channels to PCM (WAV) file
+  * \param fileName absolute path to wav file to write
+  * \return 0 if success and 1 if failure
+  */
+  int SavePCM(const QString fileName);
+
+  /** \brief Saves music and beat beep channels to PCM (WAV) file
+  *  left channel is music and right channel is beat beeps at detecte locations
+  * \param fileName absolute path to wav file to write
+  * \param beatFrames vector of detected beats, location in frames/samples
+  * \return 0 if success and 1 if failure
+  */
+  int SavePCMBeats(const QString fileName,
+                   const std::vector<long>& beatFrames);
+
+  /** \brief Returns pointer to raw MP3 file data
+  * \return const pointer to data
+  */
+  const char* getRawMP3Data(void) const {
+    return mRawMP3Data.data();
   }
-
-  int GetSampleRate(void) const {
-    return sample_rate_;
-  }
-
-  // public data members
-  QByteArray mp3_prepend_data_;
-  std::vector<float> float_data_;
-  std::vector<float> float_music_;
-
-  // saves music and data channels to PCM (WAV) file given by absoulte file_path
-  // returns 0 if success and 1 if failure
-  int SavePCM(const QString file_name);
 
 private:
+  /** Lame encoding status enum
+  */
   enum class LameEncCodes {
-    kEncodeSuccess = 0,
-    kMP3BufTooSmall = -1,
-    kMallocProblem = -2,
-    kInitNotCalled = -3,
-    kPsychoIssue = -4,
-    kPCMDataNotSameLength = -5,
-    kNoPCMData = -6,
-    kLameInitFailed = -7
+    eEncodeSuccess = 0,
+    eMP3BufTooSmall = -1,
+    eMallocProblem = -2,
+    eInitNotCalled = -3,
+    ePsychoIssue = -4,
+    ePCMDataNotSameLength = -5,
+    eNoPCMData = -6,
+    eLameInitFailed = -7
   };
 
-  // file data containers:
-  TagLib::ByteVector raw_mp3_data_;
+  /** MP3 file data container: */
+  TagLib::ByteVector mRawMP3Data;
 
-  // file
-  QString path_;
-  bool is_dancefile_ = false;
-  static const size_t kHeaderSizeNBytes{ 4 };
-  bool has_data_{ false };
+  QString mPath; /**< file path */
+  bool mIsDanceFile = false; /**< dance file flag (valid header detected) */
+  /** number of bytes that make up the total bytes in header unsigned int */
+  static const size_t headerSizeNBytes{ 4 };
+  bool mHasData{ false }; /** flag indicating data available in object */
 
-	// audio file parameters:
-  int sample_rate_ { 0 };
-  int length_ms_{ 0 };
-	std::string artist_;
-	std::string title_;
-  double mp3_music_gain_ = 1.0;
+  /** Sample rate read from load file tags - only for internal use as all 
+  * music data will be resampled to the static const sampleRate = 44.1kHz
+  */
+  int mLoadFileSampleRate { 0 };
+  int mLengthMS{ 0 }; /**< length of music in ms from mp3 tag*/
+	std::string mArtist; /**< song artist (extracted from tag) */
+	std::string mTitle; /**< song title */
+  /** Calculated music gain to ensure music rms stays at musicRMSTarget */
+  double mMP3MusicGain = 1.0;
 
-  // private functions:
-  int ReadTag(void);
-  int WriteTag(void);
-  int Decode(void);
-  LameEncCodes Encode(void);
+  // PRIVATE FUNCTIONS //
+  /** \brief read mp3 tag from raw mp3 data */
+  int readTag(void);
+  /** \brief write mp3 tag to raw mp3 data */
+  int writeTag(void);
+  /** \brief decode raw mp3 data */
+  int decode(void);
+  /** \brief encode data in music and data stream to raw mp3 data */
+  LameEncCodes encode(void);
 };
 
-#endif // AUDIO_FILE_H header guard
+#endif // AUDIO_FILE_H_ header guard

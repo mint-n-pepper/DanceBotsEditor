@@ -1,6 +1,4 @@
 add_subdirectory(test_audiofile)
-add_subdirectory(test_gtest)
-add_subdirectory(test_lame)
 add_subdirectory(test_kissfft)
 
 # COPY TEST MP3 to build test folder

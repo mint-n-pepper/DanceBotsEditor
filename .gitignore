@@ -6,3 +6,6 @@ lib/include/**
 
 # ignore all mp3 files
 **/*.mp3
+
+# ignore doc
+doc
