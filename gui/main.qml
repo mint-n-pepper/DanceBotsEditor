@@ -1,16 +1,17 @@
 import QtQuick 2.6
 import QtQuick.Controls 2.0
 
-import "components"
+import "Components"
+import "GuiStyle"
 
 ApplicationWindow {
     id: root
-    width: 1280
-    height: 720
+    width: Style.main.width
+    height: Style.main.height
     visible: true
 	background: Rectangle{
 		anchors.fill: parent
-		color:"#ffe0e0"
+		color: Style.main.color
 	}
 	
 

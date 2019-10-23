@@ -2,13 +2,14 @@ import QtQuick 2.6
 import QtQuick.Controls 2.0
 import QtQuick.Dialogs 1.3
 import dancebots.backend 1.0
+import "../GuiStyle"
 
 Rectangle{
 	id: root
-	width: 320
-	height: 400
+	width: Style.motorControl.width
+	height: Style.motorControl.height
 
-	color: "#F5E850"
+	color: Style.motorControl.color
 
 	Component.onCompleted: setDisabled()
 	

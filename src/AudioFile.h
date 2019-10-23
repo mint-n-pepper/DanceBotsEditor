@@ -139,7 +139,7 @@ public:
   * \param fileName absolute path to wav file to write
   * \return 0 if success and 1 if failure
   */
-  int SavePCM(const QString fileName);
+  int savePCM(const QString fileName);
 
   /** \brief Saves music and beat beep channels to PCM (WAV) file
   *  left channel is music and right channel is beat beeps at detecte locations
@@ -147,7 +147,7 @@ public:
   * \param beatFrames vector of detected beats, location in frames/samples
   * \return 0 if success and 1 if failure
   */
-  int SavePCMBeats(const QString fileName,
+  int savePCMBeats(const QString fileName,
                    const std::vector<long>& beatFrames);
 
   /** \brief Returns pointer to raw MP3 file data

@@ -1,13 +1,14 @@
 import QtQuick 2.6
 import QtQuick.Controls 2.0
 import QtQuick.Dialogs 1.3
+import "../GuiStyle"
 
 Rectangle{
 	id: root
-	width: 320
-	height: 400
+	width: Style.fileControl.width
+	height: Style.fileControl.height
 
-	color: "#5D7CE7"
+	color: Style.fileControl.color
 
 	property alias songTitle: songTitleText.text
 	property alias songArtist: songArtistText.text
@@ -45,7 +46,7 @@ Rectangle{
 	FileDialog {
 		id: loadDialog
 		folder: shortcuts.desktop
-		nameFilters: [ "MP3 files (*.mp3)"]
+		nameFilters: [ "MP3 Files (*.mp3)"]
 		title: "Select MP3 File to Load"
 		selectExisting: true
 		selectMultiple: false
@@ -55,17 +56,18 @@ Rectangle{
 		}
 	}
 
-	Column
-	{
+	Column{
 		width: parent.width
+
 		Row{
-			padding: 5
-			spacing: 5
+			padding: Style.fileControl.buttonPadding
+			spacing: Style.fileControl.buttonSpacing
+
 			Button
 			{
 				id: loadButton
-				width:100
-				height:50
+				width:Style.fileControl.buttonWidth
+				height:Style.fileControl.buttonHeight
 				text: "Load File"
 				onClicked:
 				{
@@ -75,8 +77,8 @@ Rectangle{
 			Button
 			{
 				id: saveButton
-				width:100
-				height:50
+				width:Style.fileControl.buttonWidth
+				height:Style.fileControl.buttonHeight
 				text: "Save File"
 				onClicked:
 				{
@@ -86,53 +88,62 @@ Rectangle{
 			Button
 			{
 				id: clearButton
-				width:100
-				height:50
+				width:Style.fileControl.buttonWidth
+				height:Style.fileControl.buttonHeight
 				text: "Clear Choreo"
 				onClicked:
 				{
 					console.log("Click Clear")
 				}
 			}
-		}
+		} // buttons row
 	
-		Column{
+		Column{ // text fields column
 			id: textFields
 			width: parent.width
-			Item{
-			width: parent.width
-			height: songArtistText.height
-			Text{
-				id: artistLabel
-				anchors.verticalCenter: parent.verticalCenter
-				x: 5
-				text: "Artist"
-				font.pixelSize: 15
-			}
-			TextField
-			{
-				id:songArtistText
-				anchors.left: artistLabel.right
-				anchors.leftMargin: 5
-				width: parent.width - 10 - artistLabel.width
-				maximumLength: 30
-				placeholderText: qsTr("Artist Name")
-					onEditingFinished: backend.songArtist = text
-			}
-			}
+      spacing: 2*Style.fileControl.textLabelSpacing
+			
+      Item{ // artist
+			  width: parent.width
+			  height: songArtistText.height
+			  Text{ // label
+				  id: artistLabel
+				  anchors.verticalCenter: parent.verticalCenter
+				  x: Style.fileControl.textLabelMargin
+				  text: "Artist"
+				  font.pixelSize: Style.fileControl.textLabelPixelSize
+			  }
+			  TextField{ // text edit field
+				  id:songArtistText
+				  anchors.left: artistLabel.right
+				  anchors.leftMargin: Style.fileControl.textLabelMargin
+          anchors.right: parent.right
+          anchors.rightMargin: Style.fileControl.textLabelMargin
+				  maximumLength: 30 // fixed from mp3 tag limitation
+				  placeholderText: "Artist Name"
+					  onEditingFinished: backend.songArtist = text
+			  }
+			} // artist 
 
-			Text{
-				text: "Title"
-			}
-			TextField
-			{
-				id:songTitleText
-				maximumLength: 30
-				width: parent.width
-				placeholderText: qsTr("Song Title")
-				onEditingFinished: backend.songTitle = text
-			}
-		}
-	}
-
-}
+      Item{ // title
+			  width: parent.width
+			  height: songArtistText.height
+			  Text{ // label
+				  id: titleLabel
+				  anchors.verticalCenter: parent.verticalCenter
+				  text: "Title"
+          x: Style.fileControl.textLabelMargin
+          font.pixelSize: Style.fileControl.textLabelPixelSize
+			  }
+			  TextField{
+				  id:songTitleText
+          x: songArtistText.x
+          width: songArtistText.width
+				  maximumLength: 30 // fixed from mp3 tag limitation
+				  placeholderText: qsTr("Song Title")
+				  onEditingFinished: backend.songTitle = text
+			  }
+      } // title
+		} // text column
+	} // box column
+} // box
