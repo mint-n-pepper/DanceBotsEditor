@@ -54,4 +54,9 @@ QtObject {
     property real frameToPixel:  0.00072562358276643991
 	}
 
+  property QtObject motorPrimitive: QtObject{
+    property int height: timerBar.height - 10
+    property int radius: 3
+    property color color: "red"
+	}
 }

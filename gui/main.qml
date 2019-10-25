@@ -46,12 +46,12 @@ ApplicationWindow {
       TimerBar{
         id: motorBar
         width: 1000
-        backgroundColor: Style.motorControl.color
+        color: Style.motorControl.color
       }
       TimerBar{
         id: ledBar
         width: 1000
-        backgroundColor: Style.ledControl.color
+        color: Style.ledControl.color
       }
     }
   }

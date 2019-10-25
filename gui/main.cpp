@@ -19,8 +19,8 @@ int main(int argc, char *argv[])
 
     mpriv1->mPositionBeat = 1;
     mpriv1->mLengthBeat = 4;
-    mpriv2->mPositionBeat = 2;
-    mpriv2->mLengthBeat = 5;
+    mpriv2->mPositionBeat = 7;
+    mpriv2->mLengthBeat = 3;
 
     backend.motorPrimitives()->add(mpriv1);
     backend.motorPrimitives()->add(mpriv2);
