@@ -28,20 +28,31 @@ ApplicationWindow {
 		anchors.left: fileControl.right
 	}
 
-  Column{
+  Flickable{
     width: parent.width
+    height: timerBarColumn.height
+    contentWidth: timerBarColumn.width
+    contentHeight: timerBarColumn.height
     anchors.top: fileControl.bottom
     anchors.left: parent.left
     anchors.topMargin: Style.timerBar.margin
     anchors.bottomMargin: Style.timerBar.margin
-    spacing: Style.timerBar.spacing
-    TimerBar{
-      id: motorBar
-      width: parent.width
+    ScrollBar.horizontal: ScrollBar{}
+
+    Column{
+      id: timerBarColumn
+      width: motorBar.width
+      spacing: Style.timerBar.spacing
+      TimerBar{
+        id: motorBar
+        width: 1000
+        backgroundColor: Style.motorControl.color
+      }
+      TimerBar{
+        id: ledBar
+        width: 1000
+        backgroundColor: Style.ledControl.color
+      }
     }
-    TimerBar{
-      id: ledBar
-      width: parent.width
-  }
   }
 }

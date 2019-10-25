@@ -101,3 +101,16 @@ bool BackEnd::loadMP3Worker(const QString& filePath) {
   QThread::msleep(1000);
   return true;
 }
+
+QVector<int> BackEnd::getBeats(void) const{
+  QVector<int> returnVec;
+  returnVec.reserve(mBeatFrames.size());
+  for(auto const &a : mBeatFrames) {
+    returnVec.push_back(static_cast<int>(a));
+  }
+  return returnVec;
+}
+
+Q_INVOKABLE int BackEnd::getAudioLengthInFrames(void) const{
+  return static_cast<int>(mAudioFile.getLengthInFrames());
+}

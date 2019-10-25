@@ -30,7 +30,7 @@ QtObject {
   // Motor Primitive Control Box
   property QtObject motorControl: QtObject{
     // box
-    property color color: "#F5E850"
+    property color color: "#c8a2c8" // lilac
     property int width: 320
     property int height: 400
   }
@@ -38,7 +38,7 @@ QtObject {
   // LED Primitive Control Box
   property QtObject ledControl: QtObject{
     // box
-    property color color: "#c8a2c8" // lilac
+    property color color: "#00A693"
     property int width: motorControl.width
     property int height: motorControl.height
   }
@@ -50,6 +50,8 @@ QtObject {
     property int spacing: 10 // space between timer bars
     property color beatColor: "lightgray"
     property color timeBarColor: "red"
+
+    property real frameToPixel:  0.00072562358276643991
 	}
 
 }

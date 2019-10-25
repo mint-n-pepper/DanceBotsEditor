@@ -28,6 +28,8 @@ public:
     void setSongArtist(const QString &name);
     void setSongTitle(const QString& name);
     Q_INVOKABLE void loadMP3(const QString& filePath);
+    Q_INVOKABLE QVector<int> getBeats(void) const;
+    Q_INVOKABLE int getAudioLengthInFrames(void) const;
 
 signals:
     void loadStatusChanged();

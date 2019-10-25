@@ -157,6 +157,13 @@ public:
     return mRawMP3Data.data();
   }
 
+  /** \brief Returns total length in frames
+  * \return length in frames
+  */
+  size_t getLengthInFrames(void) const {
+    return mFloatMusic.size();
+  }
+
 private:
   /** Lame encoding status enum
   */
