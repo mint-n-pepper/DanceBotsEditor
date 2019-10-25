@@ -27,4 +27,21 @@ ApplicationWindow {
 		id: motorPrimitiveControl
 		anchors.left: fileControl.right
 	}
+
+  Column{
+    width: parent.width
+    anchors.top: fileControl.bottom
+    anchors.left: parent.left
+    anchors.topMargin: Style.timerBar.margin
+    anchors.bottomMargin: Style.timerBar.margin
+    spacing: Style.timerBar.spacing
+    TimerBar{
+      id: motorBar
+      width: parent.width
+    }
+    TimerBar{
+      id: ledBar
+      width: parent.width
+  }
+  }
 }

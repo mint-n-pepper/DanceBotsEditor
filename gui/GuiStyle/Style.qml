@@ -35,4 +35,21 @@ QtObject {
     property int height: 400
   }
 
+  // LED Primitive Control Box
+  property QtObject ledControl: QtObject{
+    // box
+    property color color: "#c8a2c8" // lilac
+    property int width: motorControl.width
+    property int height: motorControl.height
+  }
+
+  // Timer bar window
+  property QtObject timerBar: QtObject{
+		property int height: 80
+    property int margin: 10 // margin to other GUI elements
+    property int spacing: 10 // space between timer bars
+    property color beatColor: "lightgray"
+    property color timeBarColor: "red"
+	}
+
 }

@@ -15,6 +15,7 @@ find_package(Qt5 COMPONENTS Core Quick Qml Concurrent REQUIRED)
 set(SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/../src/AudioFile.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/../src/BackEnd.cpp
 			${CMAKE_CURRENT_SOURCE_DIR}/../src/BeatDetector.cpp
+			${CMAKE_CURRENT_SOURCE_DIR}/../src/PrimitiveList.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp)
 
 set(INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/../src

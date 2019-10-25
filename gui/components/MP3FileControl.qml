@@ -144,6 +144,6 @@ Rectangle{
 				  onEditingFinished: backend.songTitle = text
 			  }
       } // title
-		} // text column
-	} // box column
+    } // text column
+  } // box column
 } // box

@@ -1,4 +1,5 @@
 #include "BackEnd.h"
+
 #include "QtDebug"
 #include <stdio.h>
 #include <QThread>
@@ -9,7 +10,7 @@ BackEnd::BackEnd(QObject* parent) :
   QObject{ parent }, mAudioFile{},
   mBeatDetector{ mAudioFile.sampleRate },
   mLoadStatus{ "Idle" }, mLoadFutureWatcher{},
-  mLoadFuture{}
+  mLoadFuture{}, mMotorPrimitives{ new PrimitiveList{this} }
 {
   // connect load thread finish signal to backend load handling slot
   connect(&mLoadFutureWatcher, &QFutureWatcher<bool>::finished,
@@ -30,6 +31,10 @@ QString BackEnd::songArtist()
 QString BackEnd::loadStatus()
 {
   return mLoadStatus;
+}
+
+PrimitiveList* BackEnd::motorPrimitives(void) {
+  return mMotorPrimitives;
 }
 
 void BackEnd::setSongArtist(const QString &name)
