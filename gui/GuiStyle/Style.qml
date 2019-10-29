@@ -1,6 +1,7 @@
 // Style.qml
 pragma Singleton
 import QtQuick 2.0
+
 QtObject {
   id:root
   // Main window
@@ -54,9 +55,25 @@ QtObject {
     property real frameToPixel:  0.00072562358276643991
 	}
 
-  property QtObject motorPrimitive: QtObject{
+  // General primitives:
+  property QtObject primitives: QtObject{
     property int height: timerBar.height - 10
     property int radius: 3
-    property color color: "red"
+    property color textColor: "white"
+    property int textPosX: 3
+    property int textPosY: 3
+    property int textSize: height/5
+    property bool textBold: true
+	}
+
+  property QtObject motorPrimitive: QtObject{
+    // see Primitive.h for mapping of type to color
+    // eStraight = 0
+    // eSpin = 1
+    // eTwist = 2
+    // eBackAndForth = 3
+    // eConstant = 4
+    property var textID: ["D", "S", "T", "B", "C"]
+    property var colors: ["red", "green", "blue", "deepskyblue", "deeppink"]
 	}
 }

@@ -13,7 +13,6 @@ ApplicationWindow {
 		anchors.fill: parent
 		color: Style.main.color
 	}
-	
 
 	LoadProcessPopup{
 		id: loadProcess
@@ -47,11 +46,13 @@ ApplicationWindow {
         id: motorBar
         width: 1000
         color: Style.motorControl.color
+        keys: ["mot"]
       }
       TimerBar{
         id: ledBar
         width: 1000
         color: Style.ledControl.color
+        keys: ["led"]
       }
     }
   }

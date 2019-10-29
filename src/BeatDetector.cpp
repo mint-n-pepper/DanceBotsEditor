@@ -54,7 +54,7 @@ std::vector<long> BeatDetector::detectBeats(const std::vector<float>& monoMusicD
     // figure out how many samples to process
     size_t count = kDataLength - i;
     count = count > mBlockSize ? mBlockSize : count;
-    
+
     // fill window buffer with count samples
     for (size_t j = 0; j < count; ++j) {
       mWindowedData[j] = monoMusicData[j + i] * mHanningWindow[j];
@@ -97,7 +97,20 @@ std::vector<long> BeatDetector::detectBeats(const std::vector<float>& monoMusicD
                                                              mSampleRate);
   // see if any beat features were detected
   if (features.find(0) != features.end()) {
-    // for all features
+
+    // add beat at 0, if necessary
+    if(features[0].size()){
+      const auto firstBeat = features[0].at(0);
+      if(firstBeat.hasTimestamp) {
+        const long firstBeatFrame = Vamp::RealTime::realTime2Frame(
+          firstBeat.timestamp + adjustment, mSampleRate);
+        if(firstBeatFrame != 0) {
+          retVal.push_back(0);
+        }
+      }
+    }
+
+    // Get remaining beats
     for (auto feature : features[0]) {
       if (feature.hasTimestamp) {
         retVal.push_back(Vamp::RealTime::realTime2Frame(feature.timestamp + adjustment, mSampleRate));

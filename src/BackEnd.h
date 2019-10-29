@@ -38,6 +38,7 @@ signals:
 
 public slots:
     void handleDoneLoading(void);
+    void printMotPrimitives(void) const;
 
 private:
     QString mSongArtist;

@@ -10,6 +10,7 @@ Canvas{
   property color color: "lightgray"
   property var beats: [] // empty beats
   property var currentPos: 10
+  property var keys: []
 
   Connections{
 	  target: backend
@@ -19,42 +20,27 @@ Canvas{
       beats = backend.getBeats();
       requestPaint();
       primitiveView.model = backend.motorPrimitives
+      backend.printMotPrimitives()
     }
   }
 
-  MotorPrimitive{
-    id: dragPrimitive
-    type: MotorPrimitive.Type.eStraight
-    lengthBeat: 4
-  }
-
-  MouseArea {
-    id: clickArea
-    anchors.fill: parent
-    onClicked: {
-      var addPrimitive = motorPrimitiveFactory.createObject(parent)
-      addPrimitive.positionBeat = currentPos
-      addPrimitive.lengthBeat = 4
-      currentPos += 5
-      primitiveView.model.add(addPrimitive);
+  DropArea{
+  anchors.fill: parent
+    id: dropArea
+    keys: keys
+    onDropped:{
+      console.log("dropped at " + drag.x + ", " + drag.y)
     }
   }
-
-   Component {
-        id: motorPrimitiveFactory
-        MotorPrimitive{}
-    }
 
   Repeater{
     id: primitiveView
-    Rectangle{
-      height: Style.motorPrimitive.height
-      radius: Style.motorPrimitive.radius
-      anchors.verticalCenter: parent.verticalCenter
-      x: beats[model.display.positionBeat] * Style.timerBar.frameToPixel
-      width: {(beats[model.display.positionBeat+model.display.lengthBeat]
-              - beats[model.display.positionBeat]) * Style.timerBar.frameToPixel}
+    MotorPrimitiveDelegate{
+      primitive: model.item
+      keys: dropArea.keys
     }
+
+    onItemRemoved:{ backend.printMotPrimitives()}
   }
 
   onPaint: {

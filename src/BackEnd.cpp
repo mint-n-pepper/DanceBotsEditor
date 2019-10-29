@@ -86,15 +86,14 @@ bool BackEnd::loadMP3Worker(const QString& filePath) {
   emit loadStatusChanged();
   mBeatFrames = mBeatDetector.detectBeats(mAudioFile.mFloatMusic);
   
-  /*
-  qDebug() << "detected " << mBeatFrames.size() << " beats";
-  size_t i = 0;
-  for (const auto& e : mBeatFrames) {
-    std::cout << "beat " << i << " is at " << e << std::endl;
-  }
-
-  mAudioFile.SavePCMBeats("beatBeep.wav", mBeatFrames);
-  */
+//
+//  qDebug() << "detected " << mBeatFrames.size() << " beats";
+//
+//  for(size_t i = 0; i < 10; i++) {
+//    std::cout << "beat " << i << " is at " << mBeatFrames[i] << std::endl;
+//  }
+//
+////  mAudioFile.SavePCMBeats("beatBeep.wav", mBeatFrames);
 
   mLoadStatus = "Done.";
   emit loadStatusChanged();
@@ -111,6 +110,10 @@ QVector<int> BackEnd::getBeats(void) const{
   return returnVec;
 }
 
-Q_INVOKABLE int BackEnd::getAudioLengthInFrames(void) const{
+int BackEnd::getAudioLengthInFrames(void) const{
   return static_cast<int>(mAudioFile.getLengthInFrames());
+}
+
+void BackEnd::printMotPrimitives(void) const {
+  mMotorPrimitives->printPrimitives();
 }
