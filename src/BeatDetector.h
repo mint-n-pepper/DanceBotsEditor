@@ -8,7 +8,7 @@ public:
   explicit BeatDetector(const unsigned int sample_rate);
 
   std::vector<long> detectBeats(const std::vector<float>& monoMusicData);
-  
+
   // check if init was successful
   bool isInitialized(void) { return mInitSuccess; };
 private:

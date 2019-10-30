@@ -97,19 +97,6 @@ std::vector<long> BeatDetector::detectBeats(const std::vector<float>& monoMusicD
                                                              mSampleRate);
   // see if any beat features were detected
   if (features.find(0) != features.end()) {
-
-    // add beat at 0, if necessary
-    if(features[0].size()){
-      const auto firstBeat = features[0].at(0);
-      if(firstBeat.hasTimestamp) {
-        const long firstBeatFrame = Vamp::RealTime::realTime2Frame(
-          firstBeat.timestamp + adjustment, mSampleRate);
-        if(firstBeatFrame != 0) {
-          retVal.push_back(0);
-        }
-      }
-    }
-
     // Get remaining beats
     for (auto feature : features[0]) {
       if (feature.hasTimestamp) {
