@@ -25,12 +25,50 @@ Canvas{
   }
 
   DropArea{
-  anchors.fill: parent
+    anchors.fill: parent
     id: dropArea
     keys: keys
+
     onDropped:{
       console.log("dropped at " + drag.x + ", " + drag.y)
+      var currentFrame = drag.x / Style.timerBar.frameToPixel;
+      var beatLoc = backend.getBeatAtFrame(currentFrame)
+      if(beatLoc >= 0){
+        drag.source.primitive.positionBeat = beatLoc
+      }
+      drag.source.updatePrimitive();
     }
+
+    onEntered:{
+      var enterFrame = drag.x / Style.timerBar.frameToPixel;
+      var beatLoc = backend.getBeatAtFrame(enterFrame)
+      if(beatLoc >= 0){
+        ghost.x = beats[beatLoc] * Style.timerBar.frameToPixel
+        var endBeat = beatLoc + drag.source.primitive.lengthBeat
+        if(endBeat >= beats.length) endBeat = beats.length - 1
+        ghost.width = (beats[endBeat] - beats[beatLoc]) * Style.timerBar.frameToPixel
+        ghost.visible = true
+      }
+    }
+    onExited:{
+      ghost.visible = false
+    }
+    onPositionChanged:{
+      var currentFrame = drag.x / Style.timerBar.frameToPixel;
+      var beatLoc = backend.getBeatAtFrame(currentFrame)
+      if(beatLoc >= 0){
+        ghost.x = beats[beatLoc] * Style.timerBar.frameToPixel
+      }
+    }
+  }
+
+  Rectangle{
+    id: ghost
+    visible: false
+    x: 0
+    anchors.verticalCenter: parent.verticalCenter
+    height: Style.primitives.height
+    radius: Style.primitives.radius
   }
 
   Repeater{

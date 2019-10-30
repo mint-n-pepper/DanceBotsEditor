@@ -5,6 +5,7 @@
 #include <QThread>
 #include <QEventLoop>
 #include <QtConcurrent>
+#include "Utils.h"
 
 BackEnd::BackEnd(QObject* parent) :
   QObject{ parent }, mAudioFile{},
@@ -72,9 +73,8 @@ bool BackEnd::loadMP3Worker(const QString& filePath) {
   mAudioFile.clear();
   const AudioFile::Result res = mAudioFile.load(filePath);
 
-  if (!(AudioFile::Result::eSuccess == res)) {
+  if (AudioFile::Result::eSuccess != res) {
     // loading failed
-
     return false;
   }
 
@@ -84,30 +84,52 @@ bool BackEnd::loadMP3Worker(const QString& filePath) {
 
   mLoadStatus = "Detecting Beats...";
   emit loadStatusChanged();
-  mBeatFrames = mBeatDetector.detectBeats(mAudioFile.mFloatMusic);
-  
-//
-//  qDebug() << "detected " << mBeatFrames.size() << " beats";
-//
-//  for(size_t i = 0; i < 10; i++) {
-//    std::cout << "beat " << i << " is at " << mBeatFrames[i] << std::endl;
-//  }
-//
-////  mAudioFile.SavePCMBeats("beatBeep.wav", mBeatFrames);
+  std::vector<long> tmpBeats = mBeatDetector.detectBeats(mAudioFile.mFloatMusic);
+
+  // check if beats could be detected. We need at least to operate.
+  if(tmpBeats.size() < 2) {
+    mLoadStatus = "FAILED: Fewer than two beats detected.";
+    emit loadStatusChanged();
+    QThread::msleep(1000);
+    return false;
+  }
+
+  // convert the detected beats to int. This is fine because even a int32 would be
+  // able to hold beats detected up to 13 hours in a 44.1kHz sampled song
+  // reserve enough memory for all detected beats plus articficial start and end
+  // beats
+  mBeatFrames.reserve(tmpBeats.size() + 2);
+
+  // add zero beat if first detected beat is not at 0:
+  if(0 != tmpBeats.front()) {
+    mBeatFrames.push_back(0);
+  }
+
+  for(size_t i = 0; i < tmpBeats.size(); ++i) {
+    mBeatFrames.push_back(static_cast<int>(tmpBeats[i]));
+  }
+
+  // add last beat at final plus one audio frame
+  mBeatFrames.push_back(static_cast<int>(mAudioFile.mFloatData.size() + 1));
+
+
+/*  qDebug() << "detected " << mBeatFrames.size() << " beats";
+
+  for(size_t i = 0; i < 10; i++) {
+    std::cout << "beat " << i << " is at " << mBeatFrames[i] << std::endl;
+  }
+
+ */
+ //  mAudioFile.SavePCMBeats("beatBeep.wav", mBeatFrames);
 
   mLoadStatus = "Done.";
   emit loadStatusChanged();
-  QThread::msleep(1000);
+  QThread::msleep(100);
   return true;
 }
 
-QVector<int> BackEnd::getBeats(void) const{
-  QVector<int> returnVec;
-  returnVec.reserve(mBeatFrames.size());
-  for(auto const &a : mBeatFrames) {
-    returnVec.push_back(static_cast<int>(a));
-  }
-  return returnVec;
+std::vector<int> BackEnd::getBeats(void) const{
+  return mBeatFrames;
 }
 
 int BackEnd::getAudioLengthInFrames(void) const{
@@ -116,4 +138,23 @@ int BackEnd::getAudioLengthInFrames(void) const{
 
 void BackEnd::printMotPrimitives(void) const {
   mMotorPrimitives->printPrimitives();
+}
+
+int BackEnd::getBeatAtFrame(const int frame) const {
+  // run utility function to find beat
+  size_t ind = 0;
+  // use binary search, as it is much faster for larger arrays
+  // and about the same speed as linear search for smaller ones
+  int rv = utils::findInterval<int>(frame,
+                                    mBeatFrames,
+                                    ind,
+                                    utils::SearchMethod::eBinary);
+
+  // return -1 if search failed
+  if(rv < 0) {
+    return -1;
+  }
+
+  // otherwise return index
+  return static_cast<int>(ind);
 }

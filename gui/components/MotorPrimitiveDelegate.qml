@@ -25,7 +25,9 @@ import "../GuiStyle"
 			textID.text=Style.motorPrimitive.textID[primitive.type]
       color=Style.motorPrimitive.colors[primitive.type]
       x= parent.beats[primitive.positionBeat] * Style.timerBar.frameToPixel
-      width= (parent.beats[primitive.positionBeat+primitive.lengthBeat]
+      var endBeat = primitive.positionBeat+primitive.lengthBeat
+      endBeat = endBeat < beats.length ? endBeat : beats.length - 1
+      width= (parent.beats[endBeat]
               - parent.beats[primitive.positionBeat]) * Style.timerBar.frameToPixel
       anchors.verticalCenter = parent.verticalCenter
 		}
@@ -78,10 +80,7 @@ import "../GuiStyle"
         }else{
             console.log("End drag of " + Drag.keys + " tgt = " + Drag.target)
             if(Drag.target !== null){
-              primitive.positionBeat = 10
               Drag.drop()
-              backend.printMotPrimitives()
-              updatePrimitive()
             }else{
               // remove item from model
               backend.motorPrimitives.remove(index);

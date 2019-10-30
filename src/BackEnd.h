@@ -28,7 +28,7 @@ public:
     void setSongArtist(const QString &name);
     void setSongTitle(const QString& name);
     Q_INVOKABLE void loadMP3(const QString& filePath);
-    Q_INVOKABLE QVector<int> getBeats(void) const;
+    Q_INVOKABLE std::vector<int> getBeats(void) const;
     Q_INVOKABLE int getAudioLengthInFrames(void) const;
 
 signals:
@@ -39,6 +39,7 @@ signals:
 public slots:
     void handleDoneLoading(void);
     void printMotPrimitives(void) const;
+    int getBeatAtFrame(const int frame) const;
 
 private:
     QString mSongArtist;
@@ -47,7 +48,7 @@ private:
     QString mLoadStatus;
     AudioFile mAudioFile;
     BeatDetector mBeatDetector;
-    std::vector<long> mBeatFrames;
+    std::vector<int> mBeatFrames;
     QFuture<bool> mLoadFuture;
     QFutureWatcher<bool> mLoadFutureWatcher;
 
