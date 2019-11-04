@@ -309,9 +309,9 @@ int AudioFile::decode(void) {
 
   // Number of samples to cut from beginning that stem from encoder and decoder
   // delays
-
   const size_t kNSkip = ENCDELAY + DECDELAY + 1;
   size_t skipCount = 0;
+
   quint64 sum = 0u; // running sum of ^2 pcm samples for rms calculation
 
   while(buf != end) {
@@ -340,6 +340,7 @@ int AudioFile::decode(void) {
       else {
         // only consider left channel
         for(size_t i = 0; i < nRead; ++i) {
+          // skip encoder delay samples
           if(skipCount < kNSkip) {
             ++skipCount;
             continue;
@@ -354,7 +355,7 @@ int AudioFile::decode(void) {
   }
 
   // cut off extra sample block at end:
-  if(mIsDanceFile) {
+  if(mIsDanceFile){
     mFloatMusic.resize(mFloatMusic.size() - mp3BlockSize);
   }
 
@@ -393,8 +394,10 @@ int AudioFile::decode(void) {
     mLengthMS = mFloatMusic.size() * 1000 / sampleRate;
   }
 
-  // resize data to same length:
-  mFloatData.resize(mFloatMusic.size());
+  // resize music and data to integer multiple of mp3 block size:
+  const size_t kNBlocks = (mFloatMusic.size() / mp3BlockSize) + 1;
+  mFloatMusic.resize(kNBlocks * mp3BlockSize, 0); // w. zero padding
+  mFloatData.resize(kNBlocks * mp3BlockSize, 0);
 
   hip_decode_exit(dcGFP);
   return 0;
@@ -431,18 +434,13 @@ auto AudioFile::encode(void) -> LameEncCodes {
     return LameEncCodes::eLameInitFailed;
   }
 
-  // resize music and data to integer multiple of mp3 block size:
-  const size_t kNBlocks = (mFloatMusic.size() / mp3BlockSize) + 1;
-  mFloatMusic.resize(kNBlocks * mp3BlockSize, 0); // w. zero padding
-  mFloatData.resize(kNBlocks * mp3BlockSize, 0);
-
   // create temporary mp3 data ByteVector:
   TagLib::ByteVector tempMP3;
   const size_t kTempMP3Size = mFloatData.size() * bitRateKB * 1'000 / sampleRate
     + 50'000;
   tempMP3.resize(kTempMP3Size);
 
-  const size_t kPCMEncodeStepSize = 40 * mp3BlockSize;
+  const size_t kPCMEncodeStepSize = 32 * mp3BlockSize;
   const size_t kMP3BufferSize = static_cast<size_t>(kPCMEncodeStepSize * 1.25
     + 7200.0); // See lame.h for calculation of buffer worst-case size
 

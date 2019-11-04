@@ -19,11 +19,19 @@ namespace {
     static const QString fileFolderPath;
     static const QString fileMusic44k;
     static const QString fileTemp;
+    static const std::vector<QString> fileNames;
   };
 
   const QString AudioFileTest::fileFolderPath{ "./../test_mp3_files/" };
   const QString AudioFileTest::fileMusic44k{ fileFolderPath + "in44100.mp3" };
-  const QString AudioFileTest::fileTemp { fileFolderPath + "temp.mp3" };
+  const QString AudioFileTest::fileTemp{ fileFolderPath + "temp_AT.mp3" };
+  const std::vector<QString> AudioFileTest::fileNames{
+    "in8000.mp3",
+    "in11025.mp3",
+    "in22050.mp3",
+    "in32000.mp3",
+    "in48000.mp3"
+  };
 
   TEST_F(AudioFileTest, testAudioFileNotExist) {
     // test opening a fake file:
@@ -31,9 +39,9 @@ namespace {
 
     AudioFile fakeFile{};
     auto result = fakeFile.load(fileFolderPath + fakeFileName);
-    
+
     EXPECT_EQ(result,
-              AudioFile::Result::eFileDoesNotExist);
+      AudioFile::Result::eFileDoesNotExist);
     EXPECT_FALSE(fakeFile.hasData());
 
     // try to save empty audiofile
@@ -89,32 +97,28 @@ namespace {
       EXPECT_EQ(static_cast<char>(i),
         checkFile.mMP3PrependData.at(i));
     }
-
   }
 
   TEST_F(AudioFileTest, testResample) {
-    // Test resampling
-    std::vector<QString> fileNames = {
-      "in8000.mp3",
-      "in11025.mp3",
-      "in22050.mp3",
-      "in32000.mp3",
-      "in48000.mp3"
-    };
-
     // now load all files and check that sample numbers are close to 44k file
     AudioFile mp3File44k{};
     mp3File44k.load(fileMusic44k);
     const size_t nSamples = mp3File44k.mFloatMusic.size();
-    const size_t sampleRange{ 44100 / 10 * 7 }; // allow for 0.7s deviation
+    const size_t sampleRange{ 44100 / 10 * 3 }; // allow for 0.3s deviation
+    // for 8k file, allow bigger deviation
+    const size_t sampleRange8k{ 44100 / 10 * 7 }; // allow for 0.7s deviation
 
     for(const auto& filename : fileNames) {
+      size_t testRange = sampleRange;
+      if(filename == "in8000.mp3") testRange = sampleRange8k;
       AudioFile resampleFile{};
       resampleFile.load(fileFolderPath + filename);
       // ensure resampled total samples are close to 44.1k Hz file
       // because of large deviation in 8kHz file, have quite broad threshold
-      EXPECT_GT(resampleFile.mFloatMusic.size(), nSamples - sampleRange);
-      EXPECT_LT(resampleFile.mFloatMusic.size(), nSamples + sampleRange);
+      EXPECT_GT(resampleFile.mFloatMusic.size(), nSamples - testRange)
+        << " for file " << filename.toStdString();
+      EXPECT_LT(resampleFile.mFloatMusic.size(), nSamples + testRange)
+        << " for file " << filename.toStdString();
     }
   }
 
@@ -140,7 +144,7 @@ namespace {
 
     const char* mp3FileData = mp3File44k.getRawMP3Data();
 
-    for (size_t i = 0; i < testData.size(); ++i) {
+    for(size_t i = 0; i < testData.size(); ++i) {
       EXPECT_EQ(mp3FileData[i], testData.data()[i]);
     }
   }
@@ -170,21 +174,20 @@ namespace {
   TEST_F(AudioFileTest, testDeEnCodeCycles) {
     AudioFile mp3FileHeaderTest{};
     mp3FileHeaderTest.load(fileMusic44k);
-    
+
     // save and load file to get steady-state data length that should be const
     mp3FileHeaderTest.save(fileTemp);
     mp3FileHeaderTest.load(fileTemp);
 
     const size_t nMP3Samples = mp3FileHeaderTest.mFloatData.size();
 
-    for (uint a = 0; a < 10; ++a) {
+    for(uint a = 0; a < 10; ++a) {
       AudioFile mp3FileCycleTest{};
       mp3FileCycleTest.load(fileTemp);
       EXPECT_EQ(nMP3Samples, mp3FileCycleTest.mFloatData.size());
       mp3FileCycleTest.save(fileTemp);
     }
   }
-
 } // anon namespace
 
 int main(int argc, char* argv[]) {

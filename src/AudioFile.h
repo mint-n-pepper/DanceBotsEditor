@@ -40,7 +40,7 @@ public:
   /** Lame MP3 compression quality parameter */
   static const int mp3Quality{ 3 };
   /** Lame output bitrate */
-  static const int bitRateKB{ 160 };
+  static const int bitRateKB{ 192 };
   /** MP3 block size. Using 44.1k will be MPEG 1 Layer III, which has a sample
   * block size of 1152
   */
@@ -165,8 +165,7 @@ public:
   }
 
 private:
-  /** Lame encoding status enum
-  */
+  /** Lame encoding status enum */
   enum class LameEncCodes {
     eEncodeSuccess = 0,
     eMP3BufTooSmall = -1,
@@ -197,14 +196,24 @@ private:
   /** Calculated music gain to ensure music rms stays at musicRMSTarget */
   double mMP3MusicGain = 1.0;
 
-  // PRIVATE FUNCTIONS //
-  /** \brief read mp3 tag from raw mp3 data */
+  /** \brief read mp3 tag from raw mp3 data into
+  * \return 0 if success, 1 if failure
+  */
   int readTag(void);
-  /** \brief write mp3 tag to raw mp3 data */
+
+  /** \brief write artist and title to mp3 tag in raw mp3 data
+  * \return 0 if success, 1 if failure
+  */
   int writeTag(void);
-  /** \brief decode raw mp3 data */
+
+  /** \brief decode raw mp3 data
+  * \return 0 if success, 1 if failure
+  */
   int decode(void);
-  /** \brief encode data in music and data stream to raw mp3 data */
+
+  /** \brief encode data in music and data stream to raw mp3 data
+  * \return Lame Encoder status codes, see above
+  */
   LameEncCodes encode(void);
 };
 

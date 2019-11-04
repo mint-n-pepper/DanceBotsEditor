@@ -1,20 +1,19 @@
-project(audiofile)
+project(test-audiofile)
 
 find_package(Qt5 COMPONENTS Widgets REQUIRED)
 
 set(AUDIOFILE_SRC
     ${CMAKE_CURRENT_SOURCE_DIR}/../../src/AudioFile.cpp)
     
-file(GLOB HEADERS_SRC ${CMAKE_CURRENT_SOURCE_DIR}/../../src/*.hpp)
+set(HEADERS ${CMAKE_CURRENT_SOURCE_DIR}/../../src/AudioFile.h)
     
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../src)
-source_group("Headers" FILES ${HEADERS_SRC})
+source_group("Headers" FILES ${HEADERS})
 
-add_executable(${PROJECT_NAME} main.cpp ${AUDIOFILE_SRC} ${HEADERS_SRC})
+add_executable(${PROJECT_NAME} main.cpp ${AUDIOFILE_SRC} ${HEADERS})
 
 target_link_libraries(${PROJECT_NAME}
 						gtest
-						gmock
 						lib-qm-dsp
                         mp3lame
 						sndfile

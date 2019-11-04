@@ -1,8 +1,12 @@
-project(kissfft-test)
+project(test-kissfft)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../lib/kissfft)
+
+set(HEADERS ${CMAKE_CURRENT_SOURCE_DIR}/../../lib/kissfft/kissfft.hh)
+
+source_group("Header Files" FILES ${HEADERS})
   
-add_executable(${PROJECT_NAME} main.cpp)
+add_executable(${PROJECT_NAME} main.cpp ${HEADERS})
 
 target_link_libraries(${PROJECT_NAME}
                         gtest)
