@@ -8,34 +8,26 @@ import "../GuiStyle"
 		radius: Style.primitives.radius
 
     property bool dragActive: dragArea.drag.active
-    property var keys: []
-
-    property MotorPrimitive primitive: MotorPrimitive{
-			type: MotorPrimitive.Type.eStraight
-      frequency: 1.0
-      positionBeat: 0
-      lengthBeat: 0
-      velocity: 0
-      velocityRight: 0
-		}
+    property var primitive: null
 
     onPrimitiveChanged: updatePrimitive()
 
 		function updatePrimitive(){
-			textID.text=Style.motorPrimitive.textID[primitive.type]
-      color=Style.motorPrimitive.colors[primitive.type]
-      x= parent.beats[primitive.positionBeat] * Style.timerBar.frameToPixel
+    console.log("updating primitive, parent = " + parent)
+			textID.text=primitiveTextIDs[primitive.type]
+      color=primitiveColors[primitive.type]
+      x= beats[primitive.positionBeat] * Style.timerBar.frameToPixel
       var endBeat = primitive.positionBeat+primitive.lengthBeat
       endBeat = endBeat < beats.length ? endBeat : beats.length - 1
-      width= (parent.beats[endBeat]
-              - parent.beats[primitive.positionBeat]) * Style.timerBar.frameToPixel
+      width= (beats[endBeat]
+              - beats[primitive.positionBeat]) * Style.timerBar.frameToPixel
       anchors.verticalCenter = parent.verticalCenter
 		}
 
 		Text
 		{
 			id: textID
-			text: Style.motorPrimitive.textID[primitive.type]
+			text: primitiveTextIDs[primitive.type]
       color: Style.primitives.textColor
       x: Style.primitives.textPosX
       y: Style.primitives.textPosY
@@ -79,11 +71,16 @@ import "../GuiStyle"
 
         }else{
             console.log("End drag of " + Drag.keys + " tgt = " + Drag.target)
+            console.log("parent is " + parent + " has model " + parent.model)
             if(Drag.target !== null){
               Drag.drop()
+            }else if(parent.model){
+              // remove item from model, if it was on the timer bar
+              parent.model.remove(index);
             }else{
-              // remove item from model
-              backend.motorPrimitives.remove(index);
+              // item was dragged from primitive control and was
+              // dropped onto an invalid area
+              parent.destroy()
             }
         }
     }

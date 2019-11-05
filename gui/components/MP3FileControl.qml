@@ -14,7 +14,7 @@ Rectangle{
 	property alias songArtist: songArtistText.text
 
 	Component.onCompleted: setDisabled()
-	
+
 	function setEnabled(){
 		textFields.enabled = true
 		saveButton.enabled = true
@@ -97,12 +97,12 @@ Rectangle{
 				}
 			}
 		} // buttons row
-	
+
 		Column{ // text fields column
 			id: textFields
 			width: parent.width
       spacing: 2*Style.fileControl.textLabelSpacing
-			
+
       Item{ // artist
 			  width: parent.width
 			  height: songArtistText.height
@@ -123,7 +123,7 @@ Rectangle{
 				  placeholderText: "Artist Name"
 					  onEditingFinished: backend.songArtist = text
 			  }
-			} // artist 
+			} // artist
 
       Item{ // title
 			  width: parent.width

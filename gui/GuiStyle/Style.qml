@@ -10,7 +10,7 @@ QtObject {
 		property int height: 800
 		property color color: "#ffe0e0"
 	}
-  
+
   // MP3 File Control Box
   property QtObject fileControl: QtObject{
     // box
@@ -50,8 +50,9 @@ QtObject {
     property int margin: 10 // margin to other GUI elements
     property int spacing: 10 // space between timer bars
     property color beatColor: "lightgray"
+    property int beatWidth: 2 // line width of beat indicators
     property color timeBarColor: "red"
-
+    property color ghostColorValid: "#8840DF40"
     property real frameToPixel:  0.00072562358276643991
 	}
 

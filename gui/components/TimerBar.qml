@@ -6,12 +6,16 @@ import "../GuiStyle"
 Canvas{
   id: root
   height: Style.timerBar.height
+  width: 1000
 
-  property color color: "lightgray"
-  property var beats: [] // empty beats
-  property var currentPos: 10
-  property var keys: []
+  property color color
+  property var beats: []
+  property var keys
+  property var model
+  property var primitiveColors
+  property var primitiveTextIDs
 
+  // connect to done loading signal of backend to redraw rectangle
   Connections{
 	  target: backend
 	  onDoneLoading:{
@@ -19,15 +23,13 @@ Canvas{
       width = backend.getAudioLengthInFrames() * Style.timerBar.frameToPixel;
       beats = backend.getBeats();
       requestPaint();
-      primitiveView.model = backend.motorPrimitives
-      backend.printMotPrimitives()
     }
   }
 
   DropArea{
     anchors.fill: parent
     id: dropArea
-    keys: keys
+    keys: parent.keys
 
     onDropped:{
       console.log("dropped at " + drag.x + ", " + drag.y)
@@ -36,7 +38,15 @@ Canvas{
       if(beatLoc >= 0){
         drag.source.primitive.positionBeat = beatLoc
       }
-      drag.source.updatePrimitive();
+      if(drag.source.parent === parent){
+        drag.source.updatePrimitive();
+      }else{
+       // came from control box, add it to model and destroy delegate
+       model.add(drag.source.primitive)
+       drag.source.destroy()
+       model.printPrimitives()
+      }
+      ghost.visible = false
     }
 
     onEntered:{
@@ -62,23 +72,22 @@ Canvas{
     }
   }
 
+  Repeater{
+    id: primitiveView
+    model: parent.model
+    PrimitiveDelegate{
+      primitive: model.item
+    }
+  }
+
   Rectangle{
     id: ghost
     visible: false
+    color: Style.timerBar.ghostColorValid
     x: 0
     anchors.verticalCenter: parent.verticalCenter
-    height: Style.primitives.height
+    height: Style.timerBar.height
     radius: Style.primitives.radius
-  }
-
-  Repeater{
-    id: primitiveView
-    MotorPrimitiveDelegate{
-      primitive: model.item
-      keys: dropArea.keys
-    }
-
-    onItemRemoved:{ backend.printMotPrimitives()}
   }
 
   onPaint: {
@@ -86,7 +95,7 @@ Canvas{
     ctx.fillStyle = color;
     ctx.fillRect(0, 0, width, height);
     for(var i=0; i < beats.length; i++){
-      ctx.lineWidth = 2;
+      ctx.lineWidth = Style.timerBar.beatWidth;
       ctx.strokeStyle = Style.timerBar.beatColor;
       ctx.beginPath();
       var loc = beats[i] * Style.timerBar.frameToPixel;

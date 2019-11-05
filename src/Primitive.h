@@ -36,11 +36,11 @@ class MotorPrimitive : public BasePrimitive {
 
 public:
   enum class Type {
-    eStraight = 0,
-    eSpin,
-    eTwist,
-    eBackAndForth,
-    eConstant
+    Straight = 0,
+    Spin,
+    Twist,
+    BackAndForth,
+    Constant
   };
   Q_ENUM(Type);
 
@@ -49,7 +49,7 @@ public:
   };
   int mVelocity{ 0 };
   int mVelocityRight{ 0 };
-  Type mType{ Type::eTwist };
+  Type mType{ Type::Twist };
 
 signals:
   void velocityChanged(void);

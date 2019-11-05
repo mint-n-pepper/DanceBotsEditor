@@ -44,15 +44,11 @@ ApplicationWindow {
       spacing: Style.timerBar.spacing
       TimerBar{
         id: motorBar
-        width: 1000
         color: Style.motorControl.color
         keys: ["mot"]
-      }
-      TimerBar{
-        id: ledBar
-        width: 1000
-        color: Style.ledControl.color
-        keys: ["led"]
+        model: backend.motorPrimitives
+        primitiveColors: Style.motorPrimitive.colors
+        primitiveTextIDs: Style.motorPrimitive.textID
       }
     }
   }
