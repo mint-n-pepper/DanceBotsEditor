@@ -34,6 +34,8 @@ QtObject {
     property color color: "#c8a2c8" // lilac
     property int width: 320
     property int height: 400
+    // left and bottom spacing of primitive shape
+    property real margin: 10.0
   }
 
   // LED Primitive Control Box
@@ -53,6 +55,7 @@ QtObject {
     property int beatWidth: 2 // line width of beat indicators
     property color timeBarColor: "red"
     property color ghostColorValid: "#8840DF40"
+    property color ghostColorInvalid: "#88DF4040"
     property real frameToPixel:  0.00072562358276643991
 	}
 

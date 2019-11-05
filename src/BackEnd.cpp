@@ -86,13 +86,22 @@ bool BackEnd::loadMP3Worker(const QString& filePath) {
   emit loadStatusChanged();
   std::vector<long> tmpBeats = mBeatDetector.detectBeats(mAudioFile.mFloatMusic);
 
-  // check if beats could be detected. We need at least to operate.
-  if(tmpBeats.size() < 2) {
-    mLoadStatus = "FAILED: Fewer than two beats detected.";
+  // check if beats could be detected. We need at least four to operate.
+  if(tmpBeats.size() < 4) {
+    mLoadStatus = "FAILED: Fewer than four beats detected.";
     emit loadStatusChanged();
     QThread::msleep(1000);
     return false;
   }
+
+  // calculate average beat duration in frames:
+  size_t sum = 0;
+
+  for(size_t i = 2; i < tmpBeats.size() - 1; ++i) {
+    sum += static_cast<size_t>(tmpBeats[i]) - tmpBeats[i - 1];
+  }
+
+  mAverageBeatFrames = static_cast<int>(sum / (tmpBeats.size() - 3u));
 
   // convert the detected beats to int. This is fine because even a int32 would be
   // able to hold beats detected up to 13 hours in a 44.1kHz sampled song
@@ -134,6 +143,10 @@ std::vector<int> BackEnd::getBeats(void) const{
 
 int BackEnd::getAudioLengthInFrames(void) const{
   return static_cast<int>(mAudioFile.getLengthInFrames());
+}
+
+int BackEnd::getAverageBeatFrames(void) const {
+  return mAverageBeatFrames;
 }
 
 void BackEnd::printMotPrimitives(void) const {

@@ -13,21 +13,19 @@ import "../GuiStyle"
     onPrimitiveChanged: updatePrimitive()
 
 		function updatePrimitive(){
-    console.log("updating primitive, parent = " + parent)
 			textID.text=primitiveTextIDs[primitive.type]
       color=primitiveColors[primitive.type]
       x= beats[primitive.positionBeat] * Style.timerBar.frameToPixel
-      var endBeat = primitive.positionBeat+primitive.lengthBeat
+      var endBeat = primitive.positionBeat + primitive.lengthBeat
       endBeat = endBeat < beats.length ? endBeat : beats.length - 1
       width= (beats[endBeat]
               - beats[primitive.positionBeat]) * Style.timerBar.frameToPixel
-      anchors.verticalCenter = parent.verticalCenter
 		}
 
 		Text
 		{
 			id: textID
-			text: primitiveTextIDs[primitive.type]
+			text: ""
       color: Style.primitives.textColor
       x: Style.primitives.textPosX
       y: Style.primitives.textPosY
@@ -61,6 +59,13 @@ import "../GuiStyle"
             console.log("Start drag of " + Drag.keys)
             anchors.verticalCenter= undefined
             Drag.start()
+            if(parent.model){
+              parent.freeOccupied(primitive)
+            }else{
+              // recreate a new delegate for the next drag:
+              anchors.bottom= undefined
+              parent.createDelegate()
+            }
            if(dragArea.controlPressed){
                 Drag.proposedAction=Qt.CopyAction
                 console.log('copy')
@@ -80,7 +85,7 @@ import "../GuiStyle"
             }else{
               // item was dragged from primitive control and was
               // dropped onto an invalid area
-              parent.destroy()
+              destroy()
             }
         }
     }

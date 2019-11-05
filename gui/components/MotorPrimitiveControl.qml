@@ -10,26 +10,50 @@ Rectangle{
 	height: Style.motorControl.height
 	color: Style.motorControl.color
   property var keys: ['mot']
-  property var beats: []
+  property var beats: [Math.round(Style.motorControl.margin
+  / Style.timerBar.frameToPixel)]
   property var primitiveColors: Style.motorPrimitive.colors
   property var primitiveTextIDs: Style.motorPrimitive.textID
+  property var delegate: null
+  property var averageBeatFrames: 60 * 441 // 100 bpm @ 44.1kHz
 
 	Component.onCompleted:{
+    // set the first beat at a fixed pixel distance from the left border of the
+    // control box:
+    setDummyBeats();
+    createDelegate();
     setDisabled();
-    for(var i = 1; i < 6; ++i){
-      // add beats at 80 bpm
-      beats.push(i * 60/80*44100)
+  }
+
+  function setDummyBeats(){
+    for(var i = 1; i < 5; ++i){
+      // add beats at 100 bpm
+      beats[i] = (i * averageBeatFrames) + beats[0]
+    }
+  }
+
+  onAverageBeatFramesChanged:{
+    setDummyBeats();
+  }
+
+  Connections{
+	  target: backend
+	  onDoneLoading:{
+      // calculate average beat distance:
+      averageBeatFrames = backend.getAverageBeatFrames();
+      delegate.updatePrimitive();
+      setEnabled();
     }
   }
 
 	function setEnabled(){
 		typeRadio.enabled = true
-    dummyBar.enabled = true
+    delegate.enabled = true
 	}
 
 	function setDisabled(){
 		typeRadio.enabled = false
-    dummyBar.enabled = false
+    delegate.enabled = false
 	}
 
 	Column{
@@ -37,8 +61,8 @@ Rectangle{
 		width: parent.width
     property int type
     onTypeChanged: {
-      dummyBar.delegate.primitive.type = type
-      dummyBar.delegate.delegate.updatePrimitive()
+      delegate.primitive.type = type
+      delegate.updatePrimitive()
     }
 		RadioButton {
         	checked: true
@@ -55,47 +79,28 @@ Rectangle{
 	    }
 	}
 
-	Rectangle{
-		id: dummyBar
-		width: parent.width
-		height: Style.timerBar.height
-    color: "transparent"
-		anchors.bottom: parent.bottom
-		anchors.left: parent.left
-		anchors.bottomMargin: 10
 
-    property var delegate
+  function createDelegate(){
+    delegate = delegateFactory.createObject(this)
+    var prim = primitiveFactory.createObject(delegate.id)
+    prim.positionBeat= 0;
+    prim.lengthBeat= 4;
+    prim.type = typeRadio.type
 
-    onDelegateChanged:{
-      if(delegate === null){
-        createDelegate()
-      }
-    }
+    delegate.primitive = prim
 
-    Component.onCompleted:{
-      createDelegate();
-      console.log("delegate active " + delegate.enabled)
-    }
+    delegate.anchors.verticalCenter = undefined
+    delegate.anchors.bottomMargin = Style.motorControl.margin
+    delegate.anchors.bottom= root.bottom
+  }
 
-    function createDelegate(){
-        delegate = delegateFactory.createObject(dummyBar,
-      {primitive: primitiveFactory.createObject(delegate,
-        { positionBeat: 0,
-          lengthBeat: 4,
-          type: typeRadio.type})
-      })
-    }
+  Component{
+      id: delegateFactory
+      PrimitiveDelegate{}
+  }
 
-    Component{
-        id: delegateFactory
-        PrimitiveDelegate{}
-    }
-
-    Component{
-        id: primitiveFactory
-        MotorPrimitive{}
-    }
-	}
-
-
+  Component{
+      id: primitiveFactory
+      MotorPrimitive{}
+  }
 }

@@ -10,6 +10,7 @@ Canvas{
 
   property color color
   property var beats: []
+  property var occupied: []
   property var keys
   property var model
   property var primitiveColors
@@ -23,6 +24,11 @@ Canvas{
       width = backend.getAudioLengthInFrames() * Style.timerBar.frameToPixel;
       beats = backend.getBeats();
       requestPaint();
+      // clear occupancy array:
+      occupied.length = 0
+      for(var i = 0; i < beats.length; ++i){
+        occupied.push(false)
+      }
     }
   }
 
@@ -31,45 +37,104 @@ Canvas{
     id: dropArea
     keys: parent.keys
 
+    function doDrop(){
+      if(drag.source.parent === parent){
+        // source is timerbar itself, just update primitive and
+        // set location beats to occupied
+        drag.source.anchors.verticalCenter=parent.verticalCenter
+        drag.source.updatePrimitive();
+        setOccupied(drag.source.primitive)
+      }else{
+        // source is control box, add it to model and destroy delegate
+        model.add(drag.source.primitive)
+        drag.source.destroy()
+        model.printPrimitives()
+        // don't have to update occupied as this happens from repeater
+        // callback onItemAdded
+      }
+    }
+
+    function handleInvalidDrop(){
+      // cannot drop
+      if(drag.source.parent === parent){
+        // if source is timer bar, do nothing and let it bounce back
+        drag.source.updatePrimitive();
+        // and reset occupied
+        setOccupied(drag.source.primitive)
+      }else{
+        // if source is control box, delete the primitive
+        drag.source.destroy()
+      }
+    }
+
     onDropped:{
       console.log("dropped at " + drag.x + ", " + drag.y)
       var currentFrame = drag.x / Style.timerBar.frameToPixel;
       var beatLoc = backend.getBeatAtFrame(currentFrame)
       if(beatLoc >= 0){
-        drag.source.primitive.positionBeat = beatLoc
-      }
-      if(drag.source.parent === parent){
-        drag.source.updatePrimitive();
+        var validLength = getValidLength(beatLoc, drag.source.primitive.lengthBeat)
+        if(validLength > 0){
+          // can drop, set length and position:
+          drag.source.primitive.positionBeat = beatLoc;
+          drag.source.primitive.lengthBeat = validLength;
+          doDrop();
+        }else{
+          handleInvalidDrop();
+        }
       }else{
-       // came from control box, add it to model and destroy delegate
-       model.add(drag.source.primitive)
-       drag.source.destroy()
-       model.printPrimitives()
+        // also invalid drop if beat location is not valid:
+        handleInvalidDrop();
       }
+      // make ghost disappear in any case
       ghost.visible = false
     }
 
     onEntered:{
-      var enterFrame = drag.x / Style.timerBar.frameToPixel;
-      var beatLoc = backend.getBeatAtFrame(enterFrame)
-      if(beatLoc >= 0){
-        ghost.x = beats[beatLoc] * Style.timerBar.frameToPixel
-        var endBeat = beatLoc + drag.source.primitive.lengthBeat
-        if(endBeat >= beats.length) endBeat = beats.length - 1
-        ghost.width = (beats[endBeat] - beats[beatLoc]) * Style.timerBar.frameToPixel
-        ghost.visible = true
-      }
+        ghost.lengthBeat = drag.source.primitive.lengthBeat
     }
+
     onExited:{
       ghost.visible = false
     }
+
     onPositionChanged:{
       var currentFrame = drag.x / Style.timerBar.frameToPixel;
       var beatLoc = backend.getBeatAtFrame(currentFrame)
       if(beatLoc >= 0){
-        ghost.x = beats[beatLoc] * Style.timerBar.frameToPixel
+        ghost.visible = true
+        ghost.positionBeat = beatLoc
+        var validLength = getValidLength(beatLoc, drag.source.primitive.lengthBeat)
+        if(validLength > 0){
+          ghost.isValid = true
+          ghost.lengthBeat = validLength
+        }else{
+          ghost.isValid = false
+        }
+
+        // check if length of drag shape can be corrected:
+        var end = drag.source.primitive.lengthBeat + beatLoc
+        if(end < beats.length){
+          drag.source.width= (beats[end] - beats[beatLoc])
+            * Style.timerBar.frameToPixel;
+        }
       }
     }
+  }
+
+  function getValidLength(start, length){
+    var validLength = 0
+    var end = start + length;
+    if(end > occupied.length - 1){
+      end = occupied.length - 1;
+    }
+    for(var i = start; i < end; ++i){
+      if(!occupied[i]){
+        ++validLength;
+      }else{
+        break;
+      }
+    }
+    return validLength;
   }
 
   Repeater{
@@ -77,17 +142,55 @@ Canvas{
     model: parent.model
     PrimitiveDelegate{
       primitive: model.item
+      anchors.verticalCenter: parent.verticalCenter
+    }
+
+    onItemRemoved: {
+      freeOccupied(item.primitive)
+      console.log('occupied = ' + occupied)
+    }
+
+    onItemAdded: {
+      setOccupied(item.primitive)
+      console.log('occupied = ' + occupied)
+    }
+  }
+
+  function setOccupied(primitive){
+    var end = primitive.positionBeat + primitive.lengthBeat;
+    for(var i = primitive.positionBeat; i < end; ++i){
+      occupied[i] = true;
+    }
+  }
+
+  function freeOccupied(primitive){
+    var end = primitive.positionBeat + primitive.lengthBeat;
+    for(var i = primitive.positionBeat; i < end; ++i){
+      occupied[i] = false;
     }
   }
 
   Rectangle{
     id: ghost
     visible: false
-    color: Style.timerBar.ghostColorValid
-    x: 0
+    property bool isValid: false
+    property int lengthBeat: 0
+    property int positionBeat: 0
+    color: Style.timerBar.ghostColorInvalid
     anchors.verticalCenter: parent.verticalCenter
     height: Style.timerBar.height
     radius: Style.primitives.radius
+
+    onIsValidChanged: update()
+    onLengthBeatChanged: update()
+    onPositionBeatChanged: update()
+
+    function update(){
+      color = isValid ? Style.timerBar.ghostColorValid : Style.timerBar.ghostColorInvalid
+      x = beats[positionBeat] * Style.timerBar.frameToPixel
+      var endBeat = positionBeat + lengthBeat
+      ghost.width = (beats[endBeat] - beats[positionBeat]) * Style.timerBar.frameToPixel
+    }
   }
 
   onPaint: {

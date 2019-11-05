@@ -34,7 +34,6 @@ Rectangle{
 			fileControl.songTitle = backend.songTitle
 			fileControl.songArtist = backend.songArtist
 			fileControl.setEnabled()
-			motorPrimitiveControl.setEnabled()
 			if(result){
 				console.log('load success in event')
 			}else{
