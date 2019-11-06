@@ -6,11 +6,21 @@ import "../GuiStyle"
 		id: root
     height: Style.primitives.height
 		radius: Style.primitives.radius
+    border.color: Style.primitives.borderColor
+    border.width: Style.primitives.borderWidth
 
     property bool dragActive: dragArea.drag.active
     property var primitive: null
 
     onPrimitiveChanged: updatePrimitive()
+
+    onEnabledChanged: {
+      if(enabled){
+        color = primitiveColors[primitive.type]
+      }else{
+        color = Style.primitives.disabledColor
+      }
+    }
 
 		function updatePrimitive(){
 			textID.text=primitiveTextIDs[primitive.type]
@@ -78,6 +88,7 @@ import "../GuiStyle"
             console.log("End drag of " + Drag.keys + " tgt = " + Drag.target)
             console.log("parent is " + parent + " has model " + parent.model)
             if(Drag.target !== null){
+              // item was dropped on a timer bar
               Drag.drop()
             }else if(parent.model){
               // remove item from model, if it was on the timer bar

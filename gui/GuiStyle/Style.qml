@@ -68,6 +68,9 @@ QtObject {
     property int textPosY: 3
     property int textSize: height/5
     property bool textBold: true
+    property color disabledColor: "#44EEEEEE"
+    property color borderColor: "white"
+    property int borderWidth: 1
 	}
 
   property QtObject motorPrimitive: QtObject{
