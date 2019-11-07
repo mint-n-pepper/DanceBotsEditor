@@ -8,10 +8,13 @@
 #include "Utils.h"
 
 BackEnd::BackEnd(QObject* parent) :
-  QObject{ parent }, mAudioFile{},
+  QObject{ parent },
+  mAudioFile{},
   mBeatDetector{ mAudioFile.sampleRate },
-  mLoadStatus{ "Idle" }, mLoadFutureWatcher{},
-  mLoadFuture{}, mMotorPrimitives{ new PrimitiveList{this} }
+  mLoadStatus{ "Idle" },
+  mLoadFutureWatcher{},
+  mLoadFuture{},
+  mMotorPrimitives{ new PrimitiveList{this} }
 {
   // connect load thread finish signal to backend load handling slot
   connect(&mLoadFutureWatcher, &QFutureWatcher<bool>::finished,
@@ -103,10 +106,9 @@ bool BackEnd::loadMP3Worker(const QString& filePath) {
 
   mAverageBeatFrames = static_cast<int>(sum / (tmpBeats.size() - 3u));
 
-  // convert the detected beats to int. This is fine because even a int32 would be
-  // able to hold beats detected up to 13 hours in a 44.1kHz sampled song
-  // reserve enough memory for all detected beats plus articficial start and end
-  // beats
+  // convert the detected beats to int. This is fine because even a int32 would
+  // be able to hold beats detected up to 13 hours in a 44.1kHz sampled song
+  // reserve enough memory for all detected beats plus dummy start and end beats
   mBeatFrames.reserve(tmpBeats.size() + 2);
 
   // add zero beat if first detected beat is not at 0:

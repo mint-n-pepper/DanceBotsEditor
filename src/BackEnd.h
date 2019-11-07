@@ -15,7 +15,8 @@ class BackEnd : public QObject{
   Q_PROPERTY(QString songArtist READ songArtist WRITE setSongArtist)
   Q_PROPERTY(QString songTitle READ songTitle WRITE setSongTitle)
   Q_PROPERTY(QString loadStatus READ loadStatus NOTIFY loadStatusChanged)
-  Q_PROPERTY(PrimitiveList* motorPrimitives READ motorPrimitives NOTIFY motorPrimitivesChanged)
+  Q_PROPERTY(PrimitiveList* motorPrimitives 
+    READ motorPrimitives NOTIFY motorPrimitivesChanged)
 public:
   explicit BackEnd(QObject *parent = nullptr);
 
@@ -53,7 +54,7 @@ private:
   QFuture<bool> mLoadFuture;
   QFutureWatcher<bool> mLoadFutureWatcher;
 
-  PrimitiveList* mMotorPrimitives;
+  PrimitiveList* mMotorPrimitives; // raw pointer fine because it is QObject
 
   bool loadMP3Worker(const QString& fileName);
 };

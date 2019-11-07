@@ -1,4 +1,5 @@
 add_subdirectory(test_audiofile)
+add_subdirectory(test_audioplayer)
 add_subdirectory(test_kissfft)
 add_subdirectory(test_utils)
 add_subdirectory(test_beatdetect)
