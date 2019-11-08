@@ -4,8 +4,7 @@ project(dancebots_gui)
 
 set(CMAKE_CXX_STANDARD 14)
 
-set(CMAKE_AUTOMOC ON)
-
+# enable using folders for compatible IDEs (specifically Visual Studio)
 set(USE_FOLDERS ON)
 
 # Prevent overriding the parent project's compiler/linker

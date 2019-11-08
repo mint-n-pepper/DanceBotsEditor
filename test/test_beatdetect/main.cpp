@@ -55,7 +55,7 @@ namespace {
     }
 
     testFiles.append(dpTestFile);
-    std::cout << testFiles.at(0).toStdString();
+
     // now test all files:
 
     for(const auto& testFile : testFiles) {

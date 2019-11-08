@@ -1,12 +1,10 @@
 #include "AudioPlayer.h"
-#include <QDataStream>
-#include <QDebug>
 
 AudioPlayer::AudioPlayer(QObject* parent):
   QObject{ parent },
   mRawAudioBuffer(&mRawAudio, this)
 {
-};
+}
 
 void AudioPlayer::setAudioData(const std::vector<float>& monoData,
                                const int sampleRate) {
@@ -47,7 +45,7 @@ void AudioPlayer::setAudioData(const std::vector<float>& monoData,
   format.setChannelCount(1); // mono data
   format.setSampleSize(16); // 16 bit
   format.setCodec("audio/pcm"); // raw samples
-  format.setByteOrder(static_cast<QAudioFormat::Endian>(mEndianness));  
+  format.setByteOrder(static_cast<QAudioFormat::Endian>(mEndianness));
   format.setSampleType(QAudioFormat::SignedInt);
 
   if(!deviceInfo.isFormatSupported(format)) {
@@ -58,19 +56,17 @@ void AudioPlayer::setAudioData(const std::vector<float>& monoData,
   // make new output:
   mAudioOutput = std::make_unique<QAudioOutput>(format, this);
 
+  // set notify interval:
+  mAudioOutput->setNotifyInterval(mNotifyInterval);
+
   // connect to handler:
-  connect(mAudioOutput.get(), SIGNAL(stateChanged(QAudio::State)),
-          this, SLOT(handleStateChanged(QAudio::State)));
+  connectAudioOutputSignals();
 
   // get current volume:
   qreal initialVolume = mAudioOutput->volume();
+}
 
-  qDebug() << "Converted data, nSamples = " << mRawAudio.size() / 2;
-  qDebug() << "Samples in raw audio was " << monoData.size();
-
-};
-
-int AudioPlayer::getCurrentLogVolume(void) {
+int AudioPlayer::getCurrentLogVolume(void) const{
   return qRound(100*QAudio::convertVolume(mVolumeLinear,
                         QAudio::LinearVolumeScale,
                         QAudio::LogarithmicVolumeScale));
@@ -82,19 +78,79 @@ void AudioPlayer::play(void) {
     return;
   }
   qDebug() << "starting to play";
-  mRawAudioBuffer.open(QIODevice::ReadOnly);
-  mRawAudioBuffer.seek(0);
+  // open if necessary
+  if(!mRawAudioBuffer.isOpen()) {
+    mRawAudioBuffer.open(QIODevice::ReadOnly);
+  }
+
+  // rewind audio if we are at the end:
+  if(mRawAudioBuffer.atEnd()) {
+    mRawAudioBuffer.reset();
+  }
+
+  // emit a notify of the new position:
+  handleAudioOutputNotify();
+
+  // And start
   mAudioOutput->start(&mRawAudioBuffer);
 }
 
-void AudioPlayer::stop(void) {};
+void AudioPlayer::stop(void) {
+  if(mAudioOutput) {
+    mAudioOutput->stop();
+    mRawAudioBuffer.reset();
+    // emit change of position
+    handleAudioOutputNotify();
+  }
+}
 
-void AudioPlayer::pause(void) {};
+void AudioPlayer::pause(void) {
+  if(mAudioOutput) {
+    mAudioOutput->suspend();
+  }
+}
 
-void AudioPlayer::seek(float time) {};
+void AudioPlayer::handleAudioOutputNotify(void) {
+  // get current position in buffer:
+  const qint64 pos = mRawAudioBuffer.pos();
+  // convert to MS:
+  const int timeMS = 10 * pos / 882; // 1000 * pos / 2 / 44100
 
-void AudioPlayer::volumeChanged(int value) {};
+ // and inform subscribers
+ emit notify(timeMS);
+}
+
+void AudioPlayer::connectAudioOutputSignals() {
+  // state change
+  connect(mAudioOutput.get(), SIGNAL(stateChanged(QAudio::State)),
+          this, SLOT(handleStateChanged(QAudio::State)));
+  // notify
+  connect(mAudioOutput.get(), SIGNAL(notify()),
+          this, SLOT(handleAudioOutputNotify()));
+}
+
+void AudioPlayer::seek(const int timeMS) {
+  if(!mAudioOutput) {
+    return;
+  }
+  const size_t bufferPos = ((timeMS * 441) / 10) * 2;
+  if(bufferPos > 0 && bufferPos < mRawAudio.size() - 1) {
+    // suspend quick:
+    mAudioOutput->suspend();
+    mRawAudioBuffer.seek(bufferPos);
+    mAudioOutput->resume();
+  }
+}
+
+void AudioPlayer::setVolume(const int valueLogarithmic) {}
+
+void AudioPlayer::setNotifyInterval(const int intervalMS) {
+  mNotifyInterval = intervalMS;
+  if(mAudioOutput) {
+    mAudioOutput->setNotifyInterval(intervalMS);
+  }
+}
 
 void AudioPlayer::handleStateChanged(QAudio::State newState) {
-  qDebug() << "Audio Player New State is " << newState;
+  // TODO: might have to implement error handling here
 }

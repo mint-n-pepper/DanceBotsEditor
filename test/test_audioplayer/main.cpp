@@ -1,6 +1,7 @@
-#include <AudioFile.h>
-#include <AudioPlayer.h>
-#include <QtCore/QFile>
+#include "AudioFile.h"
+#include "AudioPlayer.h"
+#include "DummyUI.h"
+
 #include <string>
 #include <QGuiApplication>
 #include <QDebug>
@@ -15,9 +16,6 @@ int main(int argc, char* argv[]) {
     qDebug() << " error loading file ";
     return 0;
   }
-  else {
-    
-  }
 
   // make sure event loop will be active
   QCoreApplication::setOrganizationName("MINT&Pepper");
@@ -25,6 +23,9 @@ int main(int argc, char* argv[]) {
   QGuiApplication app(argc, argv);
 
   AudioPlayer player(&app);
+  player.setNotifyInterval(500);
+
+  DummyUI dummyUI{ player };
 
   player.setAudioData(mp3File44k.mFloatMusic, mp3File44k.sampleRate);
 

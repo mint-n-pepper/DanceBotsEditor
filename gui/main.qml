@@ -27,7 +27,14 @@ ApplicationWindow {
 		anchors.left: fileControl.right
 	}
 
+  AudioControl{
+    id: audioControl
+    anchors.top: timerBarFlickable.bottom
+    width: parent.width
+  }
+
   Flickable{
+    id: timerBarFlickable
     width: parent.width
     height: timerBarColumn.height
     contentWidth: timerBarColumn.width

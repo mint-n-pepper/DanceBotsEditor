@@ -14,7 +14,8 @@ BackEnd::BackEnd(QObject* parent) :
   mLoadStatus{ "Idle" },
   mLoadFutureWatcher{},
   mLoadFuture{},
-  mMotorPrimitives{ new PrimitiveList{this} }
+  mMotorPrimitives{ new PrimitiveList{this} },
+  mAudioPlayer{new AudioPlayer{this}}
 {
   // connect load thread finish signal to backend load handling slot
   connect(&mLoadFutureWatcher, &QFutureWatcher<bool>::finished,
@@ -39,6 +40,10 @@ QString BackEnd::loadStatus()
 
 PrimitiveList* BackEnd::motorPrimitives(void) {
   return mMotorPrimitives;
+}
+
+AudioPlayer* BackEnd::audioPlayer(void) {
+  return mAudioPlayer;
 }
 
 void BackEnd::setSongArtist(const QString &name)
@@ -67,6 +72,8 @@ Q_INVOKABLE void BackEnd::loadMP3(const QString& filePath) {
 
 void BackEnd::handleDoneLoading(void) {
   emit doneLoading(mLoadFuture.result());
+  // setup audio player:
+  mAudioPlayer->setAudioData(mAudioFile.mFloatMusic, mAudioFile.sampleRate);
 }
 
 bool BackEnd::loadMP3Worker(const QString& filePath) {
@@ -145,6 +152,10 @@ std::vector<int> BackEnd::getBeats(void) const{
 
 int BackEnd::getAudioLengthInFrames(void) const{
   return static_cast<int>(mAudioFile.getLengthInFrames());
+}
+
+int BackEnd::getSampleRate(void) const {
+  return AudioFile::sampleRate;
 }
 
 int BackEnd::getAverageBeatFrames(void) const {

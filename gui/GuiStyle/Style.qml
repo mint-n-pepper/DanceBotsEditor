@@ -83,4 +83,10 @@ QtObject {
     property var textID: ["D", "S", "T", "B", "C"]
     property var colors: ["red", "green", "blue", "deepskyblue", "deeppink"]
 	}
+
+  property QtObject audioControl: QtObject{
+    property int buttonWidth: 50
+    property int buttonHeight: 20
+  }
+
 }

@@ -29,7 +29,7 @@ public:
     eMP3EncodingError,
     eTagWriteError
   };
-  
+
   /** String code at beginning and end of pre-pended header data */
   static const QByteArray danceFileHeaderCode;
   /** Sample rate used internally and for MP3 output.
@@ -186,7 +186,7 @@ private:
   static const size_t headerSizeNBytes{ 4 };
   bool mHasData{ false }; /** flag indicating data available in object */
 
-  /** Sample rate read from load file tags - only for internal use as all 
+  /** Sample rate read from load file tags - only for internal use as all
   * music data will be resampled to the static const sampleRate = 44.1kHz
   */
   int mLoadFileSampleRate { 0 };
