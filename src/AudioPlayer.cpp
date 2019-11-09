@@ -62,6 +62,9 @@ void AudioPlayer::setAudioData(const std::vector<float>& monoData,
   // connect to handler:
   connectAudioOutputSignals();
 
+  // and open buffer:
+  mRawAudioBuffer.open(QIODevice::ReadOnly);
+
   // get current volume:
   qreal initialVolume = mAudioOutput->volume();
 }
@@ -114,7 +117,8 @@ void AudioPlayer::handleAudioOutputNotify(void) {
   // get current position in buffer:
   const qint64 pos = mRawAudioBuffer.pos();
   // convert to MS:
-  const int timeMS = 10 * pos / 882; // 1000 * pos / 2 / 44100
+  // 1000 * pos / 2 / SampleRate - /2 for two bytes per frame
+  const int timeMS = 500 * pos / mSampleRate;
 
  // and inform subscribers
  emit notify(timeMS);
@@ -134,11 +138,13 @@ void AudioPlayer::seek(const int timeMS) {
     return;
   }
   const size_t bufferPos = ((timeMS * 441) / 10) * 2;
-  if(bufferPos > 0 && bufferPos < mRawAudio.size() - 1) {
+  if(bufferPos >= 0 && bufferPos < mRawAudio.size() - 1) {
     // suspend quick:
-    mAudioOutput->suspend();
     mRawAudioBuffer.seek(bufferPos);
-    mAudioOutput->resume();
+    // resume playing if stopped because of end of buffer:
+    if(mAudioOutput->state() != QAudio::ActiveState) {
+      mAudioOutput->start(&mRawAudioBuffer);
+    }
   }
 }
 

@@ -6,6 +6,7 @@ import "../GuiStyle"
 Rectangle{
 	id: root
 	color: Style.motorControl.color
+  property alias sliderPosition: songPositionSlider.visualPosition
 
 	Component.onCompleted:{
     setDisabled()
@@ -24,8 +25,11 @@ Rectangle{
   Connections{
 	  target: backend.audioPlayer
 	  onNotify:{
-      // calculate average beat distance:
-      songPositionSlider.value = currentPosMS
+      // set slider to current position in music,
+      // but only if user is not dragging slider at the moment:
+      if(!songPositionSlider.pressed){
+        songPositionSlider.value = currentPosMS
+      }
     }
   }
 
@@ -43,7 +47,11 @@ Rectangle{
     to: 1.0
     width: parent.width
 
-    onMoved: backend.audioPlayer.seek(value)
+    onPressedChanged:{
+      if(!pressed){
+        backend.audioPlayer.seek(value)
+      }
+    }
   }
 
 	Row{

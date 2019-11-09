@@ -15,6 +15,7 @@ Canvas{
   property var model
   property var primitiveColors
   property var primitiveTextIDs
+  property alias timeIndicatorPosition: timeIndicator.position
 
   // connect to done loading signal of backend to redraw rectangle
   Connections{
@@ -23,6 +24,7 @@ Canvas{
       // resize rectangle to fit song
       width = backend.getAudioLengthInFrames() * Style.timerBar.frameToPixel;
       beats = backend.getBeats();
+      timeIndicator.visible = true
       requestPaint();
       // clear occupancy array:
       occupied.length = 0
@@ -207,4 +209,16 @@ Canvas{
       ctx.stroke();
     }
   }
+
+  Rectangle{
+    id: timeIndicator
+    color: Style.timerBar.timeBarColor
+    width: Style.timerBar.timeBarWidth
+    height: parent.height
+    visible: false
+    property var widthOffset: width/2
+    property var position: 0
+    x: position - widthOffset
+  }
+
 }

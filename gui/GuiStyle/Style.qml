@@ -54,6 +54,8 @@ QtObject {
     property color beatColor: "lightgray"
     property int beatWidth: 2 // line width of beat indicators
     property color timeBarColor: "red"
+    property int timeBarWidth: 3
+    property int timeBarScrollOffset: 25
     property color ghostColorValid: "#8840DF40"
     property color ghostColorInvalid: "#88DF4040"
     property real frameToPixel:  0.00072562358276643991

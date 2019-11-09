@@ -43,7 +43,23 @@ ApplicationWindow {
     anchors.left: parent.left
     anchors.topMargin: Style.timerBar.margin
     anchors.bottomMargin: Style.timerBar.margin
-    ScrollBar.horizontal: ScrollBar{}
+    boundsBehavior: Flickable.StopAtBounds
+
+    property real sliderPosition: audioControl.sliderPosition
+
+    onSliderPositionChanged:{
+      // set time indicator position
+      motorBar.timeIndicatorPosition=sliderPosition
+      * backend.getAudioLengthInFrames()
+      * Style.timerBar.frameToPixel;
+      // get current visible pixel range:
+      if(motorBar.timeIndicatorPosition < contentX
+          || motorBar.timeIndicatorPosition > contentX + width){
+          var proposedContentX = motorBar.timeIndicatorPosition -
+            Style.timerBar.timeBarScrollOffset;
+          contentX = proposedContentX < 0 ? 0 : proposedContentX;
+          }
+    }
 
     Column{
       id: timerBarColumn
