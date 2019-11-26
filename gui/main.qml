@@ -5,14 +5,31 @@ import "Components"
 import "GuiStyle"
 
 ApplicationWindow {
-    id: root
-    width: Style.main.width
-    height: Style.main.height
-    visible: true
+  id: appWindow
+  width: Style.main.width
+  height: Style.main.height
+  visible: true
+
 	background: Rectangle{
 		anchors.fill: parent
 		color: Style.main.color
 	}
+
+  MouseArea{
+    id: sceneClickCatcher
+    anchors.fill: parent
+    onClicked: {
+      console.log("scene click")
+      if (!(mouse.modifiers & (Qt.ShiftModifier|Qt.ControlModifier))) {
+          motDragger.clean()
+      }
+    }
+
+    Keys.onEscapePressed: {
+        console.log("Escape pressed")
+        motDragger.clean()
+    }
+  }
 
 	LoadProcessPopup{
 		id: loadProcess
@@ -23,7 +40,7 @@ ApplicationWindow {
 	}
 
 	MotorPrimitiveControl{
-		id: motorPrimitiveControl
+    id: motorPrimitiveControl
 		anchors.left: fileControl.right
 	}
 
@@ -44,6 +61,13 @@ ApplicationWindow {
     anchors.topMargin: Style.timerBar.margin
     anchors.bottomMargin: Style.timerBar.margin
     boundsBehavior: Flickable.StopAtBounds
+
+    MouseArea
+    {
+        anchors.fill: parent
+        propagateComposedEvents: true
+        onClicked: { mouse.accepted = false }
+    }
 
     property real sliderPosition: audioControl.sliderPosition
 
@@ -70,9 +94,16 @@ ApplicationWindow {
         color: Style.motorControl.color
         keys: ["mot"]
         model: backend.motorPrimitives
+        dragTarget: motDragger
         primitiveColors: Style.motorPrimitive.colors
         primitiveTextIDs: Style.motorPrimitive.textID
       }
     }
   }
+
+  Dragger{
+    id: motDragger
+    keys: ["mot"]
+  }
+
 }

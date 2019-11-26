@@ -73,6 +73,7 @@ QtObject {
     property color disabledColor: "#44EEEEEE"
     property color borderColor: "white"
     property int borderWidth: 1
+    property color highlightOverlayColor: "#AAFFFFFF"
 	}
 
   property QtObject motorPrimitive: QtObject{

@@ -5,7 +5,7 @@ import dancebots.backend 1.0
 import "../GuiStyle"
 
 Rectangle{
-	id: root
+  id: root
 	width: Style.motorControl.width
 	height: Style.motorControl.height
 	color: Style.motorControl.color
@@ -23,6 +23,12 @@ Rectangle{
     setDummyBeats();
     createDelegate();
     setDisabled();
+  }
+
+  onDelegateChanged:{
+    if(delegate === null){
+      createDelegate()
+    }
   }
 
   function setDummyBeats(){
@@ -81,26 +87,21 @@ Rectangle{
 
 
   function createDelegate(){
-    delegate = delegateFactory.createObject(this)
-    var prim = primitiveFactory.createObject(delegate.id)
-    prim.positionBeat= 0;
-    prim.lengthBeat= 4;
-    prim.type = typeRadio.type
-
-    delegate.primitive = prim
+    delegate = delegateFactory.createObject(root)
+    delegate.dragTarget = motDragger
+    delegate.idleParent = root
+    delegate.primitive.positionBeat= 0;
+    delegate.primitive.lengthBeat= 4;
+    delegate.primitive.type = typeRadio.type
 
     delegate.anchors.verticalCenter = undefined
     delegate.anchors.bottomMargin = Style.motorControl.margin
     delegate.anchors.bottom= root.bottom
+    delegate.updatePrimitive()
   }
 
   Component{
       id: delegateFactory
       PrimitiveDelegate{}
-  }
-
-  Component{
-      id: primitiveFactory
-      MotorPrimitive{}
   }
 }
