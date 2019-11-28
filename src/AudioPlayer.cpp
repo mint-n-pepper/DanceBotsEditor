@@ -56,6 +56,8 @@ void AudioPlayer::setAudioData(const std::vector<float>& monoData,
   // make new output:
   mAudioOutput = std::make_unique<QAudioOutput>(format, this);
 
+  mAudioOutput->setBufferSize(8192);
+
   // set notify interval:
   mAudioOutput->setNotifyInterval(mNotifyInterval);
 
@@ -114,8 +116,10 @@ void AudioPlayer::pause(void) {
 }
 
 void AudioPlayer::handleAudioOutputNotify(void) {
-  // get current position in buffer:
-  const qint64 pos = mRawAudioBuffer.pos();
+  // get current position in buffer and compensate
+  // for buffer delay
+  qint64 pos = mRawAudioBuffer.pos() - mAudioOutput->bufferSize();
+  if(pos < 0) { pos = 0; }
   // convert to MS:
   // 1000 * pos / 2 / SampleRate - /2 for two bytes per frame
   const int timeMS = 500 * pos / mSampleRate;
