@@ -67,7 +67,7 @@ Rectangle{
 				id: loadButton
 				width:Style.fileControl.buttonWidth
 				height:Style.fileControl.buttonHeight
-				text: "Load File"
+        text: "Load"
         focusPolicy: Qt.NoFocus
 				onClicked:
 				{
@@ -79,7 +79,7 @@ Rectangle{
 				id: saveButton
 				width:Style.fileControl.buttonWidth
 				height:Style.fileControl.buttonHeight
-				text: "Save File"
+        text: "Save"
         focusPolicy: Qt.NoFocus
 				onClicked:
 				{
@@ -91,7 +91,7 @@ Rectangle{
 				id: clearButton
 				width:Style.fileControl.buttonWidth
 				height:Style.fileControl.buttonHeight
-				text: "Clear Choreo"
+        text: "Clear"
         focusPolicy: Qt.NoFocus
 				onClicked:
 				{

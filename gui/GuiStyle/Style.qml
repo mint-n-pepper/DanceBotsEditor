@@ -16,7 +16,7 @@ QtObject {
     // box
     property color color: "#5D7CE7"
     property int width: 320
-    property int height: 400
+    property int height: 420
     // buttons
     property int buttonPadding: 5
     property int buttonSpacing: 5
@@ -28,22 +28,17 @@ QtObject {
     property int textLabelPixelSize: 15
   }
 
-  // Motor Primitive Control Box
-  property QtObject motorControl: QtObject{
+  property QtObject primitiveControl: QtObject{
     // box
-    property color color: "#c8a2c8" // lilac
-    property int width: 320
-    property int height: 400
+    property color moveColor: "#c8a2c8" // lilac
+    property color ledColor: "#00A693"
+    property int width: 380
+    property int height: fileControl.height
     // left and bottom spacing of primitive shape
     property real margin: 10.0
-  }
-
-  // LED Primitive Control Box
-  property QtObject ledControl: QtObject{
-    // box
-    property color color: "#00A693"
-    property int width: motorControl.width
-    property int height: motorControl.height
+    property int textPixelSize: 15
+    property int titlePixelSize: 22
+    property int labelsWidth: 100
   }
 
   // Timer bar window
@@ -77,6 +72,10 @@ QtObject {
     // margin of primitive at which a drag causes a size change
     // is capped at half primtive width
     property int sizePixelMarginRight: 10
+
+    // TOOLTIP STYLE
+    property color toolTipBgColor: "#CCFFFFFF"
+
 	}
 
   property QtObject motorPrimitive: QtObject{

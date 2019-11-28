@@ -96,7 +96,7 @@ ApplicationWindow {
       spacing: Style.timerBar.spacing
       TimerBar{
         id: motorBar
-        color: Style.motorControl.color
+        color: Style.primitiveControl.moveColor
         keys: ["mot"]
         model: backend.motorPrimitives
         primitiveColors: Style.motorPrimitive.colors

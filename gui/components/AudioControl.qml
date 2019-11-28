@@ -5,7 +5,7 @@ import "../GuiStyle"
 
 Rectangle{
 	id: root
-	color: Style.motorControl.color
+  color: Style.main.color
   property alias sliderPosition: songPositionSlider.visualPosition
 
 	Component.onCompleted:{
@@ -43,6 +43,7 @@ Rectangle{
 
   Slider{
     id: songPositionSlider
+    //activeFocusOnPress: false
     from: 0.0
     to: 1.0
     width: parent.width

@@ -13,6 +13,7 @@ Rectangle{
   property bool isFromBar: false
   property var primitive: null
   property var dragTarget: null
+  property bool showData: false
 
   onPrimitiveChanged: updatePrimitive()
 
@@ -159,6 +160,16 @@ Rectangle{
       doResize = false
       timerBarFlickable.interactive = true
     }
+
+    onEntered: showTimer.start()
+    onExited: {showTimer.stop(); showData=false}
+
+    Timer {
+      id: showTimer
+      interval: 250
+      onTriggered: showData = true
+    }
+
   } // mouse area
 
 
@@ -186,4 +197,41 @@ Rectangle{
     anchors.fill: parent
   }
 
+  Rectangle{
+    id: primitiveData
+    anchors.top: parent.bottom
+    visible: showData && isFromBar
+    color: Style.primitives.toolTipBgColor
+    width: dataColumn.width
+    height:dataColumn.height
+    Column{
+      id:dataColumn
+      Text{
+        text: "Freq: 1.00"
+        onVisibleChanged: {
+          if(visible){text="Freq: " + primitive.frequency.toFixed(2)}
+        }
+      }
+      Text{
+        visible: primitiveData.visible && primitive.velocity
+        text: "Vel: 40"
+        onVisibleChanged: {
+          if(visible){
+            if(primitive.type === MotorPrimitive.Type.Custom){
+              text="Vel L: " + primitive.velocity
+            }else{
+              text="Vel: " + primitive.velocity
+            }
+          }
+        }
+      }
+      Text{
+        visible: primitiveData.visible && primitive.type === MotorPrimitive.Type.Custom
+        text: "Vel R: 40"
+        onVisibleChanged: {
+          if(visible){text="Vel R: " + primitive.velocityRight}
+        }
+      }
+    }
+  }
 }

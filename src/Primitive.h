@@ -40,7 +40,7 @@ public:
     Spin,
     Twist,
     BackAndForth,
-    Constant
+    Custom
   };
   Q_ENUM(Type);
 
