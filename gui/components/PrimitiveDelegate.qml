@@ -3,15 +3,15 @@ import dancebots.backend 1.0
 import "../GuiStyle"
 
 Rectangle{
-	id: root
+  id: root
   height: Style.primitives.height
-	radius: Style.primitives.radius
+  radius: Style.primitives.radius
   border.color: Style.primitives.borderColor
   border.width: Style.primitives.borderWidth
 
   property var idleParent: null
   property bool isFromBar: false
-  property var primitive: MotorPrimitive{}
+  property var primitive: null
   property var dragTarget: null
 
   onPrimitiveChanged: updatePrimitive()
@@ -48,33 +48,116 @@ Rectangle{
   MouseArea{
     id: dragArea
     anchors.fill: parent
-    drag.target: dragTarget
     drag.threshold: 2
 
     property bool controlPressed: false
     property bool shiftPressed: false
     property bool dragActive: drag.active
 
+    property var resizeMargin: Style.primitives.sizePixelMarginRight
+    property bool doResize: false
+
+    hoverEnabled: parent.isFromBar
+
+    onWidthChanged: {
+      if(resizeMargin > width / 2){
+        resizeMargin = width / 2
+      }
+    }
+
     onDragActiveChanged: {
       if(dragActive){
+        // switch between resize and move drag
+        parent.state="onDrag"
         dragTarget.startDrag(controlPressed)
       }else{
         dragTarget.endDrag()
       }
     }
 
+    onPositionChanged:{
+      // figure out in what part of the primitive the cursor is
+      // and then change the mouse pointer accordingly
+      if(parent.isFromBar && mouseX > width - resizeMargin){
+        cursorShape = Qt.SizeHorCursor
+      }else{
+        cursorShape = Qt.ArrowCursor
+      }
+
+      if(doResize && pressed){
+        // do resize
+        var currentFrame = (parent.x + mouseX) / Style.timerBar.frameToPixel;
+        var beatLoc = backend.getBeatAtFrame(currentFrame) + 1
+        var newLength = beatLoc - parent.primitive.positionBeat
+        if(newLength < 1){
+          newLength = 1
+        }
+        if(newLength < parent.primitive.lengthBeat){
+          // decrease size:
+          idleParent.parent.freeOccupied(parent.primitive)
+          parent.primitive.lengthBeat = newLength
+          idleParent.parent.setOccupied(parent.primitive)
+          parent.updatePrimitive()
+        }else if(newLength > parent.primitive.lengthBeat){
+          // check if there is space:
+          var start = parent.primitive.positionBeat + parent.primitive.lengthBeat
+          var end = parent.primitive.positionBeat + newLength
+          if(end > idleParent.parent.occupied.length - 1){
+            end = idleParent.parent.occupied.length - 1
+          }
+          var notFree = false
+          for(var i = start; i < end; ++i){
+            notFree |= idleParent.parent.occupied[i]
+          }
+
+          if(!notFree){
+            // space available, resize
+            parent.primitive.lengthBeat = end - parent.primitive.positionBeat
+            idleParent.parent.setOccupied(parent.primitive)
+            parent.updatePrimitive()
+          }
+        }
+      }
+    }
+
     onPressed:{
       controlPressed = (mouse.modifiers & Qt.ControlModifier)
       shiftPressed = (mouse.modifiers & Qt.ShiftModifier)
-      parent.state="onDrag"
+      doResize = isFromBar && mouseX > width - resizeMargin
+      if(doResize){
+        console.log("set resize")
+        timerBarFlickable.interactive = false
+        drag.target= null
+      }else{
+        drag.target= dragTarget
+      }
       mouse.accepted = true
     }
 
     onReleased: {
-      console.log("Released")
-      if (!drag.active) {
-          console.log("release in non drag event")
+      // unless a drag is active, handle de- selection
+      if (!drag.active && !doResize) {
+        // if shift was pressed, we keep selecting and do not
+        // deselect
+        if(shiftPressed){
+          // select:
+          parent.state = "onDrag"
+        }else if(controlPressed){
+          // with control pressed, we toggle:
+          if(parent.state === "onDrag"){
+            // deselect
+            parent.state = "idle"
+          }else{
+            parent.state = "onDrag"
+          }
+        }else{
+          // with no modifiers, select just this item
+          parent.state = "onDrag"
+          dragTarget.clean(root)
+        }
       }
+      doResize = false
+      timerBarFlickable.interactive = true
     }
   } // mouse area
 
@@ -91,8 +174,6 @@ Rectangle{
         PropertyChanges{target: selectionHighlight; visible: true}
     }
   ]
-
-  onStateChanged: console.log("State changed to " + state)
 
   function deselect(){
     state="idle"

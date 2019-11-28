@@ -74,6 +74,9 @@ QtObject {
     property color borderColor: "white"
     property int borderWidth: 1
     property color highlightOverlayColor: "#AAFFFFFF"
+    // margin of primitive at which a drag causes a size change
+    // is capped at half primtive width
+    property int sizePixelMarginRight: 10
 	}
 
   property QtObject motorPrimitive: QtObject{

@@ -68,6 +68,7 @@ Rectangle{
 				width:Style.fileControl.buttonWidth
 				height:Style.fileControl.buttonHeight
 				text: "Load File"
+        focusPolicy: Qt.NoFocus
 				onClicked:
 				{
 					loadDialog.open()
@@ -79,6 +80,7 @@ Rectangle{
 				width:Style.fileControl.buttonWidth
 				height:Style.fileControl.buttonHeight
 				text: "Save File"
+        focusPolicy: Qt.NoFocus
 				onClicked:
 				{
 					console.log("Click Save")
@@ -90,6 +92,7 @@ Rectangle{
 				width:Style.fileControl.buttonWidth
 				height:Style.fileControl.buttonHeight
 				text: "Clear Choreo"
+        focusPolicy: Qt.NoFocus
 				onClicked:
 				{
 					console.log("Click Clear")
@@ -120,7 +123,10 @@ Rectangle{
           anchors.rightMargin: Style.fileControl.textLabelMargin
 				  maximumLength: 30 // fixed from mp3 tag limitation
 				  placeholderText: "Artist Name"
-					  onEditingFinished: backend.songArtist = text
+          onEditingFinished:{
+            backend.songArtist = text
+            focus=false
+          }
 			  }
 			} // artist
 
@@ -140,7 +146,10 @@ Rectangle{
           width: songArtistText.width
 				  maximumLength: 30 // fixed from mp3 tag limitation
 				  placeholderText: qsTr("Song Title")
-				  onEditingFinished: backend.songTitle = text
+          onEditingFinished:{
+            backend.songTitle = text
+            focus=false
+          }
 			  }
       } // title
     } // text column

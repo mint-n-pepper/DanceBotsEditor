@@ -88,8 +88,9 @@ Rectangle{
 
   function createDelegate(){
     delegate = delegateFactory.createObject(root)
-    delegate.dragTarget = motDragger
+    delegate.dragTarget = motorBar.dragTarget
     delegate.idleParent = root
+    delegate.primitive = primitiveFactory.createObject(delegate.id)
     delegate.primitive.positionBeat= 0;
     delegate.primitive.lengthBeat= 4;
     delegate.primitive.type = typeRadio.type
@@ -103,5 +104,10 @@ Rectangle{
   Component{
       id: delegateFactory
       PrimitiveDelegate{}
+  }
+
+  Component{
+      id: primitiveFactory
+      MotorPrimitive{}
   }
 }

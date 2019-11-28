@@ -17,7 +17,6 @@ Canvas{
   property alias timeIndicatorPosition: timeIndicator.position
   property var ghosts: []
   property var beats: []
-  property var dragTarget: null
 
   property var primitiveY: (Style.timerBar.height - Style.primitives.height)/2
 
@@ -46,12 +45,10 @@ Canvas{
     keys: parent.keys
 
     function doDrop(){
-      drag.source.reset()
       if(drag.source.children[0].isFromBar){
         // source is timerbar itself, just update primitive and
         // set location beats to occupied
         for(var i=0; i < drag.source.children.length; ++i){
-          console.log("root y = " + root.y)
           drag.source.children[i].y = root.y + primitiveY
           drag.source.children[i].updatePrimitive();
           setOccupied(drag.source.children[i].primitive)
@@ -82,7 +79,7 @@ Canvas{
     }
 
     onDropped:{
-      console.log("dropped at " + drag.x + ", " + drag.y)
+      drag.source.reset()
       var currentFrame = drag.x / Style.timerBar.frameToPixel;
       var beatLoc = backend.getBeatAtFrame(currentFrame)
       var positions = []
@@ -118,12 +115,14 @@ Canvas{
     }
 
     onEntered:{
-      console.log("entered with " + drag.source.children.length + " primitives")
       createGhosts(drag.source.children.length)
+      for(var i = 0; i < drag.source.children.length; ++i){
+        // set width of ghosts to primitive width:
+        ghosts[i].width = drag.source.children[i].width
+      }
     }
 
     onExited:{
-      console.log("exited")
       for(var i = 0; i < drag.source.children.length; ++i){
         ghosts[i].visible = false
       }
@@ -132,7 +131,6 @@ Canvas{
     onPositionChanged:{
       var currentFrame = drag.x / Style.timerBar.frameToPixel;
       var beatLoc = backend.getBeatAtFrame(currentFrame)
-      console.log("beat pos is " + beatLoc)
       if(beatLoc >= 0){
         // update ghosts for each child in dragger
         var beatOffset = drag.source.children[0].primitive.positionBeat
@@ -190,12 +188,10 @@ Canvas{
 
     onItemRemoved: {
       freeOccupied(item.primitive)
-      console.log('occupied = ' + occupied)
     }
 
     onItemAdded: {
       setOccupied(item.primitive)
-      console.log('occupied = ' + occupied)
     }
   }
 
@@ -250,6 +246,11 @@ Canvas{
   Component{
       id: ghostFactory
       Ghost{}
+  }
+
+  property var dragTarget: Dragger{
+    parent: root
+    z: 1000
   }
 
 }

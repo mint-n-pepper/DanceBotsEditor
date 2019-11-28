@@ -10,39 +10,39 @@ ApplicationWindow {
   height: Style.main.height
   visible: true
 
-	background: Rectangle{
-		anchors.fill: parent
-		color: Style.main.color
-	}
+  onActiveFocusItemChanged:{
+    if(activeFocusItem === appWindow || activeFocusItem === null)  {
+      keyCatcher.focus=true
+    }
+    print("activeFocusItem", activeFocusItem)
+
+  }
+
+  background: Rectangle{
+    anchors.fill: parent
+    color: Style.main.color
+  }
 
   MouseArea{
     id: sceneClickCatcher
     anchors.fill: parent
     onClicked: {
-      console.log("scene click")
-      if (!(mouse.modifiers & (Qt.ShiftModifier|Qt.ControlModifier))) {
-          motDragger.clean()
-      }
-    }
-
-    Keys.onEscapePressed: {
-        console.log("Escape pressed")
-        motDragger.clean()
+      handleSceneClick(mouse)
     }
   }
 
-	LoadProcessPopup{
-		id: loadProcess
-	}
+  LoadProcessPopup{
+    id: loadProcess
+  }
 
-	MP3FileControl{
-		id: fileControl
-	}
+  MP3FileControl{
+    id: fileControl
+  }
 
-	MotorPrimitiveControl{
+  MotorPrimitiveControl{
     id: motorPrimitiveControl
-		anchors.left: fileControl.right
-	}
+    anchors.left: fileControl.right
+  }
 
   AudioControl{
     id: audioControl
@@ -61,12 +61,17 @@ ApplicationWindow {
     anchors.topMargin: Style.timerBar.margin
     anchors.bottomMargin: Style.timerBar.margin
     boundsBehavior: Flickable.StopAtBounds
+    interactive: true
 
     MouseArea
     {
-        anchors.fill: parent
-        propagateComposedEvents: true
-        onClicked: { mouse.accepted = false }
+      anchors.fill: parent
+      onClicked: { mouse.accepted = false }
+      onReleased: {
+          if (!propagateComposedEvents) {
+              propagateComposedEvents = true
+          }
+      }
     }
 
     property real sliderPosition: audioControl.sliderPosition
@@ -94,16 +99,22 @@ ApplicationWindow {
         color: Style.motorControl.color
         keys: ["mot"]
         model: backend.motorPrimitives
-        dragTarget: motDragger
         primitiveColors: Style.motorPrimitive.colors
         primitiveTextIDs: Style.motorPrimitive.textID
       }
     }
   }
 
-  Dragger{
-    id: motDragger
-    keys: ["mot"]
+  Item{
+    id: keyCatcher
+    focus: true
+    Keys.onPressed: console.log("god key")
   }
 
+  function handleSceneClick(mouse){
+    console.log("scene click")
+    if (!(mouse.modifiers & (Qt.ShiftModifier|Qt.ControlModifier))) {
+        motorBar.dragTarget.clean()
+    }
+  }
 }
