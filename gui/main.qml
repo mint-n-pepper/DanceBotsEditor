@@ -39,9 +39,15 @@ ApplicationWindow {
     id: fileControl
   }
 
+
   MotorPrimitiveControl{
     id: motorPrimitiveControl
     anchors.left: fileControl.right
+  }
+
+  LEDPrimitiveControl{
+    id: ledPrimitiveControl
+    anchors.left: motorPrimitiveControl.right
   }
 
   AudioControl{
@@ -99,8 +105,20 @@ ApplicationWindow {
         color: Style.primitiveControl.moveColor
         keys: ["mot"]
         model: backend.motorPrimitives
+        dragTarget: motDragger
         primitiveColors: Style.motorPrimitive.colors
         primitiveTextIDs: Style.motorPrimitive.textID
+      }
+      TimerBar{
+        id: ledBar
+        color: Style.primitiveControl.ledColor
+        keys: ["led"]
+        z: -1
+        model: backend.ledPrimitives
+        dragTarget: ledDragger
+        primitiveColors: Style.ledPrimitive.colors
+        primitiveTextIDs: Style.ledPrimitive.textID
+        timeIndicatorPosition: motorBar.timeIndicatorPosition
       }
     }
   }
@@ -111,10 +129,21 @@ ApplicationWindow {
     Keys.onPressed: console.log("god key")
   }
 
+  Dragger{
+    id: motDragger
+    keys: motorBar.keys
+  }
+
+  Dragger{
+    id: ledDragger
+    keys: ledBar.keys
+  }
+
   function handleSceneClick(mouse){
     console.log("scene click")
     if (!(mouse.modifiers & (Qt.ShiftModifier|Qt.ControlModifier))) {
         motorBar.dragTarget.clean()
+        ledBar.dragTarget.clean()
     }
   }
 }

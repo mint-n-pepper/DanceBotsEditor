@@ -18,6 +18,8 @@ class BackEnd : public QObject{
   Q_PROPERTY(QString loadStatus READ loadStatus NOTIFY loadStatusChanged);
   Q_PROPERTY(PrimitiveList* motorPrimitives
              READ motorPrimitives NOTIFY motorPrimitivesChanged);
+  Q_PROPERTY(PrimitiveList* ledPrimitives
+             READ ledPrimitives NOTIFY ledPrimitivesChanged);
   Q_PROPERTY(AudioPlayer* audioPlayer READ audioPlayer NOTIFY audioPlayerChanged);
 
 public:
@@ -27,6 +29,7 @@ public:
   QString songTitle();
   QString loadStatus();
   PrimitiveList* motorPrimitives(void);
+  PrimitiveList* ledPrimitives(void);
   AudioPlayer* audioPlayer(void);
   void setSongArtist(const QString &name);
   void setSongTitle(const QString& name);
@@ -38,12 +41,14 @@ public:
 signals:
   void loadStatusChanged();
   void motorPrimitivesChanged();
+  void ledPrimitivesChanged();
   void audioPlayerChanged();
   void doneLoading(const bool result);
 
 public slots:
   void handleDoneLoading(void);
   void printMotPrimitives(void) const;
+  void printLedPrimitives(void) const;
   int getBeatAtFrame(const int frame) const;
 
 private:
@@ -61,6 +66,7 @@ private:
   QFutureWatcher<bool> mLoadFutureWatcher;
 
   PrimitiveList* mMotorPrimitives; // raw pointer fine because it is QObject
+  PrimitiveList* mLedPrimitives; // raw pointer fine because it is QObject
   AudioPlayer* mAudioPlayer;
 
   bool loadMP3Worker(const QString& fileName);

@@ -19,7 +19,6 @@ Item{
   }
 
   onChildrenChanged: {
-    console.log('Nchildren = ' + children.length)
     if(children.length > 1){
       // check newest child for being the same as the ones before
       if(children[children.length - 1 ].isFromBar
@@ -32,19 +31,20 @@ Item{
   function endDrag(){
     if(Drag.target === null){
       // dropped outside. Delete.
-      while(children.length){
-        if(children[0].isFromBar){
-          children[0].idleParent.model.remove(children[0].index)
+      var nChildren = children.length
+      for(var i = 0; i < nChildren; ++i){
+        var child = children[nChildren - i - 1]
+        if(child.isFromBar){
+          child.idleParent.model.remove(child.primitive)
         }else{
-          children[0].destroy()
+          child.destroy()
         }
-        children[0].parent = null
       }
     }
     Drag.drop()
   }
 
-  Drag.keys: parent.keys
+  Drag.keys: keys
   Drag.dragType: Drag.Automatic
 
   function reset(){

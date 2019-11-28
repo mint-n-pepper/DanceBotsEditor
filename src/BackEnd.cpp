@@ -15,6 +15,7 @@ BackEnd::BackEnd(QObject* parent) :
   mLoadFutureWatcher{},
   mLoadFuture{},
   mMotorPrimitives{ new PrimitiveList{this} },
+  mLedPrimitives{ new PrimitiveList{this} },
   mAudioPlayer{new AudioPlayer{this}}
 {
   // connect load thread finish signal to backend load handling slot
@@ -40,6 +41,10 @@ QString BackEnd::loadStatus()
 
 PrimitiveList* BackEnd::motorPrimitives(void) {
   return mMotorPrimitives;
+}
+
+PrimitiveList* BackEnd::ledPrimitives(void) {
+  return mLedPrimitives;
 }
 
 AudioPlayer* BackEnd::audioPlayer(void) {
@@ -164,6 +169,10 @@ int BackEnd::getAverageBeatFrames(void) const {
 
 void BackEnd::printMotPrimitives(void) const {
   mMotorPrimitives->printPrimitives();
+}
+
+void BackEnd::printLedPrimitives(void) const {
+  mLedPrimitives->printPrimitives();
 }
 
 int BackEnd::getBeatAtFrame(const int frame) const {

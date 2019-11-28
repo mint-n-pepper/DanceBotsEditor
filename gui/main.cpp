@@ -15,6 +15,7 @@ int main(int argc, char *argv[])
     BackEnd backend{&app};
 
     qmlRegisterType<MotorPrimitive>("dancebots.backend", 1, 0, "MotorPrimitive");
+    qmlRegisterType<LEDPrimitive>("dancebots.backend", 1, 0, "LEDPrimitive");
 
     QQmlApplicationEngine engine;
     engine.rootContext()->setContextProperty("backend", &backend);

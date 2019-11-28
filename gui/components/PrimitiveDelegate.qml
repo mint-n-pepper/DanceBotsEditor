@@ -213,7 +213,7 @@ Rectangle{
         }
       }
       Text{
-        visible: primitiveData.visible && primitive.velocity
+        visible: primitiveData.visible && primitive.velocity !== undefined
         text: "Vel: 40"
         onVisibleChanged: {
           if(visible){

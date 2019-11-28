@@ -57,4 +57,36 @@ signals:
   void typeChanged(void);
 };
 
+class LEDPrimitive : public BasePrimitive {
+  Q_OBJECT;
+  // make sure enum is scoped in QML as well
+  Q_CLASSINFO("RegisterEnumClassesUnscoped", "false");
+
+  Q_PROPERTY(std::vector<bool> leds MEMBER mLeds NOTIFY ledsChanged);
+  Q_PROPERTY(Type type MEMBER mType NOTIFY typeChanged);
+
+public:
+  enum class Type {
+    KnightRider = 0,
+    Alternate,
+    Blink,
+    Constant,
+    Random
+  };
+  Q_ENUM(Type);
+
+public:
+  LEDPrimitive(QObject* const parent = nullptr)
+    : BasePrimitive{ parent },
+    mLeds(8, true)
+  {
+  };
+  std::vector<bool> mLeds;
+  Type mType{ Type::KnightRider };
+
+signals:
+  void ledsChanged(void);
+  void typeChanged(void);
+};
+
 #endif // !PRIMITIVE_H_

@@ -43,11 +43,24 @@ void PrimitiveList::add(QObject* o) {
   endInsertRows();
 }
 
-void PrimitiveList::remove(const int index) {
-  if(index < 0 || index >= mData.size()) {
-    // object does not exist, return:
+void PrimitiveList::remove(QObject* object) {
+
+  // find index:
+  size_t index = 0;
+  for(auto &e : mData) {
+    if(e == object) {
+      break;
+    }
+    ++index;
+  }
+
+  // check if object was found
+  if(index >= mData.length()) {
     return;
   }
+
+  qDebug() << "removing " << object << " at index " << index;
+
   // start removal notification
   // data inserted at top level, hence first arg. QModelIndex()
   beginRemoveRows(QModelIndex(), index, index);

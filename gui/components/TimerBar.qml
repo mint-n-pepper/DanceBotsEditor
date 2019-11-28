@@ -49,7 +49,10 @@ Canvas{
         // source is timerbar itself, just update primitive and
         // set location beats to occupied
         for(var i=0; i < drag.source.children.length; ++i){
-          drag.source.children[i].y = root.y + primitiveY
+          drag.source.children[i].y = root.y
+              + primitiveY
+              + Style.fileControl.height
+              + Style.timerBar.spacing
           drag.source.children[i].updatePrimitive();
           setOccupied(drag.source.children[i].primitive)
         }
@@ -68,6 +71,7 @@ Canvas{
       if(drag.source.children[0].isFromBar){
         // if source is timer bar, do nothing and let it bounce back
         for(var i = 0; i < drag.source.children.length; ++i){
+          ghosts[i].visible = false
           drag.source.children[i].updatePrimitive();
           // and reset occupied
           setOccupied(drag.source.children[i].primitive)
@@ -191,6 +195,7 @@ Canvas{
     }
 
     onItemAdded: {
+      console.log('added item is ' + item + ", with " + item.primitive)
       setOccupied(item.primitive)
     }
   }
@@ -237,8 +242,8 @@ Canvas{
 
   function createGhosts(desiredNumber){
     for(var i = ghosts.length; i < desiredNumber; ++i){
-      var newGhost = ghostFactory.createObject(this)
-      newGhost.anchors.verticalCenter = this.verticalCenter
+      var newGhost = ghostFactory.createObject(root)
+      newGhost.anchors.verticalCenter = root.verticalCenter
       ghosts.push(newGhost)
     }
   }
@@ -248,9 +253,6 @@ Canvas{
       Ghost{}
   }
 
-  property var dragTarget: Dragger{
-    parent: root
-    z: 1000
-  }
+  property var dragTarget: null
 
 }

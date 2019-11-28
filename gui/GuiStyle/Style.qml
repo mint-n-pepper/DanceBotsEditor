@@ -80,14 +80,25 @@ QtObject {
 
   property QtObject motorPrimitive: QtObject{
     // see Primitive.h for mapping of type to color
-    // eStraight = 0
-    // eSpin = 1
-    // eTwist = 2
-    // eBackAndForth = 3
-    // eConstant = 4
+    // Straight = 0
+    // Spin = 1
+    // Twist = 2
+    // BackAndForth = 3
+    // Custom = 4
     property var textID: ["D", "S", "T", "B", "C"]
     property var colors: ["red", "green", "blue", "deepskyblue", "deeppink"]
 	}
+
+  property QtObject ledPrimitive: QtObject{
+    // see Primitive.h for mapping of type to color
+    // KnightRider = 0
+    // Alternate = 1
+    // Blink = 2
+    // Constant = 3
+    // Random = 4
+    property var textID: ["K", "A", "B", "C", "R"]
+    property var colors: ["aqua", "darkseagreen", "darkslateblue", "hotpink", "orange"]
+  }
 
   property QtObject audioControl: QtObject{
     property int buttonWidth: 50
