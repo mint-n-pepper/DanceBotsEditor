@@ -22,6 +22,7 @@ public:
 public slots:
   void add(QObject* o);
   void remove(QObject* o);
+  void clear(void);
   void printPrimitives(void) const;
   void callDataChanged(const int index);
 

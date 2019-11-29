@@ -11,9 +11,11 @@ BackEnd::BackEnd(QObject* parent) :
   QObject{ parent },
   mAudioFile{},
   mBeatDetector{ mAudioFile.sampleRate },
-  mLoadStatus{ "Idle" },
-  mLoadFutureWatcher{},
+  mFileStatus{ "Idle" },
   mLoadFuture{},
+  mLoadFutureWatcher{},
+  mSaveFuture{},
+  mSaveFutureWatcher{},
   mMotorPrimitives{ new PrimitiveList{this} },
   mLedPrimitives{ new PrimitiveList{this} },
   mAudioPlayer{new AudioPlayer{this}}
@@ -21,6 +23,8 @@ BackEnd::BackEnd(QObject* parent) :
   // connect load thread finish signal to backend load handling slot
   connect(&mLoadFutureWatcher, &QFutureWatcher<bool>::finished,
           this, &BackEnd::handleDoneLoading);
+  connect(&mSaveFutureWatcher, &QFutureWatcher<bool>::finished,
+          this, &BackEnd::handleDoneSaving);
 }
 
 //** PROPERTY SETTERS GETTERS AND NOTIFIERS **//
@@ -34,9 +38,9 @@ QString BackEnd::songArtist()
     return mSongArtist;
 }
 
-QString BackEnd::loadStatus()
+QString BackEnd::fileStatus()
 {
-  return mLoadStatus;
+  return mFileStatus;
 }
 
 PrimitiveList* BackEnd::motorPrimitives(void) {
@@ -75,15 +79,30 @@ Q_INVOKABLE void BackEnd::loadMP3(const QString& filePath) {
   mLoadFutureWatcher.setFuture(mLoadFuture);
 }
 
+Q_INVOKABLE void BackEnd::saveMP3(const QString& filePath) {
+  qDebug() << "saving file to " << filePath;
+  mFileStatus = "Saving.";
+  emit fileStatusChanged();
+  QThread::msleep(1000);
+  mFileStatus = "Done.";
+  emit fileStatusChanged();
+  QThread::msleep(100);
+  emit doneSaving(true);
+}
+
 void BackEnd::handleDoneLoading(void) {
   emit doneLoading(mLoadFuture.result());
   // setup audio player:
   mAudioPlayer->setAudioData(mAudioFile.mFloatMusic, mAudioFile.sampleRate);
 }
 
+void BackEnd::handleDoneSaving(void) {
+  emit doneSaving(mSaveFuture.result());
+}
+
 bool BackEnd::loadMP3Worker(const QString& filePath) {
-  mLoadStatus = "Reading and decoding MP3...";
-  emit loadStatusChanged();
+  mFileStatus = "Reading and decoding MP3...";
+  emit fileStatusChanged();
 
   mAudioFile.clear();
   const AudioFile::Result res = mAudioFile.load(filePath);
@@ -97,14 +116,14 @@ bool BackEnd::loadMP3Worker(const QString& filePath) {
   mSongArtist = QString{ mAudioFile.getArtist().c_str() };
   mSongTitle = QString{ mAudioFile.getTitle().c_str() };
 
-  mLoadStatus = "Detecting Beats...";
-  emit loadStatusChanged();
+  mFileStatus = "Detecting Beats...";
+  emit fileStatusChanged();
   std::vector<long> tmpBeats = mBeatDetector.detectBeats(mAudioFile.mFloatMusic);
 
   // check if beats could be detected. We need at least four to operate.
   if(tmpBeats.size() < 4) {
-    mLoadStatus = "FAILED: Fewer than four beats detected.";
-    emit loadStatusChanged();
+    mFileStatus = "FAILED: Fewer than four beats detected.";
+    emit fileStatusChanged();
     QThread::msleep(1000);
     return false;
   }
@@ -145,8 +164,8 @@ bool BackEnd::loadMP3Worker(const QString& filePath) {
  */
  //  mAudioFile.SavePCMBeats("beatBeep.wav", mBeatFrames);
 
-  mLoadStatus = "Done.";
-  emit loadStatusChanged();
+  mFileStatus = "Done.";
+  emit fileStatusChanged();
   QThread::msleep(100);
   return true;
 }

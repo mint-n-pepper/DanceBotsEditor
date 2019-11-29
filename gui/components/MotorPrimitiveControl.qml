@@ -75,6 +75,7 @@ Rectangle{
         id: moveText
         width: Style.primitiveControl.labelsWidth
         text: qsTr("M O V E S")
+        horizontalAlignment: Text.AlignHCenter
         font.pixelSize: Style.primitiveControl.titlePixelSize
         rotation : 270
         anchors.verticalCenter: parent.verticalCenter
@@ -228,5 +229,16 @@ Rectangle{
   Component{
     id: primitiveFactory
     MotorPrimitive{}
+  }
+
+  function duplicatePrimitive(primOrig){
+    var prim = primitiveFactory.createObject(root)
+    prim.type = primOrig.type
+    prim.positionBeat = primOrig.positionBeat
+    prim.lengthBeat = primOrig.lengthBeat
+    prim.frequency = primOrig.frequency
+    prim.velocity = primOrig.velocity
+    prim.velocityRight = primOrig.velocityRight
+    return prim
   }
 }

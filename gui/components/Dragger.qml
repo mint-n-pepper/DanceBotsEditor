@@ -14,7 +14,11 @@ Item{
     copy = controlPressed
     Drag.hotSpot.x = children[0].x;
     Drag.hotSpot.y = children[0].y + Style.primitives.height/2
-    clearOccupancy()
+    clearOccupancy() // clear occupancy
+    if(copy){
+      // copy primitives
+      copyPrimitives()
+    }
     Drag.start()
   }
 
@@ -31,15 +35,7 @@ Item{
   function endDrag(){
     if(Drag.target === null){
       // dropped outside. Delete.
-      var nChildren = children.length
-      for(var i = 0; i < nChildren; ++i){
-        var child = children[nChildren - i - 1]
-        if(child.isFromBar){
-          child.idleParent.model.remove(child.primitive)
-        }else{
-          child.destroy()
-        }
-      }
+      deleteAll()
     }
     Drag.drop()
   }
@@ -52,6 +48,19 @@ Item{
     y = 0
   }
 
+  function deleteAll(){
+    console.log('deleting all in dragger')
+    var nChildren = children.length
+    for(var i = 0; i < nChildren; ++i){
+      var child = children[0]
+      if(child.isFromBar){
+        child.idleParent.model.remove(child.primitive)
+      }else{
+        child.destroy()
+      }
+    }
+  }
+
   function clearOccupancy(){
     if(!children[0].isFromBar){
       // don't have to clear, as dragged primitive is not from bar
@@ -61,6 +70,18 @@ Item{
     for(var i = 0; i < children.length; ++i){
       // clear it:
       children[0].idleParent.parent.freeOccupied(children[i].primitive)
+    }
+  }
+
+  function copyPrimitives(){
+    if(!children[0].isFromBar){
+      // don't have to copy, as dragged primitive is not from bar
+      return
+    }
+
+    for(var i = 0; i < children.length; ++i){
+      // clear it:
+      children[0].idleParent.duplicateItem(children[i])
     }
   }
 

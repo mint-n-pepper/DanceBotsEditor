@@ -25,7 +25,7 @@ signals:
   void notify(int currentPosMS);
 
 public slots:
-  void play(void);
+  void togglePlay(void);
   void stop(void);
   void pause(void);
   void seek(const int timeMS);
@@ -41,6 +41,7 @@ private:
   qreal mVolumeLinear{ 0.0 };
   int mSampleRate{ 0 };
   int mNotifyInterval{ 100 };
+  bool mStartupStart = true;
   const QDataStream::ByteOrder mEndianness{ QDataStream::LittleEndian };
   std::unique_ptr<QAudioOutput> mAudioOutput;
   QByteArray mRawAudio;

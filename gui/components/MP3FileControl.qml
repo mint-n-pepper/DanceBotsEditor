@@ -16,21 +16,17 @@ Rectangle{
 	Component.onCompleted: setDisabled()
 
 	function setEnabled(){
-		textFields.enabled = true
-		saveButton.enabled = true
-		clearButton.enabled = true
+    textFields.enabled = true
 	}
 
 	function setDisabled(){
 		textFields.enabled = false
-		saveButton.enabled = false
-		clearButton.enabled = false
 	}
 
 	Connections{
 		target: backend
 		onDoneLoading:{
-			loadProcess.close()
+      fileProcess.close()
 			fileControl.songTitle = backend.songTitle
 			fileControl.songArtist = backend.songArtist
 			fileControl.setEnabled()
@@ -42,6 +38,40 @@ Rectangle{
 		}
 	}
 
+  Connections{
+    target: backend
+    onDoneSaving:{
+      fileProcess.close()
+    }
+  }
+
+  MessageDialog {
+    id: clearDialog
+    title: "Please Confirm Clear"
+    icon: StandardIcon.Question
+    text: "Are you sure you want to clear choreography?"
+    standardButtons: StandardButton.Yes | StandardButton.No
+    onYes: {
+      backend.motorPrimitives.clear()
+      backend.ledPrimitives.clear()
+    }
+    onNo: console.log("ok not clearing")
+  }
+
+  FileDialog {
+    id: saveDialog
+    folder: shortcuts.desktop
+    nameFilters: [ "MP3 Files (*.mp3)"]
+    title: "Save Dancebot Choreo"
+    selectExisting: false
+    selectMultiple: false
+    sidebarVisible: true
+    onAccepted: {
+      fileProcess.open()
+      var res = backend.saveMP3(saveDialog.fileUrl.toString())
+    }
+  }
+
 	FileDialog {
 		id: loadDialog
 		folder: shortcuts.desktop
@@ -49,8 +79,9 @@ Rectangle{
 		title: "Select MP3 File to Load"
 		selectExisting: true
 		selectMultiple: false
+    sidebarVisible: true
 		onAccepted: {
-			loadProcess.open()
+      fileProcess.open()
 			var res = backend.loadMP3(loadDialog.fileUrl.toString())
 		}
 	}
@@ -79,11 +110,12 @@ Rectangle{
 				id: saveButton
 				width:Style.fileControl.buttonWidth
 				height:Style.fileControl.buttonHeight
+        enabled: motorBar.isNotEmpty || ledBar.isNotEmpty
         text: "Save"
         focusPolicy: Qt.NoFocus
 				onClicked:
 				{
-					console.log("Click Save")
+          saveDialog.open()
 				}
 			}
 			Button
@@ -92,10 +124,11 @@ Rectangle{
 				width:Style.fileControl.buttonWidth
 				height:Style.fileControl.buttonHeight
         text: "Clear"
+        enabled: motorBar.isNotEmpty || ledBar.isNotEmpty
         focusPolicy: Qt.NoFocus
 				onClicked:
 				{
-					console.log("Click Clear")
+          clearDialog.open()
 				}
 			}
 		} // buttons row

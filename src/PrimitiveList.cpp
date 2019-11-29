@@ -59,13 +59,17 @@ void PrimitiveList::remove(QObject* object) {
     return;
   }
 
-  qDebug() << "removing " << object << " at index " << index;
-
   // start removal notification
   // data inserted at top level, hence first arg. QModelIndex()
   beginRemoveRows(QModelIndex(), index, index);
   mData.at(index)->setParent(nullptr);
   mData.removeAt(index);
+  endRemoveRows();
+}
+
+void PrimitiveList::clear(void) {
+  beginRemoveRows(QModelIndex(), 0, mData.size() - 1);
+  mData.clear();
   endRemoveRows();
 }
 

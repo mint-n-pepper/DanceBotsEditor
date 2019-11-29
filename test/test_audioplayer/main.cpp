@@ -29,7 +29,7 @@ int main(int argc, char* argv[]) {
 
   player.setAudioData(mp3File44k.mFloatMusic, mp3File44k.sampleRate);
 
-  player.play();
+  player.togglePlay();
 
   return app.exec();
 }

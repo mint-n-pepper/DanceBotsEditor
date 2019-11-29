@@ -36,10 +36,10 @@ class MotorPrimitive : public BasePrimitive {
 
 public:
   enum class Type {
-    Straight = 0,
-    Spin,
-    Twist,
+    Twist = 0,
     BackAndForth,
+    Spin,
+    Straight,
     Custom
   };
   Q_ENUM(Type);

@@ -53,19 +53,22 @@ Rectangle{
   }
 
 	function setEnabled(){
-		typeRadio.enabled = true
+    blinkieSettings.enabled = true
+
     delegate.enabled = true
 	}
 
 	function setDisabled(){
-		typeRadio.enabled = false
+    blinkieSettings.enabled = false
     delegate.enabled = false
 	}
 
 	Column{
-		id: typeRadio
+    id: blinkieSettings
 		width: parent.width
+    spacing: Style.primitiveControl.controlsSpacing
     property int type
+    property var leds: [true, true, true, true, true, true, true, true]
     onTypeChanged: {
       delegate.primitive.type = type
       delegate.updatePrimitive()
@@ -75,6 +78,7 @@ Rectangle{
         id: blinkieText
         width: Style.primitiveControl.labelsWidth
         text: qsTr("B L I N K I E S")
+        horizontalAlignment: Text.AlignHCenter
         font.pixelSize: Style.primitiveControl.titlePixelSize
         rotation : 270
         anchors.verticalCenter: parent.verticalCenter
@@ -84,27 +88,27 @@ Rectangle{
           id: knightRiderRadio
           checked: true
           text: qsTr("KnightRider")
-          onToggled: typeRadio.type=LEDPrimitive.Type.KnightRider
+          onToggled: blinkieSettings.type=LEDPrimitive.Type.KnightRider
         }
         RadioButton {
           id: alternateRadio
           text: qsTr("Alternate")
-          onToggled: typeRadio.type=LEDPrimitive.Type.Alternate
+          onToggled: blinkieSettings.type=LEDPrimitive.Type.Alternate
         }
         RadioButton {
           id: blinkRadio
           text: qsTr("Blink")
-          onToggled: typeRadio.type=LEDPrimitive.Type.Blink
+          onToggled: blinkieSettings.type=LEDPrimitive.Type.Blink
         }
         RadioButton {
           id: constantRadio
           text: qsTr("Constant")
-          onToggled: typeRadio.type=LEDPrimitive.Type.Constant
+          onToggled: blinkieSettings.type=LEDPrimitive.Type.Constant
         }
         RadioButton {
           id: randomRadio
           text: qsTr("Random")
-          onToggled: typeRadio.type=LEDPrimitive.Type.Random
+          onToggled: blinkieSettings.type=LEDPrimitive.Type.Random
         }
       }
     }
@@ -144,9 +148,9 @@ Rectangle{
 
     Row{
       id: ledSet
-      visible: !knightRiderRadio.checked
-      property var leds: [true, true, true, true, true, true, true, true]
+      visible: !knightRiderRadio.checked && !randomRadio.checked
       Column{
+        anchors.verticalCenter: ledCheckboxes.verticalCenter
         width: Style.primitiveControl.labelsWidth
         Text{
           x: Style.primitiveControl.margin
@@ -154,10 +158,47 @@ Rectangle{
         }
       }
 
+      Row{
+        id: ledCheckboxes
+        spacing: Style.primitiveControl.ledRadioSpacing
+        Repeater{
+          model: blinkieSettings.leds.length
+          delegate: CheckBox{
+            id: control
+            checked: blinkieSettings.leds[index]
+            onCheckedChanged: {
+              blinkieSettings.leds[index] = checked
+              if(delegate){
+                delegate.primitive.leds[index] = checked;
+              }
+            }
+            contentItem: Text{
+              anchors.top: background.bottom
+              anchors.verticalCenter: background.verticalCenter
+              text: index
+              horizontalAlignment: Text.AlignHCenter
+            }
 
+            indicator: Rectangle{
+              width: Style.primitiveControl.ledRadioDiameter
+              height: Style.primitiveControl.ledRadioDiameter
+              radius: height/2
+              anchors.verticalCenter: background.verticalCenter
+              anchors.horizontalCenter: background.horizontalCenter
+              color: control.checked ?
+                       Style.primitives.ledToolTipOnColor : background.color
+            }
 
+            background: Rectangle{
+              width: Style.primitiveControl.ledRadioDiameter
+              height: Style.primitiveControl.ledRadioDiameter
+              radius: height/2
+              color: Style.primitives.ledToolTipOffColor
+            }
+          }
+        }
+      }
     }
-
 	}
 
 
@@ -168,9 +209,9 @@ Rectangle{
     delegate.primitive = primitiveFactory.createObject(delegate.id)
     delegate.primitive.positionBeat= 0;
     delegate.primitive.lengthBeat= 4;
-    delegate.primitive.type = typeRadio.type
+    delegate.primitive.type = blinkieSettings.type
     delegate.primitive.frequency = frequencySet.frequencies[frequencySlider.value]
-    delegate.primitive.leds = ledSet.leds
+    delegate.primitive.leds = blinkieSettings.leds
 
     delegate.anchors.verticalCenter = undefined
     delegate.anchors.bottomMargin = Style.primitiveControl.margin
@@ -186,5 +227,15 @@ Rectangle{
   Component{
     id: primitiveFactory
     LEDPrimitive{}
+  }
+
+  function duplicatePrimitive(primOrig){
+    var prim = primitiveFactory.createObject(root)
+    prim.type = primOrig.type
+    prim.positionBeat = primOrig.positionBeat
+    prim.lengthBeat = primOrig.lengthBeat
+    prim.frequency = primOrig.frequency
+    prim.leds = primOrig.leds
+    return prim
   }
 }

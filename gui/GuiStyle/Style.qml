@@ -36,9 +36,12 @@ QtObject {
     property int height: fileControl.height
     // left and bottom spacing of primitive shape
     property real margin: 10.0
+    property real controlsSpacing: 10
     property int textPixelSize: 15
     property int titlePixelSize: 22
     property int labelsWidth: 100
+    property int ledRadioDiameter: 20
+    property int ledRadioSpacing: 5
   }
 
   // Timer bar window
@@ -65,7 +68,7 @@ QtObject {
     property int textPosY: 3
     property int textSize: height/5
     property bool textBold: true
-    property color disabledColor: "#44EEEEEE"
+    property color disabledColor: "#99EEEEEE"
     property color borderColor: "white"
     property int borderWidth: 1
     property color highlightOverlayColor: "#AAFFFFFF"
@@ -74,19 +77,25 @@ QtObject {
     property int sizePixelMarginRight: 10
 
     // TOOLTIP STYLE
-    property color toolTipBgColor: "#CCFFFFFF"
+    property color toolTipBgColor: "#000000"
+    property color toolTipFontColor: "lightgrey"
+    property int toolTipFontPixelSize: 16
+    property real toolTipPadding: 4.0
+    property var ledToolTipLEDSize: 10
+    property var ledToolTipOnColor: "lime"
+    property var ledToolTipOffColor: "lightslategrey"
 
 	}
 
   property QtObject motorPrimitive: QtObject{
     // see Primitive.h for mapping of type to color
-    // Straight = 0
-    // Spin = 1
-    // Twist = 2
-    // BackAndForth = 3
+    // Twist = 0
+    // BackAndForth = 1
+    // Spin = 2
+    // Straight = 3
     // Custom = 4
-    property var textID: ["D", "S", "T", "B", "C"]
-    property var colors: ["red", "green", "blue", "deepskyblue", "deeppink"]
+    property var textID: ["T", "B", "S", "D", "C"]
+    property var colors: ["firebrick", "darkolivegreen", "royalblue", "deepskyblue", "deeppink"]
 	}
 
   property QtObject ledPrimitive: QtObject{
@@ -97,7 +106,7 @@ QtObject {
     // Constant = 3
     // Random = 4
     property var textID: ["K", "A", "B", "C", "R"]
-    property var colors: ["aqua", "darkseagreen", "darkslateblue", "hotpink", "orange"]
+    property var colors: ["aqua", "darkseagreen", "mediumblue", "indigo", "orange"]
   }
 
   property QtObject audioControl: QtObject{

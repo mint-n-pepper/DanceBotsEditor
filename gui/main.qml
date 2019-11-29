@@ -9,6 +9,7 @@ ApplicationWindow {
   width: Style.main.width
   height: Style.main.height
   visible: true
+  title: "Dancebots GUI"
 
   onActiveFocusItemChanged:{
     if(activeFocusItem === appWindow || activeFocusItem === null)  {
@@ -31,8 +32,8 @@ ApplicationWindow {
     }
   }
 
-  LoadProcessPopup{
-    id: loadProcess
+  FileProcessPopup{
+    id: fileProcess
   }
 
   MP3FileControl{
@@ -108,6 +109,7 @@ ApplicationWindow {
         dragTarget: motDragger
         primitiveColors: Style.motorPrimitive.colors
         primitiveTextIDs: Style.motorPrimitive.textID
+        controlBox: motorPrimitiveControl
       }
       TimerBar{
         id: ledBar
@@ -119,6 +121,7 @@ ApplicationWindow {
         primitiveColors: Style.ledPrimitive.colors
         primitiveTextIDs: Style.ledPrimitive.textID
         timeIndicatorPosition: motorBar.timeIndicatorPosition
+        controlBox: ledPrimitiveControl
       }
     }
   }

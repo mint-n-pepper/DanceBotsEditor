@@ -1,4 +1,4 @@
-import QtQuick 2.0
+import QtQuick 2.13
 import dancebots.backend 1.0
 import "../GuiStyle"
 
@@ -68,8 +68,14 @@ Rectangle{
 
     onDragActiveChanged: {
       if(dragActive){
-        // switch between resize and move drag
-        parent.state="onDrag"
+        // check if primitive was already selected
+        // and clean if neither control or shift were pressed
+        if(parent.state !== "onDrag"){
+          if(!shiftPressed){
+            dragTarget.clean(root)
+          }
+          parent.state = "onDrag"
+        }
         dragTarget.startDrag(controlPressed)
       }else{
         dragTarget.endDrag()
@@ -126,7 +132,6 @@ Rectangle{
       shiftPressed = (mouse.modifiers & Qt.ShiftModifier)
       doResize = isFromBar && mouseX > width - resizeMargin
       if(doResize){
-        console.log("set resize")
         timerBarFlickable.interactive = false
         drag.target= null
       }else{
@@ -204,17 +209,24 @@ Rectangle{
     color: Style.primitives.toolTipBgColor
     width: dataColumn.width
     height:dataColumn.height
+    radius: Style.primitives.radius
     Column{
       id:dataColumn
       Text{
         text: "Freq: 1.00"
+        font.pixelSize: Style.primitives.toolTipFontPixelSize
+        color: Style.primitives.toolTipFontColor
         onVisibleChanged: {
           if(visible){text="Freq: " + primitive.frequency.toFixed(2)}
         }
+        padding: Style.primitives.toolTipPadding
       }
       Text{
         visible: primitiveData.visible && primitive.velocity !== undefined
         text: "Vel: 40"
+        font.pixelSize: Style.primitives.toolTipFontPixelSize
+        color: Style.primitives.toolTipFontColor
+        padding: Style.primitives.toolTipPadding
         onVisibleChanged: {
           if(visible){
             if(primitive.type === MotorPrimitive.Type.Custom){
@@ -226,10 +238,45 @@ Rectangle{
         }
       }
       Text{
-        visible: primitiveData.visible && primitive.type === MotorPrimitive.Type.Custom
+        visible: {primitiveData.visible
+                 && primitive.type === MotorPrimitive.Type.Custom
+                 && primitive.velocityRight !== undefined}
         text: "Vel R: 40"
+        padding: Style.primitives.toolTipPadding
+        font.pixelSize: Style.primitives.toolTipFontPixelSize
+        color: Style.primitives.toolTipFontColor
         onVisibleChanged: {
           if(visible){text="Vel R: " + primitive.velocityRight}
+        }
+      }
+
+      Row{
+        padding: 4.0
+        visible: { primitiveData.visible
+          && primitive.type !== LEDPrimitive.Type.KnightRider
+          && primitive.type !== LEDPrimitive.Type.Random
+          && primitive.leds !== undefined
+        }
+        onVisibleChanged: {
+          if(visible){
+            for(var i = 0; i < primitive.leds.length; i++){
+              if(primitive.leds[i]){
+                ledRepeater.itemAt(i).color =  Style.primitives.ledToolTipOnColor
+              }else{
+                ledRepeater.itemAt(i).color =  Style.primitives.ledToolTipOffColor
+              }
+            }
+          }
+        }
+        Repeater{
+          id: ledRepeater
+          model: 8
+          delegate: Rectangle{
+            width: Style.primitives.ledToolTipLEDSize
+            height: Style.primitives.ledToolTipLEDSize
+            radius: Style.primitives.ledToolTipLEDSize / 2
+            color: Style.primitives.ledToolTipOffColor
+          }
         }
       }
     }

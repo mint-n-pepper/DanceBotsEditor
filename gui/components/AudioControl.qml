@@ -43,7 +43,6 @@ Rectangle{
 
   Slider{
     id: songPositionSlider
-    //activeFocusOnPress: false
     from: 0.0
     to: 1.0
     width: parent.width
@@ -67,18 +66,7 @@ Rectangle{
       text: "Play"
       onClicked:
       {
-        backend.audioPlayer.play()
-      }
-    }
-    Button
-    {
-      id: pauseButton
-      width:Style.audioControl.buttonWidth
-      height:Style.audioControl.buttonHeight
-      text: "Pause"
-      onClicked:
-      {
-        backend.audioPlayer.pause()
+        backend.audioPlayer.togglePlay()
       }
     }
     Button

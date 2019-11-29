@@ -17,7 +17,7 @@ Popup{
 		radius: 10
 		Text{
 			anchors.centerIn: parent
-			text: backend.loadStatus
+      text: backend.fileStatus
 		}
 	}
 

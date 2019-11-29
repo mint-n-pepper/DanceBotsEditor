@@ -69,6 +69,10 @@ void AudioPlayer::setAudioData(const std::vector<float>& monoData,
 
   // get current volume:
   qreal initialVolume = mAudioOutput->volume();
+
+  // and start to shorten startup time
+  mStartupStart = true;
+  mAudioOutput->start(&mRawAudioBuffer);
 }
 
 int AudioPlayer::getCurrentLogVolume(void) const{
@@ -77,12 +81,12 @@ int AudioPlayer::getCurrentLogVolume(void) const{
                         QAudio::LogarithmicVolumeScale));
 }
 
-void AudioPlayer::play(void) {
+void AudioPlayer::togglePlay(void) {
   // ensure that output is not null:
   if(!mAudioOutput) {
     return;
   }
-  qDebug() << "starting to play";
+
   // open if necessary
   if(!mRawAudioBuffer.isOpen()) {
     mRawAudioBuffer.open(QIODevice::ReadOnly);
@@ -96,8 +100,19 @@ void AudioPlayer::play(void) {
   // emit a notify of the new position:
   handleAudioOutputNotify();
 
-  // And start
-  mAudioOutput->start(&mRawAudioBuffer);
+  // And start / suspend according to state:
+  switch(mAudioOutput->state()) {
+  case QAudio::ActiveState:
+    mAudioOutput->suspend();
+    break;
+  case QAudio::SuspendedState:
+    mAudioOutput->resume();
+    break;
+  case QAudio::StoppedState:
+  case QAudio::IdleState:
+    mAudioOutput->start(&mRawAudioBuffer);
+    break;
+  }
 }
 
 void AudioPlayer::stop(void) {
@@ -163,4 +178,8 @@ void AudioPlayer::setNotifyInterval(const int intervalMS) {
 
 void AudioPlayer::handleStateChanged(QAudio::State newState) {
   // TODO: might have to implement error handling here
+  if(mStartupStart && mAudioOutput->state() == QAudio::ActiveState) {
+    mAudioOutput->suspend();
+    mStartupStart = false;
+  }
 }

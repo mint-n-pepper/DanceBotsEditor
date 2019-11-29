@@ -17,6 +17,8 @@ Canvas{
   property alias timeIndicatorPosition: timeIndicator.position
   property var ghosts: []
   property var beats: []
+  property var controlBox: null
+  property bool isNotEmpty: primitiveView.count > 0
 
   property var primitiveY: (Style.timerBar.height - Style.primitives.height)/2
 
@@ -60,7 +62,6 @@ Canvas{
         // source is control box, add it to model and destroy delegate
         model.add(drag.source.children[0].primitive)
         drag.source.children[0].destroy()
-        model.printPrimitives()
         // don't have to update occupied as this happens from repeater
         // callback onItemAdded
       }
@@ -69,12 +70,17 @@ Canvas{
     function handleInvalidDrop(){
       // cannot drop
       if(drag.source.children[0].isFromBar){
-        // if source is timer bar, do nothing and let it bounce back
-        for(var i = 0; i < drag.source.children.length; ++i){
-          ghosts[i].visible = false
-          drag.source.children[i].updatePrimitive();
-          // and reset occupied
-          setOccupied(drag.source.children[i].primitive)
+        // if source is timer bar and items were not copied,
+        // do nothing and let it bounce back
+        if(drag.source.copy){
+          drag.source.deleteAll()
+        }else{
+          for(var i = 0; i < drag.source.children.length; ++i){
+            ghosts[i].visible = false
+            drag.source.children[i].updatePrimitive();
+            // and reset occupied
+            setOccupied(drag.source.children[i].primitive)
+          }
         }
       }else{
         // if source is control box, delete the (always single) primitive
@@ -195,8 +201,12 @@ Canvas{
     }
 
     onItemAdded: {
-      console.log('added item is ' + item + ", with " + item.primitive)
       setOccupied(item.primitive)
+    }
+
+    function duplicateItem(item){
+      var prim = controlBox.duplicatePrimitive(item.primitive)
+      parent.model.add(prim)
     }
   }
 
