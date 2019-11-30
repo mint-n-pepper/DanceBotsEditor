@@ -46,6 +46,7 @@ Rectangle{
     from: 0.0
     to: 1.0
     width: parent.width
+    focusPolicy: Qt.NoFocus
 
     onPressedChanged:{
       if(!pressed){
@@ -61,6 +62,7 @@ Rectangle{
     Button
     {
       id: playButton
+      focusPolicy: Qt.NoFocus
       width:Style.audioControl.buttonWidth
       height:Style.audioControl.buttonHeight
       text: "Play"
@@ -72,6 +74,7 @@ Rectangle{
     Button
     {
       id: stopButton
+      focusPolicy: Qt.NoFocus
       width:Style.audioControl.buttonWidth
       height:Style.audioControl.buttonHeight
       text: "Stop"

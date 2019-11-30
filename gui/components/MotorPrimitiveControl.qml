@@ -85,26 +85,31 @@ Rectangle{
           id: twistRadio
           checked: true
           text: qsTr("Twist")
+          focusPolicy: Qt.NoFocus
           onToggled: typeRadio.type=MotorPrimitive.Type.Twist
         }
         RadioButton {
           id: spinRadio
           text: qsTr("Spin")
+          focusPolicy: Qt.NoFocus
           onToggled: typeRadio.type=MotorPrimitive.Type.Spin
         }
         RadioButton {
           id: backForthRadio
           text: qsTr("Back and Forth")
+          focusPolicy: Qt.NoFocus
           onToggled: typeRadio.type=MotorPrimitive.Type.BackAndForth
         }
         RadioButton {
           id: driveStraightRadio
           text: qsTr("Drive Straight")
+          focusPolicy: Qt.NoFocus
           onToggled: typeRadio.type=MotorPrimitive.Type.Straight
         }
         RadioButton {
           id: customRadio
           text: qsTr("Custom")
+          focusPolicy: Qt.NoFocus
           onToggled: typeRadio.type=MotorPrimitive.Type.Custom
         }
       }
@@ -129,6 +134,7 @@ Rectangle{
         live: true
         snapMode: Slider.SnapAlways
         onValueChanged: delegate.primitive.velocity = value
+        Keys.onPressed: appWindow.handleKey(event)
       }
       Text {
         id: velocityShow
@@ -162,6 +168,7 @@ Rectangle{
         live: true
         snapMode: Slider.SnapAlways
         onValueChanged: delegate.primitive.frequency = frequencySet.frequencies[value]
+        Keys.onPressed: appWindow.handleKey(event)
       }
       Text {
         id: frequencyShow
@@ -191,6 +198,7 @@ Rectangle{
         live: true
         snapMode: Slider.SnapAlways
         onValueChanged: delegate.primitive.velocityRight = value
+        Keys.onPressed: appWindow.handleKey(event)
       }
       Text {
         id: velocityRightShow

@@ -86,6 +86,7 @@ Rectangle{
       Column{
         RadioButton {
           id: knightRiderRadio
+          focusPolicy: Qt.NoFocus
           checked: true
           text: qsTr("KnightRider")
           onToggled: blinkieSettings.type=LEDPrimitive.Type.KnightRider
@@ -93,21 +94,25 @@ Rectangle{
         RadioButton {
           id: alternateRadio
           text: qsTr("Alternate")
+          focusPolicy: Qt.NoFocus
           onToggled: blinkieSettings.type=LEDPrimitive.Type.Alternate
         }
         RadioButton {
           id: blinkRadio
           text: qsTr("Blink")
+          focusPolicy: Qt.NoFocus
           onToggled: blinkieSettings.type=LEDPrimitive.Type.Blink
         }
         RadioButton {
           id: constantRadio
           text: qsTr("Constant")
+          focusPolicy: Qt.NoFocus
           onToggled: blinkieSettings.type=LEDPrimitive.Type.Constant
         }
         RadioButton {
           id: randomRadio
           text: qsTr("Random")
+          focusPolicy: Qt.NoFocus
           onToggled: blinkieSettings.type=LEDPrimitive.Type.Random
         }
       }
@@ -137,6 +142,8 @@ Rectangle{
         live: true
         snapMode: Slider.SnapAlways
         onValueChanged: delegate.primitive.frequency = frequencySet.frequencies[value]
+
+        Keys.onPressed: appWindow.handleKey(event)
       }
       Text {
         id: frequencyShow
@@ -166,6 +173,7 @@ Rectangle{
           delegate: CheckBox{
             id: control
             checked: blinkieSettings.leds[index]
+            focusPolicy: Qt.NoFocus
             onCheckedChanged: {
               blinkieSettings.leds[index] = checked
               if(delegate){

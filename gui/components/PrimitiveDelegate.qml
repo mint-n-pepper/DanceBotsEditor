@@ -157,9 +157,13 @@ Rectangle{
             parent.state = "onDrag"
           }
         }else{
-          // with no modifiers, select just this item
-          parent.state = "onDrag"
-          dragTarget.clean(root)
+          // with no modifiers, toggle while deselecting others
+          if(parent.state == "onDrag"){
+            dragTarget.clean()
+          }else{
+            parent.state = "onDrag"
+            dragTarget.clean(root)
+          }
         }
       }
       doResize = false

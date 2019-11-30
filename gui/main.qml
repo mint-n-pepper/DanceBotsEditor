@@ -11,14 +11,6 @@ ApplicationWindow {
   visible: true
   title: "Dancebots GUI"
 
-  onActiveFocusItemChanged:{
-    if(activeFocusItem === appWindow || activeFocusItem === null)  {
-      keyCatcher.focus=true
-    }
-    print("activeFocusItem", activeFocusItem)
-
-  }
-
   background: Rectangle{
     anchors.fill: parent
     color: Style.main.color
@@ -59,7 +51,7 @@ ApplicationWindow {
 
   Flickable{
     id: timerBarFlickable
-    width: parent.width
+    width: parent.width < timerBarColumn.width ? parent.width : timerBarColumn.width
     height: timerBarColumn.height
     contentWidth: timerBarColumn.width
     contentHeight: timerBarColumn.height
@@ -128,8 +120,13 @@ ApplicationWindow {
 
   Item{
     id: keyCatcher
+    onActiveFocusChanged:{
+      if(activeFocusItem === null){
+        grabFocus()
+      }
+    }
     focus: true
-    Keys.onPressed: console.log("god key")
+    Keys.onPressed: handleKey(event)
   }
 
   Dragger{
@@ -142,11 +139,30 @@ ApplicationWindow {
     keys: ledBar.keys
   }
 
+  function grabFocus(){
+    keyCatcher.focus = true
+  }
+
   function handleSceneClick(mouse){
-    console.log("scene click")
     if (!(mouse.modifiers & (Qt.ShiftModifier|Qt.ControlModifier))) {
-        motorBar.dragTarget.clean()
-        ledBar.dragTarget.clean()
+        motDragger.clean()
+        ledDragger.clean()
+    }
+  }
+
+  function handleKey(event){
+    switch(event.key){
+    case Qt.Key_Escape:
+      motDragger.clean()
+      ledDragger.clean()
+      break;
+    case Qt.Key_Delete:
+      motDragger.deleteAll()
+      ledDragger.deleteAll()
+      break;
+    case Qt.Key_Space:
+      backend.audioPlayer.togglePlay()
+      break;
     }
   }
 }

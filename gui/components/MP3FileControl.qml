@@ -158,7 +158,7 @@ Rectangle{
 				  placeholderText: "Artist Name"
           onEditingFinished:{
             backend.songArtist = text
-            focus=false
+            appWindow.grabFocus()
           }
 			  }
 			} // artist
@@ -181,7 +181,7 @@ Rectangle{
 				  placeholderText: qsTr("Song Title")
           onEditingFinished:{
             backend.songTitle = text
-            focus=false
+            appWindow.grabFocus()
           }
 			  }
       } // title

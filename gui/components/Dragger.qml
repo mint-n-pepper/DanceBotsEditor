@@ -49,7 +49,6 @@ Item{
   }
 
   function deleteAll(){
-    console.log('deleting all in dragger')
     var nChildren = children.length
     for(var i = 0; i < nChildren; ++i){
       var child = children[0]
