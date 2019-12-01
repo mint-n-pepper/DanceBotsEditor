@@ -31,8 +31,8 @@ Canvas{
       // resize rectangle to fit song
       width = backend.getAudioLengthInFrames() * Style.timerBar.frameToPixel;
       timeIndicator.visible = true
-      requestPaint();
       beats=backend.getBeats()
+      requestPaint();
       // clear occupancy array:
       occupied.length = 0
       for(var i = 0; i < beats.length; ++i){

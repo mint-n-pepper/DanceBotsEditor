@@ -13,8 +13,8 @@
 
 class BackEnd : public QObject{
   Q_OBJECT;
-  Q_PROPERTY(QString songArtist READ songArtist WRITE setSongArtist);
-  Q_PROPERTY(QString songTitle READ songTitle WRITE setSongTitle);
+  Q_PROPERTY(QString songArtist READ songArtist WRITE setSongArtist NOTIFY songArtistChanged);
+  Q_PROPERTY(QString songTitle READ songTitle WRITE setSongTitle NOTIFY songTitleChanged);
   Q_PROPERTY(QString fileStatus READ fileStatus NOTIFY fileStatusChanged);
   Q_PROPERTY(PrimitiveList* motorPrimitives
              READ motorPrimitives NOTIFY motorPrimitivesChanged);
@@ -41,6 +41,8 @@ public:
   Q_INVOKABLE int getAverageBeatFrames(void) const;
 signals:
   void fileStatusChanged();
+  void songArtistChanged();
+  void songTitleChanged();
   void motorPrimitivesChanged();
   void ledPrimitivesChanged();
   void audioPlayerChanged();
@@ -75,6 +77,11 @@ private:
   AudioPlayer* mAudioPlayer;
 
   bool loadMP3Worker(const QString& fileName);
+  bool saveMP3Worker(const QString& fileName);
+
+  bool writePrependData(void);
+  bool readBeatsFromPrependData(void);
+  bool readPrimitivesFromPrependData(void);
 };
 
 #endif // BACKEND_H

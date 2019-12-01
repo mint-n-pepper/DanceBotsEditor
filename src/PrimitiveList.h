@@ -18,6 +18,7 @@ public:
   bool setData(const QModelIndex& index,
                const QVariant& value,
                int role = Qt::EditRole) override;
+  const QList<QObject*>& getData(void);
 
 public slots:
   void add(QObject* o);

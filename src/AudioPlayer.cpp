@@ -13,6 +13,7 @@ void AudioPlayer::setAudioData(const std::vector<float>& monoData,
 
   // clear any existing audio data:
   mRawAudio.clear();
+  mAudioOutput.reset(nullptr); // delete audio output
 
   // set sample rate:
   mSampleRate = sampleRate;
@@ -64,8 +65,9 @@ void AudioPlayer::setAudioData(const std::vector<float>& monoData,
   // connect to handler:
   connectAudioOutputSignals();
 
-  // and open buffer:
+  // and open and reset buffer
   mRawAudioBuffer.open(QIODevice::ReadOnly);
+  mRawAudioBuffer.reset(); // in case of reload, rewind
 
   // get current volume:
   qreal initialVolume = mAudioOutput->volume();

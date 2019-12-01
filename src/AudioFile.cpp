@@ -1,7 +1,6 @@
 #include "AudioFile.h"
 #include "dsp/rateconversion/Resampler.h"
 #include <lame.h>
-#include <QDataStream>
 #include <sndfile.h>
 #include <limits.h>
 #include <math.h>
@@ -54,10 +53,10 @@ auto AudioFile::load(const QString filePath) -> Result {
     }
 
     // convert size bytes to size int nData
-    QDataStream nDataStr(headerNData);
-    nDataStr.setByteOrder(QDataStream::LittleEndian);
+    QDataStream nDataStream(headerNData);
+    applyDataStreamSettings(nDataStream);
     quint32 nData;
-    nDataStr >> nData;
+    nDataStream >> nData;
 
     // verify that nData is shorter than the file is long:
     if(file.pos() + nData > file.size()) {
@@ -152,9 +151,10 @@ auto AudioFile::save(const QString file) -> Result {
   // serialize header length to file:
   const quint32 kHeaderLength = mMP3PrependData.size();
   QByteArray sizeBytes;
-  QDataStream sizeBytesStr(&sizeBytes, QIODevice::WriteOnly);
-  sizeBytesStr.setByteOrder(QDataStream::LittleEndian);
-  sizeBytesStr << kHeaderLength;
+  QDataStream sizeBytesStream(&sizeBytes, QIODevice::WriteOnly);
+  applyDataStreamSettings(sizeBytesStream);
+
+  sizeBytesStream << kHeaderLength;
   outFile.write(sizeBytes);
 
   // write prepend data and finish with the header code again:
@@ -610,4 +610,10 @@ int AudioFile::savePCMBeats(const QString fileName,
   // close the file
   sf_close(sndFile);
   return 0;
+}
+
+void AudioFile::applyDataStreamSettings(QDataStream& stream) {
+  stream.setVersion(dataStreamVersion);
+  stream.setByteOrder(dataByteOrder);
+  stream.setFloatingPointPrecision(dataFloatPrecision);
 }

@@ -209,7 +209,7 @@ Rectangle{
   Rectangle{
     id: primitiveData
     anchors.top: parent.bottom
-    visible: showData && isFromBar
+    visible: showData && isFromBar && !dragArea.dragActive
     color: Style.primitives.toolTipBgColor
     width: dataColumn.width
     height:dataColumn.height

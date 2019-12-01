@@ -3,6 +3,7 @@
 
 #include<QObject>
 #include<QDebug>
+#include <QDataStream>
 
 class BasePrimitive : public QObject {
   Q_OBJECT;
@@ -18,6 +19,8 @@ public:
   double mFrequency{ 1.0f };
   int mPositionBeat = 0u;
   int mLengthBeat = 0u;
+
+  virtual void SerializeToStream(QDataStream& stream) const = 0;
 
 signals:
   void positionBeatChanged(void);
@@ -40,16 +43,18 @@ public:
     BackAndForth,
     Spin,
     Straight,
-    Custom
+    Custom // leave custom as last as used for counting types
   };
   Q_ENUM(Type);
 
-public:
-  MotorPrimitive(QObject* const parent = nullptr) : BasePrimitive{ parent } {
-  };
+  MotorPrimitive(QObject* const parent = nullptr);
+  MotorPrimitive(QDataStream& initStream,
+                 QObject* const parent = nullptr);
   int mVelocity{ 0 };
   int mVelocityRight{ 0 };
   Type mType{ Type::Twist };
+
+  void SerializeToStream(QDataStream& stream) const override;
 
 signals:
   void velocityChanged(void);
@@ -71,18 +76,17 @@ public:
     Alternate,
     Blink,
     Constant,
-    Random
+    Random // leave random as last as used for counting types
   };
   Q_ENUM(Type);
 
-public:
-  LEDPrimitive(QObject* const parent = nullptr)
-    : BasePrimitive{ parent },
-    mLeds(8, true)
-  {
-  };
+  LEDPrimitive(QObject* const parent = nullptr);
+  LEDPrimitive(QDataStream& initStream,
+                 QObject* const parent = nullptr);
   std::vector<bool> mLeds;
   Type mType{ Type::KnightRider };
+
+  void SerializeToStream(QDataStream& stream) const override;
 
 signals:
   void ledsChanged(void);

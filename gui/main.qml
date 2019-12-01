@@ -130,13 +130,13 @@ ApplicationWindow {
   }
 
   Dragger{
-    id: motDragger
-    keys: motorBar.keys
+    id: ledDragger
+    keys: ledBar.keys
   }
 
   Dragger{
-    id: ledDragger
-    keys: ledBar.keys
+    id: motDragger
+    keys: motorBar.keys
   }
 
   function grabFocus(){

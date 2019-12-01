@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <QtCore/QFile>
+#include <QDataStream>
 
 #include <tbytevectorstream.h>
 #include <mpegfile.h>
@@ -32,6 +33,13 @@ public:
 
   /** String code at beginning and end of pre-pended header data */
   static const QByteArray danceFileHeaderCode;
+  
+  /** Settings for Qt stream serialization of header data  */
+  static const QDataStream::ByteOrder dataByteOrder{QDataStream::BigEndian};
+  static const QDataStream::Version dataStreamVersion{ QDataStream::Qt_5_13 };
+  static const QDataStream::FloatingPointPrecision
+    dataFloatPrecision{ QDataStream::SinglePrecision };
+
   /** Sample rate used internally and for MP3 output.
   *
   * Inputs that are not at sampleRate will be up- or downsampled to match
@@ -163,6 +171,10 @@ public:
   size_t getLengthInFrames(void) const {
     return mFloatMusic.size();
   }
+
+  /** \brief Applies data stream settings to QDataStream
+  */
+  static void applyDataStreamSettings(QDataStream& stream);
 
 private:
   /** Lame encoding status enum */

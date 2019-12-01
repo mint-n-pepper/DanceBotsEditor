@@ -16,6 +16,7 @@ set(SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/../src/AudioFile.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/../src/AudioPlayer.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/../src/BackEnd.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/../src/BeatDetector.cpp
+            ${CMAKE_CURRENT_SOURCE_DIR}/../src/Primitive.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/../src/PrimitiveList.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp)
 

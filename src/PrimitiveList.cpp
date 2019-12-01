@@ -94,3 +94,7 @@ bool PrimitiveList::setData(const QModelIndex& index,
   dataChanged(index, index, QVector<int>{Qt::UserRole + 1});
   return true;
 }
+
+const QList<QObject*>& PrimitiveList::getData(void) {
+  return mData;
+}
