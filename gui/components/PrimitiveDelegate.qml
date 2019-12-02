@@ -14,6 +14,7 @@ Rectangle{
   property var primitive: null
   property var dragTarget: null
   property bool showData: false
+  property bool toolTipUp: false
 
   onPrimitiveChanged: updatePrimitive()
 
@@ -208,7 +209,8 @@ Rectangle{
 
   Rectangle{
     id: primitiveData
-    anchors.top: parent.bottom
+    anchors.top: toolTipUp ? undefined : parent.bottom
+    anchors.bottom: toolTipUp ? parent.top : undefined
     visible: showData && isFromBar && !dragArea.dragActive
     color: Style.primitives.toolTipBgColor
     width: dataColumn.width

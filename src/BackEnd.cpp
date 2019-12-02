@@ -73,6 +73,10 @@ void BackEnd::setSongTitle(const QString& name) {
 Q_INVOKABLE void BackEnd::loadMP3(const QString& filePath) {
   // convert to qurl and localized file path:
   QUrl localFilePath{ filePath };
+  // clean models before loading:
+  mMotorPrimitives->clear();
+  mLedPrimitives->clear();
+
   mLoadFuture = QtConcurrent::run(this, &BackEnd::loadMP3Worker,
                                   localFilePath.toLocalFile());
   mLoadFutureWatcher.setFuture(mLoadFuture);
@@ -108,8 +112,6 @@ bool BackEnd::loadMP3Worker(const QString& filePath) {
   // clear all data
   mAudioFile.clear();
   mBeatFrames.clear();
-  mMotorPrimitives->clear();
-  mLedPrimitives->clear();
 
   const AudioFile::Result res = mAudioFile.load(filePath);
 
@@ -171,7 +173,6 @@ bool BackEnd::loadMP3Worker(const QString& filePath) {
 
   mFileStatus = "Done.";
   emit fileStatusChanged();
-  QThread::msleep(100);
   return true;
 }
 

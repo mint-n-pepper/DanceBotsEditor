@@ -99,6 +99,7 @@ ApplicationWindow {
         keys: ["mot"]
         model: backend.motorPrimitives
         dragTarget: motDragger
+        toolTipUp: true
         primitiveColors: Style.motorPrimitive.colors
         primitiveTextIDs: Style.motorPrimitive.textID
         controlBox: motorPrimitiveControl
@@ -145,16 +146,19 @@ ApplicationWindow {
 
   function handleSceneClick(mouse){
     if (!(mouse.modifiers & (Qt.ShiftModifier|Qt.ControlModifier))) {
-        motDragger.clean()
-        ledDragger.clean()
+        cleanDraggers()
     }
+  }
+
+  function cleanDraggers(){
+    motDragger.clean()
+    ledDragger.clean()
   }
 
   function handleKey(event){
     switch(event.key){
     case Qt.Key_Escape:
-      motDragger.clean()
-      ledDragger.clean()
+      cleanDraggers()
       break;
     case Qt.Key_Delete:
       motDragger.deleteAll()

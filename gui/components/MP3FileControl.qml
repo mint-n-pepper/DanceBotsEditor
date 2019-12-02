@@ -102,6 +102,7 @@ Rectangle{
         focusPolicy: Qt.NoFocus
 				onClicked:
 				{
+          appWindow.cleanDraggers()
 					loadDialog.open()
 				}
 			}
