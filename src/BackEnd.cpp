@@ -9,6 +9,7 @@
 
 #include "Primitive.h"
 #include "Utils.h"
+#include "PrimitiveToSignal.h"
 
 BackEnd::BackEnd(QObject* parent) :
   QObject{ parent },
@@ -88,6 +89,7 @@ Q_INVOKABLE void BackEnd::saveMP3(const QString& filePath) {
 void BackEnd::handleDoneLoading(void) {
   emit doneLoading(mLoadFuture.result());
   // read out primitives if it is a dancefile:
+  // need to do that in main thread (here) as we are assigning the parent
   if(mAudioFile.isDancefile()) {
     readPrimitivesFromPrependData();
   }
@@ -156,7 +158,7 @@ bool BackEnd::loadMP3Worker(const QString& filePath) {
     }
 
     // add last beat at final plus one audio frame
-    mBeatFrames.push_back(static_cast<int>(mAudioFile.mFloatData.size() + 1));
+    mBeatFrames.push_back(static_cast<int>(mAudioFile.mFloatData.size()));
   }
 
   // calculate average beat duration in frames,
@@ -184,6 +186,13 @@ bool BackEnd::saveMP3Worker(const QString& fileName) {
     QThread::msleep(1000);
     return false;
   }
+
+  // instantiate primitive to audio signal converter
+  PrimitiveToSignal primitiveConverter(mBeatFrames, mAudioFile);
+  primitiveConverter.convert(mMotorPrimitives->getData(),
+                             mLedPrimitives->getData());
+
+  mAudioFile.savePCM("temp.wav");
 
   mFileStatus = "Saving to MP3 File";
   emit fileStatusChanged();
@@ -263,7 +272,7 @@ bool BackEnd::writePrependData(void) {
 
   for(const auto& e : motPrimitives) {
     const MotorPrimitive* const mp = reinterpret_cast<const MotorPrimitive*>(e);
-    mp->SerializeToStream(dataStream);
+    mp->serializeToStream(dataStream);
   }
 
   // next, write out led primitives:
@@ -273,7 +282,7 @@ bool BackEnd::writePrependData(void) {
 
   for(const auto& e : ledPrimitives) {
     const LEDPrimitive* const lp = reinterpret_cast<const LEDPrimitive*>(e);
-    lp->SerializeToStream(dataStream);
+    lp->serializeToStream(dataStream);
   }
 
   return true;

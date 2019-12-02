@@ -18,6 +18,7 @@ set(SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/../src/AudioFile.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/../src/BeatDetector.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/../src/Primitive.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/../src/PrimitiveList.cpp
+            ${CMAKE_CURRENT_SOURCE_DIR}/../src/PrimitiveToSignal.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp)
 
 set(INCLUDE_DIRS  ${CMAKE_CURRENT_SOURCE_DIR}/../src
@@ -32,6 +33,7 @@ set(HEADERS ${CMAKE_CURRENT_SOURCE_DIR}/../src/AudioFile.h
             ${CMAKE_CURRENT_SOURCE_DIR}/../src/BackEnd.h
             ${CMAKE_CURRENT_SOURCE_DIR}/../src/BeatDetector.h
             ${CMAKE_CURRENT_SOURCE_DIR}/../src/PrimitiveList.h
+            ${CMAKE_CURRENT_SOURCE_DIR}/../src/PrimitiveToSignal.h
             ${CMAKE_CURRENT_SOURCE_DIR}/../lib/kissfft/kissfft.hh)
 
 source_group("Header Files" FILES ${HEADERS})

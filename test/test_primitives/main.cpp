@@ -47,7 +47,7 @@ namespace {
     AudioFile::applyDataStreamSettings(dataStream);
 
     // serialize primitive
-    prim.SerializeToStream(dataStream);
+    prim.serializeToStream(dataStream);
 
     // and create a new primitive from the stream:
     dataStream.device()->reset();
@@ -88,7 +88,7 @@ namespace {
 
     // serialize primitive
     for(const auto& p : primitives) {
-      p->SerializeToStream(dataStream);
+      p->serializeToStream(dataStream);
     }
 
     // and recreate primitives from stream
@@ -125,7 +125,7 @@ namespace {
     AudioFile::applyDataStreamSettings(dataStream);
 
     // serialize primitive
-    prim.SerializeToStream(dataStream);
+    prim.serializeToStream(dataStream);
 
     // and create a new primitive from the stream:
     dataStream.device()->reset();
@@ -166,7 +166,7 @@ namespace {
 
     // serialize primitive
     for(const auto& p : primitives) {
-      p->SerializeToStream(dataStream);
+      p->serializeToStream(dataStream);
     }
 
     // and recreate primitives from stream

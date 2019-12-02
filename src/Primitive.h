@@ -20,7 +20,7 @@ public:
   int mPositionBeat = 0u;
   int mLengthBeat = 0u;
 
-  virtual void SerializeToStream(QDataStream& stream) const = 0;
+  virtual void serializeToStream(QDataStream& stream) const = 0;
 
 signals:
   void positionBeatChanged(void);
@@ -54,7 +54,7 @@ public:
   int mVelocityRight{ 0 };
   Type mType{ Type::Twist };
 
-  void SerializeToStream(QDataStream& stream) const override;
+  void serializeToStream(QDataStream& stream) const override;
 
 signals:
   void velocityChanged(void);
@@ -86,7 +86,8 @@ public:
   std::vector<bool> mLeds;
   Type mType{ Type::KnightRider };
 
-  void SerializeToStream(QDataStream& stream) const override;
+  void serializeToStream(QDataStream& stream) const override;
+  quint8 getLedByte(void) const;
 
 signals:
   void ledsChanged(void);

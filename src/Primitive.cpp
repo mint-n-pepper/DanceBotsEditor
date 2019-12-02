@@ -27,7 +27,7 @@ MotorPrimitive::MotorPrimitive(QDataStream& initStream, QObject* const parent)
   mVelocityRight = velocityRight;
 }
 
-void MotorPrimitive::SerializeToStream(QDataStream& stream) const {
+void MotorPrimitive::serializeToStream(QDataStream& stream) const {
   // convert data members to suitable small data types
   quint16 beatPosition = static_cast<quint16>(mPositionBeat);
   quint16 beatLength = static_cast<quint16>(mLengthBeat);
@@ -71,7 +71,7 @@ LEDPrimitive::LEDPrimitive(QDataStream& initStream, QObject* const parent)
   }
 }
 
-void LEDPrimitive::SerializeToStream(QDataStream& stream) const {
+void LEDPrimitive::serializeToStream(QDataStream& stream) const {
   // convert data members to suitable small data types
   quint16 beatPosition = static_cast<quint16>(mPositionBeat);
   quint16 beatLength = static_cast<quint16>(mLengthBeat);
@@ -79,13 +79,18 @@ void LEDPrimitive::SerializeToStream(QDataStream& stream) const {
   double frequency = mFrequency;
 
   // create single unsigned byte from LED array
+  quint8 leds = getLedByte();
+
+  // and save to stream:
+  stream << beatPosition << beatLength << type << frequency << leds;
+}
+
+quint8 LEDPrimitive::getLedByte(void) const{
   quint8 leds = 0u;
   for(size_t i = 0; i < mLeds.size(); ++i) {
     if(mLeds[i]) {
       leds |= (1u << i);
     }
   }
-
-  // and save to stream:
-  stream << beatPosition << beatLength << type << frequency << leds;
+  return leds;
 }

@@ -2,9 +2,11 @@
 #include "Primitive.h"
 #include <QDebug>
 
-PrimitiveList::PrimitiveList(QObject* parent) : QAbstractListModel{ parent } {};
+PrimitiveList::PrimitiveList(QObject* parent)
+  : QAbstractListModel{ parent },
+  mData{}{};
 
-int PrimitiveList::rowCount(const QModelIndex& parent) const{
+int PrimitiveList::rowCount(const QModelIndex& parent) const {
   Q_UNUSED(parent);
   return mData.size();
 }
@@ -17,7 +19,6 @@ QVariant PrimitiveList::data(const QModelIndex& index, int role) const {
   else {
     return QVariant();
   }
-
 }
 
 Qt::ItemFlags PrimitiveList::flags(const QModelIndex& index) const {
@@ -44,10 +45,9 @@ void PrimitiveList::add(QObject* o) {
 }
 
 void PrimitiveList::remove(QObject* object) {
-
   // find index:
   size_t index = 0;
-  for(auto &e : mData) {
+  for(auto& e : mData) {
     if(e == object) {
       break;
     }
@@ -68,12 +68,14 @@ void PrimitiveList::remove(QObject* object) {
 }
 
 void PrimitiveList::clear(void) {
+  // don't need to clear if there is nothing
+  if(mData.isEmpty()) { return; }
   beginRemoveRows(QModelIndex(), 0, mData.size() - 1);
   mData.clear();
   endRemoveRows();
 }
 
-void PrimitiveList::printPrimitives(void) const{
+void PrimitiveList::printPrimitives(void) const {
   size_t counter = 0;
   for(const auto& e : mData) {
     BasePrimitive* p = reinterpret_cast<BasePrimitive*>(e);
