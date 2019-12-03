@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.15 FATAL_ERROR)
 
-project(gui)
+project(dancebotsGui)
 
 set(CMAKE_CXX_STANDARD 14)
 
@@ -10,7 +10,7 @@ set(CMAKE_AUTORCC ON)
 find_package(Qt5 COMPONENTS Core Quick Qml Concurrent Multimedia REQUIRED)
 
 # Telling CMake location of our app .qrc file
-#qt5_add_resources(APP_RESOURCES ${CMAKE_CURRENT_SOURCE_DIR}/qml.qrc)
+qt5_add_resources(APP_RESOURCES ${CMAKE_CURRENT_SOURCE_DIR}/qml.qrc)
 
 set(SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/../src/AudioFile.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/../src/AudioPlayer.cpp
@@ -41,7 +41,7 @@ source_group("Header Files" FILES ${HEADERS})
 file(GLOB_RECURSE QMLS ${CMAKE_CURRENT_SOURCE_DIR}/../gui/ *.qml)
 source_group("QML Files" FILES ${QMLS})
 
-add_executable(${PROJECT_NAME} ${SOURCES} ${APP_RESOURCES} ${HEADERS} ${QMLS})
+add_executable(${PROJECT_NAME} WIN32 ${SOURCES} ${APP_RESOURCES} ${HEADERS} ${QMLS})
 
 # copy visual studio user file to binary folder to have
 # qt in debug path:

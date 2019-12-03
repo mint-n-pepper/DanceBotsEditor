@@ -1,5 +1,23 @@
 <RCC>
     <qresource prefix="/qml">
         <file>main.qml</file>
+	</qresource>
+
+	<qresource prefix="/qml">
+		<file>components/AudioControl.qml</file>
+		<file>components/Dragger.qml</file>
+		<file>components/FileProcessPopup.qml</file>
+		<file>components/Ghost.qml</file>
+		<file>components/LEDPrimitiveControl.qml</file>
+		<file>components/MotorPrimitiveControl.qml</file>
+		<file>components/MP3FileControl.qml</file>
+		<file>components/PrimitiveDelegate.qml</file>
+		<file>components/TimerBar.qml</file>
     </qresource>
+
+	<qresource prefix="/qml">
+		<file>GuiStyle/Style.qml</file>
+		<file>GuiStyle/qmldir</file>
+	</qresource>
+
 </RCC>
