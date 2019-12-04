@@ -41,7 +41,7 @@ source_group("Header Files" FILES ${HEADERS})
 file(GLOB_RECURSE QMLS ${CMAKE_CURRENT_SOURCE_DIR}/../gui/ *.qml)
 source_group("QML Files" FILES ${QMLS})
 
-add_executable(${PROJECT_NAME} WIN32 ${SOURCES} ${APP_RESOURCES} ${HEADERS} ${QMLS})
+add_executable(${PROJECT_NAME} ${SOURCES} ${APP_RESOURCES} ${HEADERS} ${QMLS})
 
 # copy visual studio user file to binary folder to have
 # qt in debug path:

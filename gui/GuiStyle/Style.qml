@@ -11,6 +11,14 @@ QtObject {
 		property color color: "#ffe0e0"
 	}
 
+  // load/save progress overlay:
+  property QtObject fileProcessOverlay: QtObject{
+    property int height: 100
+    property int fontPixelSize: height / 4
+    property color backgroundColor: "#BB444444"
+    property color fontColor: "white"
+  }
+
   // MP3 File Control Box
   property QtObject fileControl: QtObject{
     // box
@@ -57,6 +65,12 @@ QtObject {
     property color ghostColorValid: "#8840DF40"
     property color ghostColorInvalid: "#88DF4040"
     property real frameToPixel:  0.00072562358276643991
+
+    // beat indicator
+    property color beatIndicatorBgColor: "lightgrey"
+    property color beatIndicatorFontColor: "#000000"
+    property int beatIndicatorFontPixelSize: 16
+    property real beatIndicatorPadding: 4.0
 	}
 
   // General primitives:
@@ -110,8 +124,22 @@ QtObject {
   }
 
   property QtObject audioControl: QtObject{
+    property int playControlBoxWidth: fileControl.width
     property int buttonWidth: 50
-    property int buttonHeight: 20
+    property int buttonHeight: 40
+    property int timerWidth: 60
+    property int timerFontPixelSize: buttonHeight * 0.45
+    property int timerTextMarginRight: 7
+    property color timerBGColor: "white"
+    property color timerFontColor: "slategrey"
+    property int spacing: fileControl.buttonSpacing
+    property int padding: fileControl.buttonPadding
+    property color iconColor: "slategrey"
+    // volume slider
+    property color volumeSliderHandleBGColor: "white"
+    property int volumeSliderSize: 30
+    // scale of speaker icon relative to slider size
+    property real volumeSliderIconScale: 0.75
   }
 
 }

@@ -77,6 +77,9 @@ Q_INVOKABLE void BackEnd::loadMP3(const QString& filePath) {
   mMotorPrimitives->clear();
   mLedPrimitives->clear();
 
+  // stop audio playback:
+  mAudioPlayer->stop();
+
   mLoadFuture = QtConcurrent::run(this, &BackEnd::loadMP3Worker,
                                   localFilePath.toLocalFile());
   mLoadFutureWatcher.setFuture(mLoadFuture);

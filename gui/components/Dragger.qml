@@ -84,11 +84,14 @@ Item{
     }
   }
 
-  function clean(whiteListItem){
-    if(children.length === 0){
-      return
+  function cleanAll(){
+    while(children.length){
+      children[0].deselect()
     }
+  }
 
+  function clean(whiteListItem){
+    cleanOther()
     var removeIndex = 0
     while(children.length > removeIndex && children[removeIndex]){
       if(children[removeIndex] === whiteListItem){

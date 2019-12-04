@@ -8,8 +8,6 @@ AudioPlayer::AudioPlayer(QObject* parent):
 
 void AudioPlayer::setAudioData(const std::vector<float>& monoData,
                                const int sampleRate) {
-  // Kill the audio output:
-  mAudioOutput.reset();
 
   // clear any existing audio data:
   mRawAudio.clear();
@@ -26,7 +24,7 @@ void AudioPlayer::setAudioData(const std::vector<float>& monoData,
   const float MAX_INT16 = 32767.0f;
 
   for(const auto& e : monoData) {
-    // ensure that data is in -1.0, 1.0 range:
+    // clamp data to -1.0, 1.0 range:
     float rangeFloat = e > 1.0f ? 1.0f : e;
     if(rangeFloat < -1.0f) rangeFloat = -1.0f;
 
@@ -37,10 +35,10 @@ void AudioPlayer::setAudioData(const std::vector<float>& monoData,
     stream << frame;
   }
 
-  // use default device for now:
+  // use default device for output:
   const QAudioDeviceInfo deviceInfo{ QAudioDeviceInfo::defaultOutputDevice() };
 
-  // now setup output:
+  // setup output:
   QAudioFormat format;
   format.setSampleRate(mSampleRate);
   format.setChannelCount(1); // mono data
@@ -62,6 +60,15 @@ void AudioPlayer::setAudioData(const std::vector<float>& monoData,
   // set notify interval:
   mAudioOutput->setNotifyInterval(mNotifyInterval);
 
+  // get current output device volume and adjust to current setting
+  // if not identical
+  if(mAudioOutput->volume() != mVolumeLinear) {
+    mAudioOutput->setVolume(mVolumeLinear);
+  }
+
+  // emit volume ready signal:
+  emit volumeAvailable();
+
   // connect to handler:
   connectAudioOutputSignals();
 
@@ -69,18 +76,24 @@ void AudioPlayer::setAudioData(const std::vector<float>& monoData,
   mRawAudioBuffer.open(QIODevice::ReadOnly);
   mRawAudioBuffer.reset(); // in case of reload, rewind
 
-  // get current volume:
-  qreal initialVolume = mAudioOutput->volume();
-
   // and start to shorten startup time
   mStartupStart = true;
   mAudioOutput->start(&mRawAudioBuffer);
 }
 
-int AudioPlayer::getCurrentLogVolume(void) const{
-  return qRound(100*QAudio::convertVolume(mVolumeLinear,
-                        QAudio::LinearVolumeScale,
-                        QAudio::LogarithmicVolumeScale));
+qreal AudioPlayer::getCurrentLogVolume(void) {
+  if(mAudioOutput) {
+    mVolumeLinear = mAudioOutput->volume();
+  }
+
+  qreal logVolume = 1.0;
+  if(1.0 != mVolumeLinear) {
+    logVolume = QAudio::convertVolume(mVolumeLinear,
+                                 QAudio::LinearVolumeScale,
+                                 QAudio::LogarithmicVolumeScale);
+  }
+
+  return logVolume;
 }
 
 void AudioPlayer::togglePlay(void) {
@@ -162,14 +175,17 @@ void AudioPlayer::seek(const int timeMS) {
   if(bufferPos >= 0 && bufferPos < mRawAudio.size() - 1) {
     // suspend quick:
     mRawAudioBuffer.seek(bufferPos);
-    // resume playing if stopped because of end of buffer:
-    if(mAudioOutput->state() != QAudio::ActiveState) {
-      mAudioOutput->start(&mRawAudioBuffer);
-    }
   }
 }
 
-void AudioPlayer::setVolume(const int valueLogarithmic) {}
+void AudioPlayer::setVolume(const qreal valueLogarithmic) {
+  mVolumeLinear = QAudio::convertVolume(valueLogarithmic,
+                                        QAudio::LogarithmicVolumeScale,
+                                        QAudio::LinearVolumeScale);
+  if(mAudioOutput) {
+    mAudioOutput->setVolume(mVolumeLinear);
+  }
+}
 
 void AudioPlayer::setNotifyInterval(const int intervalMS) {
   mNotifyInterval = intervalMS;

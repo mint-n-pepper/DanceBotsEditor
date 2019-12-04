@@ -32,7 +32,6 @@ ApplicationWindow {
     id: fileControl
   }
 
-
   MotorPrimitiveControl{
     id: motorPrimitiveControl
     anchors.left: fileControl.right
@@ -133,11 +132,17 @@ ApplicationWindow {
   Dragger{
     id: ledDragger
     keys: ledBar.keys
+    function cleanOther(){
+      motDragger.cleanAll()
+    }
   }
 
   Dragger{
     id: motDragger
     keys: motorBar.keys
+    function cleanOther(){
+      ledDragger.cleanAll()
+    }
   }
 
   function grabFocus(){
@@ -151,8 +156,8 @@ ApplicationWindow {
   }
 
   function cleanDraggers(){
-    motDragger.clean()
-    ledDragger.clean()
+    motDragger.cleanAll()
+    ledDragger.cleanAll()
   }
 
   function handleKey(event){

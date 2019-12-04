@@ -46,10 +46,21 @@ Rectangle{
   }
 
   MessageDialog {
-    id: clearDialog
-    title: "Please Confirm Clear"
+    id: loadConfirm
+    title: "Please Confirm"
     icon: StandardIcon.Question
-    text: "Are you sure you want to clear choreography?"
+    text: "Loading will clear the choreography. Are you sure?"
+    standardButtons: StandardButton.Yes | StandardButton.No
+    onYes: {
+      loadDialog.open()
+    }
+  }
+
+  MessageDialog {
+    id: clearDialog
+    title: "Please Confirm"
+    icon: StandardIcon.Question
+    text: "Are you sure you want to clear the choreography?"
     standardButtons: StandardButton.Yes | StandardButton.No
     onYes: {
       backend.motorPrimitives.clear()
@@ -99,11 +110,18 @@ Rectangle{
 				width:Style.fileControl.buttonWidth
 				height:Style.fileControl.buttonHeight
         text: "Load"
+        font.pixelSize: Style.fileControl.buttonHeight * 0.4
         focusPolicy: Qt.NoFocus
 				onClicked:
 				{
           appWindow.cleanDraggers()
-					loadDialog.open()
+          // confirm with user if the choreography is not empty
+          if(motorBar.isNotEmpty || ledBar.isNotEmpty){
+            loadConfirm.open()
+          }else{
+            // otherwise, load directly
+            loadDialog.open()
+          }
 				}
 			}
 			Button
@@ -113,6 +131,7 @@ Rectangle{
 				height:Style.fileControl.buttonHeight
         enabled: motorBar.isNotEmpty || ledBar.isNotEmpty
         text: "Save"
+        font.pixelSize: Style.fileControl.buttonHeight * 0.4
         focusPolicy: Qt.NoFocus
 				onClicked:
 				{
@@ -125,6 +144,7 @@ Rectangle{
 				width:Style.fileControl.buttonWidth
 				height:Style.fileControl.buttonHeight
         text: "Clear"
+        font.pixelSize: Style.fileControl.buttonHeight * 0.4
         enabled: motorBar.isNotEmpty || ledBar.isNotEmpty
         focusPolicy: Qt.NoFocus
 				onClicked:
@@ -157,9 +177,16 @@ Rectangle{
           anchors.rightMargin: Style.fileControl.textLabelMargin
 				  maximumLength: 30 // fixed from mp3 tag limitation
 				  placeholderText: "Artist Name"
-          onEditingFinished:{
-            backend.songArtist = text
+          onFocusChanged: {
+            if(!focus){
+              backend.songArtist = text
+            }
+          }
+          onAccepted: {
             appWindow.grabFocus()
+          }
+          Keys.onTabPressed: {
+            songTitleText.focus = true
           }
 			  }
 			} // artist
@@ -180,9 +207,16 @@ Rectangle{
           width: songArtistText.width
 				  maximumLength: 30 // fixed from mp3 tag limitation
 				  placeholderText: qsTr("Song Title")
-          onEditingFinished:{
-            backend.songTitle = text
+          onFocusChanged: {
+            if(!focus){
+              backend.songTitle = text
+            }
+          }
+          onAccepted: {
             appWindow.grabFocus()
+          }
+          Keys.onTabPressed: {
+            songArtistText.focus = true
           }
 			  }
       } // title

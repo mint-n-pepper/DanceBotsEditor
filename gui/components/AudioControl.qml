@@ -4,11 +4,11 @@ import dancebots.backend 1.0
 import "../GuiStyle"
 
 Rectangle{
-	id: root
+  id: root
   color: Style.main.color
   property alias sliderPosition: songPositionSlider.visualPosition
 
-	Component.onCompleted:{
+  Component.onCompleted:{
     setDisabled()
   }
 
@@ -16,15 +16,16 @@ Rectangle{
     target: backend
     onDoneLoading:{
       setEnabled()
-      backend.audioPlayer.setNotifyInterval(20);
+      backend.audioPlayer.setNotifyInterval(30);
+      songPositionSlider.value = 0
       songPositionSlider.to =
         backend.getAudioLengthInFrames() / backend.getSampleRate() * 1000;
     }
   }
 
   Connections{
-	  target: backend.audioPlayer
-	  onNotify:{
+    target: backend.audioPlayer
+    onNotify:{
       // set slider to current position in music,
       // but only if user is not dragging slider at the moment:
       if(!songPositionSlider.pressed){
@@ -33,13 +34,14 @@ Rectangle{
     }
   }
 
-	function setEnabled(){
-    buttonRow.enabled = true
-	}
+  function setEnabled(){
+    songPositionSlider.enabled = true
+  }
 
-	function setDisabled(){
-    buttonRow.enabled = false
-	}
+  function setDisabled(){
+    songPositionSlider.enabled = false
+
+  }
 
   Slider{
     id: songPositionSlider
@@ -55,33 +57,93 @@ Rectangle{
     }
   }
 
-	Row{
-    id: buttonRow
-    width: parent.width
+  Item{
+    id: playControlBox
+    width: Style.audioControl.playControlBoxWidth
     anchors.top: songPositionSlider.bottom
-    Button
-    {
-      id: playButton
-      focusPolicy: Qt.NoFocus
-      width:Style.audioControl.buttonWidth
-      height:Style.audioControl.buttonHeight
-      text: "Play"
-      onClicked:
+
+    Row{
+      id: playControlRow
+      spacing: Style.audioControl.spacing
+      padding: Style.audioControl.padding
+      Button
       {
-        backend.audioPlayer.togglePlay()
+        id: playButton
+        focusPolicy: Qt.NoFocus
+        width:Style.audioControl.buttonWidth
+        height:Style.audioControl.buttonHeight
+        icon.source: "../icons/playPause.svg"
+        icon.color: Style.audioControl.iconColor
+        display: Button.IconOnly
+        onClicked:
+        {
+          backend.audioPlayer.togglePlay()
+        }
+      }
+      Button
+      {
+        id: stopButton
+        focusPolicy: Qt.NoFocus
+        width:Style.audioControl.buttonWidth
+        height:Style.audioControl.buttonHeight
+        icon.source: "../icons/stop.svg"
+        icon.color: Style.audioControl.iconColor
+        display: Button.IconOnly
+        onClicked:
+        {
+          backend.audioPlayer.stop()
+        }
+      }
+      Rectangle{
+        id:timerDisplay
+        height: Style.audioControl.buttonHeight
+        width: Style.audioControl.timerWidth
+        color: Style.audioControl.timerBGColor
+        Text{
+          anchors.right: parent.right
+          anchors.verticalCenter: parent.verticalCenter
+          anchors.rightMargin: Style.audioControl.timerTextMarginRight
+          text: (songPositionSlider.value / 1000).toFixed(1)
+          font.pixelSize: Style.audioControl.timerFontPixelSize
+          color: Style.audioControl.timerFontColor
+        }
       }
     }
-    Button
-    {
-      id: stopButton
-      focusPolicy: Qt.NoFocus
-      width:Style.audioControl.buttonWidth
-      height:Style.audioControl.buttonHeight
-      text: "Stop"
-      onClicked:
-      {
-        backend.audioPlayer.stop()
+
+    Connections{
+      target: backend.audioPlayer
+      onVolumeAvailable:{
+        volumeSlider.value = backend.audioPlayer.getCurrentLogVolume()
       }
     }
-	}
+
+    Slider{
+      id: volumeSlider
+      from: 0.0
+      to: 1.0
+      value: 1.0
+      width: parent.width - playControlRow.width
+      anchors.verticalCenter: playControlRow.verticalCenter
+      anchors.left: playControlRow.right
+      focusPolicy: Qt.NoFocus
+      live: true
+      onValueChanged: backend.audioPlayer.setVolume(value)
+
+      handle: Rectangle{
+        width: Style.audioControl.volumeSliderSize
+        height: width
+        radius: width/2
+        color: Style.audioControl.volumeSliderHandleBGColor
+        x: volumeSlider.leftPadding
+           + volumeSlider.visualPosition * (volumeSlider.availableWidth - width)
+        anchors.verticalCenter: volumeSlider.verticalCenter
+        Image{
+          source: "../icons/volume.svg"
+          anchors.centerIn: parent
+          width: Style.audioControl.volumeSliderIconScale * parent.width
+          height: width
+        }
+      }
+    }
+  }
 }

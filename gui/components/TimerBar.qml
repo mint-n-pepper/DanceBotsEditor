@@ -90,6 +90,7 @@ Canvas{
     }
 
     onDropped:{
+      beatIndicator.visible = false
       drag.source.reset()
       var currentFrame = drag.x / Style.timerBar.frameToPixel;
       var beatLoc = backend.getBeatAtFrame(currentFrame)
@@ -131,18 +132,23 @@ Canvas{
         // set width of ghosts to primitive width:
         ghosts[i].width = drag.source.children[i].width
       }
+      beatIndicator.visible = true
     }
 
     onExited:{
       for(var i = 0; i < drag.source.children.length; ++i){
         ghosts[i].visible = false
       }
+      beatIndicator.visible = false
     }
 
     onPositionChanged:{
       var currentFrame = drag.x / Style.timerBar.frameToPixel;
       var beatLoc = backend.getBeatAtFrame(currentFrame)
       if(beatLoc >= 0){
+        // update beat indicator:
+        beatIndicator.text = beatLoc
+        beatIndicator.x = beats[beatLoc] * Style.timerBar.frameToPixel
         // update ghosts for each child in dragger
         var beatOffset = drag.source.children[0].primitive.positionBeat
         for(var i = 0; i < drag.source.children.length; ++i){
@@ -184,6 +190,33 @@ Canvas{
       }
     }
     return validLength;
+  }
+
+  Rectangle{
+    id: timeIndicator
+    color: Style.timerBar.timeBarColor
+    width: Style.timerBar.timeBarWidth
+    height: parent.height
+    property var position: 0
+    x: position - width/2
+  }
+
+  Rectangle{
+    id: beatIndicator
+    color: Style.timerBar.beatIndicatorBgColor
+    visible: false
+    anchors.bottom: root.toolTipUp ? root.top : undefined
+    anchors.top: root.toolTipUp ? undefined : root.bottom
+    property var text: "15"
+    width: beatText.width
+    height: beatText.height
+    Text{
+      id: beatText
+      text: beatIndicator.text
+      padding: Style.timerBar.beatIndicatorPadding
+      font.pixelSize: Style.timerBar.beatIndicatorFontPixelSize
+      color: Style.timerBar.beatIndicatorFontColor
+    }
   }
 
   Repeater{
@@ -239,17 +272,6 @@ Canvas{
       ctx.lineTo(loc, height);
       ctx.stroke();
     }
-  }
-
-  Rectangle{
-    id: timeIndicator
-    color: Style.timerBar.timeBarColor
-    width: Style.timerBar.timeBarWidth
-    height: parent.height
-    visible: false
-    property var widthOffset: width/2
-    property var position: 0
-    x: position - widthOffset
   }
 
   function createGhosts(desiredNumber){

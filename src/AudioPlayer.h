@@ -18,18 +18,19 @@ public:
   void setAudioData(const std::vector<float>& monoData,
                     const int sampleRate = 44100);
 
-  Q_INVOKABLE int getCurrentLogVolume(void) const;
+  Q_INVOKABLE qreal getCurrentLogVolume(void);
 
 signals:
   void stopped(void);
   void notify(int currentPosMS);
+  void volumeAvailable(void);
 
 public slots:
   void togglePlay(void);
   void stop(void);
   void pause(void);
   void seek(const int timeMS);
-  void setVolume(const int valueLogarithmic);
+  void setVolume(const qreal valueLogarithmic);
   void setNotifyInterval(const int intervalMS);
 
 private slots:
@@ -38,9 +39,9 @@ private slots:
 
 private:
   void connectAudioOutputSignals();
-  qreal mVolumeLinear{ 0.0 };
+  qreal mVolumeLinear{ 1.0 }; // start with full volume
   int mSampleRate{ 0 };
-  int mNotifyInterval{ 100 };
+  int mNotifyInterval{ 25 };
   bool mStartupStart = true;
   const QDataStream::ByteOrder mEndianness{ QDataStream::LittleEndian };
   std::unique_ptr<QAudioOutput> mAudioOutput;
