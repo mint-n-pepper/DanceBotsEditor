@@ -75,10 +75,6 @@ void AudioPlayer::setAudioData(const std::vector<float>& monoData,
   // and open and reset buffer
   mRawAudioBuffer.open(QIODevice::ReadOnly);
   mRawAudioBuffer.reset(); // in case of reload, rewind
-
-  // and start to shorten startup time
-  mStartupStart = true;
-  mAudioOutput->start(&mRawAudioBuffer);
 }
 
 qreal AudioPlayer::getCurrentLogVolume(void) {
@@ -146,16 +142,23 @@ void AudioPlayer::pause(void) {
 }
 
 void AudioPlayer::handleAudioOutputNotify(void) {
-  // get current position in buffer and compensate
-  // for buffer delay
-  qint64 pos = mRawAudioBuffer.pos() - mAudioOutput->bufferSize();
+  // get current position in buffer and compensate for buffer delay if not at
+  // end (to make sure end is properly displayed by frontend)
+  qint64 pos = 0;
+  if(mRawAudioBuffer.atEnd()) {
+    pos = mRawAudioBuffer.pos();
+  }
+  else {
+    pos = mRawAudioBuffer.pos() - mAudioOutput->bufferSize();
+  }
+
   if(pos < 0) { pos = 0; }
   // convert to MS:
   // 1000 * pos / 2 / SampleRate - /2 for two bytes per frame
   const int timeMS = 500 * pos / mSampleRate;
 
- // and inform subscribers
- emit notify(timeMS);
+  // and inform subscribers
+  emit notify(timeMS);
 }
 
 void AudioPlayer::connectAudioOutputSignals() {
@@ -196,8 +199,4 @@ void AudioPlayer::setNotifyInterval(const int intervalMS) {
 
 void AudioPlayer::handleStateChanged(QAudio::State newState) {
   // TODO: might have to implement error handling here
-  if(mStartupStart && mAudioOutput->state() == QAudio::ActiveState) {
-    mAudioOutput->suspend();
-    mStartupStart = false;
-  }
 }

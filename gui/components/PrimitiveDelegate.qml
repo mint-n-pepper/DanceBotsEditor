@@ -14,8 +14,7 @@ Rectangle{
   property var primitive: null
   property var dragTarget: null
   property bool showData: false
-  property bool toolTipUp: false
-
+  property bool dragActive: dragArea.dragActive
   onPrimitiveChanged: updatePrimitive()
 
   onEnabledChanged: {
@@ -205,86 +204,5 @@ Rectangle{
     visible: false
     color: Style.primitives.highlightOverlayColor
     anchors.fill: parent
-  }
-
-  Rectangle{
-    id: primitiveData
-    anchors.top: toolTipUp ? undefined : parent.bottom
-    anchors.bottom: toolTipUp ? parent.top : undefined
-    visible: showData && isFromBar && !dragArea.dragActive
-    color: Style.primitives.toolTipBgColor
-    width: dataColumn.width
-    height:dataColumn.height
-    radius: Style.primitives.radius
-    Column{
-      id:dataColumn
-      Text{
-        text: "Freq: 1.00"
-        font.pixelSize: Style.primitives.toolTipFontPixelSize
-        color: Style.primitives.toolTipFontColor
-        onVisibleChanged: {
-          if(visible){text="Freq: " + primitive.frequency.toFixed(2)}
-        }
-        padding: Style.primitives.toolTipPadding
-      }
-      Text{
-        visible: primitiveData.visible && primitive.velocity !== undefined
-        text: "Vel: 40"
-        font.pixelSize: Style.primitives.toolTipFontPixelSize
-        color: Style.primitives.toolTipFontColor
-        padding: Style.primitives.toolTipPadding
-        onVisibleChanged: {
-          if(visible){
-            if(primitive.type === MotorPrimitive.Type.Custom){
-              text="Vel L: " + primitive.velocity
-            }else{
-              text="Vel: " + primitive.velocity
-            }
-          }
-        }
-      }
-      Text{
-        visible: {primitiveData.visible
-                 && primitive.type === MotorPrimitive.Type.Custom
-                 && primitive.velocityRight !== undefined}
-        text: "Vel R: 40"
-        padding: Style.primitives.toolTipPadding
-        font.pixelSize: Style.primitives.toolTipFontPixelSize
-        color: Style.primitives.toolTipFontColor
-        onVisibleChanged: {
-          if(visible){text="Vel R: " + primitive.velocityRight}
-        }
-      }
-
-      Row{
-        padding: 4.0
-        visible: { primitiveData.visible
-          && primitive.type !== LEDPrimitive.Type.KnightRider
-          && primitive.type !== LEDPrimitive.Type.Random
-          && primitive.leds !== undefined
-        }
-        onVisibleChanged: {
-          if(visible){
-            for(var i = 0; i < primitive.leds.length; i++){
-              if(primitive.leds[i]){
-                ledRepeater.itemAt(i).color =  Style.primitives.ledToolTipOnColor
-              }else{
-                ledRepeater.itemAt(i).color =  Style.primitives.ledToolTipOffColor
-              }
-            }
-          }
-        }
-        Repeater{
-          id: ledRepeater
-          model: 8
-          delegate: Rectangle{
-            width: Style.primitives.ledToolTipLEDSize
-            height: Style.primitives.ledToolTipLEDSize
-            radius: Style.primitives.ledToolTipLEDSize / 2
-            color: Style.primitives.ledToolTipOffColor
-          }
-        }
-      }
-    }
   }
 }

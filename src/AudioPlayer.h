@@ -42,7 +42,6 @@ private:
   qreal mVolumeLinear{ 1.0 }; // start with full volume
   int mSampleRate{ 0 };
   int mNotifyInterval{ 25 };
-  bool mStartupStart = true;
   const QDataStream::ByteOrder mEndianness{ QDataStream::LittleEndian };
   std::unique_ptr<QAudioOutput> mAudioOutput;
   QByteArray mRawAudio;

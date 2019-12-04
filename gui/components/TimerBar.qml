@@ -19,7 +19,7 @@ Canvas{
   property var beats: []
   property var controlBox: null
   property bool isNotEmpty: primitiveView.count > 0
-  property bool toolTipUp: false
+  property bool isMotorBar: false
 
   property var primitiveY: (Style.timerBar.height - Style.primitives.height)/2
 
@@ -226,9 +226,11 @@ Canvas{
       primitive: model.item
       idleParent: primitiveView
       isFromBar: true
-      toolTipUp: root.toolTipUp
       dragTarget: root.dragTarget
       y: (Style.timerBar.height - Style.primitives.height) / 2
+      PrimitiveToolTip{
+        isMotor: root.isMotorBar
+      }
     }
 
     onItemRemoved: {

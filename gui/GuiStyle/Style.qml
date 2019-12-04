@@ -96,6 +96,7 @@ QtObject {
     property int toolTipFontPixelSize: 16
     property real toolTipPadding: 4.0
     property var ledToolTipLEDSize: 10
+    property var ledToolTipLEDPadding: 4.0
     property var ledToolTipOnColor: "lime"
     property var ledToolTipOffColor: "lightslategrey"
 

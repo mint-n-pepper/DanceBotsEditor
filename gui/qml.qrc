@@ -10,6 +10,7 @@
         <file>components/MP3FileControl.qml</file>
         <file>components/PrimitiveDelegate.qml</file>
         <file>components/TimerBar.qml</file>
+        <file>components/PrimitiveToolTip.qml</file>
         <file>GuiStyle/Style.qml</file>
         <file>GuiStyle/qmldir</file>
         <file>icons/playPause.svg</file>

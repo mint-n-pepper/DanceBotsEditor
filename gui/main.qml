@@ -98,7 +98,7 @@ ApplicationWindow {
         keys: ["mot"]
         model: backend.motorPrimitives
         dragTarget: motDragger
-        toolTipUp: true
+        isMotorBar: true
         primitiveColors: Style.motorPrimitive.colors
         primitiveTextIDs: Style.motorPrimitive.textID
         controlBox: motorPrimitiveControl

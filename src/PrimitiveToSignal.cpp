@@ -156,8 +156,8 @@ void PrimitiveToSignal::getMotorVelocities(
     data.velocityRight = motorPrimitive->mVelocityRight;
     break;
   case MotorPrimitive::Type::Spin:
-    data.velocityLeft = motorPrimitive->mVelocity;
-    data.velocityRight = -motorPrimitive->mVelocity;
+    data.velocityLeft = -motorPrimitive->mVelocity;
+    data.velocityRight = motorPrimitive->mVelocity;
     break;
   case MotorPrimitive::Type::Straight:
     data.velocityLeft = motorPrimitive->mVelocity;
@@ -166,7 +166,7 @@ void PrimitiveToSignal::getMotorVelocities(
   case MotorPrimitive::Type::Twist: {
     double angle = relativeBeat * motorPrimitive->mFrequency * 2.0 * pi;
     data.velocityLeft = static_cast<qint8>(
-      round(motorPrimitive->mVelocity * sin(angle)));
+      -round(motorPrimitive->mVelocity * sin(angle)));
     data.velocityRight = -data.velocityLeft;
     break;
   }
