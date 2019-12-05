@@ -196,8 +196,6 @@ bool BackEnd::saveMP3Worker(const QString& fileName) {
   primitiveConverter.convert(mMotorPrimitives->getData(),
                              mLedPrimitives->getData());
 
-  mAudioFile.savePCM("temp.wav");
-
   mFileStatus = "Saving to MP3 File";
   emit fileStatusChanged();
   // save file

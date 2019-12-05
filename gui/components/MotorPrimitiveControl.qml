@@ -22,7 +22,7 @@ Rectangle{
     // control box:
     setDummyBeats();
     createDelegate();
-    setDisabled();
+    enabled = false
   }
 
   onDelegateChanged:{
@@ -45,22 +45,14 @@ Rectangle{
   Connections{
 	  target: backend
 	  onDoneLoading:{
-      // calculate average beat distance:
-      averageBeatFrames = backend.getAverageBeatFrames();
-      delegate.updatePrimitive();
-      setEnabled();
+      if(result){
+        // calculate average beat distance:
+        averageBeatFrames = backend.getAverageBeatFrames();
+        delegate.updatePrimitive();
+        enabled = true
+      }
     }
   }
-
-	function setEnabled(){
-		typeRadio.enabled = true
-    delegate.enabled = true
-	}
-
-	function setDisabled(){
-		typeRadio.enabled = false
-    delegate.enabled = false
-	}
 
 	Column{
 		id: typeRadio
@@ -85,31 +77,31 @@ Rectangle{
           id: twistRadio
           checked: true
           text: qsTr("Twist")
-          focusPolicy: Qt.NoFocus
+          onPressed: appWindow.grabFocus()
           onToggled: typeRadio.type=MotorPrimitive.Type.Twist
         }
         RadioButton {
           id: spinRadio
           text: qsTr("Spin")
-          focusPolicy: Qt.NoFocus
+          onPressed: appWindow.grabFocus()
           onToggled: typeRadio.type=MotorPrimitive.Type.Spin
         }
         RadioButton {
           id: backForthRadio
           text: qsTr("Back and Forth")
-          focusPolicy: Qt.NoFocus
+          onPressed: appWindow.grabFocus()
           onToggled: typeRadio.type=MotorPrimitive.Type.BackAndForth
         }
         RadioButton {
           id: driveStraightRadio
           text: qsTr("Drive Straight")
-          focusPolicy: Qt.NoFocus
+          onPressed: appWindow.grabFocus()
           onToggled: typeRadio.type=MotorPrimitive.Type.Straight
         }
         RadioButton {
           id: customRadio
           text: qsTr("Custom")
-          focusPolicy: Qt.NoFocus
+          onPressed: appWindow.grabFocus()
           onToggled: typeRadio.type=MotorPrimitive.Type.Custom
         }
       }

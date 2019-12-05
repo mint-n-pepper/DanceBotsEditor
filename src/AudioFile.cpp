@@ -12,7 +12,7 @@ typedef float sample_t;
 
 // class constants:
 const QByteArray AudioFile::danceFileHeaderCode("DancebotsDancefile");
-const double AudioFile::musicRMSTarget = 0.2f;
+const double AudioFile::musicRMSTarget = 0.16f;
 
 // Dummy reporting function for Lame
 extern "C" {

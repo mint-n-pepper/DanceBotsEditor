@@ -5,8 +5,11 @@ import "../GuiStyle"
 
 Rectangle{
   id: root
-  color: Style.main.color
+  color: "transparent"
   property alias sliderPosition: songPositionSlider.visualPosition
+
+  height: songPositionSlider.implicitHeight
+          + playControlBox.height
 
   Component.onCompleted:{
     setDisabled()
@@ -15,11 +18,13 @@ Rectangle{
   Connections{
     target: backend
     onDoneLoading:{
-      setEnabled()
-      backend.audioPlayer.setNotifyInterval(30);
-      songPositionSlider.value = 0
-      songPositionSlider.to =
-        backend.getAudioLengthInFrames() / backend.getSampleRate() * 1000;
+      if(result){
+        setEnabled()
+        backend.audioPlayer.setNotifyInterval(30);
+        songPositionSlider.value = 0
+        songPositionSlider.to =
+          backend.getAudioLengthInFrames() / backend.getSampleRate() * 1000;
+      }
     }
   }
 
@@ -51,6 +56,7 @@ Rectangle{
     focusPolicy: Qt.NoFocus
 
     onPressedChanged:{
+      appWindow.grabFocus()
       if(!pressed){
         backend.audioPlayer.seek(value)
       }
@@ -61,9 +67,11 @@ Rectangle{
     id: playControlBox
     width: Style.audioControl.playControlBoxWidth
     anchors.top: songPositionSlider.bottom
-
+    height: Style.audioControl.buttonHeight
+            + 2 * Style.audioControl.padding
     Row{
       id: playControlRow
+      anchors.topMargin: Style.audioControl.padding
       spacing: Style.audioControl.spacing
       padding: Style.audioControl.padding
       Button
@@ -75,6 +83,7 @@ Rectangle{
         icon.source: "../icons/playPause.svg"
         icon.color: Style.audioControl.iconColor
         display: Button.IconOnly
+        onPressed: appWindow.grabFocus()
         onClicked:
         {
           backend.audioPlayer.togglePlay()
@@ -89,6 +98,7 @@ Rectangle{
         icon.source: "../icons/stop.svg"
         icon.color: Style.audioControl.iconColor
         display: Button.IconOnly
+        onPressed: appWindow.grabFocus()
         onClicked:
         {
           backend.audioPlayer.stop()
@@ -127,6 +137,7 @@ Rectangle{
       anchors.left: playControlRow.right
       focusPolicy: Qt.NoFocus
       live: true
+      onPressedChanged: appWindow.grabFocus()
       onValueChanged: backend.audioPlayer.setVolume(value)
 
       handle: Rectangle{

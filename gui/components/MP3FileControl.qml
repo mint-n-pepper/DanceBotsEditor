@@ -27,14 +27,11 @@ Rectangle{
 		target: backend
 		onDoneLoading:{
       fileProcess.close()
-			fileControl.songTitle = backend.songTitle
-			fileControl.songArtist = backend.songArtist
-			fileControl.setEnabled()
-			if(result){
-				console.log('load success in event')
-			}else{
-				console.log('load fail in event')
-			}
+      if(result){
+        fileControl.songTitle = backend.songTitle
+        fileControl.songArtist = backend.songArtist
+        fileControl.setEnabled()
+      }
 		}
 	}
 
@@ -66,7 +63,6 @@ Rectangle{
       backend.motorPrimitives.clear()
       backend.ledPrimitives.clear()
     }
-    onNo: console.log("ok not clearing")
   }
 
   FileDialog {
@@ -114,6 +110,7 @@ Rectangle{
         focusPolicy: Qt.NoFocus
 				onClicked:
 				{
+          appWindow.grabFocus()
           appWindow.cleanDraggers()
           // confirm with user if the choreography is not empty
           if(motorBar.isNotEmpty || ledBar.isNotEmpty){
@@ -135,6 +132,8 @@ Rectangle{
         focusPolicy: Qt.NoFocus
 				onClicked:
 				{
+          backend.audioPlayer.pause()
+          appWindow.grabFocus()
           saveDialog.open()
 				}
 			}
@@ -149,6 +148,8 @@ Rectangle{
         focusPolicy: Qt.NoFocus
 				onClicked:
 				{
+          backend.audioPlayer.pause()
+          appWindow.grabFocus()
           clearDialog.open()
 				}
 			}

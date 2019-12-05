@@ -57,7 +57,6 @@ Rectangle{
 
     property var resizeMargin: Style.primitives.sizePixelMarginRight
     property bool doResize: false
-
     hoverEnabled: parent.isFromBar
 
     onWidthChanged: {
@@ -85,7 +84,7 @@ Rectangle{
     onPositionChanged:{
       // figure out in what part of the primitive the cursor is
       // and then change the mouse pointer accordingly
-      if(parent.isFromBar && mouseX > width - resizeMargin){
+      if(!dragActive && isFromBar && mouseX > width - resizeMargin){
         cursorShape = Qt.SizeHorCursor
       }else{
         cursorShape = Qt.ArrowCursor
@@ -94,6 +93,9 @@ Rectangle{
       if(doResize && pressed){
         // do resize
         var currentFrame = (parent.x + mouseX) / Style.timerBar.frameToPixel;
+        if(currentFrame > backend.getAudioLengthInFrames()){
+          currentFrame = backend.getAudioLengthInFrames() - 1
+        }
         var beatLoc = backend.getBeatAtFrame(currentFrame) + 1
         var newLength = beatLoc - parent.primitive.positionBeat
         if(newLength < 1){
@@ -128,6 +130,7 @@ Rectangle{
     }
 
     onPressed:{
+      appWindow.grabFocus()
       controlPressed = (mouse.modifiers & Qt.ControlModifier)
       shiftPressed = (mouse.modifiers & Qt.ShiftModifier)
       doResize = isFromBar && mouseX > width - resizeMargin
@@ -191,7 +194,7 @@ Rectangle{
     State {
         name: "onDrag"
         ParentChange { target: root; parent: dragTarget }
-        PropertyChanges{target: selectionHighlight; visible: true}
+        PropertyChanges{target: selectionHighlight; visible: true && isFromBar}
     }
   ]
 

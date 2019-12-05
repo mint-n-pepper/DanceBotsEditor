@@ -6,13 +6,14 @@ Item{
 
   property var keys: null
   property bool hasChildren: (children.length > 0)
-  width: parent.width
-  height: parent.height
   property bool copy: false
+  property bool dragActive: Drag.active
+
+  signal dragXChanged(int minChildX, int maxChildX)
 
   function startDrag(controlPressed){
     copy = controlPressed
-    Drag.hotSpot.x = children[0].x;
+    Drag.hotSpot.x = children[0].x
     Drag.hotSpot.y = children[0].y + Style.primitives.height/2
     clearOccupancy() // clear occupancy
     if(copy){
@@ -20,6 +21,26 @@ Item{
       copyPrimitives()
     }
     Drag.start()
+  }
+
+  onXChanged: {
+    // only process if we are hovering over the timer bar
+    if(Drag.active && Drag.target){
+      // calculate left and right edges of children
+      var minChildX = children[0].x
+      var maxChildX = children[0].x + children[0].width
+
+      for(var i = 1; i < children.length; ++i){
+        if(children[i].x < minChildX){
+          minChildX = children[i].x
+        }
+        if(children[i].x + children[i].width > maxChildX){
+          maxChildX = children[i].x + children[i].width
+        }
+      }
+
+      dragXChanged(x + minChildX, x + maxChildX)
+    }
   }
 
   onChildrenChanged: {
@@ -36,6 +57,7 @@ Item{
     if(Drag.target === null){
       // dropped outside. Delete.
       deleteAll()
+      reset()
     }
     Drag.drop()
   }
@@ -79,7 +101,7 @@ Item{
     }
 
     for(var i = 0; i < children.length; ++i){
-      // clear it:
+      // copy it:
       children[0].idleParent.duplicateItem(children[i])
     }
   }

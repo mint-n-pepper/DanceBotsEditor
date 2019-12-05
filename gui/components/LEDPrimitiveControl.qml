@@ -16,13 +16,13 @@ Rectangle{
   property var primitiveTextIDs: Style.ledPrimitive.textID
   property var delegate: null
   property var averageBeatFrames: 60 * 441 // 100 bpm @ 44.1kHz
+  enabled: false
 
 	Component.onCompleted:{
     // set the first beat at a fixed pixel distance from the left border of the
     // control box:
     setDummyBeats();
     createDelegate();
-    setDisabled();
   }
 
   onDelegateChanged:{
@@ -45,23 +45,14 @@ Rectangle{
   Connections{
 	  target: backend
 	  onDoneLoading:{
-      // calculate average beat distance:
-      averageBeatFrames = backend.getAverageBeatFrames();
-      delegate.updatePrimitive();
-      setEnabled();
+      if(result){
+        // calculate average beat distance:
+        averageBeatFrames = backend.getAverageBeatFrames();
+        delegate.updatePrimitive();
+        enabled = true;
+      }
     }
   }
-
-	function setEnabled(){
-    blinkieSettings.enabled = true
-
-    delegate.enabled = true
-	}
-
-	function setDisabled(){
-    blinkieSettings.enabled = false
-    delegate.enabled = false
-	}
 
 	Column{
     id: blinkieSettings
@@ -86,33 +77,33 @@ Rectangle{
       Column{
         RadioButton {
           id: knightRiderRadio
-          focusPolicy: Qt.NoFocus
           checked: true
           text: qsTr("KnightRider")
+          onPressed: appWindow.grabFocus()
           onToggled: blinkieSettings.type=LEDPrimitive.Type.KnightRider
         }
         RadioButton {
           id: alternateRadio
           text: qsTr("Alternate")
-          focusPolicy: Qt.NoFocus
+          onPressed: appWindow.grabFocus()
           onToggled: blinkieSettings.type=LEDPrimitive.Type.Alternate
         }
         RadioButton {
           id: blinkRadio
           text: qsTr("Blink")
-          focusPolicy: Qt.NoFocus
+          onPressed: appWindow.grabFocus()
           onToggled: blinkieSettings.type=LEDPrimitive.Type.Blink
         }
         RadioButton {
           id: constantRadio
           text: qsTr("Constant")
-          focusPolicy: Qt.NoFocus
+          onPressed: appWindow.grabFocus()
           onToggled: blinkieSettings.type=LEDPrimitive.Type.Constant
         }
         RadioButton {
           id: randomRadio
           text: qsTr("Random")
-          focusPolicy: Qt.NoFocus
+          onPressed: appWindow.grabFocus()
           onToggled: blinkieSettings.type=LEDPrimitive.Type.Random
         }
       }
@@ -174,6 +165,7 @@ Rectangle{
             id: control
             checked: blinkieSettings.leds[index]
             focusPolicy: Qt.NoFocus
+            onPressed: appWindow.grabFocus()
             onCheckedChanged: {
               blinkieSettings.leds[index] = checked
               if(delegate){

@@ -6,15 +6,15 @@ import "GuiStyle"
 
 ApplicationWindow {
   id: appWindow
-  width: Style.main.width
-  height: Style.main.height
+  width: fileControl.width
+         + motorPrimitiveControl.width
+         + ledPrimitiveControl.width
+  height: audioControl.y
+          + audioControl.height
   visible: true
   title: "Dancebots GUI"
 
-  background: Rectangle{
-    anchors.fill: parent
-    color: Style.main.color
-  }
+  color: Style.main.color
 
   MouseArea{
     id: sceneClickCatcher
@@ -45,7 +45,8 @@ ApplicationWindow {
   AudioControl{
     id: audioControl
     anchors.top: timerBarFlickable.bottom
-    width: parent.width
+    anchors.left: fileControl.left
+    anchors.right: ledPrimitiveControl.right
   }
 
   Flickable{
@@ -60,15 +61,90 @@ ApplicationWindow {
     anchors.bottomMargin: Style.timerBar.margin
     boundsBehavior: Flickable.StopAtBounds
     interactive: true
+    property bool hoverScrollRight: true
+
+    property bool dragActive: motDragger.dragActive || ledDragger.dragActive
+
+    onDragActiveChanged: {
+      if(!dragActive){
+        scrollTimer.stop()
+      }
+    }
+
+    Connections{
+      target: motDragger
+      onDragXChanged: timerBarFlickable.processMouseMove(minChildX, maxChildX)
+    }
+
+    Connections{
+      target: ledDragger
+      onDragXChanged: timerBarFlickable.processMouseMove(minChildX, maxChildX)
+    }
+
+    function hoverScroll(){
+      if(hoverScrollRight){
+        if(contentX == contentWidth - width){
+          return
+        }
+        var scrollStepUp = Style.timerBar.scrollSpeed
+        if(contentX + scrollStepUp > contentWidth - width){
+          scrollStepUp = contentWidth - width - contentX
+        }
+        contentX += scrollStepUp
+        if(motDragger.dragActive){
+          motDragger.x += scrollStepUp
+        }
+        if(ledDragger.dragActive){
+          ledDragger.x += scrollStepUp
+        }
+      }else{
+        if(contentX == 0){
+          return
+        }
+        var scrollStepDown = Style.timerBar.scrollSpeed
+        if(contentX - scrollStepDown < 0){
+          scrollStepDown = contentX
+        }
+
+        contentX -= scrollStepDown
+        if(motDragger.dragActive){
+          motDragger.x -= scrollStepDown
+        }
+        if(ledDragger.dragActive){
+          ledDragger.x -= scrollStepDown
+        }
+      }
+    }
+
+    Timer{
+      id: scrollTimer
+      interval: 25
+      repeat: true
+      onTriggered: timerBarFlickable.hoverScroll()
+    }
+
+    function processMouseMove(minX, maxX){
+      if(minX - timerBarFlickable.contentX < Style.timerBar.scrollMargin){
+        timerBarFlickable.hoverScrollRight = false
+        scrollTimer.start()
+      }else if(maxX - timerBarFlickable.contentX
+               > timerBarFlickable.width - Style.timerBar.scrollMargin){
+        timerBarFlickable.hoverScrollRight = true
+        scrollTimer.start()
+      }
+      else{
+        scrollTimer.stop()
+      }
+    }
 
     MouseArea
     {
       anchors.fill: parent
       onClicked: { mouse.accepted = false }
       onReleased: {
-          if (!propagateComposedEvents) {
-              propagateComposedEvents = true
-          }
+        if (!propagateComposedEvents) {
+            propagateComposedEvents = true
+        }
       }
     }
 
@@ -79,6 +155,8 @@ ApplicationWindow {
       motorBar.timeIndicatorPosition=sliderPosition
       * backend.getAudioLengthInFrames()
       * Style.timerBar.frameToPixel;
+      // update visible range only if drag is not active
+      if(!dragActive){
       // get current visible pixel range:
       if(motorBar.timeIndicatorPosition < contentX
           || motorBar.timeIndicatorPosition > contentX + width){
@@ -86,6 +164,7 @@ ApplicationWindow {
             Style.timerBar.timeBarScrollOffset;
           contentX = proposedContentX < 0 ? 0 : proposedContentX;
           }
+      }
     }
 
     Column{
@@ -116,6 +195,24 @@ ApplicationWindow {
         controlBox: ledPrimitiveControl
       }
     }
+
+    Dragger{
+      id: ledDragger
+      keys: ledBar.keys
+      width: motorBar.width
+      function cleanOther(){
+        motDragger.cleanAll()
+      }
+    }
+
+    Dragger{
+      id: motDragger
+      width: motorBar.width
+      keys: motorBar.keys
+      function cleanOther(){
+        ledDragger.cleanAll()
+      }
+    }
   }
 
   Item{
@@ -129,27 +226,12 @@ ApplicationWindow {
     Keys.onPressed: handleKey(event)
   }
 
-  Dragger{
-    id: ledDragger
-    keys: ledBar.keys
-    function cleanOther(){
-      motDragger.cleanAll()
-    }
-  }
-
-  Dragger{
-    id: motDragger
-    keys: motorBar.keys
-    function cleanOther(){
-      ledDragger.cleanAll()
-    }
-  }
-
   function grabFocus(){
     keyCatcher.focus = true
   }
 
   function handleSceneClick(mouse){
+    grabFocus()
     if (!(mouse.modifiers & (Qt.ShiftModifier|Qt.ControlModifier))) {
         cleanDraggers()
     }

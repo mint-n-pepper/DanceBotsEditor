@@ -27,17 +27,19 @@ Canvas{
   Connections{
 	  target: backend
 	  onDoneLoading:{
-      // pre-create a few ghosts:
-      createGhosts(10);
-      // resize rectangle to fit song
-      width = backend.getAudioLengthInFrames() * Style.timerBar.frameToPixel;
-      timeIndicator.visible = true
-      beats=backend.getBeats()
-      requestPaint();
-      // clear occupancy array:
-      occupied.length = 0
-      for(var i = 0; i < beats.length; ++i){
-        occupied.push(false)
+      if(result){
+        // pre-create a few ghosts:
+        createGhosts(10);
+        // resize rectangle to fit song
+        width = backend.getAudioLengthInFrames() * Style.timerBar.frameToPixel;
+        timeIndicator.visible = true
+        beats=backend.getBeats()
+        requestPaint();
+        // clear occupancy array:
+        occupied.length = 0
+        for(var i = 0; i < beats.length; ++i){
+          occupied.push(false)
+        }
       }
     }
   }
@@ -54,8 +56,6 @@ Canvas{
         for(var i=0; i < drag.source.children.length; ++i){
           drag.source.children[i].y = root.y
               + primitiveY
-              + Style.fileControl.height
-              + Style.timerBar.spacing
           drag.source.children[i].updatePrimitive();
           setOccupied(drag.source.children[i].primitive)
         }
@@ -69,6 +69,9 @@ Canvas{
     }
 
     function handleInvalidDrop(){
+      if(!drag.source.hasChildren){
+        return
+      }
       // cannot drop
       if(drag.source.children[0].isFromBar){
         // if source is timer bar and items were not copied,
@@ -96,7 +99,7 @@ Canvas{
       var beatLoc = backend.getBeatAtFrame(currentFrame)
       var positions = []
       var lengths = []
-      if(beatLoc >= 0){
+      if(beatLoc >= 0 && drag.source.hasChildren){
         // update ghosts for each child in dragger
         var beatOffset = drag.source.children[0].primitive.positionBeat
         var allValid = true
@@ -205,8 +208,8 @@ Canvas{
     id: beatIndicator
     color: Style.timerBar.beatIndicatorBgColor
     visible: false
-    anchors.bottom: root.toolTipUp ? root.top : undefined
-    anchors.top: root.toolTipUp ? undefined : root.bottom
+    anchors.bottom: root.isMotorBar ? root.top : undefined
+    anchors.top: root.isMotorBar ? undefined : root.bottom
     property var text: "15"
     width: beatText.width
     height: beatText.height

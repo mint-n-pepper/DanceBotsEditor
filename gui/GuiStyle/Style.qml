@@ -71,6 +71,13 @@ QtObject {
     property color beatIndicatorFontColor: "#000000"
     property int beatIndicatorFontPixelSize: 16
     property real beatIndicatorPadding: 4.0
+
+    // hover scroll settings:
+    // scroll margin is # of pixels at either end of visible timer bar
+    // area that trigger a left or right scroll on hover of the primitive
+    // edges
+    property int scrollMargin: 20
+    property int scrollSpeed: 8
 	}
 
   // General primitives:
