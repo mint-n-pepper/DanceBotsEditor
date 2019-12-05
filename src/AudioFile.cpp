@@ -3,7 +3,7 @@
 #include <lame.h>
 #include <sndfile.h>
 #include <limits.h>
-#include <math.h>
+#include <cmath>
 
 // typedef sample_t to include encoder.h that contains the en-/decoder
 // delay defines

@@ -1,6 +1,7 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
+#include <QtSvg>
 
 #include "BackEnd.h"
 #include "Primitive.h"

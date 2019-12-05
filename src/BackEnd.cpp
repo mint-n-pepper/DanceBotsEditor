@@ -14,7 +14,7 @@
 BackEnd::BackEnd(QObject* parent) :
   QObject{ parent },
   mAudioFile{},
-  mBeatDetector{ mAudioFile.sampleRate },
+  mBeatDetector{ static_cast<unsigned int>(mAudioFile.sampleRate) },
   mFileStatus{ "Idle" },
   mLoadFuture{},
   mLoadFutureWatcher{},

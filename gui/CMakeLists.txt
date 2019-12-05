@@ -7,7 +7,7 @@ set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 
-find_package(Qt5 COMPONENTS Core Quick Qml Concurrent Multimedia REQUIRED)
+find_package(Qt5 COMPONENTS Core Quick Qml Concurrent Multimedia Svg REQUIRED)
 
 # Telling CMake location of our app .qrc file
 qt5_add_resources(APP_RESOURCES ${CMAKE_CURRENT_SOURCE_DIR}/qml.qrc)
@@ -58,6 +58,7 @@ target_link_libraries(  ${PROJECT_NAME}
                         Qt5::Qml
                         Qt5::Multimedia
                         Qt5::Concurrent
+			Qt5::Svg
                         lib-qm-dsp
                         lib-qm-vamp
                         mp3lame

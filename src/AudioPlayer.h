@@ -48,4 +48,5 @@ private:
   QBuffer mRawAudioBuffer;
 };
 
-#endif AUDIO_PLAYER_H_
+#endif
+
