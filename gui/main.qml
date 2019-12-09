@@ -267,6 +267,7 @@ ApplicationWindow {
       cleanDraggers()
       break;
     case Qt.Key_Delete:
+    case Qt.Key_Backspace:
       motDragger.deleteAll()
       ledDragger.deleteAll()
       break;
