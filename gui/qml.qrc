@@ -11,6 +11,8 @@
         <file>components/PrimitiveDelegate.qml</file>
         <file>components/TimerBar.qml</file>
         <file>components/PrimitiveToolTip.qml</file>
+        <file>components/TypeRadio.qml</file>
+        <file>components/ScalableSlider.qml</file>
         <file>GuiStyle/Style.qml</file>
         <file>GuiStyle/qmldir</file>
         <file>icons/playPause.svg</file>

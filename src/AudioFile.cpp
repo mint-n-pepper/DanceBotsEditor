@@ -85,6 +85,10 @@ auto AudioFile::load(const QString filePath) -> Result {
       return Result::eCorruptHeader;
     }
   }
+  else {
+    // the header is not equal to the dancefile code
+    mIsDanceFile = false;
+  }
 
   // rewind file if it is not a dancefile but a regular mp3:
   if(!mIsDanceFile) {
@@ -185,6 +189,7 @@ auto AudioFile::save(const QString file) -> Result {
 void AudioFile::clear(void) {
   // clear all data containers
   mHasData = false;
+  mIsDanceFile = false;
   mMP3PrependData.clear();
   mRawMP3Data.clear();
   mFloatData.clear();

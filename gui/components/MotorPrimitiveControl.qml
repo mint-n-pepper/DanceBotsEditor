@@ -6,40 +6,22 @@ import "../GuiStyle"
 
 Rectangle{
   id: root
-  width: Style.primitiveControl.width
-  height: Style.primitiveControl.height
+  width: parent.width * Style.primitiveControl.width
   color: Style.primitiveControl.moveColor
   property var keys: ['mot']
-  property var beats: [Math.round(Style.primitiveControl.margin
-  / Style.timerBar.frameToPixel)]
   property var primitiveColors: Style.motorPrimitive.colors
   property var primitiveTextIDs: Style.motorPrimitive.textID
+  enabled: false
+
   property var delegate: null
+  property var beats: []
   property var averageBeatFrames: 60 * 441 // 100 bpm @ 44.1kHz
+  property var margin: width * Style.primitiveControl.margin
+  property int type
 
-	Component.onCompleted:{
-    // set the first beat at a fixed pixel distance from the left border of the
-    // control box:
-    setDummyBeats();
-    createDelegate();
-    enabled = false
-  }
-
-  onDelegateChanged:{
-    if(delegate === null){
-      createDelegate()
-    }
-  }
-
-  function setDummyBeats(){
-    for(var i = 1; i < 5; ++i){
-      // add beats at 100 bpm
-      beats[i] = (i * averageBeatFrames) + beats[0]
-    }
-  }
-
-  onAverageBeatFramesChanged:{
-    setDummyBeats();
+  onTypeChanged: {
+    delegate.primitive.type = type
+    delegate.updatePrimitive()
   }
 
   Connections{
@@ -54,71 +36,88 @@ Rectangle{
     }
   }
 
-	Column{
-		id: typeRadio
-		width: parent.width
-    property int type
-    onTypeChanged: {
-      delegate.primitive.type = type
-      delegate.updatePrimitive()
-    }
+  Column{
+    id: controlColumn
+    width: parent.width
+    topPadding: root.margin
+    spacing: Style.primitiveControl.controlSpacing * root.width
     Row{
       Text{
         id: moveText
-        width: Style.primitiveControl.labelsWidth
+        height: controlColumn.spacing * 4
+               + twistRadio.height * 5
+        width: Style.primitiveControl.titleWidth * root.width
         text: qsTr("M O V E S")
         horizontalAlignment: Text.AlignHCenter
-        font.pixelSize: Style.primitiveControl.titlePixelSize
+        verticalAlignment: Text.AlignVCenter
+        font.pixelSize: Style.primitiveControl.titleFontSize * width
         rotation : 270
-        anchors.verticalCenter: parent.verticalCenter
       }
       Column{
-        RadioButton {
+        id: radioColumn
+        spacing: controlColumn.spacing
+        TypeRadio {
           id: twistRadio
           checked: true
-          text: qsTr("Twist")
           onPressed: appWindow.grabFocus()
-          onToggled: typeRadio.type=MotorPrimitive.Type.Twist
+          onToggled: type=MotorPrimitive.Type.Twist
+          height: root.height * Style.primitiveControl.typeRadioHeight
+          width: root.width * (1.0 - Style.primitiveControl.titleWidth)
+          text: qsTr("Twist")
         }
-        RadioButton {
+        TypeRadio {
           id: spinRadio
           text: qsTr("Spin")
           onPressed: appWindow.grabFocus()
-          onToggled: typeRadio.type=MotorPrimitive.Type.Spin
+          onToggled: type=MotorPrimitive.Type.Spin
+          height: root.height * Style.primitiveControl.typeRadioHeight
+          width: root.width * (1.0 - Style.primitiveControl.titleWidth)
         }
-        RadioButton {
+        TypeRadio {
           id: backForthRadio
           text: qsTr("Back and Forth")
           onPressed: appWindow.grabFocus()
-          onToggled: typeRadio.type=MotorPrimitive.Type.BackAndForth
+          onToggled: type=MotorPrimitive.Type.BackAndForth
+          height: root.height * Style.primitiveControl.typeRadioHeight
+          width: root.width * (1.0 - Style.primitiveControl.titleWidth)
         }
-        RadioButton {
+        TypeRadio {
           id: driveStraightRadio
           text: qsTr("Drive Straight")
           onPressed: appWindow.grabFocus()
-          onToggled: typeRadio.type=MotorPrimitive.Type.Straight
+          onToggled: type=MotorPrimitive.Type.Straight
+          height: root.height * Style.primitiveControl.typeRadioHeight
+          width: root.width * (1.0 - Style.primitiveControl.titleWidth)
         }
-        RadioButton {
+        TypeRadio {
           id: customRadio
           text: qsTr("Custom")
           onPressed: appWindow.grabFocus()
-          onToggled: typeRadio.type=MotorPrimitive.Type.Custom
+          onToggled: type=MotorPrimitive.Type.Custom
+          height: root.height * Style.primitiveControl.typeRadioHeight
+          width: root.width * (1.0 - Style.primitiveControl.titleWidth)
         }
       }
     }
 
     Row{
       id: leftSpeedSet
-      Column{
-        anchors.verticalCenter: velocitySlider.verticalCenter
-        width: Style.primitiveControl.labelsWidth
-        Text{
-          x: Style.primitiveControl.margin
-          text: customRadio.checked ? "Velocity L" : "Velocity"
-        }
+      Text{
+        id: leftSpeedLabel
+        height: velocitySlider.height
+        width: Style.primitiveControl.titleWidth * root.width
+        font.pixelSize: Style.primitiveControl.sliderLabelTextSize
+                        * velocitySlider.height
+        text: customRadio.checked ? "Velocity L" : "Velocity"
+        leftPadding: root.margin
+        verticalAlignment: Text.AlignVCenter
       }
-      Slider{
+      ScalableSlider{
         id: velocitySlider
+        height: root.height * Style.primitiveControl.sliderHeight
+        width: root.width * (1.0
+                             - Style.primitiveControl.titleWidth
+                             - Style.primitiveControl.sliderValueWidth)
         from: -100.0
         value: 50.0
         to: 100.0
@@ -127,12 +126,25 @@ Rectangle{
         snapMode: Slider.SnapAlways
         onValueChanged: delegate.primitive.velocity = value
         Keys.onPressed: appWindow.handleKey(event)
+        sliderBarSize: Style.primitiveControl.sliderBarSize
+        backgroundColor: Style.primitiveControl.sliderBGColor
+        backgroundDisabledColor: Style.primitiveControl.sliderBGDisabledColor
+        backgroundActiveColor: Style.primitiveControl.sliderActivePartColor
+        backgroundActiveDisabledColor: Style.primitiveControl.sliderActivePartDisabledColor
+        handleColor: Style.primitiveControl.sliderHandleColor
+        handleDisabledColor: Style.primitiveControl.sliderHandleDisabledColor
       }
       Text {
         id: velocityShow
-        font.pixelSize: Style.primitiveControl.textPixelSize
+        width: root.width * Style.primitiveControl.sliderValueWidth
+        height: frequencySlider.height
+        rightPadding: root.margin
+        leftPadding: width * Style.primitiveControl.sliderValueLeftPadding
+        font.pixelSize: height * Style.primitiveControl.sliderLabelTextSize
         text: velocitySlider.value
         anchors.verticalCenter: velocitySlider.verticalCenter
+        verticalAlignment: Text.AlignVCenter
+        horizontalAlignment: Text.AlignRight
       }
     }
 
@@ -140,19 +152,29 @@ Rectangle{
       id: frequencySet
       visible: twistRadio.checked || backForthRadio.checked
       Column{
-        width: Style.primitiveControl.labelsWidth
+        id: frequencyLabelColumn
+        width: Style.primitiveControl.titleWidth * root.width
         Text{
-          x: Style.primitiveControl.margin
+          leftPadding: root.margin
           text: "Frequency"
+          font.pixelSize: Style.primitiveControl.sliderLabelTextSize
+                          * frequencySlider.height
         }
         Text{
-          x: Style.primitiveControl.margin
+          leftPadding: root.margin
           text: "[1/beats]"
+          font.pixelSize: Style.primitiveControl.sliderLabelTextSize
+                          * frequencySlider.height
         }
       }
       property var frequencies: [0.25, 0.33, 0.5, 0.66, 1.0]
-      Slider{
+      ScalableSlider{
         id: frequencySlider
+        anchors.verticalCenter: frequencyLabelColumn.verticalCenter
+        height: root.height * Style.primitiveControl.sliderHeight
+        width: root.width * (1.0
+                             - Style.primitiveControl.titleWidth
+                             - Style.primitiveControl.sliderValueWidth)
         from: 0.0
         value: 2.0
         to: frequencySet.frequencies.length - 1.0
@@ -161,28 +183,48 @@ Rectangle{
         snapMode: Slider.SnapAlways
         onValueChanged: delegate.primitive.frequency = frequencySet.frequencies[value]
         Keys.onPressed: appWindow.handleKey(event)
+        sliderBarSize: Style.primitiveControl.sliderBarSize
+        backgroundColor: Style.primitiveControl.sliderBGColor
+        backgroundDisabledColor: Style.primitiveControl.sliderBGDisabledColor
+        backgroundActiveColor: Style.primitiveControl.sliderActivePartColor
+        backgroundActiveDisabledColor: Style.primitiveControl.sliderActivePartDisabledColor
+        handleColor: Style.primitiveControl.sliderHandleColor
+        handleDisabledColor: Style.primitiveControl.sliderHandleDisabledColor
       }
       Text {
         id: frequencyShow
-        font.pixelSize: Style.primitiveControl.textPixelSize
-        text: frequencySet.frequencies[frequencySlider.value]
+        width: root.width * Style.primitiveControl.sliderValueWidth
+        height: frequencySlider.height
+        rightPadding: root.margin
+        leftPadding: width * Style.primitiveControl.sliderValueLeftPadding
+        font.pixelSize: height * Style.primitiveControl.sliderLabelTextSize
+        text: frequencySet.frequencies[frequencySlider.value].toFixed(2)
         anchors.verticalCenter: frequencySlider.verticalCenter
+        verticalAlignment: Text.AlignVCenter
+        horizontalAlignment: Text.AlignRight
       }
     }
 
     Row{
       id: rightSpeedSet
       visible: customRadio.checked
-      Column{
-        anchors.verticalCenter: velocityRightSlider.verticalCenter
-        width: Style.primitiveControl.labelsWidth
-        Text{
-          x: Style.primitiveControl.margin
-          text: "Velocity R"
-        }
+
+      Text{
+        id: rightSpeedLabel
+        height: velocityRightSlider.height
+        width: Style.primitiveControl.titleWidth * root.width
+        font.pixelSize: Style.primitiveControl.sliderLabelTextSize
+                        * velocityRightSlider.height
+        text: "Velocity R"
+        leftPadding: root.margin
+        verticalAlignment: Text.AlignVCenter
       }
-      Slider{
+      ScalableSlider{
         id: velocityRightSlider
+        height: root.height * Style.primitiveControl.sliderHeight
+        width: root.width * (1.0
+                             - Style.primitiveControl.titleWidth
+                             - Style.primitiveControl.sliderValueWidth)
         from: -100.0
         value: 50.0
         to: 100.0
@@ -191,34 +233,76 @@ Rectangle{
         snapMode: Slider.SnapAlways
         onValueChanged: delegate.primitive.velocityRight = value
         Keys.onPressed: appWindow.handleKey(event)
+        sliderBarSize: Style.primitiveControl.sliderBarSize
+        backgroundColor: Style.primitiveControl.sliderBGColor
+        backgroundDisabledColor: Style.primitiveControl.sliderBGDisabledColor
+        backgroundActiveColor: Style.primitiveControl.sliderActivePartColor
+        backgroundActiveDisabledColor: Style.primitiveControl.sliderActivePartDisabledColor
+        handleColor: Style.primitiveControl.sliderHandleColor
+        handleDisabledColor: Style.primitiveControl.sliderHandleDisabledColor
       }
       Text {
         id: velocityRightShow
-        font.pixelSize: Style.primitiveControl.textPixelSize
+        width: root.width * Style.primitiveControl.sliderValueWidth
+        height: frequencySlider.height
+        rightPadding: root.margin
+        leftPadding: width * Style.primitiveControl.sliderValueLeftPadding
+        font.pixelSize: height * Style.primitiveControl.sliderLabelTextSize
         text: velocityRightSlider.value
         anchors.verticalCenter: velocityRightSlider.verticalCenter
+        verticalAlignment: Text.AlignVCenter
+        horizontalAlignment: Text.AlignRight
       }
     }
+  }
 
-	}
-
+  Rectangle{
+    id: dummyTimerBar
+    height: appWindow.width * Style.primitives.height * Style.timerBar.height
+    anchors.bottom: parent.bottom
+    anchors.left: parent.left
+    anchors.leftMargin: root.margin
+    anchors.bottomMargin: root.margin
+  }
 
   function createDelegate(){
-    delegate = delegateFactory.createObject(root)
+    delegate = delegateFactory.createObject(dummyTimerBar)
     delegate.dragTarget = motorBar.dragTarget
     delegate.idleParent = root
     delegate.primitive = primitiveFactory.createObject(delegate.id)
     delegate.primitive.positionBeat= 0;
     delegate.primitive.lengthBeat= 4;
-    delegate.primitive.type = typeRadio.type
+    delegate.primitive.type = type
     delegate.primitive.frequency = frequencySet.frequencies[frequencySlider.value]
     delegate.primitive.velocity = velocitySlider.value
     delegate.primitive.velocityRight = velocityRightSlider.value
 
-    delegate.anchors.verticalCenter = undefined
-    delegate.anchors.bottomMargin = Style.primitiveControl.margin
-    delegate.anchors.bottom= root.bottom
+    delegate.anchors.verticalCenter = dummyTimerBar.verticalCenter
     delegate.updatePrimitive()
+  }
+
+  Component.onCompleted:{
+    // set the first beat at a fixed pixel distance from the left border of the
+    // control box:
+    setDummyBeats();
+    createDelegate();
+  }
+
+  onDelegateChanged:{
+    if(delegate === null){
+      createDelegate()
+    }
+  }
+
+  function setDummyBeats(){
+    for(var i = 0; i < 5; ++i){
+      // add beats at 100 bpm
+      beats[i] = (i * averageBeatFrames)
+    }
+  }
+
+  onAverageBeatFramesChanged:{
+    setDummyBeats();
   }
 
   Component{

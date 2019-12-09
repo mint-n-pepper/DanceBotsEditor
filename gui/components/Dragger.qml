@@ -14,7 +14,7 @@ Item{
   function startDrag(controlPressed){
     copy = controlPressed
     Drag.hotSpot.x = children[0].x
-    Drag.hotSpot.y = children[0].y + Style.primitives.height/2
+    Drag.hotSpot.y = children[0].y + children[0].height / 2
     clearOccupancy() // clear occupancy
     if(copy){
       // copy primitives

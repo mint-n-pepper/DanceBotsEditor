@@ -4,17 +4,22 @@ import "../GuiStyle"
 
 Rectangle{
   id: root
-  height: Style.primitives.height
-  radius: Style.primitives.radius
+  height: appWindow.width * Style.primitives.height * Style.timerBar.height
+  radius: Style.primitives.radius * height
   border.color: Style.primitives.borderColor
-  border.width: Style.primitives.borderWidth
+  border.width: Style.primitives.borderWidth * height
 
   property var idleParent: null
   property bool isFromBar: false
   property var primitive: null
   property var dragTarget: null
   property bool showData: false
-  property bool dragActive: dragArea.dragActive
+  property bool dragActive: dragArea.dragActive  
+
+  property real frameToPixels: appWindow.frameToPixels
+
+  onFrameToPixelsChanged: updatePrimitive()
+
   onPrimitiveChanged: updatePrimitive()
 
   onEnabledChanged: {
@@ -26,23 +31,26 @@ Rectangle{
   }
 
 	function updatePrimitive(){
-		textID.text=primitiveTextIDs[primitive.type]
-    color=primitiveColors[primitive.type]
-    x= beats[primitive.positionBeat] * Style.timerBar.frameToPixel
-    var endBeat = primitive.positionBeat + primitive.lengthBeat
-    endBeat = endBeat < beats.length ? endBeat : beats.length - 1
-    width= (beats[endBeat]
-            - beats[primitive.positionBeat]) * Style.timerBar.frameToPixel
+    // only update if there is a primitive
+    if(primitive){
+      textID.text=primitiveTextIDs[primitive.type]
+      color= enabled ? primitiveColors[primitive.type] : Style.primitives.disabledColor
+      x= beats[primitive.positionBeat] * appWindow.frameToPixels
+      var endBeat = primitive.positionBeat + primitive.lengthBeat
+      endBeat = endBeat < beats.length ? endBeat : beats.length - 1
+      width= (beats[endBeat]
+              - beats[primitive.positionBeat]) * appWindow.frameToPixels
+    }
 	} // update primitive
 
 	Text
 	{
 		id: textID
-		text: ""
+    text: "D"
     color: Style.primitives.textColor
-    x: Style.primitives.textPosX
-    y: Style.primitives.textPosY
-    font.pixelSize: Style.primitives.textSize
+    x: Style.primitives.textPosX * root.height
+    y: Style.primitives.textPosY * root.height
+    font.pixelSize: Style.primitives.textSize * root.height
     font.bold: Style.primitives.textBold
 	} // text
 
@@ -55,7 +63,7 @@ Rectangle{
     property bool shiftPressed: false
     property bool dragActive: drag.active
 
-    property var resizeMargin: Style.primitives.sizePixelMarginRight
+    property var resizeMargin: Style.primitives.resizeMarginRight * root.height
     property bool doResize: false
     hoverEnabled: parent.isFromBar
 
@@ -92,7 +100,7 @@ Rectangle{
 
       if(doResize && pressed){
         // do resize
-        var currentFrame = (parent.x + mouseX) / Style.timerBar.frameToPixel;
+        var currentFrame = (parent.x + mouseX) / appWindow.frameToPixels;
         if(currentFrame > backend.getAudioLengthInFrames()){
           currentFrame = backend.getAudioLengthInFrames() - 1
         }

@@ -6,15 +6,16 @@ QtObject {
   id:root
   // Main window
   property QtObject main: QtObject{
-		property int width: 1280
-		property int height: 800
+    property int initialWidth: 1280 // pixels
+    property real heightRatio: 8.5 / 16.0 // height/width
+    property int minWidth: 800 // pixels
 		property color color: "#ffe0e0"
 	}
 
   // load/save progress overlay:
   property QtObject fileProcessOverlay: QtObject{
-    property int height: 100
-    property int fontPixelSize: height / 4
+    property real height: 0.15 // ratio of window height
+    property real fontSize: 0.2 // ratio of height
     property color backgroundColor: "#BB444444"
     property color fontColor: "white"
   }
@@ -23,90 +24,123 @@ QtObject {
   property QtObject fileControl: QtObject{
     // box
     property color color: "#5D7CE7"
-    property int width: 320
-    property int height: 420
+    property real width: 0.333 // ratio of window width
+    property real heightRatio: 0.95 // height / width
+
     // buttons
-    property int buttonPadding: 5
-    property int buttonSpacing: 5
-    property int buttonWidth: 100
-    property int buttonHeight: 50
+    property real buttonPadding: 0.01 // ratio to box width
+    property real buttonSpacing: 0.01 // ratio to box width
+    // button width is equal width of remaining space
+    property real buttonHeightRatio: 0.5 // ratio to button width
+    property real buttonTextHeightRatio: 0.35 // ratio to button height
+
     // texts
-    property int textLabelMargin: 5
-    property int textLabelSpacing: 5
-    property int textLabelPixelSize: 15
+    property real textBoxHeight: 0.7 // ratio to button height
+    property real textBoxLabelWidth: 0.16 // ratio to box width
+    property real textPadding: 0.01 // ratio to box width
+    property real textSpacing: 0.02 // vertical, ratio to box width
+    property real textSize: 0.4 // ratio to text box height
   }
 
   property QtObject primitiveControl: QtObject{
     // box
     property color moveColor: "#c8a2c8" // lilac
     property color ledColor: "#00A693"
-    property int width: 380
-    property int height: fileControl.height
-    // left and bottom spacing of primitive shape
-    property real margin: 10.0
-    property real controlsSpacing: 10
-    property int textPixelSize: 15
-    property int titlePixelSize: 22
-    property int labelsWidth: 100
-    property int ledRadioDiameter: 20
-    property int ledRadioSpacing: 5
+    property real width: 0.333 // ratio of window width
+    property real margin: 0.025 // ratio to box width
+    property real controlSpacing: margin // ratio of box width
+    // title
+    property real titleFontSize: 0.27 // ratio to titleWidth
+    property real titleWidth: 0.25 // ratio to box width
+
+    // type radios
+    property real typeRadioHeight: 0.07 // ratio of box height
+    property real radioIndicatorSize: 0.8 // ratio of radio height
+    property real typeTextSize: 0.75 // ratio of radio height
+    property real radioToTextSpacing: 0.25 // ratio of radio height
+    property color typeRadioBGColor: "white"
+    property color typeRadioDisabledColor: "lightgrey"
+    property color typeRadioIndicatorDisabledColor: "darkgrey"
+    property color typeRadioIndicatorColor: "black"
+    property color typeRadioFontColor: "black"
+
+    // sliders:
+    property real sliderHeight: typeRadioHeight // ratio of box height, same as radio size
+    property real sliderBarSize: 0.2 // ratio of slider handle size
+    property color sliderBGColor: "lightgrey"
+    property color sliderBGDisabledColor: typeRadioDisabledColor
+    property color sliderActivePartColor: "#222222"
+    property color sliderActivePartDisabledColor: "#888888"
+    property color sliderHandleColor: "white"
+    property color sliderHandleDisabledColor: typeRadioDisabledColor
+    property real sliderLabelTextSize: 0.58 // ratio of slider height
+    property real sliderValueWidth: 0.15 // ratio of box width
+    property real sliderValueLeftPadding: 0.07 // ratio of width
+
+    // led toggles
+    property real ledRadioDiameter: 0.8 // ratio of type radio diameter
+    property real ledRadioSpacing: 0.35 // ratio of diameter
+    property real ledTextSize: 1.0 // ratio of diameter
   }
 
   // Timer bar window
   property QtObject timerBar: QtObject{
-		property int height: 80
-    property int margin: 10 // margin to other GUI elements
-    property int spacing: 10 // space between timer bars
+    property real height: 0.06 // ratio of window width
+    // margin to other GUI elements
+    property real margin: 0.125 // ratio of timerBar height
+    // space between timer bars
+    property real spacing: 0.125 // ratio of timerBar height
     property color beatColor: "lightgray"
-    property int beatWidth: 2 // line width of beat indicators
+    property real beatWidth: 2.0/80.0 // line width of beat indicators
     property color timeBarColor: "red"
-    property int timeBarWidth: 3
-    property int timeBarScrollOffset: 25
+    property real timeBarWidth: 3.0/80.0 // ratio of height
+    property real timeBarScrollOffset: 25.0/80.0 // ratio of height
     property color ghostColorValid: "#8840DF40"
     property color ghostColorInvalid: "#88DF4040"
-    property real frameToPixel:  0.00072562358276643991
+
+    // how many seconds of music to show in window, which
+    // determines beat/samples scaling to window size
+    property real secondsInWindow: 40.0
 
     // beat indicator
     property color beatIndicatorBgColor: "lightgrey"
     property color beatIndicatorFontColor: "#000000"
-    property int beatIndicatorFontPixelSize: 16
-    property real beatIndicatorPadding: 4.0
+    property real beatIndicatorFontSize: 16.0 / 80.0 // ratio of timerbar height
+    property real beatIndicatorPadding: 4.0 / 80.0 // ratio of timerbar height
 
     // hover scroll settings:
     // scroll margin is # of pixels at either end of visible timer bar
     // area that trigger a left or right scroll on hover of the primitive
     // edges
-    property int scrollMargin: 20
-    property int scrollSpeed: 8
+    property real scrollMargin: 0.003 // ratio of main window width
+    property real scrollSpeed: 8.0 / 1000.0 // ratio of main window with
 	}
 
   // General primitives:
   property QtObject primitives: QtObject{
-    property int height: timerBar.height - 10
-    property int radius: 3
+    property real height: 0.9 // ratio of timerbar height
+    property real radius: 3.0/72.0 // ratio of height
     property color textColor: "white"
-    property int textPosX: 3
-    property int textPosY: 3
-    property int textSize: height/5
+    property real textPosX: 3.0/72.0
+    property real textPosY: 3.0/72.0
+    property real textSize: 0.2 // ratio of height
     property bool textBold: true
     property color disabledColor: "#99EEEEEE"
     property color borderColor: "white"
-    property int borderWidth: 1
+    property real borderWidth: 1.0 / 72.0 // ratio of height
     property color highlightOverlayColor: "#AAFFFFFF"
     // margin of primitive at which a drag causes a size change
     // is capped at half primtive width
-    property int sizePixelMarginRight: 10
+    property real resizeMarginRight: 0.14 // ratio of height
 
     // TOOLTIP STYLE
     property color toolTipBgColor: "#000000"
     property color toolTipFontColor: "lightgrey"
-    property int toolTipFontPixelSize: 16
-    property real toolTipPadding: 4.0
-    property var ledToolTipLEDSize: 10
-    property var ledToolTipLEDPadding: 4.0
+    property real toolTipFontSize: 16.0 / 72.0 // ratio of height
+    property real toolTipPadding: 4.0 / 72.0 // ratio of height
+    property real ledToolTipLEDSize: 10.0 / 72.0 // ratio of height
     property var ledToolTipOnColor: "lime"
     property var ledToolTipOffColor: "lightslategrey"
-
 	}
 
   property QtObject motorPrimitive: QtObject{
@@ -132,22 +166,33 @@ QtObject {
   }
 
   property QtObject audioControl: QtObject{
-    property int playControlBoxWidth: fileControl.width
-    property int buttonWidth: 50
-    property int buttonHeight: 40
-    property int timerWidth: 60
-    property int timerFontPixelSize: buttonHeight * 0.45
-    property int timerTextMarginRight: 7
+    // width of time slider is same as window size
+    // controls height set so that slider knob has same size as
+    // primitive box sliders
+    property real controlsHeight: fileControl.heightRatio
+                                  * primitiveControl.width
+                                  * primitiveControl.typeRadioHeight
+
+    // total width of buttons and volume slider
+    property real playControlWidth: fileControl.width // ratio of window size
+    property real playControlHeight: 1.5 // ratio of controlsHeight
+    property real buttonWidth: 0.15 // ratio of playControlWidth
+    property real timerWidth: 0.18 // ratio of playControlWidth
+    // volume slider takes remaining space to fill playControlWidth
+
+    // timer visuals
+    property real timerFontSize: 0.45 // ratio of playControlHeight
+    property real timerTextMarginRight: 0.1 // ratio of timer width
     property color timerBGColor: "white"
     property color timerFontColor: "slategrey"
-    property int spacing: fileControl.buttonSpacing
-    property int padding: fileControl.buttonPadding
+
+    // spacing between slider and buttons
+    property real sliderButtonSpacing: 0.3 // ratio of controlsHeight
+    // horizontal spacing between buttons
+    property real buttonSpacing: 0.2 // ratio of controlsHeight
     property color iconColor: "slategrey"
-    // volume slider
-    property color volumeSliderHandleBGColor: "white"
-    property int volumeSliderSize: 30
+
     // scale of speaker icon relative to slider size
     property real volumeSliderIconScale: 0.75
   }
-
 }

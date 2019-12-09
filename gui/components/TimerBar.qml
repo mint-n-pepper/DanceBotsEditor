@@ -5,8 +5,7 @@ import "../GuiStyle"
 
 Canvas{
   id: root
-  height: Style.timerBar.height
-  width: 1000
+  height: Style.timerBar.height * appWindow.width
 
   property color color
   property var occupied: []
@@ -20,8 +19,13 @@ Canvas{
   property var controlBox: null
   property bool isNotEmpty: primitiveView.count > 0
   property bool isMotorBar: false
+  property var primitiveY: appWindow.width*Style.timerBar.height * (1.0 - Style.primitives.height)/2
 
-  property var primitiveY: (Style.timerBar.height - Style.primitives.height)/2
+  property real frameToPixels: appWindow.frameToPixels
+  property int lengthInFrames: 0
+
+  onFrameToPixelsChanged: width = lengthInFrames * appWindow.frameToPixels
+  onLengthInFramesChanged: width = lengthInFrames * appWindow.frameToPixels
 
   // connect to done loading signal of backend to redraw rectangle
   Connections{
@@ -31,7 +35,7 @@ Canvas{
         // pre-create a few ghosts:
         createGhosts(10);
         // resize rectangle to fit song
-        width = backend.getAudioLengthInFrames() * Style.timerBar.frameToPixel;
+        lengthInFrames = backend.getAudioLengthInFrames()
         timeIndicator.visible = true
         beats=backend.getBeats()
         requestPaint();
@@ -95,7 +99,7 @@ Canvas{
     onDropped:{
       beatIndicator.visible = false
       drag.source.reset()
-      var currentFrame = drag.x / Style.timerBar.frameToPixel;
+      var currentFrame = drag.x / appWindow.frameToPixels;
       var beatLoc = backend.getBeatAtFrame(currentFrame)
       var positions = []
       var lengths = []
@@ -146,23 +150,23 @@ Canvas{
     }
 
     onPositionChanged:{
-      var currentFrame = drag.x / Style.timerBar.frameToPixel;
+      var currentFrame = drag.x / appWindow.frameToPixels;
       var beatLoc = backend.getBeatAtFrame(currentFrame)
       if(beatLoc >= 0){
         // update beat indicator:
         beatIndicator.text = beatLoc
-        beatIndicator.x = beats[beatLoc] * Style.timerBar.frameToPixel
+        beatIndicator.x = beats[beatLoc] * appWindow.frameToPixels
         // update ghosts for each child in dragger
         var beatOffset = drag.source.children[0].primitive.positionBeat
         for(var i = 0; i < drag.source.children.length; ++i){
           var primitive = drag.source.children[i].primitive
           var startBeat = beatLoc + primitive.positionBeat - beatOffset
           ghosts[i].visible = true
-          ghosts[i].x = beats[startBeat] * Style.timerBar.frameToPixel
+          ghosts[i].x = beats[startBeat] * appWindow.frameToPixels
           var validLength = getValidLength(startBeat, primitive.lengthBeat)
           if(validLength > 0){
             ghosts[i].isValid = true
-            var endPixel = beats[startBeat + validLength] * Style.timerBar.frameToPixel
+            var endPixel = beats[startBeat + validLength] * appWindow.frameToPixels
             ghosts[i].width = endPixel - ghosts[i].x
           }else{
             ghosts[i].isValid = false
@@ -172,7 +176,7 @@ Canvas{
           var end = primitive.lengthBeat + startBeat
           if(end < beats.length){
             drag.source.children[i].width= (beats[end] - beats[startBeat])
-              * Style.timerBar.frameToPixel;
+              * appWindow.frameToPixels;
           }
         }
       }
@@ -198,7 +202,7 @@ Canvas{
   Rectangle{
     id: timeIndicator
     color: Style.timerBar.timeBarColor
-    width: Style.timerBar.timeBarWidth
+    width: Style.timerBar.timeBarWidth * root.height
     height: parent.height
     property var position: 0
     x: position - width/2
@@ -216,8 +220,8 @@ Canvas{
     Text{
       id: beatText
       text: beatIndicator.text
-      padding: Style.timerBar.beatIndicatorPadding
-      font.pixelSize: Style.timerBar.beatIndicatorFontPixelSize
+      padding: Style.timerBar.beatIndicatorPadding * root.height
+      font.pixelSize: Style.timerBar.beatIndicatorFontSize * root.height
       color: Style.timerBar.beatIndicatorFontColor
     }
   }
@@ -230,7 +234,7 @@ Canvas{
       idleParent: primitiveView
       isFromBar: true
       dragTarget: root.dragTarget
-      y: (Style.timerBar.height - Style.primitives.height) / 2
+      y: primitiveY
       PrimitiveToolTip{
         isMotor: root.isMotorBar
       }
@@ -265,17 +269,17 @@ Canvas{
   }
 
   onPaint: {
-    var ctx = getContext("2d");
-    ctx.fillStyle = color;
-    ctx.fillRect(0, 0, width, height);
+    var ctx = getContext("2d")
+    ctx.fillStyle = color
+    ctx.fillRect(0, 0, width, height)
     for(var i=0; i < beats.length; i++){
-      ctx.lineWidth = Style.timerBar.beatWidth;
-      ctx.strokeStyle = Style.timerBar.beatColor;
-      ctx.beginPath();
-      var loc = beats[i] * Style.timerBar.frameToPixel;
-      ctx.moveTo(loc, 0);
-      ctx.lineTo(loc, height);
-      ctx.stroke();
+      ctx.lineWidth = Style.timerBar.beatWidth * root.height
+      ctx.strokeStyle = Style.timerBar.beatColor
+      ctx.beginPath()
+      var loc = beats[i] * appWindow.frameToPixels
+      ctx.moveTo(loc, 0)
+      ctx.lineTo(loc, height)
+      ctx.stroke()
     }
   }
 

@@ -100,6 +100,7 @@ void BackEnd::handleDoneLoading(void) {
   if(mAudioFile.isDancefile()) {
     readPrimitivesFromPrependData();
   }
+
   // setup audio player:
   mAudioPlayer->setAudioData(mAudioFile.mFloatMusic, mAudioFile.sampleRate);
 }
@@ -140,14 +141,6 @@ bool BackEnd::loadMP3Worker(const QString& filePath) {
     emit fileStatusChanged();
     std::vector<long> tmpBeats = mBeatDetector.detectBeats(mAudioFile.mFloatMusic);
 
-    // check if beats could be detected. We need at least four to operate.
-    if(tmpBeats.size() < 4) {
-      mFileStatus = "FAILED: Fewer than four beats detected.";
-      emit fileStatusChanged();
-      QThread::msleep(1000);
-      return false;
-    }
-
     // convert the detected beats to int. This is fine because even a int32 would
     // be able to hold beats detected up to 13 hours in a 44.1kHz sampled song
     // reserve enough memory for all detected beats plus dummy start and end beats
@@ -166,6 +159,13 @@ bool BackEnd::loadMP3Worker(const QString& filePath) {
     mBeatFrames.push_back(static_cast<int>(mAudioFile.mFloatData.size()));
   }
 
+  // check if there are enough beats (four) to operate.
+  if(mBeatFrames.size() < 4) {
+    mFileStatus = "FAILED: Fewer than four beats available.";
+    emit fileStatusChanged();
+    QThread::msleep(1000);
+    return false;
+  }
   // calculate average beat duration in frames,
   // ignoring first and last beat-intervals
   size_t sum = 0;

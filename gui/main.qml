@@ -6,15 +6,21 @@ import "GuiStyle"
 
 ApplicationWindow {
   id: appWindow
-  width: fileControl.width
-         + motorPrimitiveControl.width
-         + ledPrimitiveControl.width
-  height: audioControl.y
-          + audioControl.height
+  width: Style.main.initialWidth
+  minimumWidth: Style.main.minWidth
+  minimumHeight: (fileControl.height
+                 + timerBarFlickable.height
+                 + timerBarFlickable.anchors.topMargin
+                 + audioControl.anchors.topMargin
+                 + audioControl.height )
+
   visible: true
   title: "Dancebots GUI"
 
   color: Style.main.color
+
+  property real frameToPixels: width / (Style.timerBar.secondsInWindow
+                                         * backend.getSampleRate())
 
   MouseArea{
     id: sceneClickCatcher
@@ -35,11 +41,13 @@ ApplicationWindow {
   MotorPrimitiveControl{
     id: motorPrimitiveControl
     anchors.left: fileControl.right
+    height: fileControl.height
   }
 
   LEDPrimitiveControl{
     id: ledPrimitiveControl
     anchors.left: motorPrimitiveControl.right
+    height: fileControl.height
   }
 
   AudioControl{
@@ -47,20 +55,28 @@ ApplicationWindow {
     anchors.top: timerBarFlickable.bottom
     anchors.left: fileControl.left
     anchors.right: ledPrimitiveControl.right
+    anchors.topMargin: Style.timerBar.margin * motorBar.height
   }
 
   Flickable{
     id: timerBarFlickable
-    width: parent.width < timerBarColumn.width ? parent.width : timerBarColumn.width
-    height: timerBarColumn.height
-    contentWidth: timerBarColumn.width
+    width: parent.width < motorBar.width ? parent.width : motorBar.width
+    height: timerBarColumn.spacing + 2 * motorBar.height
+    contentWidth: motorBar.width
     contentHeight: timerBarColumn.height
     anchors.top: fileControl.bottom
     anchors.left: parent.left
-    anchors.topMargin: Style.timerBar.margin
-    anchors.bottomMargin: Style.timerBar.margin
+    anchors.topMargin: Style.timerBar.margin * motorBar.height
     boundsBehavior: Flickable.StopAtBounds
     interactive: true
+
+    onContentWidthChanged: {
+      contentX = visibleArea.xPosition * contentWidth
+      motorBar.timeIndicatorPosition=sliderPosition
+        * motorBar.lengthInFrames
+        * appWindow.frameToPixels;
+    }
+
     property bool hoverScrollRight: true
 
     property bool dragActive: motDragger.dragActive || ledDragger.dragActive
@@ -86,7 +102,7 @@ ApplicationWindow {
         if(contentX == contentWidth - width){
           return
         }
-        var scrollStepUp = Style.timerBar.scrollSpeed
+        var scrollStepUp = Style.timerBar.scrollSpeed * appWindow.width
         if(contentX + scrollStepUp > contentWidth - width){
           scrollStepUp = contentWidth - width - contentX
         }
@@ -101,7 +117,7 @@ ApplicationWindow {
         if(contentX == 0){
           return
         }
-        var scrollStepDown = Style.timerBar.scrollSpeed
+        var scrollStepDown = Style.timerBar.scrollSpeed * appWindow.width
         if(contentX - scrollStepDown < 0){
           scrollStepDown = contentX
         }
@@ -124,11 +140,13 @@ ApplicationWindow {
     }
 
     function processMouseMove(minX, maxX){
-      if(minX - timerBarFlickable.contentX < Style.timerBar.scrollMargin){
+      if(minX - timerBarFlickable.contentX
+          < Style.timerBar.scrollMargin * appWindow.width){
         timerBarFlickable.hoverScrollRight = false
         scrollTimer.start()
       }else if(maxX - timerBarFlickable.contentX
-               > timerBarFlickable.width - Style.timerBar.scrollMargin){
+               > timerBarFlickable.width
+               - Style.timerBar.scrollMargin * appWindow.width){
         timerBarFlickable.hoverScrollRight = true
         scrollTimer.start()
       }
@@ -153,8 +171,7 @@ ApplicationWindow {
     onSliderPositionChanged:{
       // set time indicator position
       motorBar.timeIndicatorPosition=sliderPosition
-      * backend.getAudioLengthInFrames()
-      * Style.timerBar.frameToPixel;
+      * motorBar.lengthInFrames * appWindow.frameToPixels;
       // update visible range only if drag is not active
       if(!dragActive){
       // get current visible pixel range:
@@ -169,13 +186,14 @@ ApplicationWindow {
 
     Column{
       id: timerBarColumn
-      width: motorBar.width
-      spacing: Style.timerBar.spacing
+      spacing: Style.timerBar.spacing * motorBar.height
       TimerBar{
         id: motorBar
         color: Style.primitiveControl.moveColor
         keys: ["mot"]
         model: backend.motorPrimitives
+        lengthInFrames: (fileControl.width + motorPrimitiveControl.width
+         + ledPrimitiveControl.width) / frameToPixels
         dragTarget: motDragger
         isMotorBar: true
         primitiveColors: Style.motorPrimitive.colors
@@ -187,6 +205,7 @@ ApplicationWindow {
         color: Style.primitiveControl.ledColor
         keys: ["led"]
         z: -1
+        lengthInFrames: motorBar.lengthInFrames
         model: backend.ledPrimitives
         dragTarget: ledDragger
         primitiveColors: Style.ledPrimitive.colors

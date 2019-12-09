@@ -7,18 +7,20 @@ Popup{
 	id: root
   parent: Overlay.overlay
   anchors.centerIn: parent
+  width: parent.width
+  height: parent.height
   modal: true
 	closePolicy: Popup.NoAutoClose
 		
 	background: Rectangle{
 		anchors.centerIn: parent
-    width: appWindow.width
+    width: parent.width
     color: Style.fileProcessOverlay.backgroundColor
-    height: 100
+    height: Style.fileProcessOverlay.height * parent.height
 		Text{
 			anchors.centerIn: parent
       text: backend.fileStatus
-      font.pixelSize: Style.fileProcessOverlay.fontPixelSize
+      font.pixelSize: Style.fileProcessOverlay.fontSize * parent.height
       color: Style.fileProcessOverlay.fontColor
 		}
 	}

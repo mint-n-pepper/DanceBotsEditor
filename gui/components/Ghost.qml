@@ -7,6 +7,6 @@ Rectangle{
   visible: false
   property bool isValid: false
   color: isValid ? Style.timerBar.ghostColorValid : Style.timerBar.ghostColorInvalid
-  height: Style.timerBar.height
+  height: parent.height
   radius: Style.primitives.radius
 }

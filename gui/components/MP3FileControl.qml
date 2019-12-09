@@ -5,13 +5,10 @@ import "../GuiStyle"
 
 Rectangle{
 	id: root
-	width: Style.fileControl.width
-	height: Style.fileControl.height
+  width: Style.fileControl.width * parent.width
+  height: Style.fileControl.heightRatio * width
 
 	color: Style.fileControl.color
-
-	property alias songTitle: songTitleText.text
-	property alias songArtist: songArtistText.text
 
 	Component.onCompleted: setDisabled()
 
@@ -28,9 +25,9 @@ Rectangle{
 		onDoneLoading:{
       fileProcess.close()
       if(result){
-        fileControl.songTitle = backend.songTitle
-        fileControl.songArtist = backend.songArtist
-        fileControl.setEnabled()
+        songTitleText.text = backend.songTitle
+        songArtistText.text = backend.songArtist
+        setEnabled()
       }
 		}
 	}
@@ -94,19 +91,20 @@ Rectangle{
 	}
 
 	Column{
-		width: parent.width
-
-		Row{
-			padding: Style.fileControl.buttonPadding
-			spacing: Style.fileControl.buttonSpacing
-
+    width: root.width
+    spacing: root.width * Style.fileControl.textSpacing
+    Row{
+      id: buttonRow
+      width: root.width
+      padding: Style.fileControl.buttonPadding * root.width
+      spacing: Style.fileControl.buttonSpacing * root.width
 			Button
 			{
 				id: loadButton
-				width:Style.fileControl.buttonWidth
-				height:Style.fileControl.buttonHeight
+        width: (root.width - 2 * (parent.padding + parent.spacing)) / 3
+        height: width * Style.fileControl.buttonHeightRatio
+        font.pixelSize: height * Style.fileControl.buttonTextHeightRatio
         text: "Load"
-        font.pixelSize: Style.fileControl.buttonHeight * 0.4
         focusPolicy: Qt.NoFocus
 				onClicked:
 				{
@@ -124,11 +122,11 @@ Rectangle{
 			Button
 			{
 				id: saveButton
-				width:Style.fileControl.buttonWidth
-				height:Style.fileControl.buttonHeight
+        width: (parent.width - 2 * (parent.padding + parent.spacing)) / 3
+        height: width * Style.fileControl.buttonHeightRatio
+        font.pixelSize: height * Style.fileControl.buttonTextHeightRatio
         enabled: motorBar.isNotEmpty || ledBar.isNotEmpty
         text: "Save"
-        font.pixelSize: Style.fileControl.buttonHeight * 0.4
         focusPolicy: Qt.NoFocus
 				onClicked:
 				{
@@ -140,10 +138,10 @@ Rectangle{
 			Button
 			{
 				id: clearButton
-				width:Style.fileControl.buttonWidth
-				height:Style.fileControl.buttonHeight
+        width: (parent.width - 2 * (parent.padding + parent.spacing)) / 3
+        height: width * Style.fileControl.buttonHeightRatio
+        font.pixelSize: height * Style.fileControl.buttonTextHeightRatio
         text: "Clear"
-        font.pixelSize: Style.fileControl.buttonHeight * 0.4
         enabled: motorBar.isNotEmpty || ledBar.isNotEmpty
         focusPolicy: Qt.NoFocus
 				onClicked:
@@ -157,27 +155,25 @@ Rectangle{
 
 		Column{ // text fields column
 			id: textFields
-			width: parent.width
-      spacing: 2*Style.fileControl.textLabelSpacing
-
-      Item{ // artist
-			  width: parent.width
-			  height: songArtistText.height
+      width: root.width
+      spacing: root.width * Style.fileControl.textSpacing
+      Row{ // artist
+        width: parent.width
+        padding: width * Style.fileControl.textPadding
 			  Text{ // label
 				  id: artistLabel
-				  anchors.verticalCenter: parent.verticalCenter
-				  x: Style.fileControl.textLabelMargin
-				  text: "Artist"
-				  font.pixelSize: Style.fileControl.textLabelPixelSize
+          anchors.verticalCenter: songArtistText.verticalCenter
+          width: root.width * Style.fileControl.textBoxLabelWidth
+          text: "Artist: "
+          font.pixelSize: Style.fileControl.textSize * songArtistText.height
 			  }
 			  TextField{ // text edit field
-				  id:songArtistText
-				  anchors.left: artistLabel.right
-				  anchors.leftMargin: Style.fileControl.textLabelMargin
-          anchors.right: parent.right
-          anchors.rightMargin: Style.fileControl.textLabelMargin
+          id: songArtistText
+          height: Style.fileControl.textBoxHeight * clearButton.height
+          width: root.width - artistLabel.width - 2 * parent.padding
 				  maximumLength: 30 // fixed from mp3 tag limitation
 				  placeholderText: "Artist Name"
+          font.pixelSize: Style.fileControl.textSize * height
           onFocusChanged: {
             if(!focus){
               backend.songArtist = text
@@ -190,24 +186,25 @@ Rectangle{
             songTitleText.focus = true
           }
 			  }
-			} // artist
+      } // artist
 
-      Item{ // title
-			  width: parent.width
-			  height: songArtistText.height
+      Row{ // title
+        width: parent.width
+        padding: width * Style.fileControl.textPadding
 			  Text{ // label
 				  id: titleLabel
-				  anchors.verticalCenter: parent.verticalCenter
-				  text: "Title"
-          x: Style.fileControl.textLabelMargin
-          font.pixelSize: Style.fileControl.textLabelPixelSize
-			  }
+          anchors.verticalCenter: songTitleText.verticalCenter
+          text: "Title: "
+          width: root.width * Style.fileControl.textBoxLabelWidth
+          font.pixelSize: Style.fileControl.textSize * songTitleText.height
+        }
 			  TextField{
-				  id:songTitleText
-          x: songArtistText.x
-          width: songArtistText.width
+          id: songTitleText
+          height: Style.fileControl.textBoxHeight * clearButton.height
+          width: root.width - artistLabel.width - 2 * parent.padding
 				  maximumLength: 30 // fixed from mp3 tag limitation
 				  placeholderText: qsTr("Song Title")
+          font.pixelSize: Style.fileControl.textSize * height
           onFocusChanged: {
             if(!focus){
               backend.songTitle = text

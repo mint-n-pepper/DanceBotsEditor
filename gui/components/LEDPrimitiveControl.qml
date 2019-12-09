@@ -6,41 +6,22 @@ import "../GuiStyle"
 
 Rectangle{
   id: root
-  width: Style.primitiveControl.width
-  height: Style.primitiveControl.height
+  width: parent.width * Style.primitiveControl.width
   color: Style.primitiveControl.ledColor
   property var keys: ['led']
-  property var beats: [Math.round(Style.primitiveControl.margin
-  / Style.timerBar.frameToPixel)]
+  property var beats: []
   property var primitiveColors: Style.ledPrimitive.colors
   property var primitiveTextIDs: Style.ledPrimitive.textID
   property var delegate: null
   property var averageBeatFrames: 60 * 441 // 100 bpm @ 44.1kHz
   enabled: false
-
-	Component.onCompleted:{
-    // set the first beat at a fixed pixel distance from the left border of the
-    // control box:
-    setDummyBeats();
-    createDelegate();
+  property var margin: width * Style.primitiveControl.margin
+  property int type
+  onTypeChanged: {
+    delegate.primitive.type = type
+    delegate.updatePrimitive()
   }
-
-  onDelegateChanged:{
-    if(delegate === null){
-      createDelegate()
-    }
-  }
-
-  function setDummyBeats(){
-    for(var i = 1; i < 5; ++i){
-      // add beats at 100 bpm
-      beats[i] = (i * averageBeatFrames) + beats[0]
-    }
-  }
-
-  onAverageBeatFramesChanged:{
-    setDummyBeats();
-  }
+  property var leds: [true, true, true, true, true, true, true, true]
 
   Connections{
 	  target: backend
@@ -55,56 +36,64 @@ Rectangle{
   }
 
 	Column{
-    id: blinkieSettings
+    id: controlColumn
 		width: parent.width
-    spacing: Style.primitiveControl.controlsSpacing
-    property int type
-    property var leds: [true, true, true, true, true, true, true, true]
-    onTypeChanged: {
-      delegate.primitive.type = type
-      delegate.updatePrimitive()
-    }
+    topPadding: root.margin
+    spacing: Style.primitiveControl.controlSpacing * root.width
     Row{
       Text{
         id: blinkieText
-        width: Style.primitiveControl.labelsWidth
-        text: qsTr("B L I N K I E S")
+        height: controlColumn.spacing * 4
+               + knightRiderRadio.height * 5
+        width: Style.primitiveControl.titleWidth * root.width
+        text: qsTr("L I G H T S")
         horizontalAlignment: Text.AlignHCenter
-        font.pixelSize: Style.primitiveControl.titlePixelSize
+        verticalAlignment: Text.AlignVCenter
+        font.pixelSize: Style.primitiveControl.titleFontSize * width
         rotation : 270
-        anchors.verticalCenter: parent.verticalCenter
       }
       Column{
-        RadioButton {
+        spacing: Style.primitiveControl.controlSpacing * root.height
+        TypeRadio {
           id: knightRiderRadio
           checked: true
           text: qsTr("KnightRider")
           onPressed: appWindow.grabFocus()
-          onToggled: blinkieSettings.type=LEDPrimitive.Type.KnightRider
+          onToggled: type=LEDPrimitive.Type.KnightRider
+          height: root.height * Style.primitiveControl.typeRadioHeight
+          width: root.width - blinkieText.width
         }
-        RadioButton {
+        TypeRadio {
           id: alternateRadio
           text: qsTr("Alternate")
           onPressed: appWindow.grabFocus()
-          onToggled: blinkieSettings.type=LEDPrimitive.Type.Alternate
+          onToggled: type=LEDPrimitive.Type.Alternate
+          height: root.height * Style.primitiveControl.typeRadioHeight
+          width: root.width - blinkieText.width
         }
-        RadioButton {
+        TypeRadio {
           id: blinkRadio
           text: qsTr("Blink")
           onPressed: appWindow.grabFocus()
-          onToggled: blinkieSettings.type=LEDPrimitive.Type.Blink
+          onToggled: type=LEDPrimitive.Type.Blink
+          height: root.height * Style.primitiveControl.typeRadioHeight
+          width: root.width - blinkieText.width
         }
-        RadioButton {
+        TypeRadio {
           id: constantRadio
           text: qsTr("Constant")
           onPressed: appWindow.grabFocus()
-          onToggled: blinkieSettings.type=LEDPrimitive.Type.Constant
+          onToggled: type=LEDPrimitive.Type.Constant
+          height: root.height * Style.primitiveControl.typeRadioHeight
+          width: root.width - blinkieText.width
         }
-        RadioButton {
+        TypeRadio {
           id: randomRadio
           text: qsTr("Random")
           onPressed: appWindow.grabFocus()
-          onToggled: blinkieSettings.type=LEDPrimitive.Type.Random
+          onToggled: type=LEDPrimitive.Type.Random
+          height: root.height * Style.primitiveControl.typeRadioHeight
+          width: root.width - blinkieText.width
         }
       }
     }
@@ -113,19 +102,29 @@ Rectangle{
       id: frequencySet
       visible: !constantRadio.checked
       Column{
-        width: Style.primitiveControl.labelsWidth
+        id: frequencyLabelColumn
+        width: Style.primitiveControl.titleWidth * root.width
         Text{
-          x: Style.primitiveControl.margin
+          leftPadding: root.margin
           text: "Frequency"
+          font.pixelSize: Style.primitiveControl.sliderLabelTextSize
+                          * frequencySlider.height
         }
         Text{
-          x: Style.primitiveControl.margin
+          leftPadding: root.margin
           text: "[1/beats]"
+          font.pixelSize: Style.primitiveControl.sliderLabelTextSize
+                          * frequencySlider.height
         }
       }
       property var frequencies: [0.25, 0.33, 0.5, 0.66, 1.0, 1.5, 2.0, 3.0, 4.0]
-      Slider{
+      ScalableSlider{
         id: frequencySlider
+        anchors.verticalCenter: frequencyLabelColumn.verticalCenter
+        height: root.height * Style.primitiveControl.sliderHeight
+        width: root.width * (1.0
+                             - Style.primitiveControl.titleWidth
+                             - Style.primitiveControl.sliderValueWidth)
         from: 0.0
         value: 4.0
         to: frequencySet.frequencies.length - 1.0
@@ -133,65 +132,87 @@ Rectangle{
         live: true
         snapMode: Slider.SnapAlways
         onValueChanged: delegate.primitive.frequency = frequencySet.frequencies[value]
-
         Keys.onPressed: appWindow.handleKey(event)
+        sliderBarSize: Style.primitiveControl.sliderBarSize
+        backgroundColor: Style.primitiveControl.sliderBGColor
+        backgroundDisabledColor: Style.primitiveControl.sliderBGDisabledColor
+        backgroundActiveColor: Style.primitiveControl.sliderActivePartColor
+        backgroundActiveDisabledColor: Style.primitiveControl.sliderActivePartDisabledColor
+        handleColor: Style.primitiveControl.sliderHandleColor
+        handleDisabledColor: Style.primitiveControl.sliderHandleDisabledColor
       }
       Text {
         id: frequencyShow
-        font.pixelSize: Style.primitiveControl.textPixelSize
-        text: frequencySet.frequencies[frequencySlider.value]
+        width: root.width * Style.primitiveControl.sliderValueWidth
+        height: frequencySlider.height
+        rightPadding: root.margin
+        leftPadding: width * Style.primitiveControl.sliderValueLeftPadding
+        font.pixelSize: height * Style.primitiveControl.sliderLabelTextSize
+        text: frequencySet.frequencies[frequencySlider.value].toFixed(2)
         anchors.verticalCenter: frequencySlider.verticalCenter
+        verticalAlignment: Text.AlignVCenter
+        horizontalAlignment: Text.AlignRight
       }
     }
 
     Row{
       id: ledSet
       visible: !knightRiderRadio.checked && !randomRadio.checked
-      Column{
-        anchors.verticalCenter: ledCheckboxes.verticalCenter
-        width: Style.primitiveControl.labelsWidth
-        Text{
-          x: Style.primitiveControl.margin
-          text: "LEDs"
-        }
+      width: Style.primitiveControl.labelsWidth
+      Text{
+        id: ledLabel
+        height: root.height * Style.primitiveControl.typeRadioHeight
+        width: Style.primitiveControl.titleWidth * root.width
+        font.pixelSize: Style.primitiveControl.sliderLabelTextSize
+                        * height
+        leftPadding: root.margin
+        verticalAlignment: Text.AlignVCenter
+        text: "LEDs"
       }
 
       Row{
         id: ledCheckboxes
-        spacing: Style.primitiveControl.ledRadioSpacing
+        property var ledDiameter: Style.primitiveControl.ledRadioDiameter
+                                  * ledLabel.height
+        spacing: Style.primitiveControl.ledRadioSpacing * ledDiameter
         Repeater{
-          model: blinkieSettings.leds.length
+          model: leds.length
           delegate: CheckBox{
             id: control
-            checked: blinkieSettings.leds[index]
+            checked: leds[index]
             focusPolicy: Qt.NoFocus
+            width: ledCheckboxes.ledDiameter
             onPressed: appWindow.grabFocus()
             onCheckedChanged: {
-              blinkieSettings.leds[index] = checked
+              leds[index] = checked
               if(delegate){
                 delegate.primitive.leds[index] = checked;
               }
             }
             contentItem: Text{
+              width: background.width
               anchors.top: background.bottom
-              anchors.verticalCenter: background.verticalCenter
+              anchors.verticalCenter: parent.verticalCenter
               text: index
               horizontalAlignment: Text.AlignHCenter
+              font.pixelSize: background.width * Style.primitiveControl.ledTextSize
             }
 
             indicator: Rectangle{
-              width: Style.primitiveControl.ledRadioDiameter
-              height: Style.primitiveControl.ledRadioDiameter
+              id: ledIndicator
+              width: ledCheckboxes.ledDiameter
+              height: ledCheckboxes.ledDiameter
               radius: height/2
               anchors.verticalCenter: background.verticalCenter
-              anchors.horizontalCenter: background.horizontalCenter
+              anchors.horizontalCenter: parent.horizontalCenter
               color: control.checked ?
                        Style.primitives.ledToolTipOnColor : background.color
             }
 
             background: Rectangle{
-              width: Style.primitiveControl.ledRadioDiameter
-              height: Style.primitiveControl.ledRadioDiameter
+              width: ledCheckboxes.ledDiameter
+              height: ledCheckboxes.ledDiameter
+              anchors.verticalCenter: parent.verticalCenter
               radius: height/2
               color: Style.primitives.ledToolTipOffColor
             }
@@ -202,21 +223,52 @@ Rectangle{
 	}
 
 
+  Rectangle{
+    id: dummyTimerBar
+    height: appWindow.width * Style.primitives.height * Style.timerBar.height
+    anchors.bottom: parent.bottom
+    anchors.left: parent.left
+    anchors.leftMargin: root.margin
+    anchors.bottomMargin: root.margin
+  }
+
   function createDelegate(){
-    delegate = delegateFactory.createObject(root)
+    delegate = delegateFactory.createObject(dummyTimerBar)
     delegate.dragTarget = ledBar.dragTarget
     delegate.idleParent = root
     delegate.primitive = primitiveFactory.createObject(delegate.id)
     delegate.primitive.positionBeat= 0;
     delegate.primitive.lengthBeat= 4;
-    delegate.primitive.type = blinkieSettings.type
+    delegate.primitive.type = type
     delegate.primitive.frequency = frequencySet.frequencies[frequencySlider.value]
-    delegate.primitive.leds = blinkieSettings.leds
+    delegate.primitive.leds = leds
 
-    delegate.anchors.verticalCenter = undefined
-    delegate.anchors.bottomMargin = Style.primitiveControl.margin
-    delegate.anchors.bottom= root.bottom
+    delegate.anchors.verticalCenter = dummyTimerBar.verticalCenter
     delegate.updatePrimitive()
+  }
+
+  Component.onCompleted:{
+    // set the first beat at a fixed pixel distance from the left border of the
+    // control box:
+    setDummyBeats();
+    createDelegate();
+  }
+
+  onDelegateChanged:{
+    if(delegate === null){
+      createDelegate()
+    }
+  }
+
+  function setDummyBeats(){
+    for(var i = 0; i < 5; ++i){
+      // add beats at 100 bpm
+      beats[i] = (i * averageBeatFrames)
+    }
+  }
+
+  onAverageBeatFramesChanged:{
+    setDummyBeats();
   }
 
   Component{
