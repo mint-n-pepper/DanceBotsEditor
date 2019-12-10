@@ -7,6 +7,11 @@ import "GuiStyle"
 ApplicationWindow {
   id: appWindow
   width: Style.main.initialWidth
+  height: (fileControl.height
+           + timerBarFlickable.height
+           + timerBarFlickable.anchors.topMargin
+           + audioControl.anchors.topMargin
+           + audioControl.height )
   minimumWidth: Style.main.minWidth
   minimumHeight: (fileControl.height
                  + timerBarFlickable.height
