@@ -1,33 +1,43 @@
 # Deployment / Building
 ## Windows
-1. Create build folder and run cmake in it, pointing to repo root, where root ```CMakeLists.txt``` is.
-2. Compile in Visual Studio in Release. To avoid console from popping up upon startup add ```WIN32``` to the executable command in the Gui CMAKE code:
+1. Install ```cmake``` from https://cmake.org/download/.
+2. Install Visual Studio from https://visualstudio.microsoft.com/.
+3. Install Qt 5.13 from https://www.qt.io/. You only have to select/install the MSVC 2017 64-bit version.
+4. Create the environment variable ```CMAKE_PREFIX_PATH``` and set it to the directory where the Qt MSVC 2017 64-bit version is, e.g. ```C:\Qt\5.13.2\msvc2017_64```.
+5. Clone the repository, best using the ```--recursive``` option to init and download all submodules.
+6. Create build folder and run cmake in it, pointing to repo root, where root ```CMakeLists.txt``` is.
+7. Compile in Visual Studio in Release. To avoid console from popping up upon startup add ```WIN32``` to the executable command in the Gui CMAKE code:
 	```cmake
 	add_executable(${PROJECT_NAME} WIN32 ${SOURCES} ${APP_RESOURCES} ${HEADERS} ${QMLS})
 	```
-3. Copy the exe file to a deployment folder
-4. Run the Qt deployment tool on the executable, pointing it to the QML folder and adding some extra flags (--compiler-runtime does not seem to work, though, as users still have to install the executable):
+8. Copy the exe file to a deployment folder
+9. Run the Qt deployment tool on the executable, pointing it to the QML folder and adding some extra flags (--compiler-runtime does not seem to work, though, as users still have to install the executable):
 	```
 	windeployqt.exe C:\Users\philipp\Git\dancebots_gui\build\gui\Release\dancebotsGui.exe --release --qmldir C:\Users\philipp\Git\dancebots_gui\gui\  --compiler-runtime --no-translations
 	```
 	This adds all necessary dlls to the deployment folder.
 
 ## MacOS
-1. Create a build folder in the cloned repo folder (typically ```dancebots_gui```).
-2. Run CMAKE with the release type:
+1. Install ```cmake```, probably easiest using homebrew.
+2. Install XCode https://developer.apple.com/xcode/
+3. Install Qt 5.13 from https://www.qt.io/. You only have to select/install the MacOS version.
+4. Create the environment variable ```CMAKE_PREFIX_PATH``` and set it to the path to the Qt clang_64 folder of the 5.13 installation, e.g. do ```EXPORT CMAKE_PREFIX_PATH=/Users/philipp/Qt/5.13.2/clang_64/```, or add this command to the ```.bash_profile``` in your home folder.
+5. Clone the repo, best using the ```--recursive``` option to init and download all submodules.
+6. Create a build folder in the cloned repo folder (typically ```dancebots_gui```).
+7. Run CMAKE with the release type:
 	```
 	cmake .. -DCMAKE_BUILD_TYPE=Release
 	```
-3. Create a folder called ```dancebotsGui.app```, and within that, create a folder ```Contents```, and within that, a folder ```MacOS```.
-4. Copy the executable from the ```build/gui``` folder to ```dancebotsGui.app/Contents/MacOS```
-5. Run the Qt deployment tool on the app folder
+8. Create a folder called ```dancebotsGui.app```, and within that, create a folder ```Contents```, and within that, a folder ```MacOS```.
+9. Copy the executable from the ```build/gui``` folder to ```dancebotsGui.app/Contents/MacOS```
+10. Run the Qt deployment tool on the app folder
 	```
 		~/Qt/5.13.0/clang_64/bin/macdeployqt ./dancebotsGui.app -qmldir=/Users/philipp/Git/dancebots_gui/gui -dmg
 	```
 	where you can add ```-dmg``` to create a dmg.
 
 ## Ubuntu / Linux
-1. Install Qt 5.13 from online installer
+1. Install Qt 5.13 from online installer, selecting gcc 64 bit Version
 2. Install cmake
 3. Install build dependencies:
 	```
