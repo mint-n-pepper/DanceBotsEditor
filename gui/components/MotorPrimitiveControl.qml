@@ -6,8 +6,7 @@ import "../GuiStyle"
 
 Rectangle{
   id: root
-  width: parent.width * Style.primitiveControl.width
-  color: Style.primitiveControl.moveColor
+  color: Style.palette.pc_moveBoxBackground
   property var keys: ['mot']
   property var primitiveColors: Style.motorPrimitive.colors
   property var primitiveTextIDs: Style.motorPrimitive.textID
@@ -127,12 +126,12 @@ Rectangle{
         onValueChanged: delegate.primitive.velocity = value
         Keys.onPressed: appWindow.handleKey(event)
         sliderBarSize: Style.primitiveControl.sliderBarSize
-        backgroundColor: Style.primitiveControl.sliderBGColor
-        backgroundDisabledColor: Style.primitiveControl.sliderBGDisabledColor
-        backgroundActiveColor: Style.primitiveControl.sliderActivePartColor
-        backgroundActiveDisabledColor: Style.primitiveControl.sliderActivePartDisabledColor
-        handleColor: Style.primitiveControl.sliderHandleColor
-        handleDisabledColor: Style.primitiveControl.sliderHandleDisabledColor
+        backgroundColor: Style.palette.pc_sliderBarEnabled
+        backgroundDisabledColor: Style.palette.pc_sliderBarDisabled
+        backgroundActiveColor: Style.palette.pc_sliderBarActivePartEnabled
+        backgroundActiveDisabledColor: Style.palette.pc_sliderBarActivePartDisabled
+        handleColor: Style.palette.pc_sliderHandleEnabled
+        handleDisabledColor: Style.palette.pc_sliderHandleDisabled
       }
       Text {
         id: velocityShow
@@ -184,12 +183,12 @@ Rectangle{
         onValueChanged: delegate.primitive.frequency = frequencySet.frequencies[value]
         Keys.onPressed: appWindow.handleKey(event)
         sliderBarSize: Style.primitiveControl.sliderBarSize
-        backgroundColor: Style.primitiveControl.sliderBGColor
-        backgroundDisabledColor: Style.primitiveControl.sliderBGDisabledColor
-        backgroundActiveColor: Style.primitiveControl.sliderActivePartColor
-        backgroundActiveDisabledColor: Style.primitiveControl.sliderActivePartDisabledColor
-        handleColor: Style.primitiveControl.sliderHandleColor
-        handleDisabledColor: Style.primitiveControl.sliderHandleDisabledColor
+        backgroundColor: Style.palette.pc_sliderBarEnabled
+        backgroundDisabledColor: Style.palette.pc_sliderBarDisabled
+        backgroundActiveColor: Style.palette.pc_sliderBarActivePartEnabled
+        backgroundActiveDisabledColor: Style.palette.pc_sliderBarActivePartDisabled
+        handleColor: Style.palette.pc_sliderHandleEnabled
+        handleDisabledColor: Style.palette.pc_sliderHandleDisabled
       }
       Text {
         id: frequencyShow
@@ -234,12 +233,12 @@ Rectangle{
         onValueChanged: delegate.primitive.velocityRight = value
         Keys.onPressed: appWindow.handleKey(event)
         sliderBarSize: Style.primitiveControl.sliderBarSize
-        backgroundColor: Style.primitiveControl.sliderBGColor
-        backgroundDisabledColor: Style.primitiveControl.sliderBGDisabledColor
-        backgroundActiveColor: Style.primitiveControl.sliderActivePartColor
-        backgroundActiveDisabledColor: Style.primitiveControl.sliderActivePartDisabledColor
-        handleColor: Style.primitiveControl.sliderHandleColor
-        handleDisabledColor: Style.primitiveControl.sliderHandleDisabledColor
+        backgroundColor: Style.palette.pc_sliderBarEnabled
+        backgroundDisabledColor: Style.palette.pc_sliderBarDisabled
+        backgroundActiveColor: Style.palette.pc_sliderBarActivePartEnabled
+        backgroundActiveDisabledColor: Style.palette.pc_sliderBarActivePartDisabled
+        handleColor: Style.palette.pc_sliderHandleEnabled
+        handleDisabledColor: Style.palette.pc_sliderHandleDisabled
       }
       Text {
         id: velocityRightShow

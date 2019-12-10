@@ -14,16 +14,16 @@ RadioButton {
     width: height
     radius: height / 2
     anchors.verticalCenter: root.verticalCenter
-    color: root.enabled ? Style.primitiveControl.typeRadioBGColor
-                        : Style.primitiveControl.typeRadioDisabledColor
+    color: root.enabled ? Style.palette.pc_typeRadioEnabled
+                        : Style.palette.pc_typeRadioDisabled
     Rectangle{
       height: parent.height * Style.primitiveControl.radioIndicatorSize
       width: height
       radius: height / 2
       x: (parent.height - height) / 2
       y: x
-      color: root.enabled ? Style.primitiveControl.typeRadioIndicatorColor
-                          : Style.primitiveControl.typeRadioIndicatorDisabledColor
+      color: root.enabled ? Style.palette.pc_typeRadioIndicatorEnabled
+                          : Style.palette.pc_typeRadioIndicatorDisabled
       visible: root.checked
     }
   }
@@ -33,7 +33,7 @@ RadioButton {
     font.pixelSize: root.height * Style.primitiveControl.typeTextSize
     leftPadding: parent.height * (1.0 + Style.primitiveControl.radioToTextSpacing)
     verticalAlignment: Text.AlignVCenter
-    color: root.enabled ? Style.primitiveControl.typeRadioFontColor
-                              : Style.primitiveControl.typeRadioDisabledColor
+    color: root.enabled ? Style.palette.pc_typeRadioLabelEnabledFont
+                              : Style.palette.pc_typeRadioLabelDisabledFont
   }
 }

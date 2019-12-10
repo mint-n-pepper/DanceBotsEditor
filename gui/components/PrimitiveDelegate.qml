@@ -6,7 +6,7 @@ Rectangle{
   id: root
   height: appWindow.width * Style.primitives.height * Style.timerBar.height
   radius: Style.primitives.radius * height
-  border.color: Style.primitives.borderColor
+  border.color: Style.palette.prim_border
   border.width: Style.primitives.borderWidth * height
 
   property var idleParent: null
@@ -26,7 +26,7 @@ Rectangle{
     if(enabled){
       color = primitiveColors[primitive.type]
     }else{
-      color = Style.primitives.disabledColor
+      color = Style.palette.prim_disabled
     }
   }
 
@@ -34,7 +34,8 @@ Rectangle{
     // only update if there is a primitive
     if(primitive){
       textID.text=primitiveTextIDs[primitive.type]
-      color= enabled ? primitiveColors[primitive.type] : Style.primitives.disabledColor
+      color= enabled ? primitiveColors[primitive.type]
+                     : Style.palette.prim_disabled
       x= beats[primitive.positionBeat] * appWindow.frameToPixels
       var endBeat = primitive.positionBeat + primitive.lengthBeat
       endBeat = endBeat < beats.length ? endBeat : beats.length - 1
@@ -47,7 +48,7 @@ Rectangle{
 	{
 		id: textID
     text: "D"
-    color: Style.primitives.textColor
+    color: Style.palette.prim_text
     x: Style.primitives.textPosX * root.height
     y: Style.primitives.textPosY * root.height
     font.pixelSize: Style.primitives.textSize * root.height
@@ -213,7 +214,7 @@ Rectangle{
   Rectangle{
     id: selectionHighlight
     visible: false
-    color: Style.primitives.highlightOverlayColor
+    color: Style.palette.prim_highlight
     anchors.fill: parent
   }
 }

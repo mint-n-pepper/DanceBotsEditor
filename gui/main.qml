@@ -7,13 +7,17 @@ import "GuiStyle"
 ApplicationWindow {
   id: appWindow
   width: Style.main.initialWidth
-  height: (fileControl.height
+  height: ( titleBar.height
+           + fileControl.height
+           + ledPrimitiveControl.height
            + timerBarFlickable.height
            + timerBarFlickable.anchors.topMargin
            + audioControl.anchors.topMargin
            + audioControl.height )
   minimumWidth: Style.main.minWidth
-  minimumHeight: (fileControl.height
+  minimumHeight: ( titleBar.height
+                 + fileControl.height
+                 + ledPrimitiveControl.height
                  + timerBarFlickable.height
                  + timerBarFlickable.anchors.topMargin
                  + audioControl.anchors.topMargin
@@ -22,7 +26,7 @@ ApplicationWindow {
   visible: true
   title: "Dancebots GUI"
 
-  color: Style.main.color
+  color: Style.palette.mw_background
 
   property real frameToPixels: width / (Style.timerBar.secondsInWindow
                                          * backend.getSampleRate())
@@ -39,27 +43,36 @@ ApplicationWindow {
     id: fileProcess
   }
 
+  TitleBar{
+    id: titleBar
+    width: appWindow.width
+  }
+
   MP3FileControl{
     id: fileControl
+    width: appWindow.width
+    anchors.top: titleBar.bottom
   }
 
   MotorPrimitiveControl{
     id: motorPrimitiveControl
-    anchors.left: fileControl.right
-    height: fileControl.height
+    anchors.top: fileControl.bottom
+    width: appWindow.width * Style.primitiveControl.width
+    height: width * Style.primitiveControl.heightRatio
   }
 
   LEDPrimitiveControl{
     id: ledPrimitiveControl
     anchors.left: motorPrimitiveControl.right
-    height: fileControl.height
+    anchors.top: fileControl.bottom
+    width: appWindow.width * Style.primitiveControl.width
+    height: width * Style.primitiveControl.heightRatio
   }
 
   AudioControl{
     id: audioControl
+    width: appWindow.width
     anchors.top: timerBarFlickable.bottom
-    anchors.left: fileControl.left
-    anchors.right: ledPrimitiveControl.right
     anchors.topMargin: Style.timerBar.margin * motorBar.height
   }
 
@@ -69,17 +82,17 @@ ApplicationWindow {
     height: timerBarColumn.spacing + 2 * motorBar.height
     contentWidth: motorBar.width
     contentHeight: timerBarColumn.height
-    anchors.top: fileControl.bottom
-    anchors.left: parent.left
+    anchors.top: motorPrimitiveControl.bottom
+    anchors.left: appWindow.left
     anchors.topMargin: Style.timerBar.margin * motorBar.height
     boundsBehavior: Flickable.StopAtBounds
     interactive: true
 
     onContentWidthChanged: {
       contentX = visibleArea.xPosition * contentWidth
-      motorBar.timeIndicatorPosition=sliderPosition
-        * motorBar.lengthInFrames
-        * appWindow.frameToPixels;
+      timeIndicator.position = sliderPosition
+                               * motorBar.lengthInFrames
+                               * appWindow.frameToPixels;
     }
 
     property bool hoverScrollRight: true
@@ -175,14 +188,14 @@ ApplicationWindow {
 
     onSliderPositionChanged:{
       // set time indicator position
-      motorBar.timeIndicatorPosition=sliderPosition
+      timeIndicator.position=sliderPosition
       * motorBar.lengthInFrames * appWindow.frameToPixels;
       // update visible range only if drag is not active
       if(!dragActive){
       // get current visible pixel range:
-      if(motorBar.timeIndicatorPosition < contentX
-          || motorBar.timeIndicatorPosition > contentX + width){
-          var proposedContentX = motorBar.timeIndicatorPosition -
+      if(timeIndicator.position < contentX
+          || timeIndicator.position > contentX + width){
+          var proposedContentX = timeIndicator.position -
             Style.timerBar.timeBarScrollOffset;
           contentX = proposedContentX < 0 ? 0 : proposedContentX;
           }
@@ -194,7 +207,7 @@ ApplicationWindow {
       spacing: Style.timerBar.spacing * motorBar.height
       TimerBar{
         id: motorBar
-        color: Style.primitiveControl.moveColor
+        color: Style.palette.pc_moveBoxBackground
         keys: ["mot"]
         model: backend.motorPrimitives
         lengthInFrames: (fileControl.width + motorPrimitiveControl.width
@@ -207,7 +220,7 @@ ApplicationWindow {
       }
       TimerBar{
         id: ledBar
-        color: Style.primitiveControl.ledColor
+        color: Style.palette.pc_ledBoxBackground
         keys: ["led"]
         z: -1
         lengthInFrames: motorBar.lengthInFrames
@@ -215,7 +228,6 @@ ApplicationWindow {
         dragTarget: ledDragger
         primitiveColors: Style.ledPrimitive.colors
         primitiveTextIDs: Style.ledPrimitive.textID
-        timeIndicatorPosition: motorBar.timeIndicatorPosition
         controlBox: ledPrimitiveControl
       }
     }
@@ -236,6 +248,15 @@ ApplicationWindow {
       function cleanOther(){
         ledDragger.cleanAll()
       }
+    }
+
+    Rectangle{
+      id: timeIndicator
+      color: Style.palette.tim_timeIndicator
+      width: Style.timerBar.timeBarWidth * motorBar.height
+      height: timerBarColumn.height
+      property var position: 0
+      x: position - width/2
     }
   }
 

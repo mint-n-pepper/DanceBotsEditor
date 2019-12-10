@@ -13,7 +13,6 @@ Canvas{
   property var model
   property var primitiveColors
   property var primitiveTextIDs
-  property alias timeIndicatorPosition: timeIndicator.position
   property var ghosts: []
   property var beats: []
   property var controlBox: null
@@ -200,17 +199,8 @@ Canvas{
   }
 
   Rectangle{
-    id: timeIndicator
-    color: Style.timerBar.timeBarColor
-    width: Style.timerBar.timeBarWidth * root.height
-    height: parent.height
-    property var position: 0
-    x: position - width/2
-  }
-
-  Rectangle{
     id: beatIndicator
-    color: Style.timerBar.beatIndicatorBgColor
+    color: Style.palette.tim_beatNumberIndicatorBackground
     visible: false
     anchors.bottom: root.isMotorBar ? root.top : undefined
     anchors.top: root.isMotorBar ? undefined : root.bottom
@@ -222,7 +212,7 @@ Canvas{
       text: beatIndicator.text
       padding: Style.timerBar.beatIndicatorPadding * root.height
       font.pixelSize: Style.timerBar.beatIndicatorFontSize * root.height
-      color: Style.timerBar.beatIndicatorFontColor
+      color: Style.palette.tim_beatNumberIndicatorFont
     }
   }
 
@@ -274,7 +264,7 @@ Canvas{
     ctx.fillRect(0, 0, width, height)
     for(var i=0; i < beats.length; i++){
       ctx.lineWidth = Style.timerBar.beatWidth * root.height
-      ctx.strokeStyle = Style.timerBar.beatColor
+      ctx.strokeStyle = Style.palette.tim_beatMarks
       ctx.beginPath()
       var loc = beats[i] * appWindow.frameToPixels
       ctx.moveTo(loc, 0)

@@ -6,8 +6,7 @@ import "../GuiStyle"
 
 Rectangle{
   id: root
-  width: parent.width * Style.primitiveControl.width
-  color: Style.primitiveControl.ledColor
+  color: Style.palette.pc_ledBoxBackground
   property var keys: ['led']
   property var beats: []
   property var primitiveColors: Style.ledPrimitive.colors
@@ -134,12 +133,12 @@ Rectangle{
         onValueChanged: delegate.primitive.frequency = frequencySet.frequencies[value]
         Keys.onPressed: appWindow.handleKey(event)
         sliderBarSize: Style.primitiveControl.sliderBarSize
-        backgroundColor: Style.primitiveControl.sliderBGColor
-        backgroundDisabledColor: Style.primitiveControl.sliderBGDisabledColor
-        backgroundActiveColor: Style.primitiveControl.sliderActivePartColor
-        backgroundActiveDisabledColor: Style.primitiveControl.sliderActivePartDisabledColor
-        handleColor: Style.primitiveControl.sliderHandleColor
-        handleDisabledColor: Style.primitiveControl.sliderHandleDisabledColor
+        backgroundColor: Style.palette.pc_sliderBarEnabled
+        backgroundDisabledColor: Style.palette.pc_sliderBarDisabled
+        backgroundActiveColor: Style.palette.pc_sliderBarActivePartEnabled
+        backgroundActiveDisabledColor: Style.palette.pc_sliderBarActivePartDisabled
+        handleColor: Style.palette.pc_sliderHandleEnabled
+        handleDisabledColor: Style.palette.pc_sliderHandleDisabled
       }
       Text {
         id: frequencyShow
@@ -206,7 +205,7 @@ Rectangle{
               anchors.verticalCenter: background.verticalCenter
               anchors.horizontalCenter: parent.horizontalCenter
               color: control.checked ?
-                       Style.primitives.ledToolTipOnColor : background.color
+                       Style.palette.prim_toolTipLEDon : background.color
             }
 
             background: Rectangle{
@@ -214,7 +213,7 @@ Rectangle{
               height: ledCheckboxes.ledDiameter
               anchors.verticalCenter: parent.verticalCenter
               radius: height/2
-              color: Style.primitives.ledToolTipOffColor
+              color: Style.palette.prim_toolTipLEDoff
             }
           }
         }

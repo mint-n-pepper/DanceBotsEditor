@@ -1,14 +1,15 @@
 import QtQuick 2.6
 import QtQuick.Controls 2.0
 import QtQuick.Dialogs 1.3
+import QtGraphicalEffects 1.13
+
 import "../GuiStyle"
 
 Rectangle{
 	id: root
-  width: Style.fileControl.width * parent.width
-  height: Style.fileControl.heightRatio * width
 
-	color: Style.fileControl.color
+  height: Style.fileControl.height * width
+  color: Style.palette.fc_background
 
 	Component.onCompleted: setDisabled()
 
@@ -90,22 +91,37 @@ Rectangle{
 		}
 	}
 
-	Column{
-    width: root.width
-    spacing: root.width * Style.fileControl.textSpacing
     Row{
       id: buttonRow
       width: root.width
-      padding: Style.fileControl.buttonPadding * root.width
-      spacing: Style.fileControl.buttonSpacing * root.width
+      padding: Style.fileControl.buttonPadding * root.height
+      spacing: Style.fileControl.buttonSpacing * root.height
 			Button
 			{
 				id: loadButton
-        width: (root.width - 2 * (parent.padding + parent.spacing)) / 3
-        height: width * Style.fileControl.buttonHeightRatio
+        width: root.height * Style.fileControl.buttonWidth
+        height: root.height - buttonRow.padding * 2
         font.pixelSize: height * Style.fileControl.buttonTextHeightRatio
         text: "Load"
         focusPolicy: Qt.NoFocus
+        property color buttonColor: enabled ? Style.palette.fc_buttonEnabled
+                                            : Style.palette.fc_buttonDisabled
+
+        contentItem: Text{
+          text: parent.text
+          font: parent.font
+          color: parent.enabled ? Style.palette.fc_buttonTextEnabled
+                                : Style.palette.fc_buttonTextDisabled
+          verticalAlignment: Text.AlignVCenter
+          horizontalAlignment: Text.AlignHCenter
+        }
+
+        background: Rectangle{
+          anchors.fill: parent
+          color: parent.pressed ? Style.palette.fc_buttonPressed
+                 : parent.buttonColor
+        }
+
 				onClicked:
 				{
           appWindow.grabFocus()
@@ -122,12 +138,30 @@ Rectangle{
 			Button
 			{
 				id: saveButton
-        width: (parent.width - 2 * (parent.padding + parent.spacing)) / 3
-        height: width * Style.fileControl.buttonHeightRatio
+        width: root.height *Style.fileControl.buttonWidth
+        height: root.height - buttonRow.padding * 2
         font.pixelSize: height * Style.fileControl.buttonTextHeightRatio
         enabled: motorBar.isNotEmpty || ledBar.isNotEmpty
         text: "Save"
         focusPolicy: Qt.NoFocus
+        property color buttonColor: enabled ? Style.palette.fc_buttonEnabled
+                                            : Style.palette.fc_buttonDisabled
+
+        contentItem: Text{
+          text: parent.text
+          font: parent.font
+          color: parent.enabled ? Style.palette.fc_buttonTextEnabled
+                                : Style.palette.fc_buttonTextDisabled
+          verticalAlignment: Text.AlignVCenter
+          horizontalAlignment: Text.AlignHCenter
+        }
+
+        background: Rectangle{
+          anchors.fill: parent
+          color: parent.pressed ? Style.palette.fc_buttonPressed
+                 : parent.buttonColor
+        }
+
 				onClicked:
 				{
           backend.audioPlayer.pause()
@@ -138,12 +172,30 @@ Rectangle{
 			Button
 			{
 				id: clearButton
-        width: (parent.width - 2 * (parent.padding + parent.spacing)) / 3
-        height: width * Style.fileControl.buttonHeightRatio
+        width: root.height * Style.fileControl.buttonWidth
+        height: root.height - buttonRow.padding * 2
         font.pixelSize: height * Style.fileControl.buttonTextHeightRatio
         text: "Clear"
         enabled: motorBar.isNotEmpty || ledBar.isNotEmpty
         focusPolicy: Qt.NoFocus
+        property color buttonColor: enabled ? Style.palette.fc_buttonEnabled
+                                            : Style.palette.fc_buttonDisabled
+
+        contentItem: Text{
+          text: parent.text
+          font: parent.font
+          color: parent.enabled ? Style.palette.fc_buttonTextEnabled
+                                : Style.palette.fc_buttonTextDisabled
+          verticalAlignment: Text.AlignVCenter
+          horizontalAlignment: Text.AlignHCenter
+        }
+
+        background: Rectangle{
+          anchors.fill: parent
+          color: parent.pressed ? Style.palette.fc_buttonPressed
+                 : parent.buttonColor
+        }
+
 				onClicked:
 				{
           backend.audioPlayer.pause()
@@ -153,71 +205,66 @@ Rectangle{
 			}
 		} // buttons row
 
-		Column{ // text fields column
+    Row{ // text fields column
 			id: textFields
-      width: root.width
-      spacing: root.width * Style.fileControl.textSpacing
-      Row{ // artist
-        width: parent.width
-        padding: width * Style.fileControl.textPadding
-			  Text{ // label
-				  id: artistLabel
-          anchors.verticalCenter: songArtistText.verticalCenter
-          width: root.width * Style.fileControl.textBoxLabelWidth
-          text: "Artist: "
-          font.pixelSize: Style.fileControl.textSize * songArtistText.height
-			  }
-			  TextField{ // text edit field
-          id: songArtistText
-          height: Style.fileControl.textBoxHeight * clearButton.height
-          width: root.width - artistLabel.width - 2 * parent.padding
-				  maximumLength: 30 // fixed from mp3 tag limitation
-				  placeholderText: "Artist Name"
-          font.pixelSize: Style.fileControl.textSize * height
-          onFocusChanged: {
-            if(!focus){
-              backend.songArtist = text
-            }
+      padding: root.height * Style.fileControl.textBoxPadding
+      spacing: root.height * Style.fileControl.textBoxSpacing
+      anchors.right: root.right
+      anchors.verticalCenter: root.verticalCenter
+      Text{ // label
+        id: artistLabel
+        anchors.verticalCenter: textFields.verticalCenter
+        text: "Artist: "
+        color: Style.palette.fc_textColor
+        font.pixelSize: Style.fileControl.textSize * songArtistText.height
+      }
+      TextField{ // text edit field
+        id: songArtistText
+        height: root.height - 2 * textFields.padding
+        width: root.width * Style.fileControl.textBoxWidth
+        maximumLength: 30 // fixed from mp3 tag limitation
+        placeholderText: "Artist Name"
+        font.pixelSize: Style.fileControl.textSize * height
+        anchors.verticalCenter: textFields.verticalCenter
+        onFocusChanged: {
+          if(!focus){
+            backend.songArtist = text
           }
-          onAccepted: {
-            appWindow.grabFocus()
-          }
-          Keys.onTabPressed: {
-            songTitleText.focus = true
-          }
-			  }
-      } // artist
-
-      Row{ // title
-        width: parent.width
-        padding: width * Style.fileControl.textPadding
-			  Text{ // label
-				  id: titleLabel
-          anchors.verticalCenter: songTitleText.verticalCenter
-          text: "Title: "
-          width: root.width * Style.fileControl.textBoxLabelWidth
-          font.pixelSize: Style.fileControl.textSize * songTitleText.height
         }
-			  TextField{
-          id: songTitleText
-          height: Style.fileControl.textBoxHeight * clearButton.height
-          width: root.width - artistLabel.width - 2 * parent.padding
-				  maximumLength: 30 // fixed from mp3 tag limitation
-				  placeholderText: qsTr("Song Title")
-          font.pixelSize: Style.fileControl.textSize * height
-          onFocusChanged: {
-            if(!focus){
-              backend.songTitle = text
-            }
+        onAccepted: {
+          appWindow.grabFocus()
+        }
+        Keys.onTabPressed: {
+          songTitleText.focus = true
+        }
+      }
+
+      Text{ // label
+        id: titleLabel
+        anchors.verticalCenter: textFields.verticalCenter
+        text: "Title: "
+        color: Style.palette.fc_textColor
+        font.pixelSize: Style.fileControl.textSize * songTitleText.height
+      }
+      TextField{
+        id: songTitleText
+        height: songArtistText.height
+        width: songArtistText.width
+        maximumLength: 30 // fixed from mp3 tag limitation
+        placeholderText: qsTr("Song Title")
+        font.pixelSize: Style.fileControl.textSize * height
+        anchors.verticalCenter: textFields.verticalCenter
+        onFocusChanged: {
+          if(!focus){
+            backend.songTitle = text
           }
-          onAccepted: {
-            appWindow.grabFocus()
-          }
-          Keys.onTabPressed: {
-            songArtistText.focus = true
-          }
-			  }
-      } // title
-    } // text column
-  } // box column
+        }
+        onAccepted: {
+          appWindow.grabFocus()
+        }
+        Keys.onTabPressed: {
+          songArtistText.focus = true
+        }
+      }
+    } // text row
 } // box

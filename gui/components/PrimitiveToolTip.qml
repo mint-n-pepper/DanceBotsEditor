@@ -8,7 +8,7 @@ Rectangle{
   anchors.top: isMotor ? undefined : parent.bottom
   anchors.bottom: isMotor ? parent.top : undefined
   visible: parent.showData && !parent.dragActive
-  color: Style.primitives.toolTipBgColor
+  color: Style.palette.prim_toolTipBackground
   width: isMotor ? motorColumn.width : ledColumn.width
   height: isMotor ? motorColumn.height : ledColumn.height
   radius: Style.primitives.radius
@@ -28,7 +28,7 @@ Rectangle{
         && primitive.type !== MotorPrimitive.Type.Custom
       text: "Freq: 1.00"
       font.pixelSize: root.fontSize
-      color: Style.primitives.toolTipFontColor
+      color: Style.palette.prim_toolTipFont
       onVisibleChanged: {
         if(visible){
           text="Freq: " + primitive.frequency.toFixed(2)
@@ -39,7 +39,7 @@ Rectangle{
       visible: root.visible && primitive.velocity !== undefined
       text: "Vel: 40"
       font.pixelSize: root.fontSize
-      color: Style.primitives.toolTipFontColor
+      color: Style.palette.prim_toolTipFont
       onVisibleChanged: {
         if(visible){
           if(primitive.type === MotorPrimitive.Type.Custom){
@@ -56,7 +56,7 @@ Rectangle{
                && primitive.velocityRight !== undefined}
       text: "Vel R: 40"
       font.pixelSize: root.fontSize
-      color: Style.primitives.toolTipFontColor
+      color: Style.palette.prim_toolTipFont
       onVisibleChanged: {
         if(visible){text="Vel R: " + primitive.velocityRight}
       }
@@ -73,7 +73,7 @@ Rectangle{
         && primitive.type !== LEDPrimitive.Type.Constant
       text: "Freq: 1.00"
       font.pixelSize: root.fontSize
-      color: Style.primitives.toolTipFontColor
+      color: Style.palette.prim_toolTipFont
       onVisibleChanged: {
         if(visible){
           text="Freq: " + primitive.frequency.toFixed(2)
@@ -90,9 +90,9 @@ Rectangle{
         if(visible){
           for(var i = 0; i < primitive.leds.length; i++){
             if(primitive.leds[i]){
-              ledRepeater.itemAt(i).color =  Style.primitives.ledToolTipOnColor
+              ledRepeater.itemAt(i).color =  Style.palette.prim_toolTipLEDon
             }else{
-              ledRepeater.itemAt(i).color =  Style.primitives.ledToolTipOffColor
+              ledRepeater.itemAt(i).color =  Style.palette.prim_toolTipLEDoff
             }
           }
         }
@@ -104,7 +104,7 @@ Rectangle{
           width: Style.primitives.ledToolTipLEDSize * root.parent.height
           height: width
           radius: width / 2
-          color: Style.primitives.ledToolTipOffColor
+          color: Style.palette.prim_toolTipLEDoff
         }
       }
     }

@@ -15,13 +15,13 @@ Popup{
 	background: Rectangle{
 		anchors.centerIn: parent
     width: parent.width
-    color: Style.fileProcessOverlay.backgroundColor
+    color: Style.palette.ovr_background
     height: Style.fileProcessOverlay.height * parent.height
 		Text{
 			anchors.centerIn: parent
       text: backend.fileStatus
       font.pixelSize: Style.fileProcessOverlay.fontSize * parent.height
-      color: Style.fileProcessOverlay.fontColor
+      color: Style.palette.ovr_font
 		}
 	}
 

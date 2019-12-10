@@ -4,49 +4,167 @@ import QtQuick 2.0
 
 QtObject {
   id:root
+
+  // Color palette:
+  property QtObject palette: QtObject{
+    //* MAIN WINDOW *//
+    property color mw_background: "#555555"
+
+    //* FILE LOADING PROCESS OVERLAY *//
+    property color ovr_background: "#BB444444"
+    property color ovr_font: "white"
+
+    //* TITLE BAR *//
+    property color tb_background: "slategrey"
+    property color tb_font: "white"
+    property color tb_logo: "white"
+
+    //* FILE CONTROL BAR *//
+    property color fc_background: "#222222"
+    property color fc_buttonEnabled: "lightgrey"
+    property color fc_buttonDisabled: "#888888"
+    property color fc_buttonPressed: "#DDDDDD"
+    property color fc_buttonTextEnabled: "#333333"
+    property color fc_buttonTextDisabled: "#AAAAAA"
+    property color fc_textColor: "white"
+
+    //* PRIMITIVE CONTROL BOXES *//
+    // backgrounds
+    property color pc_moveBoxBackground: "#c8a2c8" // lilac
+    property color pc_ledBoxBackground: "#00A693"
+    // type radios
+    property color pc_typeRadioEnabled: "white"
+    property color pc_typeRadioDisabled: "lightgrey"
+    property color pc_typeRadioIndicatorEnabled: "black"
+    property color pc_typeRadioIndicatorDisabled: "darkgrey"
+    property color pc_typeRadioLabelEnabledFont: "black"
+    property color pc_typeRadioLabelDisabledFont: pc_typeRadioIndicatorDisabled
+
+    // sliders
+    property color pc_sliderBarEnabled: "lightgrey"
+    property color pc_sliderBarDisabled: pc_typeRadioDisabled
+    property color pc_sliderBarActivePartEnabled: "#222222"
+    property color pc_sliderBarActivePartDisabled: "#888888"
+    property color pc_sliderHandleEnabled: "white"
+    property color pc_sliderHandleDisabled: pc_typeRadioDisabled
+
+    //* TIMER BARS *//
+    property color tim_beatMarks: "lightgrey"
+    property color tim_timeIndicator: "red"
+    property color tim_ghostColorValid: "#8840DF40"
+    property color tim_ghostColorInvalid: "#88DF4040"
+    property color tim_beatNumberIndicatorBackground: "lightgrey"
+    property color tim_beatNumberIndicatorFont: "black"
+
+    //* PRIMITIVES *//
+    property color prim_text: "white"
+    property color prim_disabled: "#99EEEEEE"
+    property color prim_border: "white"
+    property color prim_highlight: "#AAFFFFFF"
+    property color prim_toolTipBackground: "black"
+    property color prim_toolTipFont: "lightgrey"
+    property color prim_toolTipLEDon: "lime"
+    property color prim_toolTipLEDoff: "lightslategrey"
+    // for primitive type colors see just below
+
+    //* AUDIO CONTROL *//
+    // button
+    property color ac_buttonEnabled: "lightgrey"
+    property color ac_buttonDisabled: "#888888"
+    property color ac_buttonPressed: "#DDDDDD"
+    property color ac_buttonIconEnabled: "#333333"
+    property color ac_buttonIconDisabled: "#AAAAAA"
+    // song position slider
+    property color ac_songPositionSliderBarEnabled: "lightgrey"
+    property color ac_songPositionSliderBarDisabled: pc_typeRadioDisabled
+    property color ac_songPositionSliderBarActivePartEnabled: "#222222"
+    property color ac_songPositionSliderBarActivePartDisabled: "#888888"
+    property color ac_songPositionSliderHandleEnabled: "white"
+    property color ac_songPositionSliderHandleDisabled: pc_typeRadioDisabled
+    // volume slider
+    property color ac_volumeSliderBarEnabled: "lightgrey"
+    property color ac_volumeSliderBarDisabled: pc_typeRadioDisabled
+    property color ac_volumeSliderBarActivePartEnabled: "#222222"
+    property color ac_volumeSliderBarActivePartDisabled: "#888888"
+    property color ac_volumeSliderHandleEnabled: "white"
+    property color ac_volumeSliderHandleDisabled: pc_typeRadioDisabled
+    property color ac_volumeSliderIconColorEnabled: "black"
+    property color ac_volumeSliderIconColorDisabled: "grey"
+
+    // timer display
+    property color ac_timerBackground: "white"
+    property color ac_timerFont: "slategrey"
+
+  }
+
+  property QtObject motorPrimitive: QtObject{
+    // see Primitive.h for mapping of type to color
+    // Twist = 0
+    // BackAndForth = 1
+    // Spin = 2
+    // Straight = 3
+    // Custom = 4
+    property var textID: ["T", "B", "S", "D", "C"]
+    property var colors: ["firebrick", "darkolivegreen", "royalblue", "deepskyblue", "deeppink"]
+  }
+
+  property QtObject ledPrimitive: QtObject{
+    // see Primitive.h for mapping of type to color
+    // KnightRider = 0
+    // Alternate = 1
+    // Blink = 2
+    // Constant = 3
+    // Random = 4
+    property var textID: ["K", "A", "B", "C", "R"]
+    property var colors: ["aqua", "darkseagreen", "mediumblue", "indigo", "orange"]
+  }
+
   // Main window
   property QtObject main: QtObject{
     property int initialWidth: 1280 // pixels
     property real heightRatio: 8.5 / 16.0 // height/width
     property int minWidth: 800 // pixels
-		property color color: "#ffe0e0"
 	}
 
   // load/save progress overlay:
   property QtObject fileProcessOverlay: QtObject{
     property real height: 0.15 // ratio of window height
     property real fontSize: 0.2 // ratio of height
-    property color backgroundColor: "#BB444444"
-    property color fontColor: "white"
+  }
+
+  // Title bar
+  property QtObject titleBar: QtObject{
+    property real height: 0.04
+    property real fontSize: 0.6 // relative to bar height
+    property real logoSize: 0.8 // relative to bar height
+    property real horizontalPadding: 0.2 // relative to bar height
   }
 
   // MP3 File Control Box
   property QtObject fileControl: QtObject{
     // box
-    property color color: "#5D7CE7"
-    property real width: 0.333 // ratio of window width
-    property real heightRatio: 0.95 // height / width
+    property real height: 0.04 // ratio of window width
+    // the width of the box is equal to the
 
     // buttons
-    property real buttonPadding: 0.01 // ratio to box width
-    property real buttonSpacing: 0.01 // ratio to box width
-    // button width is equal width of remaining space
-    property real buttonHeightRatio: 0.5 // ratio to button width
-    property real buttonTextHeightRatio: 0.35 // ratio to button height
+    // height is equal to height of bar minus padding
+    property real buttonPadding: 0.1 // ratio of box height
+    property real buttonSpacing: 0.1 // ratio of box height
+    property real buttonWidth: 1.4 // ratio of box height
+    property real buttonTextHeightRatio: 0.5 // ratio to button height
 
     // texts
-    property real textBoxHeight: 0.7 // ratio to button height
-    property real textBoxLabelWidth: 0.16 // ratio to box width
-    property real textPadding: 0.01 // ratio to box width
-    property real textSpacing: 0.02 // vertical, ratio to box width
+    // text box height is equal to box height minus padding
+    property real textBoxWidth: 0.15 // ratio of window width
+    property real textBoxPadding: 0.1 // ratio of box height
+    property real textBoxSpacing: 0.2 // ratio of box height
     property real textSize: 0.4 // ratio to text box height
   }
 
   property QtObject primitiveControl: QtObject{
     // box
-    property color moveColor: "#c8a2c8" // lilac
-    property color ledColor: "#00A693"
     property real width: 0.333 // ratio of window width
+    property real heightRatio: 0.9 // ratio of box width
     property real margin: 0.025 // ratio to box width
     property real controlSpacing: margin // ratio of box width
     // title
@@ -58,21 +176,10 @@ QtObject {
     property real radioIndicatorSize: 0.8 // ratio of radio height
     property real typeTextSize: 0.75 // ratio of radio height
     property real radioToTextSpacing: 0.25 // ratio of radio height
-    property color typeRadioBGColor: "white"
-    property color typeRadioDisabledColor: "lightgrey"
-    property color typeRadioIndicatorDisabledColor: "darkgrey"
-    property color typeRadioIndicatorColor: "black"
-    property color typeRadioFontColor: "black"
 
     // sliders:
     property real sliderHeight: typeRadioHeight // ratio of box height, same as radio size
     property real sliderBarSize: 0.2 // ratio of slider handle size
-    property color sliderBGColor: "lightgrey"
-    property color sliderBGDisabledColor: typeRadioDisabledColor
-    property color sliderActivePartColor: "#222222"
-    property color sliderActivePartDisabledColor: "#888888"
-    property color sliderHandleColor: "white"
-    property color sliderHandleDisabledColor: typeRadioDisabledColor
     property real sliderLabelTextSize: 0.58 // ratio of slider height
     property real sliderValueWidth: 0.15 // ratio of box width
     property real sliderValueLeftPadding: 0.07 // ratio of width
@@ -90,21 +197,15 @@ QtObject {
     property real margin: 0.125 // ratio of timerBar height
     // space between timer bars
     property real spacing: 0.125 // ratio of timerBar height
-    property color beatColor: "lightgray"
     property real beatWidth: 2.0/80.0 // line width of beat indicators
-    property color timeBarColor: "red"
     property real timeBarWidth: 3.0/80.0 // ratio of height
     property real timeBarScrollOffset: 25.0/80.0 // ratio of height
-    property color ghostColorValid: "#8840DF40"
-    property color ghostColorInvalid: "#88DF4040"
 
     // how many seconds of music to show in window, which
     // determines beat/samples scaling to window size
     property real secondsInWindow: 40.0
 
     // beat indicator
-    property color beatIndicatorBgColor: "lightgrey"
-    property color beatIndicatorFontColor: "#000000"
     property real beatIndicatorFontSize: 16.0 / 80.0 // ratio of timerbar height
     property real beatIndicatorPadding: 4.0 / 80.0 // ratio of timerbar height
 
@@ -120,62 +221,32 @@ QtObject {
   property QtObject primitives: QtObject{
     property real height: 0.9 // ratio of timerbar height
     property real radius: 3.0/72.0 // ratio of height
-    property color textColor: "white"
     property real textPosX: 3.0/72.0
     property real textPosY: 3.0/72.0
     property real textSize: 0.2 // ratio of height
     property bool textBold: true
-    property color disabledColor: "#99EEEEEE"
-    property color borderColor: "white"
     property real borderWidth: 1.0 / 72.0 // ratio of height
-    property color highlightOverlayColor: "#AAFFFFFF"
     // margin of primitive at which a drag causes a size change
     // is capped at half primtive width
     property real resizeMarginRight: 0.14 // ratio of height
 
     // TOOLTIP STYLE
-    property color toolTipBgColor: "#000000"
-    property color toolTipFontColor: "lightgrey"
     property real toolTipFontSize: 16.0 / 72.0 // ratio of height
     property real toolTipPadding: 4.0 / 72.0 // ratio of height
     property real ledToolTipLEDSize: 10.0 / 72.0 // ratio of height
-    property var ledToolTipOnColor: "lime"
-    property var ledToolTipOffColor: "lightslategrey"
 	}
-
-  property QtObject motorPrimitive: QtObject{
-    // see Primitive.h for mapping of type to color
-    // Twist = 0
-    // BackAndForth = 1
-    // Spin = 2
-    // Straight = 3
-    // Custom = 4
-    property var textID: ["T", "B", "S", "D", "C"]
-    property var colors: ["firebrick", "darkolivegreen", "royalblue", "deepskyblue", "deeppink"]
-	}
-
-  property QtObject ledPrimitive: QtObject{
-    // see Primitive.h for mapping of type to color
-    // KnightRider = 0
-    // Alternate = 1
-    // Blink = 2
-    // Constant = 3
-    // Random = 4
-    property var textID: ["K", "A", "B", "C", "R"]
-    property var colors: ["aqua", "darkseagreen", "mediumblue", "indigo", "orange"]
-  }
 
   property QtObject audioControl: QtObject{
     // width of time slider is same as window size
     // controls height set so that slider knob has same size as
     // primitive box sliders
-    property real controlsHeight: fileControl.heightRatio
+    property real controlsHeight: primitiveControl.heightRatio
                                   * primitiveControl.width
                                   * primitiveControl.typeRadioHeight
 
     // total width of buttons and volume slider
-    property real playControlWidth: fileControl.width // ratio of window size
-    property real playControlHeight: 1.5 // ratio of controlsHeight
+    property real playControlWidth: 0.25 // ratio of window size
+    property real playControlHeight: 1.2 // ratio of controlsHeight
     property real buttonWidth: 0.15 // ratio of playControlWidth
     property real timerWidth: 0.18 // ratio of playControlWidth
     // volume slider takes remaining space to fill playControlWidth
@@ -183,14 +254,11 @@ QtObject {
     // timer visuals
     property real timerFontSize: 0.45 // ratio of playControlHeight
     property real timerTextMarginRight: 0.1 // ratio of timer width
-    property color timerBGColor: "white"
-    property color timerFontColor: "slategrey"
 
     // spacing between slider and buttons
     property real sliderButtonSpacing: 0.3 // ratio of controlsHeight
     // horizontal spacing between buttons
     property real buttonSpacing: 0.2 // ratio of controlsHeight
-    property color iconColor: "slategrey"
 
     // scale of speaker icon relative to slider size
     property real volumeSliderIconScale: 0.75
