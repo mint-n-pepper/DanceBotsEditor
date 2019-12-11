@@ -102,6 +102,7 @@ Rectangle{
         width: root.height * Style.fileControl.buttonWidth
         height: root.height - buttonRow.padding * 2
         font.pixelSize: height * Style.fileControl.buttonTextHeightRatio
+				font.bold: true
         text: "LOAD"
         focusPolicy: Qt.NoFocus
         property color buttonColor: enabled ? Style.palette.fc_buttonEnabled
@@ -148,6 +149,7 @@ Rectangle{
         height: root.height - buttonRow.padding * 2
         font.pixelSize: height * Style.fileControl.buttonTextHeightRatio
         enabled: motorBar.isNotEmpty || ledBar.isNotEmpty
+				font.bold: true
         text: "SAVE"
         focusPolicy: Qt.NoFocus
         property color buttonColor: enabled ? Style.palette.fc_buttonEnabled
@@ -186,6 +188,7 @@ Rectangle{
         width: root.height * Style.fileControl.buttonWidth
         height: root.height - buttonRow.padding * 2
         font.pixelSize: height * Style.fileControl.buttonTextHeightRatio
+				font.bold: true
         text: "CLEAR"
         enabled: motorBar.isNotEmpty || ledBar.isNotEmpty
         focusPolicy: Qt.NoFocus
