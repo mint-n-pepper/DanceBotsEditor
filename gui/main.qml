@@ -11,17 +11,15 @@ ApplicationWindow {
            + fileControl.height
            + ledPrimitiveControl.height
            + timerBarFlickable.height
-           + timerBarFlickable.anchors.topMargin
-           + audioControl.anchors.topMargin
-           + audioControl.height )
+           + audioControl.height
+           + 4 * guiMargin)
   minimumWidth: Style.main.minWidth
   minimumHeight: ( titleBar.height
-                 + fileControl.height
-                 + ledPrimitiveControl.height
-                 + timerBarFlickable.height
-                 + timerBarFlickable.anchors.topMargin
-                 + audioControl.anchors.topMargin
-                 + audioControl.height )
+                  + fileControl.height
+                  + ledPrimitiveControl.height
+                  + timerBarFlickable.height
+                  + audioControl.height
+                  + 4 * guiMargin)
 
   visible: true
   title: "Dancebots GUI"
@@ -30,6 +28,8 @@ ApplicationWindow {
 
   property real frameToPixels: width / (Style.timerBar.secondsInWindow
                                          * backend.getSampleRate())
+
+  property real guiMargin: width * Style.main.margin
 
   MouseArea{
     id: sceneClickCatcher
@@ -57,15 +57,19 @@ ApplicationWindow {
   MotorPrimitiveControl{
     id: motorPrimitiveControl
     anchors.top: fileControl.bottom
-    width: appWindow.width * Style.primitiveControl.width
+    anchors.topMargin: appWindow.guiMargin
+    anchors.left: fileControl.left
+    anchors.leftMargin: appWindow.guiMargin
+    width: appWindow.width * (0.5 - 1.5 * Style.main.margin)
     height: width * Style.primitiveControl.heightRatio
   }
 
   LEDPrimitiveControl{
     id: ledPrimitiveControl
     anchors.left: motorPrimitiveControl.right
-    anchors.top: fileControl.bottom
-    width: appWindow.width * Style.primitiveControl.width
+    anchors.leftMargin: appWindow.guiMargin
+    anchors.top: motorPrimitiveControl.top
+    width: appWindow.width * (0.5 - 1.5 * Style.main.margin)
     height: width * Style.primitiveControl.heightRatio
   }
 
@@ -73,7 +77,7 @@ ApplicationWindow {
     id: audioControl
     width: appWindow.width
     anchors.top: timerBarFlickable.bottom
-    anchors.topMargin: Style.timerBar.margin * motorBar.height
+    anchors.topMargin: appWindow.guiMargin
   }
 
   Flickable{
@@ -84,7 +88,7 @@ ApplicationWindow {
     contentHeight: timerBarColumn.height
     anchors.top: motorPrimitiveControl.bottom
     anchors.left: appWindow.left
-    anchors.topMargin: Style.timerBar.margin * motorBar.height
+    anchors.topMargin: appWindow.guiMargin
     boundsBehavior: Flickable.StopAtBounds
     interactive: true
 

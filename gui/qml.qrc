@@ -13,12 +13,13 @@
         <file>components/PrimitiveToolTip.qml</file>
         <file>components/TypeRadio.qml</file>
         <file>components/ScalableSlider.qml</file>
-		<file>components/TitleBar.qml</file>
+        <file>components/TitleBar.qml</file>
         <file>GuiStyle/Style.qml</file>
         <file>GuiStyle/qmldir</file>
-        <file>icons/playPause.svg</file>
         <file>icons/stop.svg</file>
         <file>icons/volume.svg</file>
         <file>icons/mp_logo.svg</file>
+        <file>icons/pause.svg</file>
+        <file>icons/play.svg</file>
     </qresource>
 </RCC>

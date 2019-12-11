@@ -8,10 +8,10 @@ Item {
   id: root
   property alias sliderPosition: songPositionSlider.visualPosition
 
-  height: songPositionSlider.height + playControlBox.height
-          + controlsHeight * Style.audioControl.sliderButtonSpacing
+  height: songPositionSlider.height + playControlItem.height
+          + appWindow.guiMargin
 
-  property int controlsHeight: width * Style.audioControl.controlsHeight
+  property int sliderHeight: width * Style.audioControl.sliderHeight
 
   enabled: false
 
@@ -44,7 +44,7 @@ Item {
     from: 0.0
     to: 1.0
     width: root.width
-    height: controlsHeight
+    height: sliderHeight
     focusPolicy: Qt.NoFocus
 
     onPressedChanged:{
@@ -63,21 +63,24 @@ Item {
   }
 
   Item{
-    id: playControlBox
-    width: Style.audioControl.playControlWidth * parent.width
+    id: playControlItem
+    width: parent.width - 2 * appWindow.guiMargin
     anchors.top: songPositionSlider.bottom
-    height: controlsHeight * Style.audioControl.playControlHeight
-    anchors.topMargin: Style.audioControl.sliderButtonSpacing
-                       * root.controlsHeight
+    anchors.topMargin: appWindow.guiMargin
+    anchors.horizontalCenter: root.horizontalCenter
+    height: sliderHeight * Style.audioControl.buttonHeight
+
     Row{
-      id: playControlRow
-      spacing: Style.audioControl.buttonSpacing * root.controlsHeight
+      id: buttonRow
+      spacing: Style.audioControl.buttonSpacing * root.sliderHeight
+      anchors.verticalCenter: playControlItem.verticalCenter
+      anchors.horizontalCenter: playControlItem.horizontalCenter
       Button
       {
         id: playButton
         focusPolicy: Qt.NoFocus
-        width: Style.audioControl.buttonWidth * playControlBox.width
-        height: playControlBox.height
+        width: playControlItem.height
+        height: playControlItem.height
         property color buttonColor: enabled ? Style.palette.ac_buttonEnabled
                                             : Style.palette.ac_buttonDisabled
 
@@ -87,8 +90,8 @@ Item {
           Image{
             id: playImage
             anchors.centerIn: parent
-            source: "../icons/playPause.svg"
-            sourceSize.height: parent.height
+            source: "../icons/play.svg"
+            sourceSize.height: parent.height * Style.audioControl.buttonIconSize
             antialiasing: true
             visible: false
           }
@@ -99,11 +102,31 @@ Item {
             color: parent.enabled ? Style.palette.ac_buttonIconEnabled
                                   : Style.palette.ac_buttonIconDisabled
             antialiasing: true
+            visible: !backend.audioPlayer.isPlaying
+          }
+
+          Image{
+            id: pauseImage
+            anchors.centerIn: parent
+            source: "../icons/pause.svg"
+            sourceSize.height: parent.height * Style.audioControl.buttonIconSize
+            antialiasing: true
+            visible: false
+          }
+
+          ColorOverlay{
+            anchors.fill: pauseImage
+            source: pauseImage
+            color: parent.enabled ? Style.palette.ac_buttonIconEnabled
+                                  : Style.palette.ac_buttonIconDisabled
+            antialiasing: true
+            visible: backend.audioPlayer.isPlaying
           }
         }
 
         background: Rectangle{
           anchors.fill: parent
+          radius: parent.height / 2
           color: parent.pressed ? Style.palette.ac_buttonPressed
                  : parent.buttonColor
         }
@@ -118,8 +141,8 @@ Item {
       {
         id: stopButton
         focusPolicy: Qt.NoFocus
-        width: Style.audioControl.buttonWidth * playControlBox.width
-        height: playControlBox.height
+        width: playControlItem.height
+        height: playControlItem.height
         property color buttonColor: enabled ? Style.palette.ac_buttonEnabled
                                             : Style.palette.ac_buttonDisabled
 
@@ -130,7 +153,7 @@ Item {
             id: stopImage
             anchors.centerIn: parent
             source: "../icons/stop.svg"
-            sourceSize.height: parent.height
+            sourceSize.height: parent.height * Style.audioControl.buttonIconSize
             antialiasing: true
             visible: false
           }
@@ -146,6 +169,7 @@ Item {
 
         background: Rectangle{
           anchors.fill: parent
+          radius: parent.height / 2
           color: parent.pressed ? Style.palette.ac_buttonPressed
                  : parent.buttonColor
         }
@@ -156,27 +180,57 @@ Item {
           backend.audioPlayer.stop()
         }
       }
-      Rectangle{
-        id:timerDisplay
-        width: Style.audioControl.timerWidth * playControlBox.width
-        height: playControlBox.height
-        color: Style.palette.ac_timerBackground
-        Text{
-          anchors.right: parent.right
-          anchors.verticalCenter: parent.verticalCenter
-          anchors.rightMargin: Style.audioControl.timerTextMarginRight
-                               * timerDisplay.width
-          text: (songPositionSlider.value / 1000).toFixed(1)
-          font.pixelSize: Style.audioControl.timerFontSize
-                          * timerDisplay.height
-          color: Style.palette.ac_timerFont
-        }
-      }
+    }
 
+    Text{
+      anchors.left: playControlItem.left
+      anchors.verticalCenter: playControlItem.verticalCenter
+      property var minutes: Math.floor(songPositionSlider.value / 60000.0)
+      property var seconds: (songPositionSlider.value / 1000.0 - minutes * 60.0)
+      property var secondString: "0" + seconds.toFixed(1)
+      text: {
+        // cut off zero front pad in case more than 10 seconds
+        secondString.length > 4 ?
+              minutes.toFixed(0) + ":" + secondString.substr(1)
+            : minutes.toFixed(0) + ":" + secondString
+      }
+      font.pixelSize: Style.audioControl.timerFontSize
+                      * root.sliderHeight
+      color: enabled ? Style.palette.ac_timerFontEnabled
+                     : Style.palette.ac_timerFontDisabled
+    }
+
+    Row{
+      id: volumeRow
+      anchors.right: playControlItem.right
+      anchors.verticalCenter: playControlItem.verticalCenter
+      spacing: appWindow.guiMargin
       Connections{
         target: backend.audioPlayer
         onVolumeAvailable:{
           volumeSlider.value = backend.audioPlayer.getCurrentLogVolume()
+        }
+      }
+
+      Item{
+        width: speakerImage.width
+        height: speakerImage.height
+        anchors.verticalCenter: parent.verticalCenter
+        Image{
+          id: speakerImage
+          source: "../icons/volume.svg"
+          anchors.verticalCenter: parent.verticalCenter
+          width: root.sliderHeight * Style.audioControl.volumeIconScale
+          height: width
+          visible: false
+        }
+
+        ColorOverlay{
+          anchors.fill: speakerImage
+          source: speakerImage
+          color: root.enabled ? Style.palette.ac_volumeSliderIconColorEnabled
+                              : Style.palette.ac_volumeSliderIconColorDisabled
+          antialiasing: true
         }
       }
 
@@ -185,53 +239,22 @@ Item {
         from: 0.0
         to: 1.0
         value: 1.0
-        height: root.controlsHeight
-        width: playControlBox.width - 3 * playControlRow.spacing
-               - playControlBox.width * (
-                  2.0 * Style.audioControl.buttonWidth
-                  + Style.audioControl.timerWidth
-                 )
-        anchors.verticalCenter: playControlRow.verticalCenter
+        anchors.verticalCenter: parent.verticalCenter
+        height: root.sliderHeight * Style.audioControl.volumeSliderHeight
+        width: root.width * Style.audioControl.volumeSliderWidth
         focusPolicy: Qt.NoFocus
         live: true
         onPressedChanged: appWindow.grabFocus()
         onValueChanged: backend.audioPlayer.setVolume(value)
 
-        sliderBarSize: Style.primitiveControl.sliderBarSize
+        sliderBarSize: Style.audioControl.volmeSliderBarSize
         backgroundColor: Style.palette.ac_volumeSliderBarEnabled
         backgroundDisabledColor: Style.palette.ac_volumeSliderBarDisabled
         backgroundActiveColor: Style.palette.ac_volumeSliderBarActivePartEnabled
         backgroundActiveDisabledColor: Style.palette.ac_volumeSliderBarActivePartDisabled
         handleColor: Style.palette.ac_volumeSliderHandleEnabled
         handleDisabledColor: Style.palette.ac_volumeSliderHandleDisabled
-
-        handle: Rectangle{
-          width: volumeSlider.availableHeight
-          height: width
-          radius: width/2
-          color: enabled ? volumeSlider.handleColor
-                         : volumeSlider.handleDisabledColor
-          x: volumeSlider.leftPadding
-             + volumeSlider.visualPosition * (volumeSlider.availableWidth
-                                              - width)
-          y: volumeSlider.topPadding
-          Image{
-            id: speakerImage
-            source: "../icons/volume.svg"
-            anchors.centerIn: parent
-            width: Style.audioControl.volumeSliderIconScale * parent.width
-            height: width
-            visible: false
-          }
-          ColorOverlay{
-            anchors.fill: speakerImage
-            source: speakerImage
-            color: parent.enabled ? Style.palette.ac_volumeSliderIconColorEnabled
-                                  : Style.palette.ac_volumeSliderIconColorDisabled
-            antialiasing: true
-          }
-        }
       }
     }
-  }
+  } // play control item
 }

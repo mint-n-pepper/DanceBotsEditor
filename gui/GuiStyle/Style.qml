@@ -91,16 +91,16 @@ QtObject {
     // volume slider
     property color ac_volumeSliderBarEnabled: "lightgrey"
     property color ac_volumeSliderBarDisabled: pc_typeRadioDisabled
-    property color ac_volumeSliderBarActivePartEnabled: "#222222"
+    property color ac_volumeSliderBarActivePartEnabled: "grey"
     property color ac_volumeSliderBarActivePartDisabled: "#888888"
-    property color ac_volumeSliderHandleEnabled: "white"
+    property color ac_volumeSliderHandleEnabled: "grey"
     property color ac_volumeSliderHandleDisabled: pc_typeRadioDisabled
-    property color ac_volumeSliderIconColorEnabled: "black"
-    property color ac_volumeSliderIconColorDisabled: "grey"
+    property color ac_volumeSliderIconColorEnabled: "grey"
+    property color ac_volumeSliderIconColorDisabled: "darkgrey"
 
     // timer display
-    property color ac_timerBackground: "white"
-    property color ac_timerFont: "slategrey"
+    property color ac_timerFontEnabled: "lightgrey"
+    property color ac_timerFontDisabled: "grey"
 
   }
 
@@ -131,6 +131,9 @@ QtObject {
     property int initialWidth: 1280 // pixels
     property real heightRatio: 8.5 / 16.0 // height/width
     property int minWidth: 800 // pixels
+    // margin used for spacing of most major gui elements,
+    // such as primitive control boxes and timer bars
+    property real margin: 0.01 // ratio of width
 	}
 
   // load/save progress overlay:
@@ -253,29 +256,21 @@ QtObject {
 
   property QtObject audioControl: QtObject{
     // width of time slider is same as window size
-    // controls height set so that slider knob has same size as
-    // primitive box sliders
-    property real controlsHeight: primitiveControl.heightRatio
-                                  * primitiveControl.width
-                                  * primitiveControl.typeRadioHeight
+    property real sliderHeight: 0.02 // ratio of window width
 
-    // total width of buttons and volume slider
-    property real playControlWidth: 0.25 // ratio of window size
-    property real playControlHeight: 1.2 // ratio of controlsHeight
-    property real buttonWidth: 0.15 // ratio of playControlWidth
-    property real timerWidth: 0.18 // ratio of playControlWidth
-    // volume slider takes remaining space to fill playControlWidth
+    // Play / Pause Buttons
+    property real buttonHeight: 1.8 // ratio of sliderHeight
+    property real buttonSpacing: 0.2 // ratio of sliderHeight
+    property real buttonIconSize: 0.7 // ratio to buttonHeight
 
     // timer visuals
-    property real timerFontSize: 0.45 // ratio of playControlHeight
-    property real timerTextMarginRight: 0.1 // ratio of timer width
+    property real timerFontSize: 0.8 // ratio of sliderHeight
 
-    // spacing between slider and buttons
-    property real sliderButtonSpacing: 0.3 // ratio of controlsHeight
-    // horizontal spacing between buttons
-    property real buttonSpacing: 0.2 // ratio of controlsHeight
+    // Volume controls
+    property real volumeSliderHeight: 0.7 // ratio of sliderHeight
+    property real volmeSliderBarSize: 0.2 // ratio of slider handle size
+    property real volumeSliderWidth: 0.15 // ratio of window width
+    property real volumeIconScale: 0.75 // ratio of sliderHeight
 
-    // scale of speaker icon relative to slider size
-    property real volumeSliderIconScale: 0.75
   }
 }
