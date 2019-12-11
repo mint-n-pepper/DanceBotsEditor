@@ -124,7 +124,7 @@ Rectangle{
           color: parent.pressed ? Style.palette.fc_buttonPressed
                  : parent.buttonColor
 					border.color: Style.palette.fc_buttonTextEnabled
-			    border.width: Style.fileControl.buttonBorderWidth
+			    border.width: Style.fileControl.buttonBorderWidth * parent.height
 			    radius: Style.fileControl.buttonRadius
 
         }
@@ -171,7 +171,7 @@ Rectangle{
 					color: parent.pressed ? Style.palette.fc_buttonPressed
                  : parent.buttonColor
 					border.color: Style.palette.fc_buttonTextEnabled
-					border.width: Style.fileControl.buttonBorderWidth
+					border.width: Style.fileControl.buttonBorderWidth * parent.height
 					radius: Style.fileControl.buttonRadius
         }
 
@@ -211,7 +211,7 @@ Rectangle{
           color: parent.pressed ? Style.palette.fc_buttonPressed
                  : parent.buttonColor
 					border.color: Style.palette.fc_buttonTextEnabled
-					border.width: Style.fileControl.buttonBorderWidth
+					border.width: Style.fileControl.buttonBorderWidth * parent.height
 					radius: Style.fileControl.buttonRadius
         }
 
@@ -249,7 +249,7 @@ Rectangle{
 
       TextField{ // text edit field
         id: songArtistText
-        height: artistLabelBox.height 
+        height: artistLabelBox.height
         width: root.width * Style.fileControl.textBoxWidth
 
 				color: Style.palette.fc_altTextColor

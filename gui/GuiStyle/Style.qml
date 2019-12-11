@@ -56,7 +56,7 @@ QtObject {
     property color pc_sliderHandleDisabled: pc_typeRadioDisabled
 
     //* TIMER BARS *//
-    property color tim_beatMarks: "lightgrey"
+    property color tim_beatMarks: "#151515"
     property color tim_timeIndicator: "red"
     property color tim_ghostColorValid: "#8840DF40"
     property color tim_ghostColorInvalid: "#88DF4040"
@@ -162,7 +162,7 @@ QtObject {
     property real buttonTextHeightRatio: 0.5 // ratio to button height
     property real buttonOpacityEnabled: 1 // opacity of enabled text
     property real buttonOpacityDisabled: 0.4 // opacity of disabled text
-    property real buttonBorderWidth: 2 // width of button border
+    property real buttonBorderWidth: 0.05 // width of button border relative to button height
 
     // texts
     // text box height is equal to box height minus padding
