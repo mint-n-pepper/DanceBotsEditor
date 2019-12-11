@@ -21,12 +21,12 @@ QtObject {
 
     //* FILE CONTROL BAR *//
     property color fc_background: "#63DD7F"
-    property color fc_buttonEnabled: "lightgrey"
-    property color fc_buttonDisabled: "#888888"
-    property color fc_buttonPressed: "#DDDDDD"
+    property color fc_buttonEnabled: "#63DD7F"
+    property color fc_buttonDisabled: "#65A273"
+    property color fc_buttonPressed: "#77FF96"
     property color fc_buttonTextEnabled: "#333333"
-    property color fc_buttonTextDisabled: "#AAAAAA"
-    property color fc_textColor: "white"
+    property color fc_buttonTextDisabled: "#333333"
+    property color fc_textColor: "#333333"
 
     //* PRIMITIVE CONTROL BOXES *//
     // backgrounds
@@ -143,22 +143,27 @@ QtObject {
   // MP3 File Control Box
   property QtObject fileControl: QtObject{
     // box
-    property real height: 0.04 // ratio of window width
+    property real height: 0.045 // ratio of window width
     // the width of the box is equal to the
 
     // buttons
     // height is equal to height of bar minus padding
-    property real buttonPadding: 0.1 // ratio of box height
-    property real buttonSpacing: 0.1 // ratio of box height
-    property real buttonWidth: 1.4 // ratio of box height
-    property real buttonTextHeightRatio: 0.5 // ratio to button height
+    property real buttonPadding: 0.15 // ratio of box height
+    property real buttonSpacing: 0.3 // ratio of box height
+    property real buttonWidth: 1.5 // ratio of box height
+    property real buttonRadius: 2 // radius of button border
+    property real buttonTextHeightRatio: 0.6 // ratio to button height
+    property real buttonOpacityEnabled: 1 // opacity of enabled text
+    property real buttonOpacityDisabled: 0.3 // opacity of disabled text
+    property real buttonBorderWidth: 2 // width of button border
 
     // texts
     // text box height is equal to box height minus padding
-    property real textBoxWidth: 0.15 // ratio of window width
+    property real textBoxWidth: 0.18 // ratio of window width
     property real textBoxPadding: 0.1 // ratio of box height
-    property real textBoxSpacing: 0.2 // ratio of box height
-    property real textSize: 0.4 // ratio to text box height
+    property real textBoxSpacing: 0.1 // ratio of box height
+    property real textSize: 0.45 // ratio to text box height
+
   }
 
   property QtObject primitiveControl: QtObject{
