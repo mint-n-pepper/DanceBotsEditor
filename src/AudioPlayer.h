@@ -34,6 +34,11 @@
 class AudioPlayer :
   public QObject {
   Q_OBJECT;
+
+  Q_PROPERTY(bool isPlaying
+  READ isPlaying
+  NOTIFY isPlayingChanged)
+
 public:
   explicit AudioPlayer(QObject* parent);
 
@@ -53,11 +58,17 @@ public:
    */
   Q_INVOKABLE qreal getCurrentLogVolume(void);
 
-signals:
   /**
-   * \brief Signal emitted when playback is stopped
+   * \brief Get current play status
+   *
+   * \return if player is playing (true)
    */
-  void stopped(void);
+  bool isPlaying(void) const {
+    return mIsPlaying;
+  }
+
+signals:
+  void isPlayingChanged(void);
 
   /**
    * \brief Signal to update GUI elements with the current playback time in
@@ -130,6 +141,7 @@ private:
    */
   void connectAudioOutputSignals();
 
+  bool mIsPlaying{ false };
   qreal mVolumeLinear{ 1.0 }; /**< Audio volume in linear representation */
   int mSampleRate{ 0 };
   int mNotifyInterval{ 25 }; /**< Audio time update interval in MS */

@@ -138,6 +138,7 @@ void AudioPlayer::togglePlay(void) {
   case QAudio::SuspendedState:
     mAudioOutput->resume();
     break;
+  case QAudio::InterruptedState:
   case QAudio::StoppedState:
   case QAudio::IdleState:
     mAudioOutput->start(&mRawAudioBuffer);
@@ -219,4 +220,16 @@ void AudioPlayer::setNotifyInterval(const int intervalMS) {
 
 void AudioPlayer::handleStateChanged(QAudio::State newState) {
   // TODO: might have to implement error handling here
+  switch(newState) {
+  case QAudio::ActiveState:
+    mIsPlaying = true;
+    break;
+  case QAudio::SuspendedState:
+  case QAudio::InterruptedState:
+  case QAudio::StoppedState:
+  case QAudio::IdleState:
+    mIsPlaying = false;
+    break;
+  }
+  emit isPlayingChanged();
 }
