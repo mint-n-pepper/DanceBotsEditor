@@ -14,7 +14,7 @@ Rectangle{
   property var primitive: null
   property var dragTarget: null
   property bool showData: false
-  property bool dragActive: dragArea.dragActive  
+  property bool dragActive: dragArea.dragActive
 
   property real frameToPixels: appWindow.frameToPixels
 

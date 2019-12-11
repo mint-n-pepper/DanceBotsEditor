@@ -207,7 +207,7 @@ ApplicationWindow {
       spacing: Style.timerBar.spacing * motorBar.height
       TimerBar{
         id: motorBar
-        color: Style.palette.pc_moveBoxBackground
+        color: Style.palette.pc_moveBoxColor
         keys: ["mot"]
         model: backend.motorPrimitives
         lengthInFrames: (fileControl.width + motorPrimitiveControl.width
@@ -220,7 +220,7 @@ ApplicationWindow {
       }
       TimerBar{
         id: ledBar
-        color: Style.palette.pc_ledBoxBackground
+        color: Style.palette.pc_ledBoxColor
         keys: ["led"]
         z: -1
         lengthInFrames: motorBar.lengthInFrames

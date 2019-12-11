@@ -34,8 +34,11 @@ QtObject {
 
     //* PRIMITIVE CONTROL BOXES *//
     // backgrounds
-    property color pc_moveBoxBackground: "#ECD600" // Mint & Pepper Yellow
-    property color pc_ledBoxBackground: "#FF7F33" // Mint & Pepper Orange
+    property color pc_moveBoxBackground: "#4B4B4B" // Dark grey background
+    property color pc_moveBoxColor: "#ECD600" // Mint & Pepper Yellow
+    property color pc_ledBoxBackground: "#4B4B4B" // Dark grey background
+    property color pc_ledBoxColor: "#FF7F33" // Mint & Pepper Orange
+
     // type radios
     property color pc_typeRadioEnabled: "darkgrey"
     property color pc_typeRadioDisabled: "lightgrey"
@@ -164,7 +167,7 @@ QtObject {
     // texts
     // text box height is equal to box height minus padding
     property real textBoxWidth: 0.18 // ratio of window width
-    property real textBoxPadding: 0.2 // ratio of box height
+    property real textBoxPadding: 0.15 // ratio of box height
     property real textBoxSpacing: 0.1 // ratio of box height
     property real textSize: 0.45 // ratio to text box height
 
@@ -175,8 +178,8 @@ QtObject {
 
   property QtObject primitiveControl: QtObject{
     // box
-    property real width: 0.333 // ratio of window width
-    property real heightRatio: 0.9 // ratio of box width
+    property real width: 0.48 // ratio of window width
+    property real heightRatio: 0.7 // ratio of box width
     property real margin: 0.025 // ratio to box width
     property real controlSpacing: margin // ratio of box width
     // title
