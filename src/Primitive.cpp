@@ -1,3 +1,22 @@
+/*
+*  Dancebots GUI - Create choreographies for Dancebots
+*  https://github.com/philippReist/dancebots_gui
+*
+*  Copyright 2019 - Philipp Reist
+*
+*  This program is free software : you can redistribute it and/or modify
+*  it under the terms of the GNU General Public License as published by
+*  the Free Software Foundation, either version 3 of the License, or
+*  (at your option) any later version.
+*
+*  This program is distributed in the hope that it will be useful,
+*  but WITHOUT ANY WARRANTY; without even the implied warranty of
+*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+*
+*  See the GNU General Public License for more details, available in the
+*  LICENSE file included in the repository.
+*/
+
 #include "Primitive.h"
 
 MotorPrimitive::MotorPrimitive(QObject* const parent)
@@ -85,7 +104,7 @@ void LEDPrimitive::serializeToStream(QDataStream& stream) const {
   stream << beatPosition << beatLength << type << frequency << leds;
 }
 
-quint8 LEDPrimitive::getLedByte(void) const{
+quint8 LEDPrimitive::getLedByte(void) const {
   quint8 leds = 0u;
   for(size_t i = 0; i < mLeds.size(); ++i) {
     if(mLeds[i]) {

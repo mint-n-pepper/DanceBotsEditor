@@ -1,3 +1,22 @@
+/*
+*  Dancebots GUI - Create choreographies for Dancebots
+*  https://github.com/philippReist/dancebots_gui
+*
+*  Copyright 2019 - Philipp Reist
+*
+*  This program is free software : you can redistribute it and/or modify
+*  it under the terms of the GNU General Public License as published by
+*  the Free Software Foundation, either version 3 of the License, or
+*  (at your option) any later version.
+*
+*  This program is distributed in the hope that it will be useful,
+*  but WITHOUT ANY WARRANTY; without even the implied warranty of
+*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+*
+*  See the GNU General Public License for more details, available in the
+*  LICENSE file included in the repository.
+*/
+
 #include "PrimitiveToSignal.h"
 #include <cmath>
 #include <random>
@@ -84,7 +103,6 @@ void PrimitiveToSignal::processPrimitivesAtBeat(
   const size_t currentBeat,
   const MotorPrimitive* const motorPrimitive,
   const LEDPrimitive* const ledPrimitive) {
-
   // init current and final frame, and their difference
   const size_t startFrame = mBeatFrames[currentBeat];
   const size_t endFrame = mBeatFrames[currentBeat + 1];
@@ -112,14 +130,14 @@ void PrimitiveToSignal::processPrimitivesAtBeat(
       getLEDs(relativeBeat, ledPrimitive, data);
     }
     float tempCommandLevel = mCommandLevel;
-     size_t commandLength = generateCommand(data);
+    size_t commandLength = generateCommand(data);
     if(commandLength + currentFrame < endFrame) {
       // the command fits, write to audio data:
       std::copy(mCommandBuffer.begin(), mCommandBuffer.begin() + commandLength,
                 mAudioFile.mFloatData.begin() + currentFrame);
       currentFrame += commandLength;
     }
-    else{
+    else {
       // not enough space to write command. Restore command level to last:
       mCommandLevel = tempCommandLevel;
       // Either write an additional zero or not, depending on
@@ -132,7 +150,7 @@ void PrimitiveToSignal::processPrimitivesAtBeat(
       for(size_t i = currentFrame; i < endFrame; ++i) {
         mAudioFile.mFloatData[i] = mCommandLevel;
       }
-       currentFrame = endFrame;
+      currentFrame = endFrame;
       mCommandLevel = -mCommandLevel;
     }
   }
@@ -142,7 +160,6 @@ void PrimitiveToSignal::getMotorVelocities(
   const double relativeBeat,
   const MotorPrimitive* const motorPrimitive,
   Data& data) const {
-
   switch(motorPrimitive->mType) {
   case MotorPrimitive::Type::BackAndForth: {
     double angle = relativeBeat * motorPrimitive->mFrequency * 2.0 * pi;
@@ -176,9 +193,8 @@ void PrimitiveToSignal::getMotorVelocities(
 void PrimitiveToSignal::getLEDs(const double relativeBeat,
                                 const LEDPrimitive* const ledPrimitive,
                                 Data& data) {
-  
   switch(ledPrimitive->mType) {
-  case LEDPrimitive::Type::Alternate:{
+  case LEDPrimitive::Type::Alternate: {
     quint32 period = static_cast<quint32>(
       relativeBeat * 2.0 * ledPrimitive->mFrequency);
     if(period % 2) {
@@ -190,7 +206,7 @@ void PrimitiveToSignal::getLEDs(const double relativeBeat,
     }
     break;
   }
-  case LEDPrimitive::Type::Blink:{
+  case LEDPrimitive::Type::Blink: {
     quint32 period = static_cast<quint32>(
       relativeBeat * 2.0 * ledPrimitive->mFrequency);
     if(period % 2) {
@@ -221,7 +237,7 @@ void PrimitiveToSignal::getLEDs(const double relativeBeat,
     // get current period
     int period = static_cast<int>(
       relativeBeat * 2.0 * ledPrimitive->mFrequency);
-    
+
     if(period != mLastRandomLedPeriod) {
       generateRandomLed();
       mLastRandomLedPeriod = period;
@@ -231,7 +247,6 @@ void PrimitiveToSignal::getLEDs(const double relativeBeat,
     break;
   }
   }
-
 }
 
 size_t PrimitiveToSignal::generateCommand(const Data& data) {
@@ -243,8 +258,8 @@ size_t PrimitiveToSignal::generateCommand(const Data& data) {
   mCommandLevel = -mCommandLevel;
 
   quint8 leftVelByte = velocityToByte(data.velocityLeft);
-  quint8 rightVelByte = velocityToByte(data.velocityRight);  
-  
+  quint8 rightVelByte = velocityToByte(data.velocityRight);
+
   length += writeByteToBuffer(leftVelByte, length);
   length += writeByteToBuffer(rightVelByte, length);
   length += writeByteToBuffer(data.leds, length);

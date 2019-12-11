@@ -1,3 +1,22 @@
+/*
+*  Dancebots GUI - Create choreographies for Dancebots
+*  https://github.com/philippReist/dancebots_gui
+*
+*  Copyright 2019 - Philipp Reist
+*
+*  This program is free software : you can redistribute it and/or modify
+*  it under the terms of the GNU General Public License as published by
+*  the Free Software Foundation, either version 3 of the License, or
+*  (at your option) any later version.
+*
+*  This program is distributed in the hope that it will be useful,
+*  but WITHOUT ANY WARRANTY; without even the implied warranty of
+*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+*
+*  See the GNU General Public License for more details, available in the
+*  LICENSE file included in the repository.
+*/
+
 #ifndef AUDIO_FILE_H_
 #define AUDIO_FILE_H_
 
@@ -33,9 +52,9 @@ public:
 
   /** String code at beginning and end of pre-pended header data */
   static const QByteArray danceFileHeaderCode;
-  
+
   /** Settings for Qt stream serialization of header data  */
-  static const QDataStream::ByteOrder dataByteOrder{QDataStream::BigEndian};
+  static const QDataStream::ByteOrder dataByteOrder{ QDataStream::BigEndian };
   static const QDataStream::Version dataStreamVersion{ QDataStream::Qt_5_13 };
   static const QDataStream::FloatingPointPrecision
     dataFloatPrecision{ QDataStream::SinglePrecision };
@@ -138,7 +157,7 @@ public:
 
   /** \brief Get song title string
   */
-  const std::string& getTitle(void) const{
+  const std::string& getTitle(void) const {
     return mTitle;
   }
 
@@ -213,10 +232,10 @@ private:
   /** Sample rate read from load file tags - only for internal use as all
   * music data will be resampled to the static const sampleRate = 44.1kHz
   */
-  int mLoadFileSampleRate { 0 };
+  int mLoadFileSampleRate{ 0 };
   int mLengthMS{ 0 }; /**< length of music in ms from mp3 tag*/
-	std::string mArtist; /**< song artist (extracted from tag) */
-	std::string mTitle; /**< song title */
+  std::string mArtist; /**< song artist (extracted from tag) */
+  std::string mTitle; /**< song title */
   std::string mComment; /**< song comment */
 
   /** Calculated music gain to ensure music rms stays at musicRMSTarget */

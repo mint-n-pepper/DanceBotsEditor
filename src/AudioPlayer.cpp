@@ -1,3 +1,22 @@
+/*
+*  Dancebots GUI - Create choreographies for Dancebots
+*  https://github.com/philippReist/dancebots_gui
+*
+*  Copyright 2019 - Philipp Reist
+*
+*  This program is free software : you can redistribute it and/or modify
+*  it under the terms of the GNU General Public License as published by
+*  the Free Software Foundation, either version 3 of the License, or
+*  (at your option) any later version.
+*
+*  This program is distributed in the hope that it will be useful,
+*  but WITHOUT ANY WARRANTY; without even the implied warranty of
+*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+*
+*  See the GNU General Public License for more details, available in the
+*  LICENSE file included in the repository.
+*/
+
 #include "AudioPlayer.h"
 
 AudioPlayer::AudioPlayer(QObject* parent):
@@ -171,12 +190,13 @@ void AudioPlayer::connectAudioOutputSignals() {
 }
 
 void AudioPlayer::seek(const int timeMS) {
-  if(!mAudioOutput) {
+  if(!mAudioOutput || timeMS < 0) {
     return;
   }
-  const size_t bufferPos = ((timeMS * 441) / 10) * 2;
-  if(bufferPos >= 0 && bufferPos < mRawAudio.size() - 1) {
-    // suspend quick:
+  // calculate buffer position based on time, sampling rate 
+  const size_t bufferPos = ((static_cast<size_t>(timeMS) * mSampleRate)
+                            / 1000) * 2;
+  if(bufferPos >= 0 && bufferPos < (mRawAudio.size() - 1)) {
     mRawAudioBuffer.seek(bufferPos);
   }
 }

@@ -1,3 +1,22 @@
+/*
+*  Dancebots GUI - Create choreographies for Dancebots
+*  https://github.com/philippReist/dancebots_gui
+*
+*  Copyright 2019 - Philipp Reist
+*
+*  This program is free software : you can redistribute it and/or modify
+*  it under the terms of the GNU General Public License as published by
+*  the Free Software Foundation, either version 3 of the License, or
+*  (at your option) any later version.
+*
+*  This program is distributed in the hope that it will be useful,
+*  but WITHOUT ANY WARRANTY; without even the implied warranty of
+*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+*
+*  See the GNU General Public License for more details, available in the
+*  LICENSE file included in the repository.
+*/
+
 #ifndef UTILS_H_
 #define UTILS_H_
 
@@ -8,22 +27,24 @@ namespace utils {
   };
 
   /**
-  \brief Find index of first element smaller equal to a given value in a
-  monotonically increasing vector.
-
-  Given value v, the function returns the index i in vector vect for which
-
-    vect[i] <= v < vect[i+i]
-
-  The function aborts and returns -1 if the vector contains fewer than 2 elements
-  or value is smaller than first element or larger equal the last element.
-
-  \param[in] Value
-  \param[in] Vector, monotonically increasing
-  \param[out] Index i
-  \param[in] Method in [binary search, linear], default binary (faster)
-  \return Whether the operation was successful (0) or not (-1).
-  */
+   * \brief Find index of first element smaller equal to a given value in a
+   * monotonically increasing vector.
+   *
+   * Given value v, the function returns the index i in vector vect for which
+   *
+   *   vect[i] <= v < vect[i+i]
+   *
+   * The function aborts and returns -1 if the vector contains fewer than
+   * 2 elements or value is smaller than first element or larger equal the last
+   * element.
+   *
+   * \param[in] value - Value that should be found
+   * \param[in] intervals - vector of monotonically increasing intervals
+   * \param[out] ind - index i as defined above
+   * \param[in] method - search method (binary or linear),
+   * default binary (faster)
+   * \return Whether the operation was successful (0) or not (-1).
+   */
   template <class T>
   int findInterval(const T value,
                    const std::vector<T>& intervals,
@@ -70,11 +91,9 @@ namespace utils {
       ind = ind - 1;
       break;
     }
-
     }
     return 0;
   }
-
 } // namespace utils
 
 #endif // UTILS_H_

@@ -1,3 +1,22 @@
+/*
+*  Dancebots GUI - Create choreographies for Dancebots
+*  https://github.com/philippReist/dancebots_gui
+*
+*  Copyright 2019 - Philipp Reist
+*
+*  This program is free software : you can redistribute it and/or modify
+*  it under the terms of the GNU General Public License as published by
+*  the Free Software Foundation, either version 3 of the License, or
+*  (at your option) any later version.
+*
+*  This program is distributed in the hope that it will be useful,
+*  but WITHOUT ANY WARRANTY; without even the implied warranty of
+*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+*
+*  See the GNU General Public License for more details, available in the
+*  LICENSE file included in the repository.
+*/
+
 #include "BackEnd.h"
 
 #include <stdio.h>
@@ -36,6 +55,10 @@ QString BackEnd::songTitle() {
   return mSongTitle;
 }
 
+QString BackEnd::songComment() {
+  return mSongComment;
+}
+
 QString BackEnd::songArtist() {
   return mSongArtist;
 }
@@ -68,6 +91,12 @@ void BackEnd::setSongTitle(const QString& name) {
     return;
 
   mSongTitle = name;
+}
+
+void BackEnd::setSongComment(const QString& comment) {
+  if(comment == mSongComment)
+    return;
+  mSongComment = comment;
 }
 
 Q_INVOKABLE void BackEnd::loadMP3(const QString& filePath) {
@@ -127,8 +156,10 @@ bool BackEnd::loadMP3Worker(const QString& filePath) {
   // otherwise, loading succeeded, set song and artist name:
   mSongArtist = QString{ mAudioFile.getArtist().c_str() };
   mSongTitle = QString{ mAudioFile.getTitle().c_str() };
+  mSongComment = QString{ mAudioFile.getComment().c_str() };
   emit songArtistChanged();
   emit songTitleChanged();
+  emit songCommentChanged();
 
   if(mAudioFile.isDancefile()) {
     mFileStatus = "Dancebot file detected, reading data...";
@@ -139,11 +170,13 @@ bool BackEnd::loadMP3Worker(const QString& filePath) {
   else {
     mFileStatus = "Detecting Beats...";
     emit fileStatusChanged();
-    std::vector<long> tmpBeats = mBeatDetector.detectBeats(mAudioFile.mFloatMusic);
+    std::vector<long> tmpBeats = mBeatDetector.detectBeats(
+      mAudioFile.mFloatMusic);
 
-    // convert the detected beats to int. This is fine because even a int32 would
-    // be able to hold beats detected up to 13 hours in a 44.1kHz sampled song
-    // reserve enough memory for all detected beats plus dummy start and end beats
+    // convert the detected beats to int. This is fine because even a int32
+    // would be able to hold beats detected up to 13 hours in a 44.1kHz sampled
+    // song reserve enough memory for all detected beats plus dummy start and
+    // end beats
     mBeatFrames.reserve(tmpBeats.size() + 2);
 
     // add zero beat if first detected beat is not at 0:
@@ -201,6 +234,7 @@ bool BackEnd::saveMP3Worker(const QString& fileName) {
   // save file
   mAudioFile.setArtist(mSongArtist.toStdString());
   mAudioFile.setTitle(mSongTitle.toStdString());
+  mAudioFile.setComment(mSongComment.toStdString());
   mAudioFile.save(fileName);
 
   return true;
@@ -329,7 +363,7 @@ bool BackEnd::readPrimitivesFromPrependData(void) {
     mMotorPrimitives->add(mp);
   }
 
-  // next, read out motor primitives:
+  // next, read out led primitives:
   quint32 nLedPrimitives = 0;
   dataStream >> nLedPrimitives;
 
