@@ -25,7 +25,6 @@ extern "C" {
 AudioFile::AudioFile(void) {};
 
 auto AudioFile::load(const QString filePath) -> Result {
-
   // check if file exists:
   QFile file{ filePath };
 
@@ -35,6 +34,12 @@ auto AudioFile::load(const QString filePath) -> Result {
 
   // the file exists, so open it:
   file.open(QIODevice::ReadOnly);
+
+  // find header code:
+  size_t headerInd = findHeaderCode(file);
+  // and seek to the position - if there is no header, the end of the file is
+  // seeked, and the header compare below will fail
+  file.seek(headerInd);
 
   // read file header to detect a dancefile
   const QByteArray header = file.read(danceFileHeaderCode.size());
@@ -121,11 +126,10 @@ auto AudioFile::load(const QString filePath) -> Result {
 
   mHasData = true;
   return Result::eSuccess;
-  // do not need to close the file as the QFile destructor will take care of this
+  // do not need to close the file as the QFile destructor will take care of it
 }
 
 auto AudioFile::save(const QString file) -> Result {
-
   // ensure there is data available:
   if(!mHasData) {
     return Result::eFileWriteError;
@@ -200,17 +204,18 @@ void AudioFile::clear(void) {
   mLengthMS = 0;
   mArtist.clear();
   mTitle.clear();
+  mComment.clear();
   mPath.clear();
 }
 
 int AudioFile::readTag(void) {
-  // Setup 
+  // Setup
   auto tagFrameFactory = TagLib::ID3v2::FrameFactory::instance();
   TagLib::ByteVectorStream bvs{ mRawMP3Data };
   TagLib::MPEG::File mpegFile(&bvs,
-    tagFrameFactory,
-    true,
-    TagLib::AudioProperties::Accurate);
+                              tagFrameFactory,
+                              true,
+                              TagLib::AudioProperties::Accurate);
 
   // read out audio properties:
   auto audioProperties = mpegFile.audioProperties();
@@ -241,11 +246,18 @@ int AudioFile::readTag(void) {
     mTitle = "Unknown";
   }
 
+  if(!tag->comment().isNull()) {
+    mComment = tag->comment().to8Bit(true);
+  }
+  else {
+    mComment = "Unknown";
+  }
+
   return 0;
 }
 
 int AudioFile::writeTag(void) {
-  // Setup 
+  // Setup
   auto tagFrameFactory = TagLib::ID3v2::FrameFactory::instance();
 
   // the byte vector stream for the MPEG file object copies the byte vector
@@ -259,15 +271,20 @@ int AudioFile::writeTag(void) {
   bvs.data()->swap(mRawMP3Data);
 
   TagLib::MPEG::File mpegFile(&bvs,
-    tagFrameFactory,
-    true,
-    TagLib::AudioProperties::Accurate);
+                              tagFrameFactory,
+                              true,
+                              TagLib::AudioProperties::Accurate);
 
   // get the ID3V2 tag and set its fields according to data in file:
   auto tag = mpegFile.ID3v2Tag(true);
   tag->setArtist(TagLib::String(mArtist));
   tag->setTitle(TagLib::String(mTitle));
-  tag->setComment("Music for Dancebots, not Humans");
+  if(mComment.empty()) {
+    tag->setComment("Music for Dancebots, not humans.");
+  }
+  else {
+    tag->setComment(TagLib::String(mComment));
+  }
 
   // save the tag to the data
   if(mpegFile.save()) {
@@ -279,7 +296,6 @@ int AudioFile::writeTag(void) {
     // saving failed
     return 1;
   }
-
 }
 
 int AudioFile::decode(void) {
@@ -323,10 +339,10 @@ int AudioFile::decode(void) {
     size_t distToEnd = std::distance(buf, end);
     size_t nFeed = kDecodeStepSize > distToEnd ? distToEnd : kDecodeStepSize;
     int nRead = hip_decode(dcGFP,
-      reinterpret_cast<unsigned char*>(&*buf),
-      nFeed,
-      pcmBufL.data(),
-      pcmBufR.data());
+                           reinterpret_cast<unsigned char*>(&*buf),
+                           nFeed,
+                           pcmBufL.data(),
+                           pcmBufR.data());
 
     if(nRead) {
       if(nRead < 0) {
@@ -339,7 +355,7 @@ int AudioFile::decode(void) {
           qint32 average = (static_cast<qint32>(pcmBufL[i]) + pcmBufR[i]) / 2;
           mFloatMusic.push_back(static_cast<float>(average) / 32768.f);
           sum += static_cast<quint64>((static_cast<qint64>(average)
-            * static_cast<qint64>(average)));
+                                       * static_cast<qint64>(average)));
         }
       }
       else {
@@ -352,7 +368,7 @@ int AudioFile::decode(void) {
           }
           mFloatMusic.push_back(static_cast<float>(pcmBufL[i]) / 32768.f);
           sum += static_cast<quint64>((static_cast<qint64>(pcmBufL[i])
-            * static_cast<qint64>(pcmBufL[i])));
+                                       * static_cast<qint64>(pcmBufL[i])));
         }
       }
     }
@@ -360,7 +376,7 @@ int AudioFile::decode(void) {
   }
 
   // cut off extra sample block at end:
-  if(mIsDanceFile){
+  if(mIsDanceFile) {
     mFloatMusic.resize(mFloatMusic.size() - mp3BlockSize);
   }
 
@@ -378,22 +394,22 @@ int AudioFile::decode(void) {
     resampleDataIn.reserve(mFloatMusic.size());
 
     std::transform(mFloatMusic.cbegin(),
-      mFloatMusic.cend(),
-      std::back_inserter(resampleDataIn),
-      [](float in) -> double {return static_cast<double>(in); });
+                   mFloatMusic.cend(),
+                   std::back_inserter(resampleDataIn),
+                   [](float in) -> double {return static_cast<double>(in); });
 
     const auto resampleDataOut = Resampler::resample(mLoadFileSampleRate,
-      sampleRate,
-      resampleDataIn.data(),
-      resampleDataIn.size());
+                                                     sampleRate,
+                                                     resampleDataIn.data(),
+                                                     resampleDataIn.size());
     // and write to float data vector:
     mFloatMusic.clear();
     mFloatMusic.reserve(resampleDataOut.size());
 
     std::transform(resampleDataOut.cbegin(),
-      resampleDataOut.cend(),
-      std::back_inserter(mFloatMusic),
-      [](double in)->float {return static_cast<float>(in); });
+                   resampleDataOut.cend(),
+                   std::back_inserter(mFloatMusic),
+                   [](double in)->float {return static_cast<float>(in); });
 
     // recalculate duration based on resampled sample length
     mLengthMS = mFloatMusic.size() * 1000 / sampleRate;
@@ -406,6 +422,49 @@ int AudioFile::decode(void) {
 
   hip_decode_exit(dcGFP);
   return 0;
+}
+
+size_t AudioFile::findHeaderCode(QFile& file) {
+  int headerInd{ 0 };
+  size_t filePosition{ 0 };
+  const size_t fileReadStep{ 1024 };
+
+  // allocate byte array to store read data:
+  QByteArray readData;
+  readData.resize(fileReadStep);
+
+  qint64 nRead = file.read(readData.data(), fileReadStep);
+
+  // keep searching while there is data available and no match is found:
+  while(nRead > 0) {
+    // match read data to current match position in header code
+    for(int i = 0; i < nRead; ++i) {
+      if(readData[i] == danceFileHeaderCode[headerInd]) {
+        ++headerInd;
+        // found match
+        if(headerInd == danceFileHeaderCode.size()) {
+          filePosition += (static_cast<size_t>(i) + 1
+                           - static_cast<size_t>(danceFileHeaderCode.size()));
+          break;
+        }
+      }
+      else {
+        // reset to first character if not found
+        headerInd = 0;
+      }
+    }
+
+    // if found match, break out of while
+    if(headerInd == danceFileHeaderCode.size()) {
+      break;
+    }
+    else {
+      // otherwise keep reading
+      filePosition += nRead;
+      nRead = file.read(readData.data(), fileReadStep);
+    }
+  }
+  return filePosition;
 }
 
 auto AudioFile::encode(void) -> LameEncCodes {
@@ -446,8 +505,9 @@ auto AudioFile::encode(void) -> LameEncCodes {
   tempMP3.resize(kTempMP3Size);
 
   const size_t kPCMEncodeStepSize = 32 * mp3BlockSize;
+  // See lame.h for calculation of buffer worst-case size
   const size_t kMP3BufferSize = static_cast<size_t>(kPCMEncodeStepSize * 1.25
-    + 7200.0); // See lame.h for calculation of buffer worst-case size
+                                                    + 7200.0); 
 
   std::vector<unsigned char> encodeBuffer;
   encodeBuffer.resize(kMP3BufferSize);
@@ -463,8 +523,12 @@ auto AudioFile::encode(void) -> LameEncCodes {
     size_t nFeed = kPCMEncodeStepSize > distToEnd ?
       distToEnd : kPCMEncodeStepSize;
 
-    int nEncode = lame_encode_buffer_ieee_float(gfp, &*musicIT, &*dataIT, nFeed,
-      encodeBuffer.data(), kMP3BufferSize);
+    int nEncode = lame_encode_buffer_ieee_float(gfp,
+                                                &*musicIT,
+                                                &*dataIT,
+                                                nFeed,
+                                                encodeBuffer.data(),
+                                                kMP3BufferSize);
 
     if(nEncode) {
       if(nEncode < 0) {
@@ -474,8 +538,8 @@ auto AudioFile::encode(void) -> LameEncCodes {
       // otherwise, copy the buffer to the temp mp3 data:
       size_t pre = std::distance(tempMP3.begin(), mp3OutIt);
       std::copy(encodeBuffer.begin(),
-        encodeBuffer.begin() + nEncode,
-        mp3OutIt);
+                encodeBuffer.begin() + nEncode,
+                mp3OutIt);
       size_t post = std::distance(tempMP3.begin(), mp3OutIt);
       mp3OutIt += nEncode;
     }
@@ -484,7 +548,9 @@ auto AudioFile::encode(void) -> LameEncCodes {
   }
 
   // flush lame buffers:
-  const int nFlush = lame_encode_flush(gfp, encodeBuffer.data(), kMP3BufferSize);
+  const int nFlush = lame_encode_flush(gfp,
+                                       encodeBuffer.data(),
+                                       kMP3BufferSize);
   if(nFlush > 0) {
     std::copy(encodeBuffer.begin(), encodeBuffer.begin() + nFlush, mp3OutIt);
     mp3OutIt += nFlush;
@@ -492,13 +558,13 @@ auto AudioFile::encode(void) -> LameEncCodes {
 
   // get lame tag:
   const size_t tagSize = lame_get_lametag_frame(gfp,
-    encodeBuffer.data(),
-    kMP3BufferSize);
+                                                encodeBuffer.data(),
+                                                kMP3BufferSize);
 
   // and copy it to the first frame:
   std::copy(encodeBuffer.begin(),
-    encodeBuffer.begin() + tagSize,
-    tempMP3.begin());
+            encodeBuffer.begin() + tagSize,
+            tempMP3.begin());
 
   // if all went well, truncate temp mp3 to number of bytes written
   const size_t nBytesOut = std::distance(tempMP3.begin(), mp3OutIt);
@@ -524,8 +590,8 @@ int AudioFile::savePCM(const QString fileName) {
 
   // otherwise save:
   SNDFILE* sndFile = sf_open(fileName.toStdString().c_str(),
-    SFM_WRITE,
-    &outFormat);
+                             SFM_WRITE,
+                             &outFormat);
 
   if(!sndFile) {
     // opening failed, return:
@@ -542,8 +608,8 @@ int AudioFile::savePCM(const QString fileName) {
   }
 
   sf_count_t nWrite = sf_write_float(sndFile,
-    writeBuffer.data(),
-    writeBuffer.size());
+                                     writeBuffer.data(),
+                                     writeBuffer.size());
   sf_write_sync(sndFile);
   // close the file
   sf_close(sndFile);
@@ -551,7 +617,7 @@ int AudioFile::savePCM(const QString fileName) {
 }
 
 int AudioFile::savePCMBeats(const QString fileName,
-  const std::vector<long>& beatFrames) {
+                            const std::vector<long>& beatFrames) {
   if(!mHasData) {
     // no data, abort
     return 1;
@@ -564,8 +630,8 @@ int AudioFile::savePCMBeats(const QString fileName,
 
   // otherwise save:
   SNDFILE* sndFile = sf_open(fileName.toStdString().c_str(),
-    SFM_WRITE,
-    &outFormat);
+                             SFM_WRITE,
+                             &outFormat);
 
   if(!sndFile) {
     // opening failed, return:
@@ -609,8 +675,8 @@ int AudioFile::savePCMBeats(const QString fileName,
 
   // write to wav file
   sf_count_t nWrite = sf_write_float(sndFile,
-    writeBuffer.data(),
-    writeBuffer.size());
+                                     writeBuffer.data(),
+                                     writeBuffer.size());
   sf_write_sync(sndFile);
   // close the file
   sf_close(sndFile);

@@ -74,7 +74,7 @@ public:
   *   process_load_error(result);
   * }
   *
-  * \param filePath absolute path to MP3 file
+  * \param[in] filePath absolute path to MP3 file
   * \return Result enum of processing
   */
   Result load(const QString filePath);
@@ -90,7 +90,7 @@ public:
   *   process_save_error(result);
   * }
   *
-  * \param filePath absolute path to MP3 file
+  * \param[in] filePath absolute path to MP3 file
   * \return Result enum of processing
   */
   Result save(const QString filePath);
@@ -124,6 +124,12 @@ public:
     mTitle = title;
   }
 
+  /** \brief Sets song comment string
+  */
+  void setComment(const std::string& comment) {
+    mComment = comment;
+  }
+
   /** \brief Get artist string
   */
   const std::string& getArtist(void) const {
@@ -136,6 +142,12 @@ public:
     return mTitle;
   }
 
+  /** \brief Get song comment string
+  */
+  const std::string& getComment(void) const {
+    return mComment;
+  }
+
   /** MP3 prepend data containing dance-file header, if available */
   QByteArray mMP3PrependData;
   /** Data channel of audio file (R) */
@@ -144,15 +156,15 @@ public:
   std::vector<float> mFloatMusic;
 
   /** \brief Saves music and data channels to PCM (WAV) file
-  * \param fileName absolute path to wav file to write
+  * \param[in] fileName absolute path to wav file to write
   * \return 0 if success and 1 if failure
   */
   int savePCM(const QString fileName);
 
   /** \brief Saves music and beat beep channels to PCM (WAV) file
   *  left channel is music and right channel is beat beeps at detecte locations
-  * \param fileName absolute path to wav file to write
-  * \param beatFrames vector of detected beats, location in frames/samples
+  * \param[in] fileName absolute path to wav file to write
+  * \param[in] beatFrames vector of detected beats, location in frames/samples
   * \return 0 if success and 1 if failure
   */
   int savePCMBeats(const QString fileName,
@@ -205,6 +217,8 @@ private:
   int mLengthMS{ 0 }; /**< length of music in ms from mp3 tag*/
 	std::string mArtist; /**< song artist (extracted from tag) */
 	std::string mTitle; /**< song title */
+  std::string mComment; /**< song comment */
+
   /** Calculated music gain to ensure music rms stays at musicRMSTarget */
   double mMP3MusicGain = 1.0;
 
@@ -222,6 +236,12 @@ private:
   * \return 0 if success, 1 if failure
   */
   int decode(void);
+
+  /** \brief find first occurance of header code in MP3 file
+  * \param[in] file - to search
+  * \return position of first occurance, or size of file if not found
+  */
+  size_t findHeaderCode(QFile& file);
 
   /** \brief encode data in music and data stream to raw mp3 data
   * \return Lame Encoder status codes, see above
