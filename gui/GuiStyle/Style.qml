@@ -8,19 +8,19 @@ QtObject {
   // Color palette:
   property QtObject palette: QtObject{
     //* MAIN WINDOW *//
-    property color mw_background: "#555555"
+    property color mw_background: "#151515"
 
     //* FILE LOADING PROCESS OVERLAY *//
     property color ovr_background: "#BB444444"
     property color ovr_font: "white"
 
     //* TITLE BAR *//
-    property color tb_background: "slategrey"
+    property color tb_background: "#262626"
     property color tb_font: "white"
     property color tb_logo: "white"
 
     //* FILE CONTROL BAR *//
-    property color fc_background: "#222222"
+    property color fc_background: "#63DD7F"
     property color fc_buttonEnabled: "lightgrey"
     property color fc_buttonDisabled: "#888888"
     property color fc_buttonPressed: "#DDDDDD"
@@ -30,18 +30,18 @@ QtObject {
 
     //* PRIMITIVE CONTROL BOXES *//
     // backgrounds
-    property color pc_moveBoxBackground: "#c8a2c8" // lilac
-    property color pc_ledBoxBackground: "#00A693"
+    property color pc_moveBoxBackground: "#ECD600" // Mint & Pepper Yellow
+    property color pc_ledBoxBackground: "#FF7F33" // Mint & Pepper Orange
     // type radios
-    property color pc_typeRadioEnabled: "white"
+    property color pc_typeRadioEnabled: "darkgrey"
     property color pc_typeRadioDisabled: "lightgrey"
-    property color pc_typeRadioIndicatorEnabled: "black"
+    property color pc_typeRadioIndicatorEnabled: "white"
     property color pc_typeRadioIndicatorDisabled: "darkgrey"
-    property color pc_typeRadioLabelEnabledFont: "black"
+    property color pc_typeRadioLabelEnabledFont: "white"
     property color pc_typeRadioLabelDisabledFont: pc_typeRadioIndicatorDisabled
 
     // sliders
-    property color pc_sliderBarEnabled: "lightgrey"
+    property color pc_sliderBarEnabled: "black"
     property color pc_sliderBarDisabled: pc_typeRadioDisabled
     property color pc_sliderBarActivePartEnabled: "#222222"
     property color pc_sliderBarActivePartDisabled: "#888888"
@@ -135,9 +135,9 @@ QtObject {
   // Title bar
   property QtObject titleBar: QtObject{
     property real height: 0.04
-    property real fontSize: 0.6 // relative to bar height
-    property real logoSize: 0.8 // relative to bar height
-    property real horizontalPadding: 0.2 // relative to bar height
+    property real fontSize: 0.5 // relative to bar height
+    property real logoSize: 0.5 // relative to bar height
+    property real horizontalPadding: 0.3 // relative to bar height
   }
 
   // MP3 File Control Box
