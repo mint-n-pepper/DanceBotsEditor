@@ -148,13 +148,13 @@ QtObject {
 
     // buttons
     // height is equal to height of bar minus padding
-    property real buttonPadding: 0.15 // ratio of box height
-    property real buttonSpacing: 0.3 // ratio of box height
-    property real buttonWidth: 1.5 // ratio of box height
-    property real buttonRadius: 2 // radius of button border
+    property real buttonPadding: 0.13 // ratio of box height
+    property real buttonSpacing: 0.2 // ratio of box height
+    property real buttonWidth: 1.8 // ratio of box height
+    property real buttonRadius: 3 // radius of button border
     property real buttonTextHeightRatio: 0.6 // ratio to button height
     property real buttonOpacityEnabled: 1 // opacity of enabled text
-    property real buttonOpacityDisabled: 0.3 // opacity of disabled text
+    property real buttonOpacityDisabled: 0.4 // opacity of disabled text
     property real buttonBorderWidth: 2 // width of button border
 
     // texts

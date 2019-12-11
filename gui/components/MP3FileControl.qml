@@ -102,7 +102,7 @@ Rectangle{
         width: root.height * Style.fileControl.buttonWidth
         height: root.height - buttonRow.padding * 2
         font.pixelSize: height * Style.fileControl.buttonTextHeightRatio
-        text: "Load"
+        text: "LOAD"
         focusPolicy: Qt.NoFocus
         property color buttonColor: enabled ? Style.palette.fc_buttonEnabled
                                             : Style.palette.fc_buttonDisabled
@@ -110,6 +110,7 @@ Rectangle{
         contentItem: Text{
           text: parent.text
           font: parent.font
+					opacity: enabled ? Style.fileControl.buttonOpacityEnabled : Style.fileControl.buttonOpacityDisabled
           color: parent.enabled ? Style.palette.fc_buttonTextEnabled
                                 : Style.palette.fc_buttonTextDisabled
           verticalAlignment: Text.AlignVCenter
@@ -118,8 +119,13 @@ Rectangle{
 
         background: Rectangle{
           anchors.fill: parent
+					opacity: enabled ? Style.fileControl.buttonOpacityEnabled : Style.fileControl.buttonOpacityDisabled
           color: parent.pressed ? Style.palette.fc_buttonPressed
                  : parent.buttonColor
+					border.color: Style.palette.fc_buttonTextEnabled
+			    border.width: Style.fileControl.buttonBorderWidth
+			    radius: Style.fileControl.buttonRadius
+
         }
 
 				onClicked:
@@ -142,7 +148,7 @@ Rectangle{
         height: root.height - buttonRow.padding * 2
         font.pixelSize: height * Style.fileControl.buttonTextHeightRatio
         enabled: motorBar.isNotEmpty || ledBar.isNotEmpty
-        text: "Save"
+        text: "SAVE"
         focusPolicy: Qt.NoFocus
         property color buttonColor: enabled ? Style.palette.fc_buttonEnabled
                                             : Style.palette.fc_buttonDisabled
@@ -150,7 +156,8 @@ Rectangle{
         contentItem: Text{
           text: parent.text
           font: parent.font
-          color: parent.enabled ? Style.palette.fc_buttonTextEnabled
+					opacity: enabled ? Style.fileControl.buttonOpacityEnabled : Style.fileControl.buttonOpacityDisabled
+					color: parent.enabled ? Style.palette.fc_buttonTextEnabled
                                 : Style.palette.fc_buttonTextDisabled
           verticalAlignment: Text.AlignVCenter
           horizontalAlignment: Text.AlignHCenter
@@ -158,8 +165,12 @@ Rectangle{
 
         background: Rectangle{
           anchors.fill: parent
-          color: parent.pressed ? Style.palette.fc_buttonPressed
+					opacity: enabled ? Style.fileControl.buttonOpacityEnabled : Style.fileControl.buttonOpacityDisabled
+					color: parent.pressed ? Style.palette.fc_buttonPressed
                  : parent.buttonColor
+					border.color: Style.palette.fc_buttonTextEnabled
+					border.width: Style.fileControl.buttonBorderWidth
+					radius: Style.fileControl.buttonRadius
         }
 
 				onClicked:
@@ -175,7 +186,7 @@ Rectangle{
         width: root.height * Style.fileControl.buttonWidth
         height: root.height - buttonRow.padding * 2
         font.pixelSize: height * Style.fileControl.buttonTextHeightRatio
-        text: "Clear"
+        text: "CLEAR"
         enabled: motorBar.isNotEmpty || ledBar.isNotEmpty
         focusPolicy: Qt.NoFocus
         property color buttonColor: enabled ? Style.palette.fc_buttonEnabled
@@ -184,6 +195,7 @@ Rectangle{
         contentItem: Text{
           text: parent.text
           font: parent.font
+					opacity: enabled ? Style.fileControl.buttonOpacityEnabled : Style.fileControl.buttonOpacityDisabled
           color: parent.enabled ? Style.palette.fc_buttonTextEnabled
                                 : Style.palette.fc_buttonTextDisabled
           verticalAlignment: Text.AlignVCenter
@@ -192,8 +204,12 @@ Rectangle{
 
         background: Rectangle{
           anchors.fill: parent
+					opacity: enabled ? Style.fileControl.buttonOpacityEnabled : Style.fileControl.buttonOpacityDisabled
           color: parent.pressed ? Style.palette.fc_buttonPressed
                  : parent.buttonColor
+					border.color: Style.palette.fc_buttonTextEnabled
+					border.width: Style.fileControl.buttonBorderWidth
+					radius: Style.fileControl.buttonRadius
         }
 
 				onClicked:
