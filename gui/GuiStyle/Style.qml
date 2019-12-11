@@ -27,6 +27,10 @@ QtObject {
     property color fc_buttonTextEnabled: "#333333"
     property color fc_buttonTextDisabled: "#333333"
     property color fc_textColor: "#333333"
+    property color fc_altTextColor: "#D6D6D6"
+    property color fc_labelBoxBackground: "#356E41"
+    property color fc_textfieldBoxBackground: "#1A3820"
+
 
     //* PRIMITIVE CONTROL BOXES *//
     // backgrounds
@@ -160,9 +164,12 @@ QtObject {
     // texts
     // text box height is equal to box height minus padding
     property real textBoxWidth: 0.18 // ratio of window width
-    property real textBoxPadding: 0.1 // ratio of box height
+    property real textBoxPadding: 0.2 // ratio of box height
     property real textBoxSpacing: 0.1 // ratio of box height
     property real textSize: 0.45 // ratio to text box height
+
+    // labels
+    property real labelBoxWidth: 0.09 // ratio of window width
 
   }
 

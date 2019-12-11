@@ -227,24 +227,43 @@ Rectangle{
     Row{ // text fields column
 			id: textFields
       padding: root.height * Style.fileControl.textBoxPadding
-      spacing: root.height * Style.fileControl.textBoxSpacing
+      //spacing: root.height * Style.fileControl.textBoxSpacing
       anchors.right: root.right
       anchors.verticalCenter: root.verticalCenter
-      Text{ // label
-        id: artistLabel
-        anchors.verticalCenter: textFields.verticalCenter
-        text: "Artist: "
-        color: Style.palette.fc_textColor
-        font.pixelSize: Style.fileControl.textSize * songArtistText.height
-      }
+			// opacity: parent.enabled ? Style.fileControl.buttonOpacityEnabled : Style.fileControl.buttonOpacityDisabled
+
+			Rectangle {
+				id: artistLabelBox
+				height: root.height - 2 * textFields.padding
+				width: root.width * Style.fileControl.labelBoxWidth
+				color: Style.palette.fc_labelBoxBackground
+
+	      Text{ // label
+	        id: artistLabel
+					anchors.centerIn: parent
+	        text: "ARTIST "
+	        color: Style.palette.fc_altTextColor
+	        font.pixelSize: Style.fileControl.textSize * songArtistText.height
+	      }
+			}
+
       TextField{ // text edit field
         id: songArtistText
-        height: root.height - 2 * textFields.padding
+        height: artistLabelBox.height 
         width: root.width * Style.fileControl.textBoxWidth
+
+				color: Style.palette.fc_altTextColor
         maximumLength: 30 // fixed from mp3 tag limitation
-        placeholderText: "Artist Name"
+        placeholderText: "Type Artist name..."
         font.pixelSize: Style.fileControl.textSize * height
         anchors.verticalCenter: textFields.verticalCenter
+
+				background: Rectangle {
+					width: parent.width
+					height: parent.height
+					color: Style.palette.fc_textfieldBoxBackground
+				}
+
         onFocusChanged: {
           if(!focus){
             backend.songArtist = text
@@ -258,21 +277,37 @@ Rectangle{
         }
       }
 
-      Text{ // label
-        id: titleLabel
-        anchors.verticalCenter: textFields.verticalCenter
-        text: "Title: "
-        color: Style.palette.fc_textColor
-        font.pixelSize: Style.fileControl.textSize * songTitleText.height
-      }
+			Rectangle {
+				id: titleLabelBox
+				height: root.height - 2 * textFields.padding
+				width: root.width * Style.fileControl.labelBoxWidth
+				color: Style.palette.fc_labelBoxBackground
+
+				Text{ // label
+					id: titleLabel
+					anchors.centerIn: parent
+					text: "TITLE"
+					color: Style.palette.fc_altTextColor
+					font.pixelSize: Style.fileControl.textSize * songTitleText.height
+				}
+			}
+
+
       TextField{
         id: songTitleText
-        height: songArtistText.height
-        width: songArtistText.width
+				height: root.height - 2 * textFields.padding
+				width: root.width * Style.fileControl.labelBoxWidth
         maximumLength: 30 // fixed from mp3 tag limitation
-        placeholderText: qsTr("Song Title")
+        placeholderText: qsTr("Type Song title...")
         font.pixelSize: Style.fileControl.textSize * height
         anchors.verticalCenter: textFields.verticalCenter
+
+				background: Rectangle {
+					width: parent.width
+					height: parent.height
+					color: Style.palette.fc_textfieldBoxBackground
+				}
+
         onFocusChanged: {
           if(!focus){
             backend.songTitle = text
