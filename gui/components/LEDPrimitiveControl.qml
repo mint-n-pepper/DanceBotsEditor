@@ -28,7 +28,7 @@ Rectangle{
       if(result){
         // calculate average beat distance:
         averageBeatFrames = backend.getAverageBeatFrames();
-        delegate.updatePrimitive();
+        //delegate.updatePrimitive();
         enabled = true;
       }
     }
@@ -250,7 +250,7 @@ Rectangle{
     // set the first beat at a fixed pixel distance from the left border of the
     // control box:
     setDummyBeats();
-    createDelegate();
+    //createDelegate();
   }
 
   onDelegateChanged:{

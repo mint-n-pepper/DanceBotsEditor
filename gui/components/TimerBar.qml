@@ -225,9 +225,7 @@ Canvas{
       isFromBar: true
       dragTarget: root.dragTarget
       y: primitiveY
-      PrimitiveToolTip{
-        isMotor: root.isMotorBar
-      }
+      isMotor: root.isMotorBar
     }
 
     onItemRemoved: {

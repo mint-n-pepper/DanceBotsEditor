@@ -110,14 +110,13 @@ Rectangle{
     property real sliderHeight: root.width * Style.primitiveControl.sliderHeight
     property real labelWidth: width * Style.primitiveControl.sliderLabelWidth
     property real iconWidth: width * Style.primitiveControl.sliderIconWidth
-    property real valueWidth: width * Style.primitiveControl.sliderValueWidth
     property real sliderItemSpacing: sliderHeight
                                     * Style.primitiveControl.sliderItemHSpacing
     property real sliderWidth: width
                               - labelWidth
                               - 2 * iconWidth
-                              - valueWidth
-                              - 4 * sliderItemSpacing
+                              - 3 * sliderItemSpacing
+                              - appWindow.guiMargin
     property real dirRadioSize: radios.radioHeight
                                 * Style.primitiveControl.directionRadioSize
 
@@ -131,6 +130,7 @@ Rectangle{
           speed = -velocitySlider.value
         }
         delegate.primitive.velocity = speed
+        delegate.updateToolTip();
       }
       property var speed: 0
       spacing: {type !== MotorPrimitive.Type.Custom ?
@@ -322,15 +322,6 @@ Rectangle{
                      || type === MotorPrimitive.Type.BackAndForth
           }
         }
-
-        Text {
-          width: settingsColumn.valueWidth
-          height: settingsColumn.sliderHeight
-          font.pixelSize: height * Style.primitiveControl.sliderValueTextSize
-          text: velocitySlider.value
-          anchors.verticalCenter: velocitySlider.verticalCenter
-          color: Style.palette.pc_sliderText
-        }
       }
     } // left speed column
 
@@ -381,8 +372,10 @@ Rectangle{
         stepSize: 1.0
         live: true
         snapMode: Slider.SnapAlways
-        onValueChanged: {delegate.primitive.frequency
-                        = frequencies[value]}
+        onValueChanged: {
+          delegate.primitive.frequency = frequencies[value]
+          delegate.updateToolTip()
+        }
         Keys.onPressed: appWindow.handleKey(event)
         sliderBarSize: Style.primitiveControl.sliderBarSize
         backgroundColor: Style.palette.pc_sliderBarEnabled
@@ -413,15 +406,6 @@ Rectangle{
           visible: true
         }
       }
-
-      Text {
-        width: settingsColumn.valueWidth
-        height: settingsColumn.sliderHeight
-        font.pixelSize: height * Style.primitiveControl.sliderValueTextSize
-        text: frequencies[frequencySlider.value].toFixed(2)
-        anchors.verticalCenter: frequencySlider.verticalCenter
-        color: Style.palette.pc_sliderText
-      }
     } // frequency row
 
     Column{
@@ -435,6 +419,7 @@ Rectangle{
           speed = -rightVelocitySlider.value
         }
         delegate.primitive.velocityRight = speed
+        delegate.updateToolTip();
       }
       property var speed: 0
       spacing: settingsColumn.spacing
@@ -547,15 +532,6 @@ Rectangle{
             visible: true
           }
         }
-
-        Text {
-          width: settingsColumn.valueWidth
-          height: settingsColumn.sliderHeight
-          font.pixelSize: height * Style.primitiveControl.sliderValueTextSize
-          text: rightVelocitySlider.value
-          anchors.verticalCenter: rightVelocitySlider.verticalCenter
-          color: Style.palette.pc_sliderText
-        }
       } // right speed slider row
     } // right speed column
   } // settings column
@@ -573,6 +549,7 @@ Rectangle{
     delegate = delegateFactory.createObject(dummyTimerBar)
     delegate.dragTarget = motorBar.dragTarget
     delegate.idleParent = root
+    delegate.isMotor = true
     delegate.primitive = primitiveFactory.createObject(delegate.id)
     delegate.primitive.positionBeat= 0;
     delegate.primitive.lengthBeat= 4;

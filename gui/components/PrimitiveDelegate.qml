@@ -17,6 +17,7 @@ Rectangle{
   property bool dragActive: dragArea.dragActive
 
   property real frameToPixels: appWindow.frameToPixels
+  property bool isMotor: false
 
   onFrameToPixelsChanged: updatePrimitive()
 
@@ -41,6 +42,7 @@ Rectangle{
       endBeat = endBeat < beats.length ? endBeat : beats.length - 1
       width= (beats[endBeat]
               - beats[primitive.positionBeat]) * appWindow.frameToPixels
+      updateToolTip()
     }
 	} // update primitive
 
@@ -216,5 +218,13 @@ Rectangle{
     visible: false
     color: Style.palette.prim_highlight
     anchors.fill: parent
+  }
+
+  function updateToolTip(){
+    toolTip.update()
+  }
+
+  PrimitiveToolTip{
+    id: toolTip
   }
 }
