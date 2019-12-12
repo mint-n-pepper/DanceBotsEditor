@@ -1,6 +1,6 @@
 [submodule "lib/qm-vamp-plugins"]
 	path = lib/qm-vamp-plugins
-	url = git@github.com:philippReist/qm-vamp-plugins.git
+	url = https://github.com/philippReist/qm-vamp-plugins.git
 [submodule "lib/libsndfile"]
 	path = lib/libsndfile
 	url = https://github.com/erikd/libsndfile.git
