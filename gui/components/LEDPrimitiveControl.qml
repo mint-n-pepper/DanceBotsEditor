@@ -34,192 +34,192 @@ Rectangle{
     }
   }
 
-	Column{
-    id: controlColumn
-		width: parent.width
-    topPadding: root.margin
-    spacing: Style.primitiveControl.controlSpacing * root.width
-    Row{
-      Text{
-        id: blinkieText
-        height: controlColumn.spacing * 4
-               + knightRiderRadio.height * 5
-        width: Style.primitiveControl.titleWidth * root.width
-        text: qsTr("L I G H T S")
-        horizontalAlignment: Text.AlignHCenter
-        verticalAlignment: Text.AlignVCenter
-        font.pixelSize: Style.primitiveControl.titleFontSize * width
-        rotation : 270
-      }
-      Column{
-        spacing: Style.primitiveControl.controlSpacing * root.height
-        TypeRadio {
-          id: knightRiderRadio
-          checked: true
-          text: qsTr("KnightRider")
-          onPressed: appWindow.grabFocus()
-          onToggled: type=LEDPrimitive.Type.KnightRider
-          height: root.height * Style.primitiveControl.typeRadioHeight
-          width: root.width - blinkieText.width
-        }
-        TypeRadio {
-          id: alternateRadio
-          text: qsTr("Alternate")
-          onPressed: appWindow.grabFocus()
-          onToggled: type=LEDPrimitive.Type.Alternate
-          height: root.height * Style.primitiveControl.typeRadioHeight
-          width: root.width - blinkieText.width
-        }
-        TypeRadio {
-          id: blinkRadio
-          text: qsTr("Blink")
-          onPressed: appWindow.grabFocus()
-          onToggled: type=LEDPrimitive.Type.Blink
-          height: root.height * Style.primitiveControl.typeRadioHeight
-          width: root.width - blinkieText.width
-        }
-        TypeRadio {
-          id: constantRadio
-          text: qsTr("Constant")
-          onPressed: appWindow.grabFocus()
-          onToggled: type=LEDPrimitive.Type.Constant
-          height: root.height * Style.primitiveControl.typeRadioHeight
-          width: root.width - blinkieText.width
-        }
-        TypeRadio {
-          id: randomRadio
-          text: qsTr("Random")
-          onPressed: appWindow.grabFocus()
-          onToggled: type=LEDPrimitive.Type.Random
-          height: root.height * Style.primitiveControl.typeRadioHeight
-          width: root.width - blinkieText.width
-        }
-      }
-    }
+//	Column{
+//    id: controlColumn
+//		width: parent.width
+//    topPadding: root.margin
+//    spacing: Style.primitiveControl.controlSpacing * root.width
+//    Row{
+//      Text{
+//        id: blinkieText
+//        height: controlColumn.spacing * 4
+//               + knightRiderRadio.height * 5
+//        width: Style.primitiveControl.titleWidth * root.width
+//        text: qsTr("L I G H T S")
+//        horizontalAlignment: Text.AlignHCenter
+//        verticalAlignment: Text.AlignVCenter
+//        font.pixelSize: Style.primitiveControl.titleFontSize * width
+//        rotation : 270
+//      }
+//      Column{
+//        spacing: Style.primitiveControl.controlSpacing * root.height
+//        TypeRadio {
+//          id: knightRiderRadio
+//          checked: true
+//          text: qsTr("KnightRider")
+//          onPressed: appWindow.grabFocus()
+//          onToggled: type=LEDPrimitive.Type.KnightRider
+//          height: root.height * Style.primitiveControl.typeRadioHeight
+//          width: root.width - blinkieText.width
+//        }
+//        TypeRadio {
+//          id: alternateRadio
+//          text: qsTr("Alternate")
+//          onPressed: appWindow.grabFocus()
+//          onToggled: type=LEDPrimitive.Type.Alternate
+//          height: root.height * Style.primitiveControl.typeRadioHeight
+//          width: root.width - blinkieText.width
+//        }
+//        TypeRadio {
+//          id: blinkRadio
+//          text: qsTr("Blink")
+//          onPressed: appWindow.grabFocus()
+//          onToggled: type=LEDPrimitive.Type.Blink
+//          height: root.height * Style.primitiveControl.typeRadioHeight
+//          width: root.width - blinkieText.width
+//        }
+//        TypeRadio {
+//          id: constantRadio
+//          text: qsTr("Constant")
+//          onPressed: appWindow.grabFocus()
+//          onToggled: type=LEDPrimitive.Type.Constant
+//          height: root.height * Style.primitiveControl.typeRadioHeight
+//          width: root.width - blinkieText.width
+//        }
+//        TypeRadio {
+//          id: randomRadio
+//          text: qsTr("Random")
+//          onPressed: appWindow.grabFocus()
+//          onToggled: type=LEDPrimitive.Type.Random
+//          height: root.height * Style.primitiveControl.typeRadioHeight
+//          width: root.width - blinkieText.width
+//        }
+//      }
+//    }
 
-    Row{
-      id: frequencySet
-      visible: !constantRadio.checked
-      Column{
-        id: frequencyLabelColumn
-        width: Style.primitiveControl.titleWidth * root.width
-        Text{
-          leftPadding: root.margin
-          text: "Frequency"
-          font.pixelSize: Style.primitiveControl.sliderLabelTextSize
-                          * frequencySlider.height
-        }
-        Text{
-          leftPadding: root.margin
-          text: "[1/beats]"
-          font.pixelSize: Style.primitiveControl.sliderLabelTextSize
-                          * frequencySlider.height
-        }
-      }
-      property var frequencies: [0.25, 0.33, 0.5, 0.66, 1.0, 1.5, 2.0, 3.0, 4.0]
-      ScalableSlider{
-        id: frequencySlider
-        anchors.verticalCenter: frequencyLabelColumn.verticalCenter
-        height: root.height * Style.primitiveControl.sliderHeight
-        width: root.width * (1.0
-                             - Style.primitiveControl.titleWidth
-                             - Style.primitiveControl.sliderValueWidth)
-        from: 0.0
-        value: 4.0
-        to: frequencySet.frequencies.length - 1.0
-        stepSize: 1.0
-        live: true
-        snapMode: Slider.SnapAlways
-        onValueChanged: delegate.primitive.frequency = frequencySet.frequencies[value]
-        Keys.onPressed: appWindow.handleKey(event)
-        sliderBarSize: Style.primitiveControl.sliderBarSize
-        backgroundColor: Style.palette.pc_sliderBarEnabled
-        backgroundDisabledColor: Style.palette.pc_sliderBarDisabled
-        backgroundActiveColor: Style.palette.pc_sliderBarActivePartEnabled
-        backgroundActiveDisabledColor: Style.palette.pc_sliderBarActivePartDisabled
-        handleColor: Style.palette.pc_sliderHandleEnabled
-        handleDisabledColor: Style.palette.pc_sliderHandleDisabled
-      }
-      Text {
-        id: frequencyShow
-        width: root.width * Style.primitiveControl.sliderValueWidth
-        height: frequencySlider.height
-        rightPadding: root.margin
-        leftPadding: width * Style.primitiveControl.sliderValueLeftPadding
-        font.pixelSize: height * Style.primitiveControl.sliderLabelTextSize
-        text: frequencySet.frequencies[frequencySlider.value].toFixed(2)
-        anchors.verticalCenter: frequencySlider.verticalCenter
-        verticalAlignment: Text.AlignVCenter
-        horizontalAlignment: Text.AlignRight
-      }
-    }
+//    Row{
+//      id: frequencySet
+//      visible: !constantRadio.checked
+//      Column{
+//        id: frequencyLabelColumn
+//        width: Style.primitiveControl.titleWidth * root.width
+//        Text{
+//          leftPadding: root.margin
+//          text: "Frequency"
+//          font.pixelSize: Style.primitiveControl.sliderLabelTextSize
+//                          * frequencySlider.height
+//        }
+//        Text{
+//          leftPadding: root.margin
+//          text: "[1/beats]"
+//          font.pixelSize: Style.primitiveControl.sliderLabelTextSize
+//                          * frequencySlider.height
+//        }
+//      }
+//      property var frequencies: [0.25, 0.33, 0.5, 0.66, 1.0, 1.5, 2.0, 3.0, 4.0]
+//      ScalableSlider{
+//        id: frequencySlider
+//        anchors.verticalCenter: frequencyLabelColumn.verticalCenter
+//        height: root.height * Style.primitiveControl.sliderHeight
+//        width: root.width * (1.0
+//                             - Style.primitiveControl.titleWidth
+//                             - Style.primitiveControl.sliderValueWidth)
+//        from: 0.0
+//        value: 4.0
+//        to: frequencySet.frequencies.length - 1.0
+//        stepSize: 1.0
+//        live: true
+//        snapMode: Slider.SnapAlways
+//        onValueChanged: delegate.primitive.frequency = frequencySet.frequencies[value]
+//        Keys.onPressed: appWindow.handleKey(event)
+//        sliderBarSize: Style.primitiveControl.sliderBarSize
+//        backgroundColor: Style.palette.pc_sliderBarEnabled
+//        backgroundDisabledColor: Style.palette.pc_sliderBarDisabled
+//        backgroundActiveColor: Style.palette.pc_sliderBarActivePartEnabled
+//        backgroundActiveDisabledColor: Style.palette.pc_sliderBarActivePartDisabled
+//        handleColor: Style.palette.pc_sliderHandleEnabled
+//        handleDisabledColor: Style.palette.pc_sliderHandleDisabled
+//      }
+//      Text {
+//        id: frequencyShow
+//        width: root.width * Style.primitiveControl.sliderValueWidth
+//        height: frequencySlider.height
+//        rightPadding: root.margin
+//        leftPadding: width * Style.primitiveControl.sliderValueLeftPadding
+//        font.pixelSize: height * Style.primitiveControl.sliderLabelTextSize
+//        text: frequencySet.frequencies[frequencySlider.value].toFixed(2)
+//        anchors.verticalCenter: frequencySlider.verticalCenter
+//        verticalAlignment: Text.AlignVCenter
+//        horizontalAlignment: Text.AlignRight
+//      }
+//    }
 
-    Row{
-      id: ledSet
-      visible: !knightRiderRadio.checked && !randomRadio.checked
-      width: Style.primitiveControl.labelsWidth
-      Text{
-        id: ledLabel
-        height: root.height * Style.primitiveControl.typeRadioHeight
-        width: Style.primitiveControl.titleWidth * root.width
-        font.pixelSize: Style.primitiveControl.sliderLabelTextSize
-                        * height
-        leftPadding: root.margin
-        verticalAlignment: Text.AlignVCenter
-        text: "LEDs"
-      }
+//    Row{
+//      id: ledSet
+//      visible: !knightRiderRadio.checked && !randomRadio.checked
+//      width: Style.primitiveControl.labelsWidth
+//      Text{
+//        id: ledLabel
+//        height: root.height * Style.primitiveControl.typeRadioHeight
+//        width: Style.primitiveControl.titleWidth * root.width
+//        font.pixelSize: Style.primitiveControl.sliderLabelTextSize
+//                        * height
+//        leftPadding: root.margin
+//        verticalAlignment: Text.AlignVCenter
+//        text: "LEDs"
+//      }
 
-      Row{
-        id: ledCheckboxes
-        property var ledDiameter: Style.primitiveControl.ledRadioDiameter
-                                  * ledLabel.height
-        spacing: Style.primitiveControl.ledRadioSpacing * ledDiameter
-        Repeater{
-          model: leds.length
-          delegate: CheckBox{
-            id: control
-            checked: leds[index]
-            focusPolicy: Qt.NoFocus
-            width: ledCheckboxes.ledDiameter
-            onPressed: appWindow.grabFocus()
-            onCheckedChanged: {
-              leds[index] = checked
-              if(delegate){
-                delegate.primitive.leds[index] = checked;
-              }
-            }
-            contentItem: Text{
-              width: background.width
-              anchors.top: background.bottom
-              anchors.verticalCenter: parent.verticalCenter
-              text: index
-              horizontalAlignment: Text.AlignHCenter
-              font.pixelSize: background.width * Style.primitiveControl.ledTextSize
-            }
+//      Row{
+//        id: ledCheckboxes
+//        property var ledDiameter: Style.primitiveControl.ledRadioDiameter
+//                                  * ledLabel.height
+//        spacing: Style.primitiveControl.ledRadioSpacing * ledDiameter
+//        Repeater{
+//          model: leds.length
+//          delegate: CheckBox{
+//            id: control
+//            checked: leds[index]
+//            focusPolicy: Qt.NoFocus
+//            width: ledCheckboxes.ledDiameter
+//            onPressed: appWindow.grabFocus()
+//            onCheckedChanged: {
+//              leds[index] = checked
+//              if(delegate){
+//                delegate.primitive.leds[index] = checked;
+//              }
+//            }
+//            contentItem: Text{
+//              width: background.width
+//              anchors.top: background.bottom
+//              anchors.verticalCenter: parent.verticalCenter
+//              text: index
+//              horizontalAlignment: Text.AlignHCenter
+//              font.pixelSize: background.width * Style.primitiveControl.ledTextSize
+//            }
 
-            indicator: Rectangle{
-              id: ledIndicator
-              width: ledCheckboxes.ledDiameter
-              height: ledCheckboxes.ledDiameter
-              radius: height/2
-              anchors.verticalCenter: background.verticalCenter
-              anchors.horizontalCenter: parent.horizontalCenter
-              color: control.checked ?
-                       Style.palette.prim_toolTipLEDon : background.color
-            }
+//            indicator: Rectangle{
+//              id: ledIndicator
+//              width: ledCheckboxes.ledDiameter
+//              height: ledCheckboxes.ledDiameter
+//              radius: height/2
+//              anchors.verticalCenter: background.verticalCenter
+//              anchors.horizontalCenter: parent.horizontalCenter
+//              color: control.checked ?
+//                       Style.palette.prim_toolTipLEDon : background.color
+//            }
 
-            background: Rectangle{
-              width: ledCheckboxes.ledDiameter
-              height: ledCheckboxes.ledDiameter
-              anchors.verticalCenter: parent.verticalCenter
-              radius: height/2
-              color: Style.palette.prim_toolTipLEDoff
-            }
-          }
-        }
-      }
-    }
-	}
+//            background: Rectangle{
+//              width: ledCheckboxes.ledDiameter
+//              height: ledCheckboxes.ledDiameter
+//              anchors.verticalCenter: parent.verticalCenter
+//              radius: height/2
+//              color: Style.palette.prim_toolTipLEDoff
+//            }
+//          }
+//        }
+//      }
+//    }
+//	}
 
 
   Rectangle{
@@ -239,7 +239,7 @@ Rectangle{
     delegate.primitive.positionBeat= 0;
     delegate.primitive.lengthBeat= 4;
     delegate.primitive.type = type
-    delegate.primitive.frequency = frequencySet.frequencies[frequencySlider.value]
+    //delegate.primitive.frequency = frequencySet.frequencies[frequencySlider.value]
     delegate.primitive.leds = leds
 
     delegate.anchors.verticalCenter = dummyTimerBar.verticalCenter

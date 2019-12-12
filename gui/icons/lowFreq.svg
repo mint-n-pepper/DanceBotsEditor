@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with matplotlib (https://matplotlib.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   height="253.14655pt"
+   version="1.1"
+   viewBox="0 0 335.96848 253.14654"
+   width="335.96848pt"
+   id="svg634"
+   sodipodi:docname="lowFreq.svg"
+   inkscape:version="0.92.4 (5da689c313, 2019-01-14)">
+  <metadata
+     id="metadata638">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1907"
+     inkscape:window-height="1438"
+     id="namedview636"
+     showgrid="false"
+     inkscape:pagecheckerboard="true"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0"
+     inkscape:zoom="1.609158"
+     inkscape:cx="142.75882"
+     inkscape:cy="149.0271"
+     inkscape:window-x="4267"
+     inkscape:window-y="74"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="svg634" />
+  <defs
+     id="defs327"
+     style="stroke-linecap:butt;stroke-linejoin:round">
+    <style
+       type="text/css"
+       id="style325">
+*{stroke-linecap:butt;stroke-linejoin:round;}
+  </style>
+  </defs>
+  <g
+     id="line2d_17"
+     style="stroke-linecap:butt;stroke-linejoin:round"
+     transform="translate(-68.175646,-47.948087)">
+    <path
+       clip-path="url(#p160d2740e9)"
+       d="m 73.832727,174.52815 12.40718,-28.75255 6.720556,-14.98852 5.686624,-12.11582 4.652693,-9.4171 4.13573,-7.92947 4.13572,-7.461216 3.61876,-6.106851 3.61877,-5.681844 3.61876,-5.229008 3.10179,-4.102109 3.1018,-3.735795 3.10179,-3.356036 2.58483,-2.497846 2.58483,-2.21947 2.58483,-1.935544 2.58483,-1.646782 2.58483,-1.353903 2.58483,-1.057639 2.06786,-0.631001 2.06786,-0.438677 2.06787,-0.245652 2.06786,-0.05223 2.06786,0.14127 2.06787,0.334546 2.06786,0.527287 2.06786,0.719185 2.58483,1.167055 2.58483,1.462157 2.58483,1.753606 2.58483,2.040671 2.58483,2.322636 2.58483,2.598795 3.10179,3.47389 3.1018,3.849668 3.10179,4.21159 3.1018,4.558356 3.61876,5.734403 3.61876,6.155925 4.13573,7.512723 4.13572,7.97578 4.6527,9.46262 5.16965,11.03228 6.20359,13.80797 7.75449,17.84511 19.6447,45.51039 6.20359,13.68377 5.16966,10.89565 4.65269,9.3151 4.13573,7.82612 4.13573,7.34661 3.61876,5.9979 3.61876,5.56538 3.10179,4.40533 3.1018,4.05164 3.10179,3.68336 3.1018,3.30183 2.58483,2.45146 2.58483,2.17209 2.58483,1.88731 2.58483,1.59781 2.58482,1.3043 2.58483,1.00754 2.06787,0.59066 2.06786,0.39815 2.06787,0.20502 2.06786,0.0116 2.06786,-0.18193 2.06786,-0.37511 2.06787,-0.5677 2.06786,-0.75938 2.58483,-1.2169 2.58483,-1.51144 2.58483,-1.8022 2.58483,-2.08846 2.58483,-2.3695 2.58483,-2.64461 3.10179,-3.52733 3.1018,-3.90124 3.10179,-4.26112 3.1018,-4.60567 3.61876,-5.78655 3.61876,-6.20457 4.13573,-7.5637 4.13572,-8.02153 4.65269,-9.50748 5.16966,-11.07348 6.20359,-13.84488 8.27146,-19.07615 4.13572,-9.66521 v 0"
+       style="fill:none;stroke:#000000;stroke-width:11.25;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none"
+       id="path609"
+       inkscape:connector-curvature="0" />
+  </g>
+  <g
+     id="line2d_18"
+     style="stroke-linecap:butt;stroke-linejoin:round"
+     transform="translate(-68.175646,-47.948087)">
+    <path
+       clip-path="url(#p160d2740e9)"
+       d="M 73.832727,174.52815 H 398.48727"
+       style="fill:none;stroke:#000000;stroke-width:3.75;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none"
+       id="path612"
+       inkscape:connector-curvature="0" />
+  </g>
+  <defs
+     id="defs632">
+    <clipPath
+       id="p160d2740e9"
+       style="stroke-linecap:butt;stroke-linejoin:round">
+      <rect
+         height="266.112"
+         width="357.12"
+         x="57.599998"
+         y="41.472"
+         id="rect629"
+         style="stroke-linecap:butt;stroke-linejoin:round" />
+    </clipPath>
+  </defs>
+</svg>

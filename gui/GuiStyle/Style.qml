@@ -24,13 +24,13 @@ QtObject {
     property color fc_buttonEnabled: "#63DD7F"
     property color fc_buttonDisabled: "#65A273"
     property color fc_buttonPressed: "#77FF96"
-    property color fc_buttonTextEnabled: "#333333"
-    property color fc_buttonTextDisabled: "#333333"
-    property color fc_textColor: "#333333"
-    property color fc_altTextColor: "#D6D6D6"
+    property color fc_buttonText: "#333333"
     property color fc_labelBoxBackground: "#356E41"
+    property color fc_labelBoxText: "#D6D6D6"
+    property color fc_textFieldAltText: "#969696"
+    property color fc_textFieldText: "#D6D6D6"
     property color fc_textfieldBoxBackground: "#1A3820"
-
+    property color fc_textfieldActiveBorder: "white"
 
     //* PRIMITIVE CONTROL BOXES *//
     // backgrounds
@@ -54,6 +54,8 @@ QtObject {
     property color pc_sliderBarActivePartDisabled: "#888888"
     property color pc_sliderHandleEnabled: "white"
     property color pc_sliderHandleDisabled: pc_typeRadioDisabled
+    property color pc_sliderText: "white"
+    property color pc_sliderIcon: "white"
 
     //* TIMER BARS *//
     property color tim_beatMarks: "#151515"
@@ -154,53 +156,66 @@ QtObject {
   property QtObject fileControl: QtObject{
     // box
     property real height: 0.045 // ratio of window width
-    // the width of the box is equal to the
+    // the width of the box is equal to the window width
+
+    // buttons and text fields all have the same height
+    property real itemHeight: 0.8 // ratio of box height
 
     // buttons
     // height is equal to height of bar minus padding
-    property real buttonPadding: 0.13 // ratio of box height
     property real buttonSpacing: 0.2 // ratio of box height
     property real buttonWidth: 1.8 // ratio of box height
     property real buttonRadius: 3 // radius of button border
-    property real buttonTextHeightRatio: 0.5 // ratio to button height
+    property real buttonTextHeight: 0.5 // ratio to button height
     property real buttonOpacityEnabled: 1 // opacity of enabled text
     property real buttonOpacityDisabled: 0.4 // opacity of disabled text
     property real buttonBorderWidth: 0.05 // width of button border relative to button height
 
     // texts
-    // text box height is equal to box height minus padding
-    property real textBoxWidth: 0.18 // ratio of window width
-    property real textBoxPadding: 0.15 // ratio of box height
-    property real textBoxSpacing: 0.1 // ratio of box height
-    property real textSize: 0.45 // ratio to text box height
-
-    // labels
-    property real labelBoxWidth: 0.09 // ratio of window width
-
+    // the available width is equal to the LED control box
+    // the labels take up the remaining space after deducting
+    // the spacing between the text elements
+    property real textBoxWidth: 0.35 // ratio of available space
+    property real textBoxSpacing: 0.02 // ratio of box height
+    property real labelTextSize: 0.4 // ratio to text box height
+    property real textFieldTextSize: 0.35 // ratio to text box height
+    property real textBoxActiveBorderSize: 0.04 // ratio of text box height
   }
 
   property QtObject primitiveControl: QtObject{
     // box
     property real width: 0.48 // ratio of window width
-    property real heightRatio: 0.7 // ratio of box width
-    property real margin: 0.025 // ratio to box width
-    property real controlSpacing: margin // ratio of box width
+    property real heightRatio: 0.5 // ratio of box width
+
     // title
-    property real titleFontSize: 0.27 // ratio to titleWidth
-    property real titleWidth: 0.25 // ratio to box width
+    property real titleFontSize: 0.6 // ratio to titleWidth
+    property real titleWidth: 0.1 // ratio to box width
 
     // type radios
-    property real typeRadioHeight: 0.07 // ratio of box height
+    property real radioHeight: 0.035 // ratio of box width
+    property real radioSpacing: 0.3 // ratio of radio height
     property real radioIndicatorSize: 0.8 // ratio of radio height
     property real typeTextSize: 0.75 // ratio of radio height
     property real radioToTextSpacing: 0.25 // ratio of radio height
 
+    // primitive box
+    property real primitiveBoxWidth: 0.25 // ratio of available width
+
+    // direction radios
+    property real directionRadioSize: 1.0 // ratio of type radio size
+
     // sliders:
-    property real sliderHeight: typeRadioHeight // ratio of box height, same as radio size
+    property real sliderHeight: radioHeight // ratio of box width
     property real sliderBarSize: 0.2 // ratio of slider handle size
-    property real sliderLabelTextSize: 0.58 // ratio of slider height
+    property real sliderLabelWidth: 0.2 // ratio of width available for settings sliders
+    property real sliderLabelTextSize: 0.8 // ratio of slider height
+    property real sliderValueTextSize: 0.8 // ratio of slider height
     property real sliderValueWidth: 0.15 // ratio of box width
-    property real sliderValueLeftPadding: 0.07 // ratio of width
+    property real sliderIconWidth: 0.08 // ratio of box width
+    property real sliderItemHSpacing: 0.4 // ratio of sliderHeight
+    property real sliderVSpacing: 0.75 // ratio of sliderHeight
+    // narrower spacing between direction and velocity sliders for custom type
+    property real dirToSliderSpacingCustom: 0.5 // ratio of sliderVSpacing
 
     // led toggles
     property real ledRadioDiameter: 0.8 // ratio of type radio diameter

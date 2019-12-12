@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with matplotlib (https://matplotlib.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   height="71.716026pt"
+   version="1.1"
+   viewBox="0 0 336.0434 71.716025"
+   width="336.0434pt"
+   id="svg7539"
+   sodipodi:docname="lowAmplitude.svg"
+   inkscape:version="0.92.4 (5da689c313, 2019-01-14)">
+  <metadata
+     id="metadata7543">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="2880"
+     inkscape:window-height="1706"
+     id="namedview7541"
+     showgrid="false"
+     inkscape:pagecheckerboard="true"
+     inkscape:zoom="1.4485868"
+     inkscape:cx="124.34607"
+     inkscape:cy="15.543236"
+     inkscape:window-x="3829"
+     inkscape:window-y="-11"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg7539"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0" />
+  <defs
+     id="defs7229"
+     style="stroke-linecap:butt;stroke-linejoin:round">
+    <style
+       type="text/css"
+       id="style7227">
+*{stroke-linecap:butt;stroke-linejoin:round;}
+  </style>
+  </defs>
+  <g
+     id="line2d_18"
+     style="stroke-width:11.25;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none"
+     transform="translate(-68.138254,-138.66964)">
+    <path
+       clip-path="url(#p2542abec35)"
+       d="m 73.832727,174.52815 14.99201,-8.64721 8.271453,-4.50617 6.72056,-3.41889 6.20359,-2.9089 5.68662,-2.42131 5.16966,-1.97215 5.16966,-1.7336 4.65269,-1.34192 4.65269,-1.12377 4.65269,-0.89652 4.6527,-0.66202 4.65269,-0.42216 4.65269,-0.17889 4.65269,0.0659 4.6527,0.31004 4.65269,0.55172 4.65269,0.78893 4.65269,1.01978 4.6527,1.24234 5.16966,1.62915 5.16965,1.87519 5.16966,2.10251 5.68663,2.55018 6.20359,3.03037 6.72055,3.52601 8.27146,4.60051 12.40718,7.19517 14.47504,8.34681 8.27145,4.50895 6.72056,3.42197 6.20359,2.91235 5.68662,2.42493 5.16966,1.97579 5.16966,1.73755 4.65269,1.34569 4.6527,1.12771 4.65269,0.90061 4.65269,0.66623 4.65269,0.42644 4.6527,0.1832 4.65269,-0.0615 4.65269,-0.30573 4.65269,-0.54748 4.65269,-0.78479 4.6527,-1.01575 4.65269,-1.23849 5.16966,-1.62509 5.16966,-1.87141 5.16965,-2.09905 5.68663,-2.54678 6.20359,-3.02719 6.72055,-3.52325 8.27146,-4.59814 11.89021,-6.89148 v 0"
+       style="fill:none;stroke:#000000;stroke-width:11.25;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none"
+       id="path7514"
+       inkscape:connector-curvature="0" />
+  </g>
+  <g
+     id="line2d_19"
+     style="stroke-width:3.75;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none"
+     transform="translate(-68.138254,-138.66964)">
+    <path
+       clip-path="url(#p2542abec35)"
+       d="M 73.832727,174.52815 H 398.48727"
+       style="fill:none;stroke:#000000;stroke-width:3.75;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none"
+       id="path7517"
+       inkscape:connector-curvature="0" />
+  </g>
+  <defs
+     id="defs7537">
+    <clipPath
+       id="p2542abec35"
+       style="stroke-linecap:butt;stroke-linejoin:round">
+      <rect
+         height="266.112"
+         width="357.12"
+         x="57.599998"
+         y="41.472"
+         id="rect7534"
+         style="stroke-linecap:butt;stroke-linejoin:round" />
+    </clipPath>
+  </defs>
+</svg>

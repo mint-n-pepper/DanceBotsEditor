@@ -13,6 +13,8 @@ Rectangle{
 
 	Component.onCompleted: setDisabled()
 
+  property real controlWindowWidth
+
 	function setEnabled(){
     textFields.enabled = true
 	}
@@ -91,178 +93,191 @@ Rectangle{
 		}
 	}
 
+  Row{
+    id: buttonRow
+    anchors.left: parent.left
+    anchors.leftMargin: appWindow.guiMargin
+    anchors.verticalCenter: root.verticalCenter
+    spacing: Style.fileControl.buttonSpacing * root.height
+    Button
+    {
+      id: loadButton
+      width: root.height * Style.fileControl.buttonWidth
+      height: root.height * Style.fileControl.itemHeight
+      anchors.verticalCenter: parent.verticalCenter
+      font.pixelSize: height * Style.fileControl.buttonTextHeight
+      font.bold: true
+      text: "LOAD"
+      focusPolicy: Qt.NoFocus
+      property color buttonColor: enabled ? Style.palette.fc_buttonEnabled
+                                          : Style.palette.fc_buttonDisabled
+
+      contentItem: Text{
+        text: parent.text
+        font: parent.font
+        opacity: enabled ? Style.fileControl.buttonOpacityEnabled
+                         : Style.fileControl.buttonOpacityDisabled
+        color: Style.palette.fc_buttonText
+        verticalAlignment: Text.AlignVCenter
+        horizontalAlignment: Text.AlignHCenter
+      }
+
+      background: Rectangle{
+        anchors.fill: parent
+        opacity: enabled ? Style.fileControl.buttonOpacityEnabled
+                         : Style.fileControl.buttonOpacityDisabled
+        color: parent.pressed ? Style.palette.fc_buttonPressed
+               : parent.buttonColor
+        border.color: Style.palette.fc_buttonText
+        border.width: Style.fileControl.buttonBorderWidth * parent.height
+        radius: Style.fileControl.buttonRadius
+
+      }
+
+      onClicked:
+      {
+        appWindow.grabFocus()
+        appWindow.cleanDraggers()
+        // confirm with user if the choreography is not empty
+        if(motorBar.isNotEmpty || ledBar.isNotEmpty){
+          loadConfirm.open()
+        }else{
+          // otherwise, load directly
+          loadDialog.open()
+        }
+      }
+    }
+    Button
+    {
+      id: saveButton
+      width: root.height *Style.fileControl.buttonWidth
+      height: root.height * Style.fileControl.itemHeight
+      anchors.verticalCenter: parent.verticalCenter
+      font.pixelSize: height * Style.fileControl.buttonTextHeight
+      enabled: motorBar.isNotEmpty || ledBar.isNotEmpty
+      font.bold: true
+      text: "SAVE"
+      focusPolicy: Qt.NoFocus
+      property color buttonColor: enabled ? Style.palette.fc_buttonEnabled
+                                          : Style.palette.fc_buttonDisabled
+
+      contentItem: Text{
+        text: parent.text
+        font: parent.font
+        opacity: enabled ? Style.fileControl.buttonOpacityEnabled : Style.fileControl.buttonOpacityDisabled
+        color: Style.palette.fc_buttonText
+        verticalAlignment: Text.AlignVCenter
+        horizontalAlignment: Text.AlignHCenter
+      }
+
+      background: Rectangle{
+        anchors.fill: parent
+        opacity: enabled ? Style.fileControl.buttonOpacityEnabled
+                         : Style.fileControl.buttonOpacityDisabled
+        color: parent.pressed ? Style.palette.fc_buttonPressed
+               : parent.buttonColor
+        border.color: Style.palette.fc_buttonText
+        border.width: Style.fileControl.buttonBorderWidth * parent.height
+        radius: Style.fileControl.buttonRadius
+      }
+
+      onClicked:
+      {
+        backend.audioPlayer.pause()
+        appWindow.grabFocus()
+        saveDialog.open()
+      }
+    }
+    Button
+    {
+      id: clearButton
+      width: root.height * Style.fileControl.buttonWidth
+      height: root.height * Style.fileControl.itemHeight
+      anchors.verticalCenter: parent.verticalCenter
+      font.pixelSize: height * Style.fileControl.buttonTextHeight
+      font.bold: true
+      text: "CLEAR"
+      enabled: motorBar.isNotEmpty || ledBar.isNotEmpty
+      focusPolicy: Qt.NoFocus
+      property color buttonColor: enabled ? Style.palette.fc_buttonEnabled
+                                          : Style.palette.fc_buttonDisabled
+
+      contentItem: Text{
+        text: parent.text
+        font: parent.font
+        opacity: enabled ? Style.fileControl.buttonOpacityEnabled
+                         : Style.fileControl.buttonOpacityDisabled
+        color: Style.palette.fc_buttonText
+        verticalAlignment: Text.AlignVCenter
+        horizontalAlignment: Text.AlignHCenter
+      }
+
+      background: Rectangle{
+        anchors.fill: parent
+        opacity: enabled ? Style.fileControl.buttonOpacityEnabled : Style.fileControl.buttonOpacityDisabled
+        color: parent.pressed ? Style.palette.fc_buttonPressed
+               : parent.buttonColor
+        border.color: Style.palette.fc_buttonText
+        border.width: Style.fileControl.buttonBorderWidth * parent.height
+        radius: Style.fileControl.buttonRadius
+      }
+
+      onClicked:
+      {
+        backend.audioPlayer.pause()
+        appWindow.grabFocus()
+        clearDialog.open()
+      }
+    }
+  } // buttons row
+
+  Row{ // text fields column
+    id: textFields
+    anchors.right: root.right
+    anchors.rightMargin: appWindow.guiMargin
+    anchors.verticalCenter: root.verticalCenter
+    spacing: controlWindowWidth * Style.fileControl.textBoxSpacing
+    opacity: enabled ? Style.fileControl.buttonOpacityEnabled
+                     : Style.fileControl.buttonOpacityDisabled
     Row{
-      id: buttonRow
-      width: root.width
-      padding: Style.fileControl.buttonPadding * root.height
-      spacing: Style.fileControl.buttonSpacing * root.height
-			Button
-			{
-				id: loadButton
-        width: root.height * Style.fileControl.buttonWidth
-        height: root.height - buttonRow.padding * 2
-        font.pixelSize: height * Style.fileControl.buttonTextHeightRatio
-				font.bold: true
-        text: "LOAD"
-        focusPolicy: Qt.NoFocus
-        property color buttonColor: enabled ? Style.palette.fc_buttonEnabled
-                                            : Style.palette.fc_buttonDisabled
+      id: artistRow
+      spacing: 0
+      Rectangle {
+        id: artistLabelBox
+        height: root.height * Style.fileControl.itemHeight
+        width: (controlWindowWidth - textFields.spacing - 2 * songTitleText.width)/2.0
+        anchors.verticalCenter: parent.verticalCenter
+        color: Style.palette.fc_labelBoxBackground
 
-        contentItem: Text{
-          text: parent.text
-          font: parent.font
-					opacity: enabled ? Style.fileControl.buttonOpacityEnabled : Style.fileControl.buttonOpacityDisabled
-          color: parent.enabled ? Style.palette.fc_buttonTextEnabled
-                                : Style.palette.fc_buttonTextDisabled
-          verticalAlignment: Text.AlignVCenter
-          horizontalAlignment: Text.AlignHCenter
+        Text{ // label
+          id: artistLabel
+          anchors.centerIn: parent
+          text: "ARTIST"
+          color: Style.palette.fc_labelBoxText
+          font.pixelSize: Style.fileControl.labelTextSize
+                          * songArtistText.height
         }
-
-        background: Rectangle{
-          anchors.fill: parent
-					opacity: enabled ? Style.fileControl.buttonOpacityEnabled : Style.fileControl.buttonOpacityDisabled
-          color: parent.pressed ? Style.palette.fc_buttonPressed
-                 : parent.buttonColor
-					border.color: Style.palette.fc_buttonTextEnabled
-			    border.width: Style.fileControl.buttonBorderWidth * parent.height
-			    radius: Style.fileControl.buttonRadius
-
-        }
-
-				onClicked:
-				{
-          appWindow.grabFocus()
-          appWindow.cleanDraggers()
-          // confirm with user if the choreography is not empty
-          if(motorBar.isNotEmpty || ledBar.isNotEmpty){
-            loadConfirm.open()
-          }else{
-            // otherwise, load directly
-            loadDialog.open()
-          }
-				}
-			}
-			Button
-			{
-				id: saveButton
-        width: root.height *Style.fileControl.buttonWidth
-        height: root.height - buttonRow.padding * 2
-        font.pixelSize: height * Style.fileControl.buttonTextHeightRatio
-        enabled: motorBar.isNotEmpty || ledBar.isNotEmpty
-				font.bold: true
-        text: "SAVE"
-        focusPolicy: Qt.NoFocus
-        property color buttonColor: enabled ? Style.palette.fc_buttonEnabled
-                                            : Style.palette.fc_buttonDisabled
-
-        contentItem: Text{
-          text: parent.text
-          font: parent.font
-					opacity: enabled ? Style.fileControl.buttonOpacityEnabled : Style.fileControl.buttonOpacityDisabled
-					color: parent.enabled ? Style.palette.fc_buttonTextEnabled
-                                : Style.palette.fc_buttonTextDisabled
-          verticalAlignment: Text.AlignVCenter
-          horizontalAlignment: Text.AlignHCenter
-        }
-
-        background: Rectangle{
-          anchors.fill: parent
-					opacity: enabled ? Style.fileControl.buttonOpacityEnabled : Style.fileControl.buttonOpacityDisabled
-					color: parent.pressed ? Style.palette.fc_buttonPressed
-                 : parent.buttonColor
-					border.color: Style.palette.fc_buttonTextEnabled
-					border.width: Style.fileControl.buttonBorderWidth * parent.height
-					radius: Style.fileControl.buttonRadius
-        }
-
-				onClicked:
-				{
-          backend.audioPlayer.pause()
-          appWindow.grabFocus()
-          saveDialog.open()
-				}
-			}
-			Button
-			{
-				id: clearButton
-        width: root.height * Style.fileControl.buttonWidth
-        height: root.height - buttonRow.padding * 2
-        font.pixelSize: height * Style.fileControl.buttonTextHeightRatio
-				font.bold: true
-        text: "CLEAR"
-        enabled: motorBar.isNotEmpty || ledBar.isNotEmpty
-        focusPolicy: Qt.NoFocus
-        property color buttonColor: enabled ? Style.palette.fc_buttonEnabled
-                                            : Style.palette.fc_buttonDisabled
-
-        contentItem: Text{
-          text: parent.text
-          font: parent.font
-					opacity: enabled ? Style.fileControl.buttonOpacityEnabled : Style.fileControl.buttonOpacityDisabled
-          color: parent.enabled ? Style.palette.fc_buttonTextEnabled
-                                : Style.palette.fc_buttonTextDisabled
-          verticalAlignment: Text.AlignVCenter
-          horizontalAlignment: Text.AlignHCenter
-        }
-
-        background: Rectangle{
-          anchors.fill: parent
-					opacity: enabled ? Style.fileControl.buttonOpacityEnabled : Style.fileControl.buttonOpacityDisabled
-          color: parent.pressed ? Style.palette.fc_buttonPressed
-                 : parent.buttonColor
-					border.color: Style.palette.fc_buttonTextEnabled
-					border.width: Style.fileControl.buttonBorderWidth * parent.height
-					radius: Style.fileControl.buttonRadius
-        }
-
-				onClicked:
-				{
-          backend.audioPlayer.pause()
-          appWindow.grabFocus()
-          clearDialog.open()
-				}
-			}
-		} // buttons row
-
-    Row{ // text fields column
-			id: textFields
-      padding: root.height * Style.fileControl.textBoxPadding
-      //spacing: root.height * Style.fileControl.textBoxSpacing
-      anchors.right: root.right
-      anchors.verticalCenter: root.verticalCenter
-			// opacity: parent.enabled ? Style.fileControl.buttonOpacityEnabled : Style.fileControl.buttonOpacityDisabled
-
-			Rectangle {
-				id: artistLabelBox
-				height: root.height - 2 * textFields.padding
-				width: root.width * Style.fileControl.labelBoxWidth
-				color: Style.palette.fc_labelBoxBackground
-
-	      Text{ // label
-	        id: artistLabel
-					anchors.centerIn: parent
-	        text: "ARTIST "
-	        color: Style.palette.fc_altTextColor
-	        font.pixelSize: Style.fileControl.textSize * songArtistText.height
-	      }
-			}
+      }
 
       TextField{ // text edit field
         id: songArtistText
-        height: artistLabelBox.height
-        width: root.width * Style.fileControl.textBoxWidth
-
-				color: Style.palette.fc_altTextColor
+        selectByMouse: true
+        color: Style.palette.fc_textFieldText
         maximumLength: 30 // fixed from mp3 tag limitation
         placeholderText: "Type Artist name..."
-        font.pixelSize: Style.fileControl.textSize * height
-        anchors.verticalCenter: textFields.verticalCenter
+        font.pixelSize: Style.fileControl.textFieldTextSize * height
+        anchors.verticalCenter: parent.verticalCenter
+        width: controlWindowWidth * Style.fileControl.textBoxWidth
+        height: root.height * Style.fileControl.itemHeight
 
-				background: Rectangle {
-					width: parent.width
-					height: parent.height
-					color: Style.palette.fc_textfieldBoxBackground
-				}
+        background: Rectangle {
+          color: Style.palette.fc_textfieldBoxBackground
+          border.color: Style.palette.fc_textfieldActiveBorder
+          border.width:
+            {parent.focus ?
+                   parent.height * Style.fileControl.textBoxActiveBorderSize
+                 : 0}
+        }
 
         onFocusChanged: {
           if(!focus){
@@ -276,37 +291,49 @@ Rectangle{
           songTitleText.focus = true
         }
       }
+    }
 
-			Rectangle {
-				id: titleLabelBox
-				height: root.height - 2 * textFields.padding
-				width: root.width * Style.fileControl.labelBoxWidth
-				color: Style.palette.fc_labelBoxBackground
+    Row{
+      id: titleRow
+      spacing: 0
+      Rectangle {
+        id: titleLabelBox
+        height: root.height * Style.fileControl.itemHeight
+        width: (controlWindowWidth - textFields.spacing - 2 * songTitleText.width)/2.0
+        anchors.verticalCenter: parent.verticalCenter
+        color: Style.palette.fc_labelBoxBackground
 
-				Text{ // label
-					id: titleLabel
-					anchors.centerIn: parent
-					text: "TITLE"
-					color: Style.palette.fc_altTextColor
-					font.pixelSize: Style.fileControl.textSize * songTitleText.height
-				}
-			}
+        Text{ // label
+          id: titleLabel
+          anchors.centerIn: parent
+          text: "TITLE"
+          color: Style.palette.fc_labelBoxText
+          font.pixelSize: Style.fileControl.labelTextSize * songTitleText.height
+        }
+      }
 
 
       TextField{
         id: songTitleText
-				height: root.height - 2 * textFields.padding
-				width: root.width * Style.fileControl.labelBoxWidth
+        color: Style.palette.fc_textFieldText
+        selectByMouse: true
+        placeholderTextColor: Style.palette.fc_textFieldAltText
         maximumLength: 30 // fixed from mp3 tag limitation
         placeholderText: qsTr("Type Song title...")
-        font.pixelSize: Style.fileControl.textSize * height
-        anchors.verticalCenter: textFields.verticalCenter
+        font.pixelSize: Style.fileControl.textFieldTextSize * height
+        anchors.verticalCenter: parent.verticalCenter
+        width: controlWindowWidth * Style.fileControl.textBoxWidth
+        height: root.height * Style.fileControl.itemHeight
 
-				background: Rectangle {
-					width: parent.width
-					height: parent.height
-					color: Style.palette.fc_textfieldBoxBackground
-				}
+        background: Rectangle {
+          color: Style.palette.fc_textfieldBoxBackground
+          border.color: Style.palette.fc_textfieldActiveBorder
+          border.width:{
+            parent.focus ?
+                   parent.height * Style.fileControl.textBoxActiveBorderSize
+                 : 0
+          }
+        }
 
         onFocusChanged: {
           if(!focus){
@@ -320,5 +347,6 @@ Rectangle{
           songArtistText.focus = true
         }
       }
-    } // text row
+    } // title row
+  } // text row
 } // box

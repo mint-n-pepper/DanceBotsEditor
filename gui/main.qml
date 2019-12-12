@@ -52,6 +52,7 @@ ApplicationWindow {
     id: fileControl
     width: appWindow.width
     anchors.top: titleBar.bottom
+    controlWindowWidth: ledPrimitiveControl.width
   }
 
   MotorPrimitiveControl{

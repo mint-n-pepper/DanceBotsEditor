@@ -21,5 +21,11 @@
         <file>icons/mp_logo.svg</file>
         <file>icons/pause.svg</file>
         <file>icons/play.svg</file>
+        <file>icons/turtle.svg</file>
+        <file>icons/rabbit.svg</file>
+        <file>icons/lowFreq.svg</file>
+        <file>icons/highFreq.svg</file>
+        <file>icons/lowAmplitude.svg</file>
+        <file>icons/highAmplitude.svg</file>
     </qresource>
 </RCC>
