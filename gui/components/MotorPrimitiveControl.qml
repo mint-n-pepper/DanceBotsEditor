@@ -99,7 +99,7 @@ Rectangle{
       onToggled: type=MotorPrimitive.Type.Custom
       height: radios.radioHeight
     }
-  }
+  } // radios column
 
   Column{
     id: settingsColumn

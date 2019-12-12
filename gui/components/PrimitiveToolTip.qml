@@ -6,6 +6,10 @@ Rectangle{
   id: root
   anchors.top: (parent.isMotor || !parent.isFromBar) ? undefined : parent.bottom
   anchors.bottom: (parent.isMotor || !parent.isFromBar) ? parent.top : undefined
+  // visible is disabled if a drag is active or if there is no primitive data
+  // it is enabled under the above plus:
+  //    - showData is triggered through a hover
+  //    - the parent primitive is in a control box (!isFromBar) and enabled
   visible: !parent.dragActive && primitive && (parent.showData
            || (!parent.isFromBar && parent.enabled))
   color: Style.palette.prim_toolTipBackground
@@ -27,9 +31,11 @@ Rectangle{
     if(visible){
       // only update relevant portion
       if(parent.isMotor){
+        // doing this because there was an issue with property binding
         motorColumn.visible = true
         motorColumn.update()
       }else{
+        // doing this because there was an issue with property binding
         ledColumn.visible = true
         ledColumn.update()
       }
