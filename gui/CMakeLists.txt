@@ -38,10 +38,18 @@ set(HEADERS ${CMAKE_CURRENT_SOURCE_DIR}/../src/AudioFile.h
 
 source_group("Header Files" FILES ${HEADERS})
 
-file(GLOB_RECURSE QMLS ${CMAKE_CURRENT_SOURCE_DIR}/../gui/ *.qml)
+file(GLOB_RECURSE QMLS ${CMAKE_CURRENT_SOURCE_DIR} *.qml)
 source_group("QML Files" FILES ${QMLS})
 
-add_executable(${PROJECT_NAME} ${SOURCES} ${APP_RESOURCES} ${HEADERS} ${QMLS})
+if(WIN32)
+  add_executable(${PROJECT_NAME} ${SOURCES} 
+                                 ${APP_RESOURCES}
+                                 ${HEADERS}
+                                 ${QMLS}
+                                 ${CMAKE_CURRENT_SOURCE_DIR}/rc/icon.rc)
+else()
+  add_executable(${PROJECT_NAME} ${SOURCES} ${APP_RESOURCES} ${HEADERS} ${QMLS})
+endif()
 
 # copy visual studio user file to binary folder to have
 # qt in debug path:
