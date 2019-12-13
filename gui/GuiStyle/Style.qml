@@ -180,6 +180,9 @@ QtObject {
     property real labelTextSize: 0.4 // ratio to text box height
     property real textFieldTextSize: 0.35 // ratio to text box height
     property real textBoxActiveBorderSize: 0.04 // ratio of text box height
+
+    // the time to display a file save/load error message in the file overlay
+    property int errorDisplayTimeMS: 3000 // in milli seconds
   }
 
   property QtObject primitiveControl: QtObject{

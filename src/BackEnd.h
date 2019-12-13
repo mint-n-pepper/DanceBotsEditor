@@ -36,7 +36,7 @@
  */
 class BackEnd : public QObject {
   Q_OBJECT;
-  Q_PROPERTY(QString songArtist 
+  Q_PROPERTY(QString songArtist
              READ songArtist
              WRITE setSongArtist
              NOTIFY songArtistChanged);
@@ -117,12 +117,25 @@ public:
   /**
    * \brief Load MP3 from given file path
    *
+   * Updates fileStatus property during loading that can be used to indicate
+   * progress and errors in the UI.
+   *
+   * Emits doneLoading signal with boolean that indicates success (true) or
+   * failure (false) and end of loading process.
+   *
    * \param[in] filePath - path to MP3 file to load
    */
   Q_INVOKABLE void loadMP3(const QString& filePath);
 
   /**
    * \brief Save MP3 to given file path
+   *
+   * Updates fileStatus property during loading that can be used to indicate
+   * progress and errors in the UI.
+   *
+   * Emits doneSaving signal with boolean that indicates success (true) or
+   * failure (false) and end of loading process.
+   *
    * \param[in] filePath - path to MP3 file to save
    */
   Q_INVOKABLE void saveMP3(const QString& filePath);
@@ -156,6 +169,19 @@ public:
    * \return beat index, or -1 if no valid interval can be found
    */
   Q_INVOKABLE int getBeatAtFrame(const int frame) const;
+
+  /**
+   * \brief Set time in MS that error messages are shown during loading/saving.
+   * Negative times are ignored.
+   *
+   * \param[in] timeMS - time in milliseconds
+   */
+  Q_INVOKABLE void setErrorDisplayTime(const int timeMS) {
+    if(timeMS >= 0) {
+      mErrorDisplayTimeMS = timeMS;
+    }
+  }
+
 signals:
   void fileStatusChanged();
   void songArtistChanged();
@@ -176,6 +202,7 @@ public slots:
 private:
   // init to 100bpm
   int mAverageBeatFrames{ 60 * AudioFile::sampleRate / 100 };
+  unsigned long mErrorDisplayTimeMS = 3000;
 
   // song ID3 tag strings
   QString mSongArtist;

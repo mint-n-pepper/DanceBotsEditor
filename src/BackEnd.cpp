@@ -149,7 +149,29 @@ bool BackEnd::loadMP3Worker(const QString& filePath) {
   const AudioFile::Result res = mAudioFile.load(filePath);
 
   if(AudioFile::Result::eSuccess != res) {
-    // loading failed
+    // loading failed, show an appropriate error message for a few seconds.
+    switch(res) {
+    case AudioFile::Result::eCorruptHeader:
+      mFileStatus = "ERROR: Corrupt Dancefile header. Cannot process file.";
+      break;
+    case AudioFile::Result::eFileDoesNotExist:
+      mFileStatus = "ERROR: File not found.";
+      break;
+    case AudioFile::Result::eMP3DecodingError:
+      mFileStatus = "ERROR: Cannot decode corrupt MP3 File. Try different file.";
+      break;
+    case AudioFile::Result::eIOError:
+      mFileStatus = "ERROR: File reading error. Try again or different file.";
+      break;
+    case AudioFile::Result::eNotAnMP3File:
+      mFileStatus = "ERROR: Not a valid MP3 file. Try different file.";
+      break;
+    default:
+      mFileStatus = "ERROR: Unexpected error loading file.";
+      break;
+    }
+    emit fileStatusChanged();
+    QThread::msleep(mErrorDisplayTimeMS);
     return false;
   }
 
@@ -163,8 +185,8 @@ bool BackEnd::loadMP3Worker(const QString& filePath) {
 
   if(mAudioFile.isDancefile()) {
     mFileStatus = "Dancebot file detected, reading data...";
-    QThread::msleep(300);
     emit fileStatusChanged();
+    QThread::msleep(250);
     readBeatsFromPrependData();
   }
   else {
@@ -194,9 +216,9 @@ bool BackEnd::loadMP3Worker(const QString& filePath) {
 
   // check if there are enough beats (four) to operate.
   if(mBeatFrames.size() < 4) {
-    mFileStatus = "FAILED: Fewer than four beats available.";
+    mFileStatus = "ERROR: Fewer than four beats detected. Cannot proceed. Try different file.";
+    QThread::msleep(mErrorDisplayTimeMS);
     emit fileStatusChanged();
-    QThread::msleep(1000);
     return false;
   }
   // calculate average beat duration in frames,
@@ -214,13 +236,15 @@ bool BackEnd::loadMP3Worker(const QString& filePath) {
 
 bool BackEnd::saveMP3Worker(const QString& fileName) {
   bool success{ true };
-  mFileStatus = "Preparing beats, moves, and blinkies for saving...";
+  mFileStatus = "Preparing beats, moves, and lights for saving...";
+  QThread::msleep(250);
   emit fileStatusChanged();
 
   // write prepend data:
   if(!writePrependData()) {
-    mFileStatus = "Data preparation failed :(";
-    QThread::msleep(1000);
+    mFileStatus = "ERROR: Save data preparation failed. Sorry :(";
+    emit fileStatusChanged();
+    QThread::msleep(mErrorDisplayTimeMS);
     return false;
   }
 
@@ -235,7 +259,34 @@ bool BackEnd::saveMP3Worker(const QString& fileName) {
   mAudioFile.setArtist(mSongArtist.toStdString());
   mAudioFile.setTitle(mSongTitle.toStdString());
   mAudioFile.setComment(mSongComment.toStdString());
-  mAudioFile.save(fileName);
+  AudioFile::Result res = mAudioFile.save(fileName);
+
+  if(AudioFile::Result::eSuccess != res) {
+    // loading failed, show an appropriate error message for a few seconds.
+    switch(res) {
+    case AudioFile::Result::eNoDataToSave:
+      mFileStatus = "ERROR: No data to save. Aborting.";
+      break;
+    case AudioFile::Result::eFileWriteError:
+      mFileStatus = "ERROR: Cannot write data to file.";
+      break;
+    case AudioFile::Result::eMP3EncodingError:
+      mFileStatus = "ERROR: MP3 encoding error.";
+      break;
+    case AudioFile::Result::eTagWriteError:
+      mFileStatus = "ERROR: Could not write ID3 tag to MP3 file.";
+      break;
+    case AudioFile::Result::eFileOpenError:
+      mFileStatus = "ERROR: Could not open / create output file.";
+      break;
+    default:
+      mFileStatus = "ERROR: Unexpected error saving file.";
+      break;
+    }
+    emit fileStatusChanged();
+    QThread::msleep(mErrorDisplayTimeMS);
+    return false;
+  }
 
   return true;
 }

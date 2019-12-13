@@ -47,7 +47,8 @@ public:
     eFileDoesNotExist,
     eMP3DecodingError,
     eMP3EncodingError,
-    eTagWriteError
+    eTagWriteError,
+    eNoDataToSave
   };
 
   /** String code at beginning and end of pre-pended header data */

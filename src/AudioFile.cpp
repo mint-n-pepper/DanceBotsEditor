@@ -151,7 +151,7 @@ auto AudioFile::load(const QString filePath) -> Result {
 auto AudioFile::save(const QString file) -> Result {
   // ensure there is data available:
   if(!mHasData) {
-    return Result::eFileWriteError;
+    return Result::eNoDataToSave;
   }
 
   // 1. encode MP3, 2. Write TAG info, 3. write to file with header pre-pend

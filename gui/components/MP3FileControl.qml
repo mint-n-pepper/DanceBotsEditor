@@ -11,7 +11,10 @@ Rectangle{
   height: Style.fileControl.height * width
   color: Style.palette.fc_background
 
-	Component.onCompleted: setDisabled()
+  Component.onCompleted:{
+    setDisabled()
+    backend.setErrorDisplayTime(Style.fileControl.errorDisplayTimeMS)
+  }
 
   property real controlWindowWidth
 
