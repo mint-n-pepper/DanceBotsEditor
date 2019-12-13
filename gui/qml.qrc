@@ -14,6 +14,7 @@
         <file>components/TypeRadio.qml</file>
         <file>components/ScalableSlider.qml</file>
         <file>components/TitleBar.qml</file>
+        <file>components/Faders.qml</file>
         <file>GuiStyle/Style.qml</file>
         <file>GuiStyle/qmldir</file>
         <file>icons/stop.svg</file>

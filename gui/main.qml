@@ -98,6 +98,7 @@ ApplicationWindow {
       timeIndicator.position = sliderPosition
                                * motorBar.lengthInFrames
                                * appWindow.frameToPixels;
+      faders.contentWidth = contentWidth
     }
 
     property bool hoverScrollRight: true
@@ -263,6 +264,12 @@ ApplicationWindow {
       property var position: 0
       x: position - width/2
     }
+  } // timer bar flickable
+
+  Faders{
+    id: faders
+    anchors.fill: timerBarFlickable
+    contentPosition: timerBarFlickable.contentX
   }
 
   Item{

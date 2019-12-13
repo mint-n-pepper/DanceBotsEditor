@@ -64,6 +64,7 @@ QtObject {
     property color tim_ghostColorInvalid: "#88DF4040"
     property color tim_beatNumberIndicatorBackground: "lightgrey"
     property color tim_beatNumberIndicatorFont: "black"
+    property color tim_endFadeColor: "black"
 
     //* PRIMITIVES *//
     property color prim_text: "white"
@@ -249,6 +250,9 @@ QtObject {
     // edges
     property real scrollMargin: 0.003 // ratio of main window width
     property real scrollSpeed: 8.0 / 1000.0 // ratio of main window with
+
+    // faders:
+    property real faderWidth: 0.05 // ratio of main window width
 	}
 
   // General primitives:
