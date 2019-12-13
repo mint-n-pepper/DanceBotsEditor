@@ -89,7 +89,9 @@ Rectangle{
     sidebarVisible: true
 		onAccepted: {
       fileProcess.open()
-			var res = backend.loadMP3(loadDialog.fileUrl.toString())
+      var res = backend.loadMP3(loadDialog.fileUrl.toString())
+      var folder = fileUrl.toString()
+      saveDialog.folder=folder.substr(0, folder.lastIndexOf("/"))
 		}
 	}
 
