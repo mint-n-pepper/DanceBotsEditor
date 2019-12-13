@@ -269,6 +269,7 @@ ApplicationWindow {
 
   Faders{
     id: faders
+    visible: ledPrimitiveControl.enabled
     anchors.fill: timerBarFlickable
     contentPosition: timerBarFlickable.contentX
   }
