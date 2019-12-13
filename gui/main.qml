@@ -1,5 +1,6 @@
 import QtQuick 2.6
 import QtQuick.Controls 2.0
+import QtQuick.Dialogs 1.3
 
 import "components"
 import "GuiStyle"
@@ -314,4 +315,20 @@ ApplicationWindow {
       break;
     }
   }
+
+  MessageDialog {
+    id: closeConfirm
+    title: "Really Exit?"
+    text: "Are you sure you want to close the editor?"
+    standardButtons: StandardButton.Yes | StandardButton.No
+    onYes: {
+      Qt.quit()
+    }
+  }
+
+  onClosing:{
+    closeConfirm.open()
+    close.accepted = false
+  }
+
 }
