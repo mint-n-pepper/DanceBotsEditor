@@ -125,9 +125,9 @@ Rectangle{
       id: settingsColumn
       width: radios.width * (1.0 - Style.primitiveControl.primitiveBoxWidth)
       anchors.left: parent.left
-      anchors.top: parent.top
+      anchors.bottom: parent.bottom
       anchors.leftMargin: appWindow.guiMargin
-      anchors.topMargin: appWindow.guiMargin
+      anchors.bottomMargin: appWindow.guiMargin
       spacing: sliderHeight * Style.primitiveControl.sliderVSpacing
       property real sliderHeight: root.width * Style.primitiveControl.sliderHeight
       property real labelWidth: width * Style.primitiveControl.sliderLabelWidth
@@ -152,6 +152,7 @@ Rectangle{
           Text{
             font.pixelSize: Style.primitiveControl.sliderLabelTextSize
                             * parent.height
+            font.capitalization: Font.AllUppercase
             text: "Frequency"
             verticalAlignment: Text.AlignVCenter
             color: Style.palette.pc_sliderText
@@ -303,7 +304,7 @@ Rectangle{
       anchors.bottom: parent.bottom
       anchors.left: settingsColumn.right
       anchors.leftMargin: appWindow.guiMargin
-      anchors.bottomMargin: appWindow.guiMargin
+      anchors.bottomMargin: appWindow.guiMargin * 2
     }
   }
 

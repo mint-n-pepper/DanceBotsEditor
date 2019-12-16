@@ -45,12 +45,12 @@ QtObject {
 
     // type radios
     property color pc_directionRadioBG: "#151515"
-    property color pc_directionRadioIndicator: pc_moveBoxColor
+    property color pc_directionRadioIndicator: "white"
     property color pc_typeRadioFontActive: pc_moveBoxBackground
     property color pc_typeRadioBorder: pc_moveBoxColor
 
     // sliders
-    property color pc_settingsBoxBackground: mw_background
+    property color pc_settingsBoxBackground: "#393939"
     property color pc_sliderBarEnabled: "black"
     property color pc_sliderBarDisabled: "grey"
     property color pc_sliderBarActivePartEnabled: "#222222"
@@ -220,7 +220,7 @@ QtObject {
     // sliders:
     property real sliderHeight: 0.035 // ratio of box width
     property real sliderBarSize: 0.2 // ratio of slider handle size
-    property real sliderLabelWidth: 0.2 // ratio of width available for settings sliders
+    property real sliderLabelWidth: 0.25 // ratio of width available for settings sliders
     property real sliderLabelTextSize: 0.8 // ratio of slider height
     property real sliderIconWidth: 0.08 // ratio of box width
     property real sliderItemHSpacing: 0.4 // ratio of sliderHeight

@@ -124,9 +124,9 @@ Rectangle{
       id: settingsColumn
       width: radios.width * (1.0 - Style.primitiveControl.primitiveBoxWidth)
       anchors.left: parent.left
-      anchors.top: parent.top
+      anchors.bottom: parent.bottom
       anchors.leftMargin: appWindow.guiMargin
-      anchors.topMargin: appWindow.guiMargin
+      anchors.bottomMargin: appWindow.guiMargin
       spacing: sliderHeight * Style.primitiveControl.sliderVSpacing
       property real sliderHeight: root.width * Style.primitiveControl.sliderHeight
       property real labelWidth: width * Style.primitiveControl.sliderLabelWidth
@@ -168,6 +168,7 @@ Rectangle{
             width: settingsColumn.labelWidth
             font.pixelSize: Style.primitiveControl.sliderLabelTextSize
                             * height
+            font.capitalization: Font.AllUppercase
             text: {
               switch(type){
               case MotorPrimitive.Type.Custom:
@@ -228,6 +229,7 @@ Rectangle{
             Text{
               font.pixelSize: Style.primitiveControl.sliderLabelTextSize
                               * parent.height
+              font.capitalization: Font.AllUppercase
               text: {
                 switch(type){
                 case MotorPrimitive.Type.Custom:
@@ -357,6 +359,7 @@ Rectangle{
           Text{
             font.pixelSize: Style.primitiveControl.sliderLabelTextSize
                             * parent.height
+            font.capitalization: Font.AllUppercase
             text: "Frequency"
             verticalAlignment: Text.AlignVCenter
             color: Style.palette.pc_sliderText
@@ -455,6 +458,7 @@ Rectangle{
             width: settingsColumn.labelWidth
             font.pixelSize: Style.primitiveControl.sliderLabelTextSize
                             * height
+            font.capitalization: Font.AllUppercase
             text: "Direction R"
             color: Style.palette.pc_sliderText
           }
@@ -486,6 +490,7 @@ Rectangle{
               id: rightSpeedLabel
               font.pixelSize: Style.primitiveControl.sliderLabelTextSize
                               * parent.height
+              font.capitalization: Font.AllUppercase
               text: "Velocity R"
               verticalAlignment: Text.AlignVCenter
               color: Style.palette.pc_sliderText

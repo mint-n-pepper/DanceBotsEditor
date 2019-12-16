@@ -32,7 +32,9 @@ RadioButton {
     text: root.text
     z: 1000
     padding: root.height * Style.primitiveControl.typeRadioTextPadding
-    font.pixelSize: root.height - 2.0 * padding
+    font.pixelSize: root.height - 2.7 * padding
+    font.capitalization: Font.AllUppercase
+    font.bold: true;
     verticalAlignment: Text.AlignVCenter
     horizontalAlignment: Text.AlignHCenter
     color: root.checked ? Style.palette.pc_typeRadioFontActive

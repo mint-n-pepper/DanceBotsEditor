@@ -43,7 +43,9 @@ Item {
     id: songPositionSlider
     from: 0.0
     to: 1.0
-    width: root.width
+    // width: root.width
+    width: parent.width - 2 * appWindow.guiMargin
+    anchors.horizontalCenter: root.horizontalCenter
     height: sliderHeight
     focusPolicy: Qt.NoFocus
 
