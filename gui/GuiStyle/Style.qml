@@ -192,8 +192,10 @@ QtObject {
     property real heightRatio: 0.5 // ratio of box width
 
     // title
-    property real titleFontSize: 0.6 // ratio to titleWidth
-    property real titleWidth: 0.1 // ratio to box width
+    property real titleFontSize: 0.63 // ratio to titleWidth
+    property real titleWidth: 0.07 // ratio to box width
+    property real titleLetterSpacing: 3 // letter spacing between characters
+
 
     // type radios
     property real radioHeight: 0.035 // ratio of box width

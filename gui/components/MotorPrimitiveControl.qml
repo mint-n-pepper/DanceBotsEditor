@@ -45,10 +45,13 @@ Rectangle{
     color: Style.palette.pc_moveBoxColor
     Text{
       anchors.centerIn: parent
-      text: qsTr("M O V E S")
+      text: qsTr("Moves")
       horizontalAlignment: Text.AlignHCenter
       verticalAlignment: Text.AlignVCenter
       font.pixelSize: Style.primitiveControl.titleFontSize * titleBar.width
+      font.letterSpacing: Style.primitiveControl.titleLetterSpacing
+      font.capitalization: Font.AllUppercase
+      font.bold: true;
       rotation : 270
     }
   }

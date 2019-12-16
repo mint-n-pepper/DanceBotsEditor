@@ -46,10 +46,13 @@ Rectangle{
     color: Style.palette.pc_ledBoxColor
     Text{
       anchors.centerIn: parent
-      text: qsTr("L I G H T S")
+      text: qsTr("Lights")
       horizontalAlignment: Text.AlignHCenter
       verticalAlignment: Text.AlignVCenter
       font.pixelSize: Style.primitiveControl.titleFontSize * titleBar.width
+      font.letterSpacing: Style.primitiveControl.titleLetterSpacing
+      font.capitalization: Font.AllUppercase
+      font.bold: true;
       rotation : 270
     }
   }
