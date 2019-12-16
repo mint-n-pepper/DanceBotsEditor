@@ -38,24 +38,27 @@ QtObject {
     property color pc_moveBoxColor: "#ECD600" // Mint & Pepper Yellow
     property color pc_ledBoxBackground: "#4B4B4B" // Dark grey background
     property color pc_ledBoxColor: "#FF7F33" // Mint & Pepper Orange
+    property color pc_settingsBoxColor: mw_background // Settings box same as background
+
+    // Controls Fonts
+    property color pc_controlsFonts: "white"
 
     // type radios
-    property color pc_typeRadioEnabled: "darkgrey"
-    property color pc_typeRadioDisabled: "lightgrey"
-    property color pc_typeRadioIndicatorEnabled: "white"
-    property color pc_typeRadioIndicatorDisabled: "darkgrey"
-    property color pc_typeRadioLabelEnabledFont: "white"
-    property color pc_typeRadioLabelDisabledFont: pc_typeRadioIndicatorDisabled
+    property color pc_directionRadioBG: "#151515"
+    property color pc_directionRadioIndicator: pc_moveBoxColor
+    property color pc_typeRadioFontActive: pc_moveBoxBackground
+    property color pc_typeRadioBorder: pc_moveBoxColor
 
     // sliders
+    property color pc_settingsBoxBackground: mw_background
     property color pc_sliderBarEnabled: "black"
-    property color pc_sliderBarDisabled: pc_typeRadioDisabled
+    property color pc_sliderBarDisabled: "grey"
     property color pc_sliderBarActivePartEnabled: "#222222"
     property color pc_sliderBarActivePartDisabled: "#888888"
     property color pc_sliderHandleEnabled: "white"
-    property color pc_sliderHandleDisabled: pc_typeRadioDisabled
-    property color pc_sliderText: "white"
-    property color pc_sliderIcon: "white"
+    property color pc_sliderHandleDisabled: "grey"
+    property color pc_sliderText: pc_controlsFonts
+    property color pc_sliderIcon: pc_controlsFonts
 
     //* TIMER BARS *//
     property color tim_beatMarks: "#151515"
@@ -79,27 +82,27 @@ QtObject {
 
     //* AUDIO CONTROL *//
     // button
-    property color ac_buttonEnabled: "lightgrey"
-    property color ac_buttonDisabled: "#888888"
-    property color ac_buttonPressed: "#DDDDDD"
-    property color ac_buttonIconEnabled: "#333333"
-    property color ac_buttonIconDisabled: "#AAAAAA"
+    property color ac_buttonEnabled: fc_buttonEnabled
+    property color ac_buttonDisabled: "#262626"
+    property color ac_buttonPressed: fc_buttonPressed
+    property color ac_buttonIconEnabled: mw_background
+    property color ac_buttonIconDisabled: "black"
     // song position slider
-    property color ac_songPositionSliderBarEnabled: "lightgrey"
-    property color ac_songPositionSliderBarDisabled: pc_typeRadioDisabled
-    property color ac_songPositionSliderBarActivePartEnabled: "#222222"
+    property color ac_songPositionSliderBarEnabled: "darkgrey"
+    property color ac_songPositionSliderBarDisabled: "#262626"
+    property color ac_songPositionSliderBarActivePartEnabled: "#63DD7F"
     property color ac_songPositionSliderBarActivePartDisabled: "#888888"
-    property color ac_songPositionSliderHandleEnabled: "white"
-    property color ac_songPositionSliderHandleDisabled: pc_typeRadioDisabled
+    property color ac_songPositionSliderHandleEnabled: "#63DD7F"
+    property color ac_songPositionSliderHandleDisabled: "#262626"
     // volume slider
     property color ac_volumeSliderBarEnabled: "lightgrey"
-    property color ac_volumeSliderBarDisabled: pc_typeRadioDisabled
+    property color ac_volumeSliderBarDisabled: "#4B4B4B"
     property color ac_volumeSliderBarActivePartEnabled: "grey"
     property color ac_volumeSliderBarActivePartDisabled: "#888888"
     property color ac_volumeSliderHandleEnabled: "grey"
-    property color ac_volumeSliderHandleDisabled: pc_typeRadioDisabled
-    property color ac_volumeSliderIconColorEnabled: "grey"
-    property color ac_volumeSliderIconColorDisabled: "darkgrey"
+    property color ac_volumeSliderHandleDisabled: "#4B4B4B"
+    property color ac_volumeSliderIconColorEnabled: "#4B4B4B"
+    property color ac_volumeSliderIconColorDisabled: "#262626"
 
     // timer display
     property color ac_timerFontEnabled: "lightgrey"
@@ -196,22 +199,26 @@ QtObject {
     property real titleWidth: 0.07 // ratio to box width
     property real titleLetterSpacing: 3 // letter spacing between characters
 
+    // direction Radios
+    property real directionRadioHeight: 1.0 // ratio of slider height
+    property real directionRadioTextSpacing: 0.2 // radio of radio height
+    property real directionRadioTextSize: 0.75 // radio of radio height
+    property real directionRadioIndicatorSize: 0.8 // radio of radio height
 
     // type radios
-    property real radioHeight: 0.035 // ratio of box width
-    property real radioSpacing: 0.3 // ratio of radio height
-    property real radioIndicatorSize: 0.8 // ratio of radio height
-    property real typeTextSize: 0.75 // ratio of radio height
-    property real radioToTextSpacing: 0.25 // ratio of radio height
+    property real typeRadioHeight: 0.07 // ratio of box width
+    property real typeRadioSpacing: 0.3 // ratio of radio height
+    property real typeRadioRadius: 0.1 // ratio of radio height
+    property real typeRadioBorderWidth: 0.05
+    property real typeRadioTextPadding: 0.25 // ratio of radio height
 
     // primitive box
     property real primitiveBoxWidth: 0.25 // ratio of available width
 
-    // direction radios
-    property real directionRadioSize: 1.0 // ratio of type radio size
+    // setting box
 
     // sliders:
-    property real sliderHeight: radioHeight // ratio of box width
+    property real sliderHeight: 0.035 // ratio of box width
     property real sliderBarSize: 0.2 // ratio of slider handle size
     property real sliderLabelWidth: 0.2 // ratio of width available for settings sliders
     property real sliderLabelTextSize: 0.8 // ratio of slider height

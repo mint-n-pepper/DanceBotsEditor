@@ -56,22 +56,22 @@ Rectangle{
     }
   }
 
-  Column{
+  Flow{
     id: radios
     anchors.left: titleBar.right
-    anchors.leftMargin: appWindow.guiMargin
+    padding: appWindow.guiMargin
     anchors.top: titleBar.top
-    anchors.topMargin: appWindow.guiMargin
     width: root.width - titleBar.width
     property var radioHeight: root.width
-                              * Style.primitiveControl.radioHeight
-    spacing: radioHeight * Style.primitiveControl.radioSpacing
+                              * Style.primitiveControl.typeRadioHeight
+    spacing: radioHeight * Style.primitiveControl.typeRadioSpacing
     TypeRadio {
       id: twistRadio
       checked: true
       onPressed: appWindow.grabFocus()
       onToggled: type = MotorPrimitive.Type.Twist
       height: radios.radioHeight
+      mainColor: Style.palette.pc_moveBoxColor
       text: qsTr("Twist")
     }
     TypeRadio {
@@ -79,6 +79,7 @@ Rectangle{
       text: qsTr("Spin")
       onPressed: appWindow.grabFocus()
       onToggled: type=MotorPrimitive.Type.Spin
+      mainColor: Style.palette.pc_moveBoxColor
       height: radios.radioHeight
     }
     TypeRadio {
@@ -86,6 +87,7 @@ Rectangle{
       text: qsTr("Back and Forth")
       onPressed: appWindow.grabFocus()
       onToggled: type=MotorPrimitive.Type.BackAndForth
+      mainColor: Style.palette.pc_moveBoxColor
       height: radios.radioHeight
     }
     TypeRadio {
@@ -93,6 +95,7 @@ Rectangle{
       text: qsTr("Drive Straight")
       onPressed: appWindow.grabFocus()
       onToggled: type=MotorPrimitive.Type.Straight
+      mainColor: Style.palette.pc_moveBoxColor
       height: radios.radioHeight
     }
     TypeRadio {
@@ -100,374 +103,261 @@ Rectangle{
       text: qsTr("Custom")
       onPressed: appWindow.grabFocus()
       onToggled: type=MotorPrimitive.Type.Custom
+      mainColor: Style.palette.pc_moveBoxColor
       height: radios.radioHeight
     }
   } // radios column
 
-  Column{
-    id: settingsColumn
-    width: radios.width * (1.0 - Style.primitiveControl.primitiveBoxWidth)
-    anchors.right: root.right
+  Rectangle {
+    id: settingsRectangle
+    anchors.leftMargin: appWindow.guiMargin
+    anchors.rightMargin: appWindow.guiMargin
+    anchors.bottomMargin: appWindow.guiMargin
     anchors.top: radios.bottom
-    spacing: sliderHeight * Style.primitiveControl.sliderVSpacing
-    property real sliderHeight: root.width * Style.primitiveControl.sliderHeight
-    property real labelWidth: width * Style.primitiveControl.sliderLabelWidth
-    property real iconWidth: width * Style.primitiveControl.sliderIconWidth
-    property real sliderItemSpacing: sliderHeight
-                                    * Style.primitiveControl.sliderItemHSpacing
-    property real sliderWidth: width
-                              - labelWidth
-                              - 2 * iconWidth
-                              - 3 * sliderItemSpacing
-                              - appWindow.guiMargin
-    property real dirRadioSize: radios.radioHeight
-                                * Style.primitiveControl.directionRadioSize
+    anchors.left: titleBar.right
+    anchors.right: root.right
+    anchors.bottom: root.bottom
+
+    color: Style.palette.pc_settingsBoxBackground
 
     Column{
-      id: leftSpeedSet
-      Component.onCompleted: updateSpeed()
-      function updateSpeed(){
-        if(leftForwardRadio.checked){
-          speed = velocitySlider.value
-        }else{
-          speed = -velocitySlider.value
-        }
-        delegate.primitive.velocity = speed
-        delegate.updateToolTip();
-      }
-      property var speed: 0
-      spacing: {type !== MotorPrimitive.Type.Custom ?
-                     settingsColumn.spacing
-                   : settingsColumn.spacing
-                     * Style.primitiveControl.dirToSliderSpacingCustom}
-      Row{
-        id: directionRadios
-        width: settingsColumn.width
-        spacing: settingsColumn.spacing
-        Text{
-          height: settingsColumn.sliderHeight
-          width: settingsColumn.labelWidth
-          font.pixelSize: Style.primitiveControl.sliderLabelTextSize
-                          * height
-          text: {
-            switch(type){
-            case MotorPrimitive.Type.Custom:
-              return "Direction L"
-            case MotorPrimitive.Type.Straight:
-            case MotorPrimitive.Type.Spin:
-              return "Direction"
-            case MotorPrimitive.Type.Twist:
-            case MotorPrimitive.Type.BackAndForth:
-              return "Start"
-            }
-          }
-          color: Style.palette.pc_sliderText
-        }
+      id: settingsColumn
+      width: radios.width * (1.0 - Style.primitiveControl.primitiveBoxWidth)
+      anchors.left: parent.left
+      anchors.top: parent.top
+      anchors.leftMargin: appWindow.guiMargin
+      anchors.topMargin: appWindow.guiMargin
+      spacing: sliderHeight * Style.primitiveControl.sliderVSpacing
+      property real sliderHeight: root.width * Style.primitiveControl.sliderHeight
+      property real labelWidth: width * Style.primitiveControl.sliderLabelWidth
+      property real iconWidth: width * Style.primitiveControl.sliderIconWidth
+      property real sliderItemSpacing: sliderHeight
+                                      * Style.primitiveControl.sliderItemHSpacing
+      property real sliderWidth: width
+                                - labelWidth
+                                - 2 * iconWidth
+                                - 3 * sliderItemSpacing
+                                - appWindow.guiMargin
+      property real dirRadioSize: sliderHeight
+                                  * Style.primitiveControl.directionRadioHeight
 
-        TypeRadio{
-          id: leftForwardRadio
-          checked: true
-          text: {
-            switch(type){
-            case MotorPrimitive.Type.Custom:
-            case MotorPrimitive.Type.Straight:
-            case MotorPrimitive.Type.BackAndForth:
-              return "Forward"
-            case MotorPrimitive.Type.Twist:
-            case MotorPrimitive.Type.Spin:
-              return "Counter-Clockwise"
-            }
-          }
-          onPressed: appWindow.grabFocus()
-          onToggled: leftSpeedSet.updateSpeed()
-          height: settingsColumn.dirRadioSize
-        }
-        TypeRadio{
-          id: leftBackwardRadio
-          text: {
-            switch(type){
-            case MotorPrimitive.Type.Custom:
-            case MotorPrimitive.Type.Straight:
-            case MotorPrimitive.Type.BackAndForth:
-              return "Backward"
-            case MotorPrimitive.Type.Twist:
-            case MotorPrimitive.Type.Spin:
-              return "Clockwise"
-            }
-          }
-          onPressed: appWindow.grabFocus()
-          onToggled: leftSpeedSet.updateSpeed()
-          height: settingsColumn.dirRadioSize
-        }
-      }
 
-      Row{
-        spacing: settingsColumn.sliderItemSpacing
-        Item{
-          height: settingsColumn.sliderHeight
-          width: settingsColumn.labelWidth
+      Column{
+        id: leftSpeedSet
+        Component.onCompleted: updateSpeed()
+        function updateSpeed(){
+          if(leftForwardRadio.checked){
+            speed = velocitySlider.value
+          }else{
+            speed = -velocitySlider.value
+          }
+          delegate.primitive.velocity = speed
+          delegate.updateToolTip();
+        }
+        property var speed: 0
+        spacing: {type !== MotorPrimitive.Type.Custom ?
+                       settingsColumn.spacing
+                     : settingsColumn.spacing
+                       * Style.primitiveControl.dirToSliderSpacingCustom}
+        Row{
+          id: directionRadios
+          width: settingsColumn.width
+          spacing: settingsColumn.spacing
           Text{
+            height: settingsColumn.sliderHeight
+            width: settingsColumn.labelWidth
             font.pixelSize: Style.primitiveControl.sliderLabelTextSize
-                            * parent.height
+                            * height
             text: {
               switch(type){
               case MotorPrimitive.Type.Custom:
-                return "Velocity L"
+                return "Direction L"
               case MotorPrimitive.Type.Straight:
               case MotorPrimitive.Type.Spin:
-                return "Velocity"
+                return "Direction"
               case MotorPrimitive.Type.Twist:
               case MotorPrimitive.Type.BackAndForth:
-                return "Amplitude"
+                return "Start"
               }
             }
-            verticalAlignment: Text.AlignVCenter
             color: Style.palette.pc_sliderText
           }
-        }
 
-        Item{
-          width: settingsColumn.iconWidth
-          height: settingsColumn.sliderHeight
-          Image{
-            id: turtle
-            anchors.centerIn: parent
-            source: "../icons/turtle.svg"
-            sourceSize.width: parent.width
-            antialiasing: true
-            visible: false
+          DirectionRadio{
+            id: leftForwardRadio
+            checked: true
+            text: {
+              switch(type){
+              case MotorPrimitive.Type.Custom:
+              case MotorPrimitive.Type.Straight:
+              case MotorPrimitive.Type.BackAndForth:
+                return "Forward"
+              case MotorPrimitive.Type.Twist:
+              case MotorPrimitive.Type.Spin:
+                return "Counter-Clockwise"
+              }
+            }
+            onPressed: appWindow.grabFocus()
+            onToggled: leftSpeedSet.updateSpeed()
+            height: settingsColumn.dirRadioSize
           }
-
-          ColorOverlay{
-            anchors.fill: turtle
-            source: turtle
-            color: Style.palette.pc_sliderIcon
-            antialiasing: true
-            visible: !lowAmpOverlay.visible
-          }
-
-          Image{
-            id: lowAmpIcon
-            anchors.centerIn: parent
-            source: "../icons/lowAmplitude.svg"
-            sourceSize.width: parent.width
-            antialiasing: true
-            visible: false
-          }
-
-          ColorOverlay{
-            id: lowAmpOverlay
-            anchors.fill: lowAmpIcon
-            source: lowAmpIcon
-            color: Style.palette.pc_sliderIcon
-            antialiasing: true
-            visible: type === MotorPrimitive.Type.Twist
-                     || type === MotorPrimitive.Type.BackAndForth
+          DirectionRadio{
+            id: leftBackwardRadio
+            text: {
+              switch(type){
+              case MotorPrimitive.Type.Custom:
+              case MotorPrimitive.Type.Straight:
+              case MotorPrimitive.Type.BackAndForth:
+                return "Backward"
+              case MotorPrimitive.Type.Twist:
+              case MotorPrimitive.Type.Spin:
+                return "Clockwise"
+              }
+            }
+            onPressed: appWindow.grabFocus()
+            onToggled: leftSpeedSet.updateSpeed()
+            height: settingsColumn.dirRadioSize
           }
         }
-        ScalableSlider{
-          id: velocitySlider
-          height: settingsColumn.sliderHeight
-          width: settingsColumn.sliderWidth
-          from: 0.0
-          value: 60.0
-          to: 100.0
-          stepSize: 1.0
-          live: true
-          snapMode: Slider.SnapAlways
-          onValueChanged: leftSpeedSet.updateSpeed()
-          Keys.onPressed: appWindow.handleKey(event)
-          sliderBarSize: Style.primitiveControl.sliderBarSize
-          backgroundColor: Style.palette.pc_sliderBarEnabled
-          backgroundDisabledColor: Style.palette.pc_sliderBarDisabled
-          backgroundActiveColor: Style.palette.pc_sliderBarActivePartEnabled
-          backgroundActiveDisabledColor: Style.palette.pc_sliderBarActivePartDisabled
-          handleColor: Style.palette.pc_sliderHandleEnabled
-          handleDisabledColor: Style.palette.pc_sliderHandleDisabled
-        }
 
-        Item{
-          width: settingsColumn.iconWidth
-          height: settingsColumn.sliderHeight
-          Image{
-            id: rabbit
-            anchors.centerIn: parent
-            source: "../icons/rabbit.svg"
-            sourceSize.width: parent.width
-            antialiasing: true
-            visible: false
+        Row{
+          spacing: settingsColumn.sliderItemSpacing
+          Item{
+            height: settingsColumn.sliderHeight
+            width: settingsColumn.labelWidth
+            Text{
+              font.pixelSize: Style.primitiveControl.sliderLabelTextSize
+                              * parent.height
+              text: {
+                switch(type){
+                case MotorPrimitive.Type.Custom:
+                  return "Velocity L"
+                case MotorPrimitive.Type.Straight:
+                case MotorPrimitive.Type.Spin:
+                  return "Velocity"
+                case MotorPrimitive.Type.Twist:
+                case MotorPrimitive.Type.BackAndForth:
+                  return "Amplitude"
+                }
+              }
+              verticalAlignment: Text.AlignVCenter
+              color: Style.palette.pc_sliderText
+            }
           }
 
-          ColorOverlay{
-            anchors.fill: rabbit
-            source: rabbit
-            color: Style.palette.pc_sliderIcon
-            antialiasing: true
-            visible: !highAmpOverlay.visible
+          Item{
+            width: settingsColumn.iconWidth
+            height: settingsColumn.sliderHeight
+            Image{
+              id: turtle
+              anchors.centerIn: parent
+              source: "../icons/turtle.svg"
+              sourceSize.width: parent.width
+              antialiasing: true
+              visible: false
+            }
+
+            ColorOverlay{
+              anchors.fill: turtle
+              source: turtle
+              color: Style.palette.pc_sliderIcon
+              antialiasing: true
+              visible: !lowAmpOverlay.visible
+            }
+
+            Image{
+              id: lowAmpIcon
+              anchors.centerIn: parent
+              source: "../icons/lowAmplitude.svg"
+              sourceSize.width: parent.width
+              antialiasing: true
+              visible: false
+            }
+
+            ColorOverlay{
+              id: lowAmpOverlay
+              anchors.fill: lowAmpIcon
+              source: lowAmpIcon
+              color: Style.palette.pc_sliderIcon
+              antialiasing: true
+              visible: type === MotorPrimitive.Type.Twist
+                       || type === MotorPrimitive.Type.BackAndForth
+            }
+          }
+          ScalableSlider{
+            id: velocitySlider
+            height: settingsColumn.sliderHeight
+            width: settingsColumn.sliderWidth
+            from: 0.0
+            value: 60.0
+            to: 100.0
+            stepSize: 1.0
+            live: true
+            snapMode: Slider.SnapAlways
+            onValueChanged: leftSpeedSet.updateSpeed()
+            Keys.onPressed: appWindow.handleKey(event)
+            sliderBarSize: Style.primitiveControl.sliderBarSize
+            backgroundColor: Style.palette.pc_sliderBarEnabled
+            backgroundDisabledColor: Style.palette.pc_sliderBarDisabled
+            backgroundActiveColor: Style.palette.pc_sliderBarActivePartEnabled
+            backgroundActiveDisabledColor: Style.palette.pc_sliderBarActivePartDisabled
+            handleColor: Style.palette.pc_sliderHandleEnabled
+            handleDisabledColor: Style.palette.pc_sliderHandleDisabled
           }
 
-          Image{
-            id: highAmpIcon
-            anchors.centerIn: parent
-            source: "../icons/highAmplitude.svg"
-            sourceSize.width: parent.width
-            antialiasing: true
-            visible: false
+          Item{
+            width: settingsColumn.iconWidth
+            height: settingsColumn.sliderHeight
+            Image{
+              id: rabbit
+              anchors.centerIn: parent
+              source: "../icons/rabbit.svg"
+              sourceSize.width: parent.width
+              antialiasing: true
+              visible: false
+            }
+
+            ColorOverlay{
+              anchors.fill: rabbit
+              source: rabbit
+              color: Style.palette.pc_sliderIcon
+              antialiasing: true
+              visible: !highAmpOverlay.visible
+            }
+
+            Image{
+              id: highAmpIcon
+              anchors.centerIn: parent
+              source: "../icons/highAmplitude.svg"
+              sourceSize.width: parent.width
+              antialiasing: true
+              visible: false
+            }
+
+            ColorOverlay{
+              id: highAmpOverlay
+              anchors.fill: highAmpIcon
+              source: highAmpIcon
+              color: Style.palette.pc_sliderIcon
+              antialiasing: true
+              visible: type === MotorPrimitive.Type.Twist
+                       || type === MotorPrimitive.Type.BackAndForth
+            }
           }
-
-          ColorOverlay{
-            id: highAmpOverlay
-            anchors.fill: highAmpIcon
-            source: highAmpIcon
-            color: Style.palette.pc_sliderIcon
-            antialiasing: true
-            visible: type === MotorPrimitive.Type.Twist
-                     || type === MotorPrimitive.Type.BackAndForth
-          }
         }
-      }
-    } // left speed column
-
-    Row{
-      id: frequencySliderRow
-      spacing: settingsColumn.sliderItemSpacing
-      visible: twistRadio.checked || backForthRadio.checked
-      Item{
-        height: settingsColumn.sliderHeight
-        width: settingsColumn.labelWidth
-        Text{
-          font.pixelSize: Style.primitiveControl.sliderLabelTextSize
-                          * parent.height
-          text: "Frequency"
-          verticalAlignment: Text.AlignVCenter
-          color: Style.palette.pc_sliderText
-        }
-      }
-
-      Item{
-        width: settingsColumn.iconWidth
-        height: settingsColumn.sliderHeight
-        Image{
-          id: lowFreq
-          anchors.centerIn: parent
-          source: "../icons/lowFreq.svg"
-          sourceSize.width: parent.width
-          antialiasing: true
-          visible: false
-        }
-
-        ColorOverlay{
-          anchors.fill: lowFreq
-          source: lowFreq
-          color: Style.palette.pc_sliderIcon
-          antialiasing: true
-          visible: true
-        }
-      }
-
-      ScalableSlider{
-        id: frequencySlider
-        height: settingsColumn.sliderHeight
-        width: settingsColumn.sliderWidth
-        from: 0.0
-        value: 2.0
-        to: frequencies.length - 1.0
-        stepSize: 1.0
-        live: true
-        snapMode: Slider.SnapAlways
-        onValueChanged: {
-          delegate.primitive.frequency = frequencies[value]
-          delegate.updateToolTip()
-        }
-        Keys.onPressed: appWindow.handleKey(event)
-        sliderBarSize: Style.primitiveControl.sliderBarSize
-        backgroundColor: Style.palette.pc_sliderBarEnabled
-        backgroundDisabledColor: Style.palette.pc_sliderBarDisabled
-        backgroundActiveColor: Style.palette.pc_sliderBarActivePartEnabled
-        backgroundActiveDisabledColor: Style.palette.pc_sliderBarActivePartDisabled
-        handleColor: Style.palette.pc_sliderHandleEnabled
-        handleDisabledColor: Style.palette.pc_sliderHandleDisabled
-      }
-
-      Item{
-        width: settingsColumn.iconWidth
-        height: settingsColumn.sliderHeight
-        Image{
-          id: highFreq
-          anchors.centerIn: parent
-          source: "../icons/highFreq.svg"
-          sourceSize.width: parent.width
-          antialiasing: true
-          visible: false
-        }
-
-        ColorOverlay{
-          anchors.fill: highFreq
-          source: highFreq
-          color: Style.palette.pc_sliderIcon
-          antialiasing: true
-          visible: true
-        }
-      }
-    } // frequency row
-
-    Column{
-      id: rightSpeedSet
-      visible: type === MotorPrimitive.Type.Custom
-      Component.onCompleted: updateSpeed()
-      function updateSpeed(){
-        if(rightForwardRadio.checked){
-          speed = rightVelocitySlider.value
-        }else{
-          speed = -rightVelocitySlider.value
-        }
-        delegate.primitive.velocityRight = speed
-        delegate.updateToolTip();
-      }
-      property var speed: 0
-      spacing: settingsColumn.spacing
-                 * Style.primitiveControl.dirToSliderSpacingCustom
-      Row{
-        id: directionRadiosRight
-        width: settingsColumn.width
-        spacing: settingsColumn.spacing
-        Text{
-          height: settingsColumn.sliderHeight
-          width: settingsColumn.labelWidth
-          font.pixelSize: Style.primitiveControl.sliderLabelTextSize
-                          * height
-          text: "Direction R"
-          color: Style.palette.pc_sliderText
-        }
-
-        TypeRadio{
-          id: rightForwardRadio
-          checked: true
-          text: "Forward"
-          onPressed: appWindow.grabFocus()
-          onToggled: rightSpeedSet.updateSpeed()
-          height: settingsColumn.dirRadioSize
-        }
-
-        TypeRadio{
-          id: rightBackwardRadio
-          text: "Backward"
-          onPressed: appWindow.grabFocus()
-          onToggled: rightSpeedSet.updateSpeed()
-          height: settingsColumn.dirRadioSize
-        }
-      } // dir radio row
+      } // left speed column
 
       Row{
+        id: frequencySliderRow
         spacing: settingsColumn.sliderItemSpacing
+        visible: twistRadio.checked || backForthRadio.checked
         Item{
           height: settingsColumn.sliderHeight
           width: settingsColumn.labelWidth
           Text{
-            id: rightSpeedLabel
             font.pixelSize: Style.primitiveControl.sliderLabelTextSize
                             * parent.height
-            text: "Velocity R"
+            text: "Frequency"
             verticalAlignment: Text.AlignVCenter
             color: Style.palette.pc_sliderText
           }
@@ -477,17 +367,17 @@ Rectangle{
           width: settingsColumn.iconWidth
           height: settingsColumn.sliderHeight
           Image{
-            id: turtleR
+            id: lowFreq
             anchors.centerIn: parent
-            source: "../icons/turtle.svg"
+            source: "../icons/lowFreq.svg"
             sourceSize.width: parent.width
             antialiasing: true
             visible: false
           }
 
           ColorOverlay{
-            anchors.fill: turtleR
-            source: turtleR
+            anchors.fill: lowFreq
+            source: lowFreq
             color: Style.palette.pc_sliderIcon
             antialiasing: true
             visible: true
@@ -495,16 +385,19 @@ Rectangle{
         }
 
         ScalableSlider{
-          id: rightVelocitySlider
+          id: frequencySlider
           height: settingsColumn.sliderHeight
           width: settingsColumn.sliderWidth
           from: 0.0
-          value: 60.0
-          to: 100.0
+          value: 2.0
+          to: frequencies.length - 1.0
           stepSize: 1.0
           live: true
           snapMode: Slider.SnapAlways
-          onValueChanged: rightSpeedSet.updateSpeed()
+          onValueChanged: {
+            delegate.primitive.frequency = frequencies[value]
+            delegate.updateToolTip()
+          }
           Keys.onPressed: appWindow.handleKey(event)
           sliderBarSize: Style.primitiveControl.sliderBarSize
           backgroundColor: Style.palette.pc_sliderBarEnabled
@@ -519,33 +412,160 @@ Rectangle{
           width: settingsColumn.iconWidth
           height: settingsColumn.sliderHeight
           Image{
-            id: rabbitR
+            id: highFreq
             anchors.centerIn: parent
-            source: "../icons/rabbit.svg"
+            source: "../icons/highFreq.svg"
             sourceSize.width: parent.width
             antialiasing: true
             visible: false
           }
 
           ColorOverlay{
-            anchors.fill: rabbitR
-            source: rabbitR
+            anchors.fill: highFreq
+            source: highFreq
             color: Style.palette.pc_sliderIcon
             antialiasing: true
             visible: true
           }
         }
-      } // right speed slider row
-    } // right speed column
-  } // settings column
+      } // frequency row
 
-  Rectangle{
-    id: dummyTimerBar
-    height: appWindow.width * Style.primitives.height * Style.timerBar.height
-    anchors.bottom: parent.bottom
-    anchors.left: titleBar.right
-    anchors.leftMargin: appWindow.guiMargin
-    anchors.bottomMargin: appWindow.guiMargin
+      Column{
+        id: rightSpeedSet
+        visible: type === MotorPrimitive.Type.Custom
+        Component.onCompleted: updateSpeed()
+        function updateSpeed(){
+          if(rightForwardRadio.checked){
+            speed = rightVelocitySlider.value
+          }else{
+            speed = -rightVelocitySlider.value
+          }
+          delegate.primitive.velocityRight = speed
+          delegate.updateToolTip();
+        }
+        property var speed: 0
+        spacing: settingsColumn.spacing
+                   * Style.primitiveControl.dirToSliderSpacingCustom
+        Row{
+          id: directionRadiosRight
+          width: settingsColumn.width
+          spacing: settingsColumn.spacing
+          Text{
+            height: settingsColumn.sliderHeight
+            width: settingsColumn.labelWidth
+            font.pixelSize: Style.primitiveControl.sliderLabelTextSize
+                            * height
+            text: "Direction R"
+            color: Style.palette.pc_sliderText
+          }
+
+          DirectionRadio{
+            id: rightForwardRadio
+            checked: true
+            text: "Forward"
+            onPressed: appWindow.grabFocus()
+            onToggled: rightSpeedSet.updateSpeed()
+            height: settingsColumn.dirRadioSize
+          }
+
+          DirectionRadio{
+            id: rightBackwardRadio
+            text: "Backward"
+            onPressed: appWindow.grabFocus()
+            onToggled: rightSpeedSet.updateSpeed()
+            height: settingsColumn.dirRadioSize
+          }
+        } // dir radio row
+
+        Row{
+          spacing: settingsColumn.sliderItemSpacing
+          Item{
+            height: settingsColumn.sliderHeight
+            width: settingsColumn.labelWidth
+            Text{
+              id: rightSpeedLabel
+              font.pixelSize: Style.primitiveControl.sliderLabelTextSize
+                              * parent.height
+              text: "Velocity R"
+              verticalAlignment: Text.AlignVCenter
+              color: Style.palette.pc_sliderText
+            }
+          }
+
+          Item{
+            width: settingsColumn.iconWidth
+            height: settingsColumn.sliderHeight
+            Image{
+              id: turtleR
+              anchors.centerIn: parent
+              source: "../icons/turtle.svg"
+              sourceSize.width: parent.width
+              antialiasing: true
+              visible: false
+            }
+
+            ColorOverlay{
+              anchors.fill: turtleR
+              source: turtleR
+              color: Style.palette.pc_sliderIcon
+              antialiasing: true
+              visible: true
+            }
+          }
+
+          ScalableSlider{
+            id: rightVelocitySlider
+            height: settingsColumn.sliderHeight
+            width: settingsColumn.sliderWidth
+            from: 0.0
+            value: 60.0
+            to: 100.0
+            stepSize: 1.0
+            live: true
+            snapMode: Slider.SnapAlways
+            onValueChanged: rightSpeedSet.updateSpeed()
+            Keys.onPressed: appWindow.handleKey(event)
+            sliderBarSize: Style.primitiveControl.sliderBarSize
+            backgroundColor: Style.palette.pc_sliderBarEnabled
+            backgroundDisabledColor: Style.palette.pc_sliderBarDisabled
+            backgroundActiveColor: Style.palette.pc_sliderBarActivePartEnabled
+            backgroundActiveDisabledColor: Style.palette.pc_sliderBarActivePartDisabled
+            handleColor: Style.palette.pc_sliderHandleEnabled
+            handleDisabledColor: Style.palette.pc_sliderHandleDisabled
+          }
+
+          Item{
+            width: settingsColumn.iconWidth
+            height: settingsColumn.sliderHeight
+            Image{
+              id: rabbitR
+              anchors.centerIn: parent
+              source: "../icons/rabbit.svg"
+              sourceSize.width: parent.width
+              antialiasing: true
+              visible: false
+            }
+
+            ColorOverlay{
+              anchors.fill: rabbitR
+              source: rabbitR
+              color: Style.palette.pc_sliderIcon
+              antialiasing: true
+              visible: true
+            }
+          }
+        } // right speed slider row
+      } // right speed column
+    } // settings column
+
+    Rectangle{
+      id: dummyTimerBar
+      height: appWindow.width * Style.primitives.height * Style.timerBar.height
+      anchors.bottom: parent.bottom
+      anchors.left: settingsColumn.right
+      anchors.leftMargin: appWindow.guiMargin
+      anchors.bottomMargin: appWindow.guiMargin
+    }
   }
 
   function createDelegate(){
