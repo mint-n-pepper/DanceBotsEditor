@@ -22,6 +22,7 @@ QtObject {
 
     //* MAIN WINDOW *//
     property color mw_background: mp_black
+    property color mw_disableOverlay: "#88444444"
 
     //* FILE LOADING PROCESS OVERLAY *//
     property color ovr_background: mp_black
@@ -47,6 +48,7 @@ QtObject {
 
     //* PRIMITIVE CONTROL BOXES *//
     // backgrounds
+
     property color pc_moveBoxBackground: mp_mediumgrey // Dark grey background
     property color pc_moveBoxColor: mp_yellow // Mint & Pepper Yellow
     property color pc_ledBoxBackground: "#4B4B4B" // Dark grey background
@@ -64,12 +66,9 @@ QtObject {
 
     // sliders
     property color pc_settingsBoxBackground: "#393939"
-    property color pc_sliderBarEnabled: "black"
-    property color pc_sliderBarDisabled: "grey"
-    property color pc_sliderBarActivePartEnabled: "#222222"
-    property color pc_sliderBarActivePartDisabled: "#888888"
-    property color pc_sliderHandleEnabled: "white"
-    property color pc_sliderHandleDisabled: "grey"
+    property color pc_sliderBar: "black"
+    property color pc_sliderBarActivePart: "#222222"
+    property color pc_sliderHandle: "white"
     property color pc_sliderText: pc_controlsFonts
     property color pc_sliderIcon: pc_controlsFonts
 
@@ -86,7 +85,6 @@ QtObject {
 
     //* PRIMITIVES *//
     property color prim_text: mp_black
-    property color prim_disabled: mp_lightgrey
     property color prim_border: mp_darkgrey
     property color prim_highlight: "#AAFFFFFF"
     property color prim_toolTipBackground: mp_black
@@ -97,27 +95,25 @@ QtObject {
 
     //* AUDIO CONTROL *//
     // button
-    property color ac_buttonEnabled: fc_buttonEnabled
+    property color ac_button: fc_buttonEnabled
     property color ac_buttonPressed: fc_buttonPressed
-    property color ac_buttonIconEnabled: mw_background
+    property color ac_buttonIcon: mw_background
 
     // song position slider
-    property color ac_songPositionSliderBarEnabled: mp_lightgrey
-    property color ac_songPositionSliderBarActivePartEnabled: mp_green
-    property color ac_songPositionSliderHandleEnabled: mp_green
+    property color ac_songPositionSliderBar: mp_lightgrey
+    property color ac_songPositionSliderBarActivePart: mp_green
+    property color ac_songPositionSliderHandle: mp_green
     property color ac_songPositionSliderHandleBorder: mp_black
 
 
     // volume slider
-    property color ac_volumeSliderBarEnabled: mp_lightgrey
-    property color ac_volumeSliderBarActivePartEnabled: "grey"
-    property color ac_volumeSliderHandleEnabled: "grey"
-    property color ac_volumeSliderIconColorEnabled: "#B9B9B9"
+    property color ac_volumeSliderBar: mp_lightgrey
+    property color ac_volumeSliderBarActivePart: "grey"
+    property color ac_volumeSliderHandle: "grey"
+    property color ac_volumeSliderIconColor: "#B9B9B9"
 
     // timer display
-    property color ac_timerFontEnabled: "lightgrey"
-    property color ac_timerFontDisabled: "grey"
-
+    property color ac_timerFont: "lightgrey"
   }
 
   property QtObject motorPrimitive: QtObject{
@@ -239,7 +235,7 @@ QtObject {
     property real sliderItemHSpacing: 0.4 // ratio of sliderHeight
     property real sliderVSpacing: 0.75 // ratio of sliderHeight
     // narrower spacing between direction and velocity sliders for custom type
-    property real dirToSliderSpacingCustom: 0.5 // ratio of sliderVSpacing
+    property real dirToSliderSpacingCustom: 0.375 // ratio of sliderVSpacing
 
     // led toggles
     property real ledRadioDiameter: 0.8 // ratio of type radio diameter
