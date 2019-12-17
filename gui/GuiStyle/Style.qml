@@ -9,12 +9,15 @@ QtObject {
   property QtObject palette: QtObject{
     //* GLOBAL COLORS *//
     property color mp_yellow: "#ECD600" // Mint & Pepper Yellow
+    property color mp_yellow_fade: "#E0C639" // Mint & Pepper Yellow
     property color mp_orange: "#FF7F33" // Mint & Pepper Orange
+    property color mp_orange_fade: "#E67C3D" // Mint & Pepper Orange
     property color mp_green: "#63DD7F" // Mint & Pepper Green
+    property color mp_white: "#F5F5F5" // Almost white
     property color mp_lightgrey: "#262626" // Light grey
     property color mp_mediumgrey: "#4B4B4B" // Light grey
     property color mp_darkgrey: "#262626" // Dark grey
-    property color mp_black: "#151515" // Very dark grey
+    property color mp_black: "#151515" // Almost black
 
 
     //* MAIN WINDOW *//
@@ -26,8 +29,8 @@ QtObject {
 
     //* TITLE BAR *//
     property color tb_background: mp_darkgrey
-    property color tb_font: "white"
-    property color tb_logo: "white"
+    property color tb_font: mp_white
+    property color tb_logo: mp_white
 
     //* FILE CONTROL BAR *//
     property color fc_background: mp_green
@@ -71,6 +74,8 @@ QtObject {
     property color pc_sliderIcon: pc_controlsFonts
 
     //* TIMER BARS *//
+    property color tim_moveBoxColor: mp_yellow_fade
+    property color tim_ledBoxColor: mp_orange_fade
     property color tim_beatMarks: mp_black
     property color tim_timeIndicator: "red"
     property color tim_ghostColorValid: "#8840DF40"
@@ -80,12 +85,12 @@ QtObject {
     property color tim_endFadeColor: "black"
 
     //* PRIMITIVES *//
-    property color prim_text: "white"
-    property color prim_disabled: "#99EEEEEE"
-    property color prim_border: "white"
+    property color prim_text: mp_black
+    property color prim_disabled: mp_lightgrey
+    property color prim_border: mp_darkgrey
     property color prim_highlight: "#AAFFFFFF"
-    property color prim_toolTipBackground: "black"
-    property color prim_toolTipFont: "lightgrey"
+    property color prim_toolTipBackground: mp_black
+    property color prim_toolTipFont: mp_white
     property color prim_toolTipLEDon: "lime"
     property color prim_toolTipLEDoff: "lightslategrey"
     // for primitive type colors see just below
@@ -151,14 +156,17 @@ QtObject {
   property QtObject fileProcessOverlay: QtObject{
     property real height: 0.15 // ratio of window height
     property real fontSize: 0.2 // ratio of height
+    property real opacity: 0.85 // opacity of overlay
+
   }
 
   // Title bar
   property QtObject titleBar: QtObject{
-    property real height: 0.04
-    property real fontSize: 0.5 // relative to bar height
-    property real logoSize: 0.5 // relative to bar height
-    property real horizontalPadding: 0.3 // relative to bar height
+    property real height: 0.055
+    property real fontSize: 0.45 // relative to bar height
+    property real fontLetterSpacing: 1 // letter spacing between characters
+    property real logoSize: 0.4 // relative to bar height
+    property real horizontalPadding: 0.2 // relative to bar height
   }
 
   // MP3 File Control Box
@@ -273,11 +281,11 @@ QtObject {
   property QtObject primitives: QtObject{
     property real height: 0.9 // ratio of timerbar height
     property real radius: 3.0/72.0 // ratio of height
-    property real textPosX: 3.0/72.0
-    property real textPosY: 3.0/72.0
-    property real textSize: 0.2 // ratio of height
+    property real textPosX: 6.0/72.0
+    property real textPosY: 4.0/72.0
+    property real textSize: 0.25 // ratio of height
     property bool textBold: true
-    property real borderWidth: 1.0 / 72.0 // ratio of height
+    property real borderWidth: 2.0 / 72.0 // ratio of height
     // margin of primitive at which a drag causes a size change
     // is capped at half primtive width
     property real resizeMarginRight: 0.14 // ratio of height
