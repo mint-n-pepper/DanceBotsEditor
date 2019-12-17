@@ -113,7 +113,9 @@ Rectangle{
     anchors.leftMargin: appWindow.guiMargin
     anchors.rightMargin: appWindow.guiMargin
     anchors.bottomMargin: appWindow.guiMargin
-    anchors.top: radios.bottom
+    property var minHeight: dummyTimerBar.height + 2 * appWindow.guiMargin
+    height: settingsColumn.height + 2 * appWindow.guiMargin < minHeight ?
+     minHeight : settingsColumn.height + 2 * appWindow.guiMargin
     anchors.left: titleBar.right
     anchors.right: root.right
     anchors.bottom: root.bottom
@@ -127,7 +129,10 @@ Rectangle{
       anchors.bottom: parent.bottom
       anchors.leftMargin: appWindow.guiMargin
       anchors.bottomMargin: appWindow.guiMargin
-      spacing: sliderHeight * Style.primitiveControl.sliderVSpacing
+      padding: appWindow.guiMargin
+      spacing: rightSpeedSet.visible ?
+       2 * sliderHeight * Style.primitiveControl.sliderVSpacing
+       :  sliderHeight * Style.primitiveControl.sliderVSpacing
       property real sliderHeight: root.width * Style.primitiveControl.sliderHeight
       property real labelWidth: width * Style.primitiveControl.sliderLabelWidth
       property real iconWidth: width * Style.primitiveControl.sliderIconWidth
@@ -137,7 +142,7 @@ Rectangle{
                                 - labelWidth
                                 - 2 * iconWidth
                                 - 3 * sliderItemSpacing
-                                - appWindow.guiMargin
+                                - 2 * appWindow.guiMargin
       property real dirRadioSize: sliderHeight
                                   * Style.primitiveControl.directionRadioHeight
 
@@ -299,9 +304,9 @@ Rectangle{
             onValueChanged: leftSpeedSet.updateSpeed()
             Keys.onPressed: appWindow.handleKey(event)
             sliderBarSize: Style.primitiveControl.sliderBarSize
-            backgroundColor: Style.palette.pc_sliderBarEnabled
-            backgroundActiveColor: Style.palette.pc_sliderBarActivePartEnabled
-            handleColor: Style.palette.pc_sliderHandleEnabled
+            backgroundColor: Style.palette.pc_sliderBar
+            backgroundActiveColor: Style.palette.pc_sliderBarActivePart
+            handleColor: Style.palette.pc_sliderHandle
           }
 
           Item{
@@ -400,9 +405,9 @@ Rectangle{
           }
           Keys.onPressed: appWindow.handleKey(event)
           sliderBarSize: Style.primitiveControl.sliderBarSize
-          backgroundColor: Style.palette.pc_sliderBarEnabled
-          backgroundActiveColor: Style.palette.pc_sliderBarActivePartEnabled
-          handleColor: Style.palette.pc_sliderHandleEnabled
+          backgroundColor: Style.palette.pc_sliderBar
+          backgroundActiveColor: Style.palette.pc_sliderBarActivePart
+          handleColor: Style.palette.pc_sliderHandle
         }
 
         Item{
@@ -525,9 +530,9 @@ Rectangle{
             onValueChanged: rightSpeedSet.updateSpeed()
             Keys.onPressed: appWindow.handleKey(event)
             sliderBarSize: Style.primitiveControl.sliderBarSize
-            backgroundColor: Style.palette.pc_sliderBarEnabled
-            backgroundActiveColor: Style.palette.pc_sliderBarActivePartEnabled
-            handleColor: Style.palette.pc_sliderHandleEnabled
+            backgroundColor: Style.palette.pc_sliderBar
+            backgroundActiveColor: Style.palette.pc_sliderBarActivePart
+            handleColor: Style.palette.pc_sliderHandle
           }
 
           Item{

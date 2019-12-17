@@ -114,7 +114,9 @@ Rectangle{
     anchors.leftMargin: appWindow.guiMargin
     anchors.rightMargin: appWindow.guiMargin
     anchors.bottomMargin: appWindow.guiMargin
-    anchors.top: radios.bottom
+    property var minHeight: dummyTimerBar.height + 2 * appWindow.guiMargin
+    height: settingsColumn.height + 2 * appWindow.guiMargin < minHeight ?
+     minHeight : settingsColumn.height + 2 * appWindow.guiMargin
     anchors.left: titleBar.right
     anchors.right: root.right
     anchors.bottom: root.bottom
@@ -126,8 +128,9 @@ Rectangle{
       width: radios.width * (1.0 - Style.primitiveControl.primitiveBoxWidth)
       anchors.left: parent.left
       anchors.bottom: parent.bottom
-      anchors.leftMargin: appWindow.guiMargin
       anchors.bottomMargin: appWindow.guiMargin
+      anchors.leftMargin: appWindow.guiMargin
+      padding: appWindow.guiMargin
       spacing: sliderHeight * Style.primitiveControl.sliderVSpacing
       property real sliderHeight: root.width * Style.primitiveControl.sliderHeight
       property real labelWidth: width * Style.primitiveControl.sliderLabelWidth
@@ -138,7 +141,7 @@ Rectangle{
                                 - labelWidth
                                 - 2 * iconWidth
                                 - 3 * sliderItemSpacing
-                                - appWindow.guiMargin
+                                - 2 * appWindow.guiMargin
       property real dirRadioSize: radios.radioHeight
                                   * Style.primitiveControl.directionRadioSize
 
@@ -196,9 +199,9 @@ Rectangle{
           }
           Keys.onPressed: appWindow.handleKey(event)
           sliderBarSize: Style.primitiveControl.sliderBarSize
-          backgroundColor: Style.palette.pc_sliderBarEnabled
-          backgroundActiveColor: Style.palette.pc_sliderBarActivePartEnabled
-          handleColor: Style.palette.pc_sliderHandleEnabled
+          backgroundColor: Style.palette.pc_sliderBar
+          backgroundActiveColor: Style.palette.pc_sliderBarActivePart
+          handleColor: Style.palette.pc_sliderHandle
         }
 
         Item{
@@ -268,6 +271,7 @@ Rectangle{
                 horizontalAlignment: Text.AlignHCenter
                 font.pixelSize: background.width
                                 * Style.primitiveControl.ledTextSize
+                color: Style.palette.pc_controlsFonts
               }
 
               indicator: Rectangle{
@@ -301,7 +305,7 @@ Rectangle{
       anchors.bottom: parent.bottom
       anchors.left: settingsColumn.right
       anchors.leftMargin: appWindow.guiMargin
-      anchors.bottomMargin: appWindow.guiMargin * 2
+      anchors.bottomMargin: appWindow.guiMargin
     }
   }
 
