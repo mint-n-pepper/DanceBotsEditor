@@ -128,7 +128,7 @@ QtObject {
     // Straight = 3
     // Custom = 4
     property var textID: ["T", "B", "S", "D", "C"]
-    property var colors: ["firebrick", "darkolivegreen", "royalblue", "deepskyblue", "deeppink"]
+    property var colors: ["#09C1FE", "#5486FD", "#54FDE3", "#54FD9C", "#A2FD54"]
   }
 
   property QtObject ledPrimitive: QtObject{
@@ -139,7 +139,7 @@ QtObject {
     // Constant = 3
     // Random = 4
     property var textID: ["K", "A", "B", "C", "R"]
-    property var colors: ["aqua", "darkseagreen", "mediumblue", "indigo", "orange"]
+    property var colors: ["#FF656B", "#FF438B", "#FF43F8", "#9B65FF", "#FFD54A"]
   }
 
   // Main window
