@@ -6,11 +6,14 @@ Rectangle{
   id: root
   height: width * Style.titleBar.height
   color: Style.palette.tb_background
+
   Text{
     anchors.verticalCenter: titleBar.verticalCenter
     color: Style.palette.tb_font
-    text: "Dancebots GUI"
+    text: "Dancebots"
     font.pixelSize: titleBar.height * Style.titleBar.fontSize
+    font.letterSpacing: Style.titleBar.fontLetterSpacing
+    font.bold: Style.primitives.textBold
     leftPadding: titleBar.height * Style.titleBar.horizontalPadding
   }
 
