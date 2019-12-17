@@ -197,11 +197,8 @@ Rectangle{
           Keys.onPressed: appWindow.handleKey(event)
           sliderBarSize: Style.primitiveControl.sliderBarSize
           backgroundColor: Style.palette.pc_sliderBarEnabled
-          backgroundDisabledColor: Style.palette.pc_sliderBarDisabled
           backgroundActiveColor: Style.palette.pc_sliderBarActivePartEnabled
-          backgroundActiveDisabledColor: Style.palette.pc_sliderBarActivePartDisabled
           handleColor: Style.palette.pc_sliderHandleEnabled
-          handleDisabledColor: Style.palette.pc_sliderHandleDisabled
         }
 
         Item{
