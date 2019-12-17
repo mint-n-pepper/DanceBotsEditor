@@ -59,6 +59,8 @@ Item {
     backgroundColor: Style.palette.ac_songPositionSliderBarEnabled
     backgroundActiveColor: Style.palette.ac_songPositionSliderBarActivePartEnabled
     handleColor: Style.palette.ac_songPositionSliderHandleEnabled
+    handleBorderColor: Style.palette.ac_songPositionSliderHandleBorder
+    handleBorderWidth: Style.audioControl.buttonHeight
   }
 
   Item{

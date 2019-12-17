@@ -14,12 +14,14 @@ QtObject {
     property color mp_lightgrey: "#262626" // Light grey
     property color mp_mediumgrey: "#4B4B4B" // Light grey
     property color mp_darkgrey: "#262626" // Dark grey
+    property color mp_black: "#151515" // Very dark grey
+
 
     //* MAIN WINDOW *//
-    property color mw_background: "#151515"
+    property color mw_background: mp_black
 
     //* FILE LOADING PROCESS OVERLAY *//
-    property color ovr_background: "#BB444444"
+    property color ovr_background: mp_black
     property color ovr_font: "white"
 
     //* TITLE BAR *//
@@ -52,7 +54,7 @@ QtObject {
     property color pc_controlsFonts: "white"
 
     // type radios
-    property color pc_directionRadioBG: "#151515"
+    property color pc_directionRadioBG: mp_black
     property color pc_directionRadioIndicator: "white"
     property color pc_typeRadioFontActive: mp_mediumgrey
     property color pc_typeRadioBorder: mp_yellow
@@ -69,7 +71,7 @@ QtObject {
     property color pc_sliderIcon: pc_controlsFonts
 
     //* TIMER BARS *//
-    property color tim_beatMarks: "#151515"
+    property color tim_beatMarks: mp_black
     property color tim_timeIndicator: "red"
     property color tim_ghostColorValid: "#8840DF40"
     property color tim_ghostColorInvalid: "#88DF4040"
@@ -91,26 +93,21 @@ QtObject {
     //* AUDIO CONTROL *//
     // button
     property color ac_buttonEnabled: fc_buttonEnabled
-    property color ac_buttonDisabled: "#262626"
     property color ac_buttonPressed: fc_buttonPressed
     property color ac_buttonIconEnabled: mw_background
-    property color ac_buttonIconDisabled: "black"
+
     // song position slider
-    property color ac_songPositionSliderBarEnabled: "darkgrey"
-    property color ac_songPositionSliderBarDisabled: "#262626"
+    property color ac_songPositionSliderBarEnabled: mp_lightgrey
     property color ac_songPositionSliderBarActivePartEnabled: mp_green
-    property color ac_songPositionSliderBarActivePartDisabled: "#888888"
-    property color ac_songPositionSliderHandleEnabled: "#63DD7F"
-    property color ac_songPositionSliderHandleDisabled: "#262626"
+    property color ac_songPositionSliderHandleEnabled: mp_green
+    property color ac_songPositionSliderHandleBorder: mp_black
+
+
     // volume slider
-    property color ac_volumeSliderBarEnabled: "lightgrey"
-    property color ac_volumeSliderBarDisabled: "#4B4B4B"
+    property color ac_volumeSliderBarEnabled: mp_lightgrey
     property color ac_volumeSliderBarActivePartEnabled: "grey"
-    property color ac_volumeSliderBarActivePartDisabled: "#888888"
     property color ac_volumeSliderHandleEnabled: "grey"
-    property color ac_volumeSliderHandleDisabled: "#4B4B4B"
     property color ac_volumeSliderIconColorEnabled: "#B9B9B9"
-    property color ac_volumeSliderIconColorDisabled: "#262626"
 
     // timer display
     property color ac_timerFontEnabled: "lightgrey"
@@ -294,6 +291,9 @@ QtObject {
   property QtObject audioControl: QtObject{
     // width of time slider is same as window size
     property real sliderHeight: 0.02 // ratio of window width
+
+    // Play Slider
+    property real sliderHandleBorderWidth: 2 // border width
 
     // Play / Pause Buttons
     property real buttonHeight: 1.8 // ratio of sliderHeight

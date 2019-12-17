@@ -16,6 +16,8 @@ Slider {
   property color backgroundColor: "white"
   property color backgroundActiveColor: "#444444"
   property color handleColor: "white"
+  property color handleBorderColor: "black"
+  property real handleBorderWidth: 0
 
   background:Rectangle{
     id: bgRect
@@ -42,5 +44,7 @@ Slider {
     width: root.availableHeight
     radius: width/2
     color: handleColor
+    border.color: handleBorderColor
+    border.width: handleBorderWidth
   }
 }
