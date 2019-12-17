@@ -10,7 +10,7 @@ Rectangle{
   Text{
     anchors.verticalCenter: titleBar.verticalCenter
     color: Style.palette.tb_font
-    text: "Dancebots"
+    text: "Dancebots Editor"
     font.pixelSize: titleBar.height * Style.titleBar.fontSize
     font.letterSpacing: Style.titleBar.fontLetterSpacing
     font.bold: Style.primitives.textBold

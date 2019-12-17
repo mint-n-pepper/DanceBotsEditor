@@ -23,7 +23,7 @@ ApplicationWindow {
                   + 4 * guiMargin)
 
   visible: true
-  title: "Dancebots GUI"
+  title: "Dancebots Editor"
 
   color: Style.palette.mw_background
 
