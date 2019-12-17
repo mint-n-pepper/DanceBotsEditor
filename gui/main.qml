@@ -285,6 +285,14 @@ ApplicationWindow {
     Keys.onPressed: handleKey(event)
   }
 
+  Rectangle{
+    anchors.top: fileControl.bottom
+    width: appWindow.width
+    height: appWindow.height - titleBar.height - fileControl.height
+    color: Style.palette.mw_disableOverlay
+    visible: !ledPrimitiveControl.enabled
+  }
+
   function grabFocus(){
     keyCatcher.focus = true
   }
