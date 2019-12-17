@@ -56,9 +56,9 @@ Item {
       }
     }
     sliderBarSize: Style.primitiveControl.sliderBarSize
-    backgroundColor: Style.palette.ac_songPositionSliderBarEnabled
-    backgroundActiveColor: Style.palette.ac_songPositionSliderBarActivePartEnabled
-    handleColor: Style.palette.ac_songPositionSliderHandleEnabled
+    backgroundColor: Style.palette.ac_songPositionSliderBar
+    backgroundActiveColor: Style.palette.ac_songPositionSliderBarActivePart
+    handleColor: Style.palette.ac_songPositionSliderHandle
     handleBorderColor: Style.palette.ac_songPositionSliderHandleBorder
     handleBorderWidth: Style.audioControl.buttonHeight
   }
@@ -82,7 +82,7 @@ Item {
         focusPolicy: Qt.NoFocus
         width: playControlItem.height
         height: playControlItem.height
-        property color buttonColor: Style.palette.ac_buttonEnabled
+        property color buttonColor: Style.palette.ac_button
 
         contentItem: Item{
           height: parent.height
@@ -99,7 +99,7 @@ Item {
           ColorOverlay{
             anchors.fill: playImage
             source: playImage
-            color: Style.palette.ac_buttonIconEnabled
+            color: Style.palette.ac_buttonIcon
             antialiasing: true
             visible: !backend.audioPlayer.isPlaying
           }
@@ -116,7 +116,7 @@ Item {
           ColorOverlay{
             anchors.fill: pauseImage
             source: pauseImage
-            color: Style.palette.ac_buttonIconEnabled
+            color: Style.palette.ac_buttonIcon
             antialiasing: true
             visible: backend.audioPlayer.isPlaying
           }
@@ -141,7 +141,7 @@ Item {
         focusPolicy: Qt.NoFocus
         width: playControlItem.height
         height: playControlItem.height
-        property color buttonColor: Style.palette.ac_buttonEnabled
+        property color buttonColor: Style.palette.ac_button
 
         contentItem: Item{
           height: parent.height
@@ -158,7 +158,7 @@ Item {
           ColorOverlay{
             anchors.fill: stopImage
             source: stopImage
-            color: Style.palette.ac_buttonIconEnabled
+            color: Style.palette.ac_buttonIcon
             antialiasing: true
           }
         }
@@ -192,7 +192,7 @@ Item {
       }
       font.pixelSize: Style.audioControl.timerFontSize
                       * root.sliderHeight
-      color: Style.palette.ac_timerFontEnabled
+      color: Style.palette.ac_timerFont
     }
 
     Row{
@@ -223,7 +223,7 @@ Item {
         ColorOverlay{
           anchors.fill: speakerImage
           source: speakerImage
-          color: Style.palette.ac_volumeSliderIconColorEnabled
+          color: Style.palette.ac_volumeSliderIconColor
           antialiasing: true
         }
       }
@@ -242,9 +242,9 @@ Item {
         onValueChanged: backend.audioPlayer.setVolume(value)
 
         sliderBarSize: Style.audioControl.volmeSliderBarSize
-        backgroundColor: Style.palette.ac_volumeSliderBarEnabled
-        backgroundActiveColor: Style.palette.ac_volumeSliderBarActivePartEnabled
-        handleColor: Style.palette.ac_volumeSliderHandleEnabled
+        backgroundColor: Style.palette.ac_volumeSliderBar
+        backgroundActiveColor: Style.palette.ac_volumeSliderBarActivePart
+        handleColor: Style.palette.ac_volumeSliderHandle
       }
     }
   } // play control item
