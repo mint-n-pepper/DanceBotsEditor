@@ -23,20 +23,11 @@ Rectangle{
 
   onPrimitiveChanged: updatePrimitive()
 
-  onEnabledChanged: {
-    if(enabled){
-      color = primitiveColors[primitive.type]
-    }else{
-      color = Style.palette.prim_disabled
-    }
-  }
-
 	function updatePrimitive(){
     // only update if there is a primitive
     if(primitive){
       textID.text=primitiveTextIDs[primitive.type]
-      color= enabled ? primitiveColors[primitive.type]
-                     : Style.palette.prim_disabled
+      color= primitiveColors[primitive.type]
       x= beats[primitive.positionBeat] * appWindow.frameToPixels
       var endBeat = primitive.positionBeat + primitive.lengthBeat
       endBeat = endBeat < beats.length ? endBeat : beats.length - 1
