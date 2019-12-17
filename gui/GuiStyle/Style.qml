@@ -7,6 +7,14 @@ QtObject {
 
   // Color palette:
   property QtObject palette: QtObject{
+    //* GLOBAL COLORS *//
+    property color mp_yellow: "#ECD600" // Mint & Pepper Yellow
+    property color mp_orange: "#FF7F33" // Mint & Pepper Orange
+    property color mp_green: "#63DD7F" // Mint & Pepper Green
+    property color mp_lightgrey: "#262626" // Light grey
+    property color mp_mediumgrey: "#4B4B4B" // Light grey
+    property color mp_darkgrey: "#262626" // Dark grey
+
     //* MAIN WINDOW *//
     property color mw_background: "#151515"
 
@@ -15,12 +23,12 @@ QtObject {
     property color ovr_font: "white"
 
     //* TITLE BAR *//
-    property color tb_background: "#262626"
+    property color tb_background: mp_darkgrey
     property color tb_font: "white"
     property color tb_logo: "white"
 
     //* FILE CONTROL BAR *//
-    property color fc_background: "#63DD7F"
+    property color fc_background: mp_green
     property color fc_buttonEnabled: "#63DD7F"
     property color fc_buttonDisabled: "#65A273"
     property color fc_buttonPressed: "#77FF96"
@@ -34,10 +42,10 @@ QtObject {
 
     //* PRIMITIVE CONTROL BOXES *//
     // backgrounds
-    property color pc_moveBoxBackground: "#4B4B4B" // Dark grey background
-    property color pc_moveBoxColor: "#ECD600" // Mint & Pepper Yellow
+    property color pc_moveBoxBackground: mp_mediumgrey // Dark grey background
+    property color pc_moveBoxColor: mp_yellow // Mint & Pepper Yellow
     property color pc_ledBoxBackground: "#4B4B4B" // Dark grey background
-    property color pc_ledBoxColor: "#FF7F33" // Mint & Pepper Orange
+    property color pc_ledBoxColor: mp_orange // Mint & Pepper Orange
     property color pc_settingsBoxColor: mw_background // Settings box same as background
 
     // Controls Fonts
@@ -46,8 +54,8 @@ QtObject {
     // type radios
     property color pc_directionRadioBG: "#151515"
     property color pc_directionRadioIndicator: "white"
-    property color pc_typeRadioFontActive: pc_moveBoxBackground
-    property color pc_typeRadioBorder: pc_moveBoxColor
+    property color pc_typeRadioFontActive: mp_mediumgrey
+    property color pc_typeRadioBorder: mp_yellow
 
     // sliders
     property color pc_settingsBoxBackground: "#393939"
@@ -90,7 +98,7 @@ QtObject {
     // song position slider
     property color ac_songPositionSliderBarEnabled: "darkgrey"
     property color ac_songPositionSliderBarDisabled: "#262626"
-    property color ac_songPositionSliderBarActivePartEnabled: "#63DD7F"
+    property color ac_songPositionSliderBarActivePartEnabled: mp_green
     property color ac_songPositionSliderBarActivePartDisabled: "#888888"
     property color ac_songPositionSliderHandleEnabled: "#63DD7F"
     property color ac_songPositionSliderHandleDisabled: "#262626"
@@ -101,7 +109,7 @@ QtObject {
     property color ac_volumeSliderBarActivePartDisabled: "#888888"
     property color ac_volumeSliderHandleEnabled: "grey"
     property color ac_volumeSliderHandleDisabled: "#4B4B4B"
-    property color ac_volumeSliderIconColorEnabled: "#4B4B4B"
+    property color ac_volumeSliderIconColorEnabled: "#B9B9B9"
     property color ac_volumeSliderIconColorDisabled: "#262626"
 
     // timer display
@@ -289,8 +297,8 @@ QtObject {
 
     // Play / Pause Buttons
     property real buttonHeight: 1.8 // ratio of sliderHeight
-    property real buttonSpacing: 0.2 // ratio of sliderHeight
-    property real buttonIconSize: 0.7 // ratio to buttonHeight
+    property real buttonSpacing: 0.25 // ratio of sliderHeight
+    property real buttonIconSize: 0.5 // ratio to buttonHeight
 
     // timer visuals
     property real timerFontSize: 0.8 // ratio of sliderHeight
