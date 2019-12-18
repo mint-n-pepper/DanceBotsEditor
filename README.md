@@ -60,7 +60,7 @@
 | ------- 	| ------- | ------- |
 | Variable 	| `fileName` | camelCase |
 | Member Variable | `mFileName` | m + CamelCase|
-| Constant	| `fileName` | like variable | 
+| Constant	| `fileName` | like variable |
 | Enum | `eWriteOnly` | e + CamelCase|
 | Class | `FileHandler` | CamelCase|
 | Files | `FileHandler.h` | CamelCase + file ending|
@@ -74,7 +74,7 @@ Use following template:
 ```cpp
 	/**
 	\brief  Calculate convolution of two signals.
-			
+
 			Some more detailed description or an example goes here.
 	\param[in] Signal A
 	\param[in] Signal B
@@ -96,11 +96,11 @@ The GUI source code is distributed under the terms of the [GNU General Public Li
 
 The Dancebots hard- and software was originally developed by Raymond Oung and Philipp Reist during their PhD at the [Institute for Dynamic Systems and Control](https://idsc.ethz.ch/) for use in the [Sportferienlager Fiesch of the City of Zürich](https://zuerifiesch.ch/).
 
-You can find more hardware information in the [electronics and firmware repository](https://github.com/philippReist/dancebots_pcb), and more general info on the [Dancebots website](http://www.dancebots.ch/).
+You can find more hardware information in the [electronics and firmware repository](https://github.com/philippReist/dancebots_electronics), and more general info on the [Dancebots website](http://www.dancebots.ch/).
 
 The workshop's continued existence is due to the educational outreach program [mint & pepper](https://www.mintpepper.ch/) at the [Wyss Zurich](https://www.wysszurich.uzh.ch/).
 
-The Dancebots GUI was developed by Philipp Reist (main author), Robin Hanhart, and Raymond Oung.
+The Dancebots GUI was developed by Philipp Reist, Robin Hanhart, and Raymond Oung.
 
 ## Third-party libraries
 We are grateful to the developers of the following open-source libraries. For the libraries' licenses refer to the file LICENSE_3RD_PARTY, or the submodule repositories in the lib folder and the [Qt open-source licensing info](https://www.qt.io/licensing/).

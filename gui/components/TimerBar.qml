@@ -26,6 +26,8 @@ Canvas{
   onFrameToPixelsChanged: width = lengthInFrames * appWindow.frameToPixels
   onLengthInFramesChanged: width = lengthInFrames * appWindow.frameToPixels
 
+  property real beatBarLineWidth: Style.timerBar.beatWidth * root.height
+
   // connect to done loading signal of backend to redraw rectangle
   Connections{
 	  target: backend
@@ -226,6 +228,7 @@ Canvas{
       dragTarget: root.dragTarget
       y: primitiveY
       isMotor: root.isMotorBar
+      beatBarWidth: beatBarLineWidth
     }
 
     onItemRemoved: {
@@ -261,7 +264,7 @@ Canvas{
     ctx.fillStyle = color
     ctx.fillRect(0, 0, width, height)
     for(var i=0; i < beats.length; i++){
-      ctx.lineWidth = Style.timerBar.beatWidth * root.height
+      ctx.lineWidth = beatBarLineWidth
       ctx.strokeStyle = Style.palette.tim_beatMarks
       ctx.beginPath()
       var loc = beats[i] * appWindow.frameToPixels

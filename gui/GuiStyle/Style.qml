@@ -216,9 +216,7 @@ QtObject {
 
     // type radios
     property real typeRadioHeight: 0.07 // ratio of box width
-    property real typeRadioSpacing: 0.3 // ratio of radio height
-    property real typeRadioRadius: 0.1 // ratio of radio height
-    property real typeRadioBorderWidth: 0.05
+    property real typeRadioBorderWidth: 0.05 // ratio of radio height
     property real typeRadioTextPadding: 0.25 // ratio of radio height
 
     // primitive box

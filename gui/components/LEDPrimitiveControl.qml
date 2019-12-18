@@ -57,7 +57,7 @@ Rectangle{
     }
   }
 
-  Flow{
+  Row{
     id: radios
     anchors.left: titleBar.right
     padding: appWindow.guiMargin
@@ -65,7 +65,12 @@ Rectangle{
     width: root.width - titleBar.width
     property var radioHeight: root.width
                               * Style.primitiveControl.typeRadioHeight
-    spacing: radioHeight * Style.primitiveControl.typeRadioSpacing
+    spacing: (width - 2 * padding
+              - knightRiderRadio.width
+              - alternateRadio.width
+              - blinkRadio.width
+              - constantRadio.width
+              - randomRadio.width) / 4
     TypeRadio {
       id: knightRiderRadio
       checked: true

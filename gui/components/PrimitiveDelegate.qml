@@ -19,6 +19,8 @@ Rectangle{
   property real frameToPixels: appWindow.frameToPixels
   property bool isMotor: false
 
+  property real beatBarWidth: 0.0
+
   onFrameToPixelsChanged: updatePrimitive()
 
   onPrimitiveChanged: updatePrimitive()
@@ -28,11 +30,13 @@ Rectangle{
     if(primitive){
       textID.text=primitiveTextIDs[primitive.type]
       color= primitiveColors[primitive.type]
-      x= beats[primitive.positionBeat] * appWindow.frameToPixels
+      x = beats[primitive.positionBeat] * appWindow.frameToPixels
+          - beatBarWidth / 2.0
       var endBeat = primitive.positionBeat + primitive.lengthBeat
       endBeat = endBeat < beats.length ? endBeat : beats.length - 1
-      width= (beats[endBeat]
+      width = (beats[endBeat]
               - beats[primitive.positionBeat]) * appWindow.frameToPixels
+              + beatBarWidth
       updateToolTip()
     }
 	} // update primitive
