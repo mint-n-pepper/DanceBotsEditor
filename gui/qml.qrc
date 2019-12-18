@@ -17,6 +17,8 @@
         <file>components/TitleBar.qml</file>
         <file>components/Faders.qml</file>
         <file>components/ConfirmPopup.qml</file>
+        <file>components/AboutPopup.qml</file>
+        <file>components/AboutText.qml</file>
         <file>GuiStyle/Style.qml</file>
         <file>GuiStyle/qmldir</file>
         <file>icons/stop.svg</file>

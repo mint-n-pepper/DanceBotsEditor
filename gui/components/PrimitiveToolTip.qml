@@ -104,11 +104,10 @@ Rectangle{
       }
     }
     Text{
-      id: motFreq
-      visible: motorColumn.visible
-        && primitive.type !== MotorPrimitive.Type.Spin
-        && primitive.type !== MotorPrimitive.Type.Straight
-        && primitive.type !== MotorPrimitive.Type.Custom
+      id: dirText
+      visible: {motorColumn.visible
+               && (primitive.type === MotorPrimitive.Type.Twist
+               || primitive.type === MotorPrimitive.Type.BackAndForth)}
       font.pixelSize: root.fontSize
       color: Style.palette.prim_toolTipFont
     }
@@ -119,10 +118,11 @@ Rectangle{
       color: Style.palette.prim_toolTipFont
     }
     Text{
-      id: dirText
-      visible: {motorColumn.visible
-               && (primitive.type === MotorPrimitive.Type.Twist
-               || primitive.type === MotorPrimitive.Type.BackAndForth)}
+      id: motFreq
+      visible: motorColumn.visible
+        && primitive.type !== MotorPrimitive.Type.Spin
+        && primitive.type !== MotorPrimitive.Type.Straight
+        && primitive.type !== MotorPrimitive.Type.Custom
       font.pixelSize: root.fontSize
       color: Style.palette.prim_toolTipFont
     }

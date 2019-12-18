@@ -54,6 +54,11 @@ QtObject {
     property color cd_buttonPressedText: mp_white
     property color cd_buttonPressedBG: mp_darkgrey
 
+    //* ABOUT POPUP *//
+    property color ap_windowOverlay: "#99262626"
+    property color ap_background: mp_white
+    property color ap_text: mp_darkgrey
+
     //* TITLE BAR *//
     property color tb_background: mp_darkgrey
     property color tb_font: mp_white
@@ -192,6 +197,13 @@ QtObject {
     property real buttonFontSize: 0.4 // ratio of height
     property real buttonRadius: fileControl.buttonRadius
     property real buttonBorderWidth: fileControl.buttonBorderWidth
+  }
+
+  // about popup
+  property QtObject aboutPopup: QtObject{
+    property real width: 0.4 // ratio of window width
+    property real textFontSize: 0.035 // ratio of width
+    property real creditsTextSize: 0.023 // ratio of width
   }
 
   // Title bar

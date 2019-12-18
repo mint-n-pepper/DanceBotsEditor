@@ -84,6 +84,10 @@ Rectangle{
 		}
 	}
 
+  AboutPopup{
+    id: aboutPopup
+  }
+
   FileDialog {
     id: saveDialog
     folder: shortcuts.desktop
@@ -248,6 +252,40 @@ Rectangle{
         backend.audioPlayer.pause()
         appWindow.grabFocus()
 				clearPopup.open()
+      }
+    }
+    Button
+    {
+      id: aboutButton
+      height: root.height * Style.fileControl.itemHeight
+      width: height
+      anchors.verticalCenter: parent.verticalCenter
+      font.pixelSize: height * Style.fileControl.buttonTextHeight
+      font.bold: true
+      text: "?"
+      focusPolicy: Qt.NoFocus
+      property color buttonColor: Style.palette.fc_buttonEnabled
+
+      contentItem: Text{
+        text: parent.text
+        font: parent.font
+        color: Style.palette.fc_buttonText
+        verticalAlignment: Text.AlignVCenter
+        horizontalAlignment: Text.AlignHCenter
+      }
+
+      background: Rectangle{
+        anchors.fill: parent
+        color: parent.pressed ? Style.palette.fc_buttonPressed
+                              : parent.buttonColor
+        border.color: Style.palette.fc_buttonText
+        border.width: Style.fileControl.buttonBorderWidth * parent.height
+        radius: height / 2
+      }
+
+      onClicked:
+      {
+        aboutPopup.open()
       }
     }
   } // buttons row
