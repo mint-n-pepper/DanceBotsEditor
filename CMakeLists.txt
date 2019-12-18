@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.15 FATAL_ERROR)
 
-project(dancebots_choreo_gui)
+project(dancebots_gui)
 
 set(CMAKE_CXX_STANDARD 14)
 

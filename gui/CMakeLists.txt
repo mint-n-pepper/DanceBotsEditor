@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.15 FATAL_ERROR)
 
-project(dancebotsGui)
+project(dancebotsEditor)
 
 set(CMAKE_CXX_STANDARD 14)
 
@@ -42,7 +42,8 @@ file(GLOB_RECURSE QMLS ${CMAKE_CURRENT_SOURCE_DIR} *.qml)
 source_group("QML Files" FILES ${QMLS})
 
 if(WIN32)
-  add_executable(${PROJECT_NAME} ${SOURCES} 
+  add_executable(${PROJECT_NAME} WIN32
+                                 ${SOURCES}
                                  ${APP_RESOURCES}
                                  ${HEADERS}
                                  ${QMLS}
