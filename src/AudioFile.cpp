@@ -555,11 +555,9 @@ auto AudioFile::encode(void) -> LameEncCodes {
         return static_cast<LameEncCodes>(nEncode);
       }
       // otherwise, copy the buffer to the temp mp3 data:
-      size_t pre = std::distance(tempMP3.begin(), mp3OutIt);
       std::copy(encodeBuffer.begin(),
                 encodeBuffer.begin() + nEncode,
                 mp3OutIt);
-      size_t post = std::distance(tempMP3.begin(), mp3OutIt);
       mp3OutIt += nEncode;
     }
     musicIT += nFeed;
@@ -626,9 +624,9 @@ int AudioFile::savePCM(const QString fileName) {
     writeBuffer.push_back(mFloatData[i]);
   }
 
-  sf_count_t nWrite = sf_write_float(sndFile,
-                                     writeBuffer.data(),
-                                     writeBuffer.size());
+  sf_write_float(sndFile,
+                 writeBuffer.data(),
+                 writeBuffer.size());
   sf_write_sync(sndFile);
   // close the file
   sf_close(sndFile);
@@ -675,8 +673,6 @@ int AudioFile::savePCMBeats(const QString fileName,
 
   // calculate and write beeps into data audio
   for(const auto& b : beatFrames) {
-    size_t nWriteSamples = b + nbeepSamples > mFloatData.size() ?
-      mFloatData.size() - b : nbeepSamples;
     for(size_t i = b; i < b + nbeepSamples; ++i) {
       beeps[i] = amp * std::sin((i - b) * beepFreqDT);
     }
@@ -693,9 +689,9 @@ int AudioFile::savePCMBeats(const QString fileName,
   }
 
   // write to wav file
-  sf_count_t nWrite = sf_write_float(sndFile,
-                                     writeBuffer.data(),
-                                     writeBuffer.size());
+  sf_write_float(sndFile,
+                 writeBuffer.data(),
+                 writeBuffer.size());
   sf_write_sync(sndFile);
   // close the file
   sf_close(sndFile);

@@ -32,16 +32,16 @@
 
 BackEnd::BackEnd(QObject* parent) :
   QObject{ parent },
-  mAudioFile{},
-  mBeatDetector{ static_cast<unsigned int>(mAudioFile.sampleRate) },
   mFileStatus{ "Idle" },
+  mAudioFile{},
+  mAudioPlayer{ new AudioPlayer{this} },
+  mBeatDetector{ static_cast<unsigned int>(mAudioFile.sampleRate) },
   mLoadFuture{},
   mLoadFutureWatcher{},
   mSaveFuture{},
   mSaveFutureWatcher{},
   mMotorPrimitives{ new PrimitiveList{this} },
-  mLedPrimitives{ new PrimitiveList{this} },
-  mAudioPlayer{ new AudioPlayer{this} }
+  mLedPrimitives{ new PrimitiveList{this} }
 {
   // connect load and save thread finish signal to backend handler slots
   connect(&mLoadFutureWatcher, &QFutureWatcher<bool>::finished,
@@ -235,7 +235,6 @@ bool BackEnd::loadMP3Worker(const QString& filePath) {
 }
 
 bool BackEnd::saveMP3Worker(const QString& fileName) {
-  bool success{ true };
   mFileStatus = "Preparing beats, moves, and lights for saving...";
   QThread::msleep(250);
   emit fileStatusChanged();
