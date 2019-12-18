@@ -1,4 +1,4 @@
-import QtQuick 2.13
+import QtQuick 2.6
 import dancebots.backend 1.0
 import "../GuiStyle"
 

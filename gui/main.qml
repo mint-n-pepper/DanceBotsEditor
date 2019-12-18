@@ -1,5 +1,5 @@
 import QtQuick 2.6
-import QtQuick.Controls 2.0
+import QtQuick.Controls 2.12
 import QtQuick.Dialogs 1.3
 
 import "components"
@@ -8,14 +8,9 @@ import "GuiStyle"
 ApplicationWindow {
   id: appWindow
   width: Style.main.initialWidth
-  height: ( titleBar.height
-           + fileControl.height
-           + ledPrimitiveControl.height
-           + timerBarFlickable.height
-           + audioControl.height
-           + 4 * guiMargin)
   minimumWidth: Style.main.minWidth
-  minimumHeight: ( titleBar.height
+  minimumHeight: componentsHeight
+  property var componentsHeight: ( titleBar.height
                   + fileControl.height
                   + ledPrimitiveControl.height
                   + timerBarFlickable.height
@@ -325,18 +320,17 @@ ApplicationWindow {
     }
   }
 
-  MessageDialog {
-    id: closeConfirm
-    title: "Really Exit?"
-    text: "Are you sure you want to close the editor?"
-    standardButtons: StandardButton.Yes | StandardButton.No
-    onYes: {
+  ConfirmPopup{
+		id: closeConfirmPopup
+		detailText: "Closing the editor"
+		text: "Are you sure?"
+		function yesClicked(){
       Qt.quit()
-    }
-  }
+		}
+	}
 
   onClosing:{
-    closeConfirm.open()
+    closeConfirmPopup.open()
     close.accepted = false
   }
 

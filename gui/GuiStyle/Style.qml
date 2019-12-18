@@ -1,6 +1,6 @@
 // Style.qml
 pragma Singleton
-import QtQuick 2.0
+import QtQuick 2.6
 
 QtObject {
   id:root
@@ -27,6 +27,13 @@ QtObject {
     //* FILE LOADING PROCESS OVERLAY *//
     property color ovr_background: mp_black
     property color ovr_font: "white"
+
+    //* CONFIRMATION DIALOG *//
+    property color cd_windowOverlay: "#99262626"
+    property color cd_background: mp_white
+    property color cd_textAndButtons: mp_darkgrey
+    property color cd_buttonPressedText: mp_white
+    property color cd_buttonPressedBG: mp_darkgrey
 
     //* TITLE BAR *//
     property color tb_background: mp_darkgrey
@@ -156,9 +163,21 @@ QtObject {
 
   }
 
+  // confirmation dialog
+  property QtObject confirmationDialog: QtObject{
+    property real width: 0.3 // ratio of window width
+    property real heightRatio: 0.5 // ratio of width
+    property real textFontSize: 0.15 // ratio of height
+    property real detailTextFontSize: 0.08 // ratio of height
+    property real buttonHeight: 0.2 // ratio of height
+    property real buttonFontSize: 0.4 // ratio of height
+    property real buttonRadius: fileControl.buttonRadius
+    property real buttonBorderWidth: fileControl.buttonBorderWidth
+  }
+
   // Title bar
   property QtObject titleBar: QtObject{
-    property real height: 0.055
+    property real height: 0.0475
     property real fontSize: 0.45 // relative to bar height
     property real fontLetterSpacing: 1 // letter spacing between characters
     property real logoSize: 0.4 // relative to bar height
@@ -168,7 +187,7 @@ QtObject {
   // MP3 File Control Box
   property QtObject fileControl: QtObject{
     // box
-    property real height: 0.045 // ratio of window width
+    property real height: 0.04 // ratio of window width
     // the width of the box is equal to the window width
 
     // buttons and text fields all have the same height
@@ -178,7 +197,7 @@ QtObject {
     // height is equal to height of bar minus padding
     property real buttonSpacing: 0.2 // ratio of box height
     property real buttonWidth: 1.8 // ratio of box height
-    property real buttonRadius: 3 // radius of button border
+    property real buttonRadius: 0.08 // radius of button border, rel. to button height
     property real buttonTextHeight: 0.5 // ratio to button height
     property real buttonOpacityEnabled: 1 // opacity of enabled text
     property real buttonOpacityDisabled: 0.4 // opacity of disabled text
@@ -201,7 +220,7 @@ QtObject {
   property QtObject primitiveControl: QtObject{
     // box
     property real width: 0.48 // ratio of window width
-    property real heightRatio: 0.5 // ratio of box width
+    property real heightRatio: 0.45 // ratio of box width
 
     // title
     property real titleFontSize: 0.63 // ratio to titleWidth
@@ -243,7 +262,7 @@ QtObject {
 
   // Timer bar window
   property QtObject timerBar: QtObject{
-    property real height: 0.06 // ratio of window width
+    property real height: 0.055 // ratio of window width
     // margin to other GUI elements
     property real margin: 0.125 // ratio of timerBar height
     // space between timer bars

@@ -1,5 +1,5 @@
 import QtQuick 2.6
-import QtQuick.Controls 2.0
+import QtQuick.Controls 2.12
 import QtQuick.Dialogs 1.3
 import QtGraphicalEffects 1.13
 
@@ -45,28 +45,25 @@ Rectangle{
     }
   }
 
-  MessageDialog {
-    id: loadConfirm
-    title: "Please Confirm"
-    icon: StandardIcon.Question
-    text: "Loading will clear the choreography. Are you sure?"
-    standardButtons: StandardButton.Yes | StandardButton.No
-    onYes: {
-      loadDialog.open()
-    }
-  }
 
-  MessageDialog {
-    id: clearDialog
-    title: "Please Confirm"
-    icon: StandardIcon.Question
-    text: "Are you sure you want to clear the choreography?"
-    standardButtons: StandardButton.Yes | StandardButton.No
-    onYes: {
+  ConfirmPopup{
+    id: loadConfirmPopup
+		detailText: "Loading clears all moves and lights"
+		text: "Are you sure?"
+		function yesClicked(){
+      loadDialog.open()
+		}
+	}
+
+	ConfirmPopup{
+		id: clearPopup
+		detailText: "Clear all moves and lights"
+		text: "Are you sure?"
+		function yesClicked(){
       backend.motorPrimitives.clear()
       backend.ledPrimitives.clear()
-    }
-  }
+		}
+	}
 
   FileDialog {
     id: saveDialog
@@ -135,7 +132,7 @@ Rectangle{
                : parent.buttonColor
         border.color: Style.palette.fc_buttonText
         border.width: Style.fileControl.buttonBorderWidth * parent.height
-        radius: Style.fileControl.buttonRadius
+        radius: height * Style.fileControl.buttonRadius
 
       }
 
@@ -145,7 +142,7 @@ Rectangle{
         appWindow.cleanDraggers()
         // confirm with user if the choreography is not empty
         if(motorBar.isNotEmpty || ledBar.isNotEmpty){
-          loadConfirm.open()
+          loadConfirmPopup.open()
         }else{
           // otherwise, load directly
           loadDialog.open()
@@ -183,7 +180,7 @@ Rectangle{
                : parent.buttonColor
         border.color: Style.palette.fc_buttonText
         border.width: Style.fileControl.buttonBorderWidth * parent.height
-        radius: Style.fileControl.buttonRadius
+        radius: height * Style.fileControl.buttonRadius
       }
 
       onClicked:
@@ -224,14 +221,14 @@ Rectangle{
                : parent.buttonColor
         border.color: Style.palette.fc_buttonText
         border.width: Style.fileControl.buttonBorderWidth * parent.height
-        radius: Style.fileControl.buttonRadius
+        radius: height * Style.fileControl.buttonRadius
       }
 
       onClicked:
       {
         backend.audioPlayer.pause()
         appWindow.grabFocus()
-        clearDialog.open()
+				clearPopup.open()
       }
     }
   } // buttons row
