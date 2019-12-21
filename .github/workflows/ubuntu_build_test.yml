@@ -2,7 +2,8 @@ name: Ubuntu Build Test
 
 on:
   push:
-    - fix-build-errors
+    branches:
+      - fix-build-errors
 
 jobs:
   build:
