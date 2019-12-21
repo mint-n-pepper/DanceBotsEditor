@@ -1,4 +1,4 @@
-name: Ubuntu Build Test
+name: Ubuntu Build-Test
 
 on:
   push:
@@ -29,8 +29,6 @@ jobs:
         sudo apt-get install cmake
     
     - name: Configure build
-      env:
-        QT_DIRECTORY: Qt5_Dir
       run: |
         mkdir build
         cd build/
@@ -39,6 +37,9 @@ jobs:
         echo $QT_DIRECTORY
         #cmake -DCMAKE_PREFIX_PATH=${Qt5_Dir} -DCMAKE_BUILD_TYPE=Release ../
         #./configure
+      env:
+        QT_DIRECTORY: Qt5_Dir
+      shell: bash
     
     #- name: Build
     #  run: make
