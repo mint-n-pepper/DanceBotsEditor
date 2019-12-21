@@ -4,7 +4,8 @@ on:
   push:
     branches:
       - fix-build-errors
-
+      - git-workflow
+         
 jobs:
   build:
     name: Test build on ${{ matrix.os }} with Qt ${{ matrix.qt_version }}
