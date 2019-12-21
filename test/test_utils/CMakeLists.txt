@@ -2,7 +2,7 @@ project(test-utils)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../src/)
 
-set(HEADERS ${CMAKE_CURRENT_SOURCE_DIR}/../../src/utils.h)
+set(HEADERS ${CMAKE_CURRENT_SOURCE_DIR}/../../src/Utils.h)
 
 source_group("Header Files" FILES ${HEADERS})
 

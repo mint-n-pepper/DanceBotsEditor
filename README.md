@@ -1,5 +1,6 @@
 # Deployment / Building
 ## Windows
+### Build
 1. Install ```cmake``` from https://cmake.org/download/.
 2. Install Visual Studio from https://visualstudio.microsoft.com/.
 3. Install Qt 5.13 from https://www.qt.io/. You only have to select/install the MSVC 2017 64-bit version.
@@ -10,31 +11,35 @@
 	```cmake
 	add_executable(${PROJECT_NAME} WIN32 ${SOURCES} ${APP_RESOURCES} ${HEADERS} ${QMLS})
 	```
-8. Copy the exe file to a deployment folder
-9. Run the Qt deployment tool on the executable, pointing it to the QML folder and adding some extra flags (--compiler-runtime does not seem to work, though, as users still have to install the executable):
+### Deploy
+1. Copy the exe file to a deployment folder
+2. Run the Qt deployment tool on the executable, pointing it to the QML folder and adding some extra flags (--compiler-runtime does not seem to work, though, as users still have to install the executable):
 	```
 	windeployqt.exe C:\Users\philipp\Git\dancebots_gui\build\gui\Release\dancebotsGui.exe --release --qmldir C:\Users\philipp\Git\dancebots_gui\gui\  --compiler-runtime --no-translations
 	```
 	This adds all necessary dlls to the deployment folder.
 
 ## MacOS
+### Build
 1. Install ```cmake```, probably easiest using homebrew.
 2. Install XCode https://developer.apple.com/xcode/
 3. Install Qt 5.13 from https://www.qt.io/. You only have to select/install the MacOS version.
 4. Create the environment variable ```CMAKE_PREFIX_PATH``` and set it to the path to the Qt clang_64 folder of the 5.13 installation, e.g. do ```EXPORT CMAKE_PREFIX_PATH=/Users/philipp/Qt/5.13.2/clang_64/```, or add this command to the ```.bash_profile``` in your home folder.
 5. Clone the repo, best using the ```--recursive``` option to init and download all submodules.
-6. Create a build folder in the cloned repo folder (typically ```dancebots_gui```).
-7. Run CMAKE with the release type:
+6. Create a build folder in the cloned repo folder (e.g. ```dancebots_gui/build```).
+7. In the build folder, run CMAKE with the release type:
 	```
 	cmake .. -DCMAKE_BUILD_TYPE=Release
 	```
-8. Create a folder called ```dancebotsGui.app```, and within that, create a folder ```Contents```, and within that, a folder ```MacOS```.
-9. Copy the executable from the ```build/gui``` folder to ```dancebotsGui.app/Contents/MacOS```
-10. Run the Qt deployment tool on the app folder
+	where the .. will point to the repository root folder.
+8. Build the gui by running ```make dancebotsEditor``` in the build folder.
+### Deploy
+1. Go to the subfolder ```gui/mac_os_rc```, and run the script ```deploy.sh ../../build```, where the first command line argument is the path to your build folder. The script then creates the folder ```DancebotsEditor.app``` in your build folder and copies the executable, icon, and run settings files to the appropriate subfolders.
+2. Run the Qt deployment tool on the app folder to copy the appropriate frameworks to the app:
 	```
-		~/Qt/5.13.0/clang_64/bin/macdeployqt ./dancebotsGui.app -qmldir=/Users/philipp/Git/dancebots_gui/gui -dmg
+		~/Qt/5.13.0/clang_64/bin/macdeployqt ./dancebotsEditor.app -qmldir=/Users/philipp/Git/dancebots_gui/gui -dmg
 	```
-	where you can add ```-dmg``` to create a dmg.
+	where the ```-dmg``` option creates an app dmg file. You should replace the Qt install folder and gui folders with the appropriate locations.
 
 ## Ubuntu / Linux
 1. Install Qt 5.13 from online installer, selecting gcc 64 bit Version
@@ -51,6 +56,7 @@
 	```
 	cmake .. -DCMAKE_BUILD_TYPE=Release
 	```
+6. Build by running ```make dancebotsEditor``` in the build folder.
 
 # Style Guide
 
@@ -60,7 +66,7 @@
 | ------- 	| ------- | ------- |
 | Variable 	| `fileName` | camelCase |
 | Member Variable | `mFileName` | m + CamelCase|
-| Constant	| `fileName` | like variable | 
+| Constant	| `fileName` | like variable |
 | Enum | `eWriteOnly` | e + CamelCase|
 | Class | `FileHandler` | CamelCase|
 | Files | `FileHandler.h` | CamelCase + file ending|
@@ -74,7 +80,7 @@ Use following template:
 ```cpp
 	/**
 	\brief  Calculate convolution of two signals.
-			
+
 			Some more detailed description or an example goes here.
 	\param[in] Signal A
 	\param[in] Signal B
@@ -96,11 +102,11 @@ The GUI source code is distributed under the terms of the [GNU General Public Li
 
 The Dancebots hard- and software was originally developed by Raymond Oung and Philipp Reist during their PhD at the [Institute for Dynamic Systems and Control](https://idsc.ethz.ch/) for use in the [Sportferienlager Fiesch of the City of Zürich](https://zuerifiesch.ch/).
 
-You can find more hardware information in the [electronics and firmware repository](https://github.com/philippReist/dancebots_pcb), and more general info on the [Dancebots website](http://www.dancebots.ch/).
+You can find more hardware information in the [electronics and firmware repository](https://github.com/philippReist/dancebots_electronics), and more general info on the [Dancebots website](http://www.dancebots.ch/).
 
 The workshop's continued existence is due to the educational outreach program [mint & pepper](https://www.mintpepper.ch/) at the [Wyss Zurich](https://www.wysszurich.uzh.ch/).
 
-The Dancebots GUI was developed by Philipp Reist (main author), Robin Hanhart, and Raymond Oung.
+The Dancebots GUI was developed by Philipp Reist, Robin Hanhart, and Raymond Oung.
 
 ## Third-party libraries
 We are grateful to the developers of the following open-source libraries. For the libraries' licenses refer to the file LICENSE_3RD_PARTY, or the submodule repositories in the lib folder and the [Qt open-source licensing info](https://www.qt.io/licensing/).

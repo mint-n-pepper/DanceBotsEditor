@@ -1,4 +1,23 @@
-import QtQuick 2.13
+/*
+*  Dancebots GUI - Create choreographies for Dancebots
+*  https://github.com/philippReist/dancebots_gui
+*
+*  Copyright 2019 - mint & pepper
+*
+*  This program is free software : you can redistribute it and/or modify
+*  it under the terms of the GNU General Public License as published by
+*  the Free Software Foundation, either version 3 of the License, or
+*  (at your option) any later version.
+*
+*  This program is distributed in the hope that it will be useful,
+*  but WITHOUT ANY WARRANTY; without even the implied warranty of
+*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+*
+*  See the GNU General Public License for more details, available in the
+*  LICENSE file included in the repository.
+*/
+
+import QtQuick 2.6
 import dancebots.backend 1.0
 import "../GuiStyle"
 
@@ -19,29 +38,24 @@ Rectangle{
   property real frameToPixels: appWindow.frameToPixels
   property bool isMotor: false
 
+  property real beatBarWidth: 0.0
+
   onFrameToPixelsChanged: updatePrimitive()
 
   onPrimitiveChanged: updatePrimitive()
-
-  onEnabledChanged: {
-    if(enabled){
-      color = primitiveColors[primitive.type]
-    }else{
-      color = Style.palette.prim_disabled
-    }
-  }
 
 	function updatePrimitive(){
     // only update if there is a primitive
     if(primitive){
       textID.text=primitiveTextIDs[primitive.type]
-      color= enabled ? primitiveColors[primitive.type]
-                     : Style.palette.prim_disabled
-      x= beats[primitive.positionBeat] * appWindow.frameToPixels
+      color= primitiveColors[primitive.type]
+      x = beats[primitive.positionBeat] * appWindow.frameToPixels
+          - beatBarWidth / 2.0
       var endBeat = primitive.positionBeat + primitive.lengthBeat
       endBeat = endBeat < beats.length ? endBeat : beats.length - 1
-      width= (beats[endBeat]
+      width = (beats[endBeat]
               - beats[primitive.positionBeat]) * appWindow.frameToPixels
+              + beatBarWidth
       updateToolTip()
     }
 	} // update primitive

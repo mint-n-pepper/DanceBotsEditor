@@ -1,5 +1,24 @@
+/*
+*  Dancebots GUI - Create choreographies for Dancebots
+*  https://github.com/philippReist/dancebots_gui
+*
+*  Copyright 2019 - mint & pepper
+*
+*  This program is free software : you can redistribute it and/or modify
+*  it under the terms of the GNU General Public License as published by
+*  the Free Software Foundation, either version 3 of the License, or
+*  (at your option) any later version.
+*
+*  This program is distributed in the hope that it will be useful,
+*  but WITHOUT ANY WARRANTY; without even the implied warranty of
+*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+*
+*  See the GNU General Public License for more details, available in the
+*  LICENSE file included in the repository.
+*/
+
 import QtQuick 2.6
-import QtQuick.Controls 2.0
+import QtQuick.Controls 2.12
 import dancebots.backend 1.0
 import QtGraphicalEffects 1.13
 import "../GuiStyle"
@@ -43,7 +62,9 @@ Item {
     id: songPositionSlider
     from: 0.0
     to: 1.0
-    width: root.width
+    // width: root.width
+    width: parent.width - 2 * appWindow.guiMargin
+    anchors.horizontalCenter: root.horizontalCenter
     height: sliderHeight
     focusPolicy: Qt.NoFocus
 
@@ -54,12 +75,11 @@ Item {
       }
     }
     sliderBarSize: Style.primitiveControl.sliderBarSize
-    backgroundColor: Style.palette.ac_songPositionSliderBarEnabled
-    backgroundDisabledColor: Style.palette.ac_songPositionSliderBarDisabled
-    backgroundActiveColor: Style.palette.ac_songPositionSliderBarActivePartEnabled
-    backgroundActiveDisabledColor: Style.palette.ac_songPositionSliderBarActivePartDisabled
-    handleColor: Style.palette.ac_songPositionSliderHandleEnabled
-    handleDisabledColor: Style.palette.ac_songPositionSliderHandleDisabled
+    backgroundColor: Style.palette.ac_songPositionSliderBar
+    backgroundActiveColor: Style.palette.ac_songPositionSliderBarActivePart
+    handleColor: Style.palette.ac_songPositionSliderHandle
+    handleBorderColor: Style.palette.ac_songPositionSliderHandleBorder
+    handleBorderWidth: Style.audioControl.buttonHeight
   }
 
   Item{
@@ -81,8 +101,7 @@ Item {
         focusPolicy: Qt.NoFocus
         width: playControlItem.height
         height: playControlItem.height
-        property color buttonColor: enabled ? Style.palette.ac_buttonEnabled
-                                            : Style.palette.ac_buttonDisabled
+        property color buttonColor: Style.palette.ac_button
 
         contentItem: Item{
           height: parent.height
@@ -99,8 +118,7 @@ Item {
           ColorOverlay{
             anchors.fill: playImage
             source: playImage
-            color: parent.enabled ? Style.palette.ac_buttonIconEnabled
-                                  : Style.palette.ac_buttonIconDisabled
+            color: Style.palette.ac_buttonIcon
             antialiasing: true
             visible: !backend.audioPlayer.isPlaying
           }
@@ -117,8 +135,7 @@ Item {
           ColorOverlay{
             anchors.fill: pauseImage
             source: pauseImage
-            color: parent.enabled ? Style.palette.ac_buttonIconEnabled
-                                  : Style.palette.ac_buttonIconDisabled
+            color: Style.palette.ac_buttonIcon
             antialiasing: true
             visible: backend.audioPlayer.isPlaying
           }
@@ -143,8 +160,7 @@ Item {
         focusPolicy: Qt.NoFocus
         width: playControlItem.height
         height: playControlItem.height
-        property color buttonColor: enabled ? Style.palette.ac_buttonEnabled
-                                            : Style.palette.ac_buttonDisabled
+        property color buttonColor: Style.palette.ac_button
 
         contentItem: Item{
           height: parent.height
@@ -161,8 +177,7 @@ Item {
           ColorOverlay{
             anchors.fill: stopImage
             source: stopImage
-            color: parent.enabled ? Style.palette.ac_buttonIconEnabled
-                                  : Style.palette.ac_buttonIconDisabled
+            color: Style.palette.ac_buttonIcon
             antialiasing: true
           }
         }
@@ -196,8 +211,7 @@ Item {
       }
       font.pixelSize: Style.audioControl.timerFontSize
                       * root.sliderHeight
-      color: enabled ? Style.palette.ac_timerFontEnabled
-                     : Style.palette.ac_timerFontDisabled
+      color: Style.palette.ac_timerFont
     }
 
     Row{
@@ -228,8 +242,7 @@ Item {
         ColorOverlay{
           anchors.fill: speakerImage
           source: speakerImage
-          color: root.enabled ? Style.palette.ac_volumeSliderIconColorEnabled
-                              : Style.palette.ac_volumeSliderIconColorDisabled
+          color: Style.palette.ac_volumeSliderIconColor
           antialiasing: true
         }
       }
@@ -248,12 +261,9 @@ Item {
         onValueChanged: backend.audioPlayer.setVolume(value)
 
         sliderBarSize: Style.audioControl.volmeSliderBarSize
-        backgroundColor: Style.palette.ac_volumeSliderBarEnabled
-        backgroundDisabledColor: Style.palette.ac_volumeSliderBarDisabled
-        backgroundActiveColor: Style.palette.ac_volumeSliderBarActivePartEnabled
-        backgroundActiveDisabledColor: Style.palette.ac_volumeSliderBarActivePartDisabled
-        handleColor: Style.palette.ac_volumeSliderHandleEnabled
-        handleDisabledColor: Style.palette.ac_volumeSliderHandleDisabled
+        backgroundColor: Style.palette.ac_volumeSliderBar
+        backgroundActiveColor: Style.palette.ac_volumeSliderBarActivePart
+        handleColor: Style.palette.ac_volumeSliderHandle
       }
     }
   } // play control item

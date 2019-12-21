@@ -1,3 +1,22 @@
+/*
+*  Dancebots GUI - Create choreographies for Dancebots
+*  https://github.com/philippReist/dancebots_gui
+*
+*  Copyright 2019 - mint & pepper
+*
+*  This program is free software : you can redistribute it and/or modify
+*  it under the terms of the GNU General Public License as published by
+*  the Free Software Foundation, either version 3 of the License, or
+*  (at your option) any later version.
+*
+*  This program is distributed in the hope that it will be useful,
+*  but WITHOUT ANY WARRANTY; without even the implied warranty of
+*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+*
+*  See the GNU General Public License for more details, available in the
+*  LICENSE file included in the repository.
+*/
+
 import QtQuick 2.6
 import dancebots.backend 1.0
 
@@ -25,6 +44,8 @@ Canvas{
 
   onFrameToPixelsChanged: width = lengthInFrames * appWindow.frameToPixels
   onLengthInFramesChanged: width = lengthInFrames * appWindow.frameToPixels
+
+  property real beatBarLineWidth: Style.timerBar.beatWidth * root.height
 
   // connect to done loading signal of backend to redraw rectangle
   Connections{
@@ -226,6 +247,7 @@ Canvas{
       dragTarget: root.dragTarget
       y: primitiveY
       isMotor: root.isMotorBar
+      beatBarWidth: beatBarLineWidth
     }
 
     onItemRemoved: {
@@ -261,7 +283,7 @@ Canvas{
     ctx.fillStyle = color
     ctx.fillRect(0, 0, width, height)
     for(var i=0; i < beats.length; i++){
-      ctx.lineWidth = Style.timerBar.beatWidth * root.height
+      ctx.lineWidth = beatBarLineWidth
       ctx.strokeStyle = Style.palette.tim_beatMarks
       ctx.beginPath()
       var loc = beats[i] * appWindow.frameToPixels

@@ -1,5 +1,24 @@
+/*
+*  Dancebots GUI - Create choreographies for Dancebots
+*  https://github.com/philippReist/dancebots_gui
+*
+*  Copyright 2019 - mint & pepper
+*
+*  This program is free software : you can redistribute it and/or modify
+*  it under the terms of the GNU General Public License as published by
+*  the Free Software Foundation, either version 3 of the License, or
+*  (at your option) any later version.
+*
+*  This program is distributed in the hope that it will be useful,
+*  but WITHOUT ANY WARRANTY; without even the implied warranty of
+*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+*
+*  See the GNU General Public License for more details, available in the
+*  LICENSE file included in the repository.
+*/
+
 import QtQuick 2.6
-import QtQuick.Controls 2.0
+import QtQuick.Controls 2.12
 import QtQuick.Dialogs 1.3
 import QtGraphicalEffects 1.13
 
@@ -45,27 +64,28 @@ Rectangle{
     }
   }
 
-  MessageDialog {
-    id: loadConfirm
-    title: "Please Confirm"
-    icon: StandardIcon.Question
-    text: "Loading will clear the choreography. Are you sure?"
-    standardButtons: StandardButton.Yes | StandardButton.No
-    onYes: {
-      loadDialog.open()
-    }
-  }
 
-  MessageDialog {
-    id: clearDialog
-    title: "Please Confirm"
-    icon: StandardIcon.Question
-    text: "Are you sure you want to clear the choreography?"
-    standardButtons: StandardButton.Yes | StandardButton.No
-    onYes: {
+  ConfirmPopup{
+    id: loadConfirmPopup
+		detailText: "Loading clears all moves and lights"
+		text: "Are you sure?"
+		function yesClicked(){
+      loadDialog.open()
+		}
+	}
+
+	ConfirmPopup{
+		id: clearPopup
+		detailText: "Clear all moves and lights"
+		text: "Are you sure?"
+		function yesClicked(){
       backend.motorPrimitives.clear()
       backend.ledPrimitives.clear()
-    }
+		}
+	}
+
+  AboutPopup{
+    id: aboutPopup
   }
 
   FileDialog {
@@ -135,7 +155,7 @@ Rectangle{
                : parent.buttonColor
         border.color: Style.palette.fc_buttonText
         border.width: Style.fileControl.buttonBorderWidth * parent.height
-        radius: Style.fileControl.buttonRadius
+        radius: height * Style.fileControl.buttonRadius
 
       }
 
@@ -145,7 +165,7 @@ Rectangle{
         appWindow.cleanDraggers()
         // confirm with user if the choreography is not empty
         if(motorBar.isNotEmpty || ledBar.isNotEmpty){
-          loadConfirm.open()
+          loadConfirmPopup.open()
         }else{
           // otherwise, load directly
           loadDialog.open()
@@ -183,7 +203,7 @@ Rectangle{
                : parent.buttonColor
         border.color: Style.palette.fc_buttonText
         border.width: Style.fileControl.buttonBorderWidth * parent.height
-        radius: Style.fileControl.buttonRadius
+        radius: height * Style.fileControl.buttonRadius
       }
 
       onClicked:
@@ -224,14 +244,48 @@ Rectangle{
                : parent.buttonColor
         border.color: Style.palette.fc_buttonText
         border.width: Style.fileControl.buttonBorderWidth * parent.height
-        radius: Style.fileControl.buttonRadius
+        radius: height * Style.fileControl.buttonRadius
       }
 
       onClicked:
       {
         backend.audioPlayer.pause()
         appWindow.grabFocus()
-        clearDialog.open()
+				clearPopup.open()
+      }
+    }
+    Button
+    {
+      id: aboutButton
+      height: root.height * Style.fileControl.itemHeight
+      width: height
+      anchors.verticalCenter: parent.verticalCenter
+      font.pixelSize: height * Style.fileControl.buttonTextHeight
+      font.bold: true
+      text: "?"
+      focusPolicy: Qt.NoFocus
+      property color buttonColor: Style.palette.fc_buttonEnabled
+
+      contentItem: Text{
+        text: parent.text
+        font: parent.font
+        color: Style.palette.fc_buttonText
+        verticalAlignment: Text.AlignVCenter
+        horizontalAlignment: Text.AlignHCenter
+      }
+
+      background: Rectangle{
+        anchors.fill: parent
+        color: parent.pressed ? Style.palette.fc_buttonPressed
+                              : parent.buttonColor
+        border.color: Style.palette.fc_buttonText
+        border.width: Style.fileControl.buttonBorderWidth * parent.height
+        radius: height / 2
+      }
+
+      onClicked:
+      {
+        aboutPopup.open()
       }
     }
   } // buttons row

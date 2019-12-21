@@ -27,36 +27,29 @@ RadioButton {
   rightPadding: 0
   bottomPadding: 0
   topPadding: 0
-  property color mainColor: "green"
-
   indicator: Rectangle{
     id: indicatorBg
     height: root.height
-    width: root.width
-    radius: height * Style.primitiveControl.typeRadioRadius
+    width: height
+    radius: height / 2
     anchors.verticalCenter: root.verticalCenter
-    color: "transparent"
-    border.color: root.mainColor
-    border.width: height * Style.primitiveControl.typeRadioBorderWidth
+    color: Style.palette.pc_directionRadioBG
     Rectangle{
-      anchors.fill: parent
-      radius: parent.radius
-      color: root.mainColor
+      height: parent.height * Style.primitiveControl.directionRadioIndicatorSize
+      width: height
+      radius: height / 2
+      x: (parent.height - height) / 2
+      y: x
+      color: Style.palette.pc_directionRadioIndicator
       visible: root.checked
     }
   }
 
   contentItem: Text{
-    id: labelText
     text: root.text
-    z: 1000
-    padding: root.height * Style.primitiveControl.typeRadioTextPadding
-    font.pixelSize: root.height - 2.7 * padding
-    font.capitalization: Font.AllUppercase
-    font.bold: true;
+    font.pixelSize: root.height * Style.primitiveControl.directionRadioTextSize
+    leftPadding: parent.height * (1.0 + Style.primitiveControl.directionRadioTextSpacing)
     verticalAlignment: Text.AlignVCenter
-    horizontalAlignment: Text.AlignHCenter
-    color: root.checked ? Style.palette.pc_typeRadioFontActive
-                        : mainColor
+    color: Style.palette.pc_controlsFonts
   }
 }

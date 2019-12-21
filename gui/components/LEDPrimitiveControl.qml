@@ -1,5 +1,24 @@
+/*
+*  Dancebots GUI - Create choreographies for Dancebots
+*  https://github.com/philippReist/dancebots_gui
+*
+*  Copyright 2019 - mint & pepper
+*
+*  This program is free software : you can redistribute it and/or modify
+*  it under the terms of the GNU General Public License as published by
+*  the Free Software Foundation, either version 3 of the License, or
+*  (at your option) any later version.
+*
+*  This program is distributed in the hope that it will be useful,
+*  but WITHOUT ANY WARRANTY; without even the implied warranty of
+*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+*
+*  See the GNU General Public License for more details, available in the
+*  LICENSE file included in the repository.
+*/
+
 import QtQuick 2.6
-import QtQuick.Controls 2.0
+import QtQuick.Controls 2.12
 import QtQuick.Dialogs 1.3
 import QtGraphicalEffects 1.13
 import dancebots.backend 1.0
@@ -33,7 +52,7 @@ Rectangle{
       if(result){
         // calculate average beat distance:
         averageBeatFrames = backend.getAverageBeatFrames();
-        //delegate.updatePrimitive();
+        delegate.updatePrimitive();
         enabled = true;
       }
     }
@@ -46,30 +65,38 @@ Rectangle{
     color: Style.palette.pc_ledBoxColor
     Text{
       anchors.centerIn: parent
-      text: qsTr("L I G H T S")
+      text: qsTr("Lights")
       horizontalAlignment: Text.AlignHCenter
       verticalAlignment: Text.AlignVCenter
       font.pixelSize: Style.primitiveControl.titleFontSize * titleBar.width
+      font.letterSpacing: Style.primitiveControl.titleLetterSpacing
+      font.capitalization: Font.AllUppercase
+      font.bold: true;
       rotation : 270
     }
   }
 
-  Column{
+  Row{
     id: radios
     anchors.left: titleBar.right
-    anchors.leftMargin: appWindow.guiMargin
+    padding: appWindow.guiMargin
     anchors.top: titleBar.top
-    anchors.topMargin: appWindow.guiMargin
     width: root.width - titleBar.width
     property var radioHeight: root.width
-                              * Style.primitiveControl.radioHeight
-    spacing: radioHeight * Style.primitiveControl.radioSpacing
+                              * Style.primitiveControl.typeRadioHeight
+    spacing: (width - 2 * padding
+              - knightRiderRadio.width
+              - alternateRadio.width
+              - blinkRadio.width
+              - constantRadio.width
+              - randomRadio.width) / 4
     TypeRadio {
       id: knightRiderRadio
       checked: true
       text: qsTr("KnightRider")
       onPressed: appWindow.grabFocus()
       onToggled: type=LEDPrimitive.Type.KnightRider
+      mainColor: Style.palette.pc_ledBoxColor
       height: radios.radioHeight
     }
     TypeRadio {
@@ -77,6 +104,7 @@ Rectangle{
       text: qsTr("Alternate")
       onPressed: appWindow.grabFocus()
       onToggled: type=LEDPrimitive.Type.Alternate
+      mainColor: Style.palette.pc_ledBoxColor
       height: radios.radioHeight
     }
     TypeRadio {
@@ -84,6 +112,7 @@ Rectangle{
       text: qsTr("Blink")
       onPressed: appWindow.grabFocus()
       onToggled: type=LEDPrimitive.Type.Blink
+      mainColor: Style.palette.pc_ledBoxColor
       height: radios.radioHeight
     }
     TypeRadio {
@@ -91,6 +120,7 @@ Rectangle{
       text: qsTr("Constant")
       onPressed: appWindow.grabFocus()
       onToggled: type=LEDPrimitive.Type.Constant
+      mainColor: Style.palette.pc_ledBoxColor
       height: radios.radioHeight
     }
     TypeRadio {
@@ -98,191 +128,209 @@ Rectangle{
       text: qsTr("Random")
       onPressed: appWindow.grabFocus()
       onToggled: type=LEDPrimitive.Type.Random
+      mainColor: Style.palette.pc_ledBoxColor
       height: radios.radioHeight
     }
   } // radios column
 
-  Column{
-    id: settingsColumn
-    width: radios.width * (1.0 - Style.primitiveControl.primitiveBoxWidth)
+  Rectangle {
+    id: settingsRectangle
+    anchors.leftMargin: appWindow.guiMargin
+    anchors.rightMargin: appWindow.guiMargin
+    anchors.bottomMargin: appWindow.guiMargin
+    property var minHeight: dummyTimerBar.height + 2 * appWindow.guiMargin
+    height: settingsColumn.height + 2 * appWindow.guiMargin < minHeight ?
+     minHeight : settingsColumn.height + 2 * appWindow.guiMargin
+    anchors.left: titleBar.right
     anchors.right: root.right
-    anchors.top: radios.bottom
-    spacing: sliderHeight * Style.primitiveControl.sliderVSpacing
-    property real sliderHeight: root.width * Style.primitiveControl.sliderHeight
-    property real labelWidth: width * Style.primitiveControl.sliderLabelWidth
-    property real iconWidth: width * Style.primitiveControl.sliderIconWidth
-    property real sliderItemSpacing: sliderHeight
-                                    * Style.primitiveControl.sliderItemHSpacing
-    property real sliderWidth: width
-                              - labelWidth
-                              - 2 * iconWidth
-                              - 3 * sliderItemSpacing
-                              - appWindow.guiMargin
-    property real dirRadioSize: radios.radioHeight
-                                * Style.primitiveControl.directionRadioSize
+    anchors.bottom: root.bottom
 
-    Row{
-      id: frequencySliderRow
-      spacing: settingsColumn.sliderItemSpacing
-      visible: !constantRadio.checked
-      Item{
-        height: settingsColumn.sliderHeight
-        width: settingsColumn.labelWidth
-        Text{
-          font.pixelSize: Style.primitiveControl.sliderLabelTextSize
-                          * parent.height
-          text: "Frequency"
-          verticalAlignment: Text.AlignVCenter
-          color: Style.palette.pc_sliderText
-        }
-      }
+    color: Style.palette.pc_settingsBoxBackground
 
-      Item{
-        width: settingsColumn.iconWidth
-        height: settingsColumn.sliderHeight
-        Image{
-          id: lowFreq
-          anchors.centerIn: parent
-          source: "../icons/lowFreq.svg"
-          sourceSize.width: parent.width
-          antialiasing: true
-          visible: false
-        }
-
-        ColorOverlay{
-          anchors.fill: lowFreq
-          source: lowFreq
-          color: Style.palette.pc_sliderIcon
-          antialiasing: true
-          visible: true
-        }
-      }
-
-      ScalableSlider{
-        id: frequencySlider
-        height: settingsColumn.sliderHeight
-        width: settingsColumn.sliderWidth
-        from: 0.0
-        value: 2.0
-        to: frequencies.length - 1.0
-        stepSize: 1.0
-        live: true
-        snapMode: Slider.SnapAlways
-        onValueChanged: {
-          delegate.primitive.frequency = frequencies[value]
-          delegate.updateToolTip()
-        }
-        Keys.onPressed: appWindow.handleKey(event)
-        sliderBarSize: Style.primitiveControl.sliderBarSize
-        backgroundColor: Style.palette.pc_sliderBarEnabled
-        backgroundDisabledColor: Style.palette.pc_sliderBarDisabled
-        backgroundActiveColor: Style.palette.pc_sliderBarActivePartEnabled
-        backgroundActiveDisabledColor: Style.palette.pc_sliderBarActivePartDisabled
-        handleColor: Style.palette.pc_sliderHandleEnabled
-        handleDisabledColor: Style.palette.pc_sliderHandleDisabled
-      }
-
-      Item{
-        width: settingsColumn.iconWidth
-        height: settingsColumn.sliderHeight
-        Image{
-          id: highFreq
-          anchors.centerIn: parent
-          source: "../icons/highFreq.svg"
-          sourceSize.width: parent.width
-          antialiasing: true
-          visible: false
-        }
-
-        ColorOverlay{
-          anchors.fill: highFreq
-          source: highFreq
-          color: Style.palette.pc_sliderIcon
-          antialiasing: true
-          visible: true
-        }
-      }
-    } // frequency row
-
-    Row{
-      id: ledSet
-      visible: !knightRiderRadio.checked && !randomRadio.checked
-      Item{
-        id: ledlabel
-        height: settingsColumn.sliderHeight
-        width: settingsColumn.labelWidth
-        Text{
-          font.pixelSize: Style.primitiveControl.sliderLabelTextSize
-                          * parent.height
-          text: "LEDs"
-          verticalAlignment: Text.AlignVCenter
-          color: Style.palette.pc_sliderText
-        }
-      }
+    Column{
+      id: settingsColumn
+      width: radios.width * (1.0 - Style.primitiveControl.primitiveBoxWidth)
+      anchors.left: parent.left
+      anchors.bottom: parent.bottom
+      anchors.bottomMargin: appWindow.guiMargin
+      anchors.leftMargin: appWindow.guiMargin
+      padding: appWindow.guiMargin
+      spacing: sliderHeight * Style.primitiveControl.sliderVSpacing
+      property real sliderHeight: root.width * Style.primitiveControl.sliderHeight
+      property real labelWidth: width * Style.primitiveControl.sliderLabelWidth
+      property real iconWidth: width * Style.primitiveControl.sliderIconWidth
+      property real sliderItemSpacing: sliderHeight
+                                      * Style.primitiveControl.sliderItemHSpacing
+      property real sliderWidth: width
+                                - labelWidth
+                                - 2 * iconWidth
+                                - 3 * sliderItemSpacing
+                                - 2 * appWindow.guiMargin
+      property real dirRadioSize: radios.radioHeight
+                                  * Style.primitiveControl.directionRadioSize
 
       Row{
-        id: ledCheckboxes
-        property var ledDiameter: Style.primitiveControl.ledRadioDiameter
-                                  * settingsColumn.sliderHeight
-        spacing: Style.primitiveControl.ledRadioSpacing * ledDiameter
-        anchors.verticalCenter: ledlabel.verticalCenter
-        Repeater{
-          model: leds.length
-          delegate: CheckBox{
-            id: control
-            checked: leds[index]
-            focusPolicy: Qt.NoFocus
-            width: ledCheckboxes.ledDiameter
-            onPressed: appWindow.grabFocus()
-            onCheckedChanged: {
-              leds[index] = checked
-              if(delegate){
-                delegate.primitive.leds[index] = checked;
-                delegate.updateToolTip()
+        id: frequencySliderRow
+        spacing: settingsColumn.sliderItemSpacing
+        visible: !constantRadio.checked
+        Item{
+          height: settingsColumn.sliderHeight
+          width: settingsColumn.labelWidth
+          Text{
+            font.pixelSize: Style.primitiveControl.sliderLabelTextSize
+                            * parent.height
+            font.capitalization: Font.AllUppercase
+            text: "Frequency"
+            verticalAlignment: Text.AlignVCenter
+            color: Style.palette.pc_sliderText
+          }
+        }
+
+        Item{
+          width: settingsColumn.iconWidth
+          height: settingsColumn.sliderHeight
+          Image{
+            id: lowFreq
+            anchors.centerIn: parent
+            source: "../icons/lowFreq.svg"
+            sourceSize.width: parent.width
+            antialiasing: true
+            visible: false
+          }
+
+          ColorOverlay{
+            anchors.fill: lowFreq
+            source: lowFreq
+            color: Style.palette.pc_sliderIcon
+            antialiasing: true
+            visible: true
+          }
+        }
+
+        ScalableSlider{
+          id: frequencySlider
+          height: settingsColumn.sliderHeight
+          width: settingsColumn.sliderWidth
+          from: 0.0
+          value: 2.0
+          to: frequencies.length - 1.0
+          stepSize: 1.0
+          live: true
+          snapMode: Slider.SnapAlways
+          onValueChanged: {
+            delegate.primitive.frequency = frequencies[value]
+            delegate.updateToolTip()
+          }
+          Keys.onPressed: appWindow.handleKey(event)
+          sliderBarSize: Style.primitiveControl.sliderBarSize
+          backgroundColor: Style.palette.pc_sliderBar
+          backgroundActiveColor: Style.palette.pc_sliderBarActivePart
+          handleColor: Style.palette.pc_sliderHandle
+        }
+
+        Item{
+          width: settingsColumn.iconWidth
+          height: settingsColumn.sliderHeight
+          Image{
+            id: highFreq
+            anchors.centerIn: parent
+            source: "../icons/highFreq.svg"
+            sourceSize.width: parent.width
+            antialiasing: true
+            visible: false
+          }
+
+          ColorOverlay{
+            anchors.fill: highFreq
+            source: highFreq
+            color: Style.palette.pc_sliderIcon
+            antialiasing: true
+            visible: true
+          }
+        }
+      } // frequency row
+
+      Row{
+        id: ledSet
+        visible: !knightRiderRadio.checked && !randomRadio.checked
+        Item{
+          id: ledlabel
+          height: settingsColumn.sliderHeight
+          width: settingsColumn.labelWidth
+          Text{
+            font.pixelSize: Style.primitiveControl.sliderLabelTextSize
+                            * parent.height
+            text: "LEDs"
+            verticalAlignment: Text.AlignVCenter
+            color: Style.palette.pc_sliderText
+          }
+        }
+
+        Row{
+          id: ledCheckboxes
+          property var ledDiameter: Style.primitiveControl.ledRadioDiameter
+                                    * settingsColumn.sliderHeight
+          spacing: Style.primitiveControl.ledRadioSpacing * ledDiameter
+          anchors.verticalCenter: ledlabel.verticalCenter
+          Repeater{
+            model: leds.length
+            delegate: CheckBox{
+              id: control
+              checked: leds[index]
+              focusPolicy: Qt.NoFocus
+              width: ledCheckboxes.ledDiameter
+              onPressed: appWindow.grabFocus()
+              onCheckedChanged: {
+                leds[index] = checked
+                if(delegate){
+                  delegate.primitive.leds[index] = checked;
+                  delegate.updateToolTip()
+                }
+              }
+              contentItem: Text{
+                width: background.width
+                anchors.top: background.bottom
+                anchors.verticalCenter: parent.verticalCenter
+                text: index
+                horizontalAlignment: Text.AlignHCenter
+                font.pixelSize: background.width
+                                * Style.primitiveControl.ledTextSize
+                color: Style.palette.pc_controlsFonts
+              }
+
+              indicator: Rectangle{
+                id: ledIndicator
+                width: ledCheckboxes.ledDiameter
+                height: ledCheckboxes.ledDiameter
+                radius: height/2
+                anchors.verticalCenter: background.verticalCenter
+                anchors.horizontalCenter: parent.horizontalCenter
+                color: control.checked ?
+                         Style.palette.prim_toolTipLEDon : background.color
+              }
+
+              background: Rectangle{
+                width: ledCheckboxes.ledDiameter
+                height: ledCheckboxes.ledDiameter
+                anchors.verticalCenter: parent.verticalCenter
+                radius: height/2
+                color: Style.palette.prim_toolTipLEDoff
               }
             }
-            contentItem: Text{
-              width: background.width
-              anchors.top: background.bottom
-              anchors.verticalCenter: parent.verticalCenter
-              text: index
-              horizontalAlignment: Text.AlignHCenter
-              font.pixelSize: background.width
-                              * Style.primitiveControl.ledTextSize
-            }
-
-            indicator: Rectangle{
-              id: ledIndicator
-              width: ledCheckboxes.ledDiameter
-              height: ledCheckboxes.ledDiameter
-              radius: height/2
-              anchors.verticalCenter: background.verticalCenter
-              anchors.horizontalCenter: parent.horizontalCenter
-              color: control.checked ?
-                       Style.palette.prim_toolTipLEDon : background.color
-            }
-
-            background: Rectangle{
-              width: ledCheckboxes.ledDiameter
-              height: ledCheckboxes.ledDiameter
-              anchors.verticalCenter: parent.verticalCenter
-              radius: height/2
-              color: Style.palette.prim_toolTipLEDoff
-            }
-          }
-        } // led repeater
-      } // led checkboxes
-    } // led set row
-  } // settings column
+          } // led repeater
+        } // led checkboxes
+      } // led set row
+    } // settings column
 
 
-  Rectangle{
-    id: dummyTimerBar
-    height: appWindow.width * Style.primitives.height * Style.timerBar.height
-    anchors.bottom: parent.bottom
-    anchors.left: titleBar.right
-    anchors.leftMargin: appWindow.guiMargin
-    anchors.bottomMargin: appWindow.guiMargin
+    Rectangle{
+      id: dummyTimerBar
+      height: appWindow.width * Style.primitives.height * Style.timerBar.height
+      anchors.bottom: parent.bottom
+      anchors.left: settingsColumn.right
+      anchors.leftMargin: appWindow.guiMargin
+      anchors.bottomMargin: appWindow.guiMargin
+    }
   }
 
   function createDelegate(){

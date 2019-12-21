@@ -1,5 +1,24 @@
+/*
+*  Dancebots GUI - Create choreographies for Dancebots
+*  https://github.com/philippReist/dancebots_gui
+*
+*  Copyright 2019 - mint & pepper
+*
+*  This program is free software : you can redistribute it and/or modify
+*  it under the terms of the GNU General Public License as published by
+*  the Free Software Foundation, either version 3 of the License, or
+*  (at your option) any later version.
+*
+*  This program is distributed in the hope that it will be useful,
+*  but WITHOUT ANY WARRANTY; without even the implied warranty of
+*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+*
+*  See the GNU General Public License for more details, available in the
+*  LICENSE file included in the repository.
+*/
+
 import QtQuick 2.6
-import QtQuick.Controls 2.0
+import QtQuick.Controls 2.12
 import QtQuick.Dialogs 1.3
 
 import "components"
@@ -8,14 +27,9 @@ import "GuiStyle"
 ApplicationWindow {
   id: appWindow
   width: Style.main.initialWidth
-  height: ( titleBar.height
-           + fileControl.height
-           + ledPrimitiveControl.height
-           + timerBarFlickable.height
-           + audioControl.height
-           + 4 * guiMargin)
   minimumWidth: Style.main.minWidth
-  minimumHeight: ( titleBar.height
+  minimumHeight: componentsHeight
+  property var componentsHeight: ( titleBar.height
                   + fileControl.height
                   + ledPrimitiveControl.height
                   + timerBarFlickable.height
@@ -23,7 +37,7 @@ ApplicationWindow {
                   + 4 * guiMargin)
 
   visible: true
-  title: "Dancebots GUI"
+  title: "Dancebots Editor"
 
   color: Style.palette.mw_background
 
@@ -214,7 +228,7 @@ ApplicationWindow {
       spacing: Style.timerBar.spacing * motorBar.height
       TimerBar{
         id: motorBar
-        color: Style.palette.pc_moveBoxColor
+        color: Style.palette.tim_moveBoxColor
         keys: ["mot"]
         model: backend.motorPrimitives
         lengthInFrames: (fileControl.width + motorPrimitiveControl.width
@@ -227,7 +241,7 @@ ApplicationWindow {
       }
       TimerBar{
         id: ledBar
-        color: Style.palette.pc_ledBoxColor
+        color: Style.palette.tim_ledBoxColor
         keys: ["led"]
         z: -1
         lengthInFrames: motorBar.lengthInFrames
@@ -285,6 +299,14 @@ ApplicationWindow {
     Keys.onPressed: handleKey(event)
   }
 
+  Rectangle{
+    anchors.top: fileControl.bottom
+    width: appWindow.width
+    height: appWindow.height - titleBar.height - fileControl.height
+    color: Style.palette.mw_disableOverlay
+    visible: !ledPrimitiveControl.enabled
+  }
+
   function grabFocus(){
     keyCatcher.focus = true
   }
@@ -317,18 +339,17 @@ ApplicationWindow {
     }
   }
 
-  MessageDialog {
-    id: closeConfirm
-    title: "Really Exit?"
-    text: "Are you sure you want to close the editor?"
-    standardButtons: StandardButton.Yes | StandardButton.No
-    onYes: {
+  ConfirmPopup{
+		id: closeConfirmPopup
+		detailText: "Closing the editor"
+		text: "Are you sure?"
+		function yesClicked(){
       Qt.quit()
-    }
-  }
+		}
+	}
 
   onClosing:{
-    closeConfirm.open()
+    closeConfirmPopup.open()
     close.accepted = false
   }
 
