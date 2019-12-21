@@ -47,7 +47,7 @@ namespace {
     // try to save empty audiofile
     result = fakeFile.save(fileTemp);
 
-    EXPECT_EQ(result, AudioFile::Result::eFileWriteError);
+    EXPECT_EQ(result, AudioFile::Result::eNoDataToSave);
   }
 
   TEST_F(AudioFileTest, testSave) {
