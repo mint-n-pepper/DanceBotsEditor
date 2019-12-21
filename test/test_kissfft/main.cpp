@@ -68,8 +68,10 @@ namespace {
     // transform and verify amplitude and phase
     mFFTEngine.transform_real(input.data(), mOutput.data());
 
-    const float ampFFT = std::sqrtf(mOutput.at(1).imag() * mOutput.at(1).imag()
+    const float ampFFT = std::sqrt(mOutput.at(1).imag() * mOutput.at(1).imag()
       + mOutput.at(1).real() * mOutput.at(1).real()) / mNFFT;
+    // const float ampFFT = std::sqrtf(mOutput.at(1).imag() * mOutput.at(1).imag()
+    //   + mOutput.at(1).real() * mOutput.at(1).real()) / mNFFT;
 
     const float phaseFFT = std::atan2(mOutput.at(1).imag(),
       mOutput.at(1).real());

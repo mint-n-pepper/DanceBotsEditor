@@ -56,7 +56,8 @@ public:
 
   /** Settings for Qt stream serialization of header data  */
   static const QDataStream::ByteOrder dataByteOrder{ QDataStream::BigEndian };
-  static const QDataStream::Version dataStreamVersion{ QDataStream::Qt_5_13 };
+  // static const QDataStream::Version dataStreamVersion{ QDataStream::Qt_5_13 };
+  static const QDataStream::Version dataStreamVersion{ QDataStream::Qt_5_12 };
   static const QDataStream::FloatingPointPrecision
     dataFloatPrecision{ QDataStream::SinglePrecision };
 

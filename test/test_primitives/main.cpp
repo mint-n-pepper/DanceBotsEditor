@@ -154,7 +154,8 @@ namespace {
       p->mPositionBeat = positionDis(gen);
       p->mLengthBeat = positionDis(gen);
       p->mType = static_cast<LEDPrimitive::Type>(positionDis(gen) % N_TYPES);
-      for(auto& e : p->mLeds) {
+      // for(auto& e : p->mLeds) {
+      for(auto e : p->mLeds) {
         e = !(positionDis(gen) % 2);
       }
     }
