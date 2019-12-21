@@ -9,3 +9,6 @@ lib/include/**
 
 # ignore doc
 doc
+
+# ignore auto-generated files
+scripts/venv/
