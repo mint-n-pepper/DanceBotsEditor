@@ -41,22 +41,24 @@
 	```
 	where the ```-dmg``` option creates an app dmg file. You should replace the Qt install folder and gui folders with the appropriate locations.
 
-## Ubuntu / Linux
-1. Install Qt 5.13 from online installer, selecting gcc 64 bit Version
-2. Install cmake
+## Debian/Ubuntu
+1. Install Qt 5.13 or 5.12.6 LTS from [online installer](https://www.qt.io/download), selecting gcc 64 bit version.
+2. Install `cmake`:
+   ```
+   sudo apt-get install cmake
+   ```
 3. Install build dependencies:
 	```
 	sudo apt-get install libgl1-mesa-dev build-essential
 	```
-4. Create environment variable pointing to Qt:
-	```
-	export CMAKE_PREFIX_PATH=/home/philipp/Qt/5.13.2/gcc_64
-	```
-5. Run cmake in a build folder, configure for release build:
-	```
-	cmake .. -DCMAKE_BUILD_TYPE=Release
-	```
-6. Build by running ```make dancebotsEditor``` in the build folder.
+4. In the `build` directory, configure for release:
+   ```
+   cmake -DCMAKE_PREFIX_PATH=/path/to/Qt/<VERSION>/gcc_64 -DCMAKE_BUILD_TYPE=Release ../
+   ```
+5. In the `build` directory, build the project:
+   ```
+   make dancebotsEditor
+   ```
 
 # Style Guide
 
