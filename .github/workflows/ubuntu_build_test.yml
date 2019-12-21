@@ -28,7 +28,8 @@ jobs:
       run: |
         cmake --version
         which cmake
-        sudo apt-get purge --auto-remove cmake
+        sudo rm /usr/local/bin/cmake
+#        sudo apt-get purge --auto-remove cmake
 
 #        sudo apt-get upgrade
 #        cmake --version
