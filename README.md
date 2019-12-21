@@ -3,10 +3,10 @@
 ### Build
 1. Install ```cmake``` from https://cmake.org/download/.
 2. Install Visual Studio from https://visualstudio.microsoft.com/.
-3. Install Qt 5.13 from https://www.qt.io/. You only have to select/install the MSVC 2017 64-bit version.
-4. Create the environment variable ```CMAKE_PREFIX_PATH``` and set it to the directory where the Qt MSVC 2017 64-bit version is, e.g. ```C:\Qt\5.13.2\msvc2017_64```.
+3. Install Qt 5.12.6 LTS from https://www.qt.io/. You only have to select/install the MSVC 2015 64-bit version.
+4. Create the environment variable ```CMAKE_PREFIX_PATH``` and set it to the directory where the Qt MSVC 2015 64-bit version is, e.g. ```C:\Qt\5.12.6\msvc2015_64```.
 5. Clone the repository, best using the ```--recursive``` option to init and download all submodules.
-6. Create build folder and run cmake in it, pointing to repo root, where root ```CMakeLists.txt``` is.
+6. Create build folder and run ```cmake``` in it, pointing to repo root, where root ```CMakeLists.txt``` is.
 7. Compile in Visual Studio in Release. To avoid console from popping up upon startup add ```WIN32``` to the executable command in the Gui CMAKE code:
 	```cmake
 	add_executable(${PROJECT_NAME} WIN32 ${SOURCES} ${APP_RESOURCES} ${HEADERS} ${QMLS})
@@ -23,8 +23,8 @@
 ### Build
 1. Install ```cmake```, probably easiest using homebrew.
 2. Install XCode https://developer.apple.com/xcode/
-3. Install Qt 5.13 from https://www.qt.io/. You only have to select/install the MacOS version.
-4. Create the environment variable ```CMAKE_PREFIX_PATH``` and set it to the path to the Qt clang_64 folder of the 5.13 installation, e.g. do ```EXPORT CMAKE_PREFIX_PATH=/Users/philipp/Qt/5.13.2/clang_64/```, or add this command to the ```.bash_profile``` in your home folder.
+3. Install Qt 5.12.6 LTS from https://www.qt.io/. You only have to select/install the MacOS version.
+4. Create the environment variable ```CMAKE_PREFIX_PATH``` and set it to the path to the Qt clang_64 folder of the 5.12.6 installation, e.g. do ```EXPORT CMAKE_PREFIX_PATH=/Users/philipp/Qt/5.12.6/clang_64/```, or add this command to the ```.bash_profile``` in your home folder.
 5. Clone the repo, best using the ```--recursive``` option to init and download all submodules.
 6. Create a build folder in the cloned repo folder (e.g. ```dancebots_gui/build```).
 7. In the build folder, run CMAKE with the release type:
@@ -37,12 +37,12 @@
 1. Go to the subfolder ```gui/mac_os_rc```, and run the script ```deploy.sh ../../build```, where the first command line argument is the path to your build folder. The script then creates the folder ```DancebotsEditor.app``` in your build folder and copies the executable, icon, and run settings files to the appropriate subfolders.
 2. Run the Qt deployment tool on the app folder to copy the appropriate frameworks to the app:
 	```
-		~/Qt/5.13.0/clang_64/bin/macdeployqt ./dancebotsEditor.app -qmldir=/Users/philipp/Git/dancebots_gui/gui -dmg
+		~/Qt/5.12.6/clang_64/bin/macdeployqt ./dancebotsEditor.app -qmldir=/Users/philipp/Git/dancebots_gui/gui -dmg
 	```
 	where the ```-dmg``` option creates an app dmg file. You should replace the Qt install folder and gui folders with the appropriate locations.
 
 ## Debian/Ubuntu
-1. Install Qt 5.13 or 5.12.6 LTS from [online installer](https://www.qt.io/download), selecting gcc 64 bit version.
+1. Install 5.12.6 LTS from [online installer](https://www.qt.io/download), selecting gcc 64 bit version.
 2. Install `cmake`:
    ```
    sudo apt-get install cmake

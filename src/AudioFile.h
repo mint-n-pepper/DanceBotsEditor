@@ -20,7 +20,6 @@
 #ifndef AUDIO_FILE_H_
 #define AUDIO_FILE_H_
 
-#include <QtGlobal>
 #include <vector>
 #include <QtCore/QFile>
 #include <QDataStream>
@@ -57,11 +56,7 @@ public:
 
   /** Settings for Qt stream serialization of header data  */
   static const QDataStream::ByteOrder dataByteOrder{ QDataStream::BigEndian };
-#if QT_VERSION >= QT_VERSION_CHECK(5, 13, 0)
-  static const QDataStream::Version dataStreamVersion{ QDataStream::Qt_5_13 };
-#elif QT_VERSION >= QT_VERSION_CHECK(5, 12, 0)
   static const QDataStream::Version dataStreamVersion{ QDataStream::Qt_5_12 };
-#endif
   static const QDataStream::FloatingPointPrecision
     dataFloatPrecision{ QDataStream::SinglePrecision };
 
