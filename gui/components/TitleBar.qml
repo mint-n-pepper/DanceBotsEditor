@@ -18,7 +18,6 @@
 */
 
 import QtQuick 2.6
-//import QtGraphicalEffects 1.13
 import QtGraphicalEffects 1.12
 import "../GuiStyle"
 
