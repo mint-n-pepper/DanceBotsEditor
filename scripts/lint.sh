@@ -10,6 +10,21 @@
 # - gui
 # - src
 # - test
+#
+# @TODO configure style file to follow this guideline?
+# ## Naming
+#
+# | Element 	| Example | Comment |
+# | ------- 	| ------- | ------- |
+# | Variable 	| `fileName` | camelCase |
+# | Member Variable | `mFileName` | m + CamelCase|
+# | Constant	| `fileName` | like variable | 
+# | Enum | `eWriteOnly` | e + CamelCase|
+# | Class | `FileHandler` | CamelCase|
+# | Files | `FileHandler.h` | CamelCase + file ending|
+# 
+# ## Indentation / Tabs
+# are two spaces.
 
 
 CLANG_FORMAT_STYLE_FILE="Google"

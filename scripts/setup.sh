@@ -22,4 +22,4 @@ fi
 . "${VENV_PATH}/bin/activate"
 
 # install requirements
-#pip install -r requirements.txt
+pip install -r requirements.txt
