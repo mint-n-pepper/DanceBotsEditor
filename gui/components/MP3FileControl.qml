@@ -120,8 +120,8 @@ Rectangle{
 
   Row{
     id: buttonRow
-    anchors.left: parent.left
-    anchors.leftMargin: appWindow.guiMargin
+    anchors.right: root.right
+    anchors.rightMargin: appWindow.guiMargin
     anchors.verticalCenter: root.verticalCenter
     spacing: Style.fileControl.buttonSpacing * root.height
     Button
@@ -292,8 +292,8 @@ Rectangle{
 
   Row{ // text fields column
     id: textFields
-    anchors.right: root.right
-    anchors.rightMargin: appWindow.guiMargin
+    anchors.left: root.left
+    anchors.leftMargin: appWindow.guiMargin
     anchors.verticalCenter: root.verticalCenter
     spacing: controlWindowWidth * Style.fileControl.textBoxSpacing
     opacity: enabled ? Style.fileControl.buttonOpacityEnabled
