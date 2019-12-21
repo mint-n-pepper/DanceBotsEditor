@@ -586,7 +586,7 @@ Rectangle{
     Rectangle{
       id: dummyTimerBar
       height: appWindow.width * Style.primitives.height * Style.timerBar.height
-      anchors.bottom: parent.bottom
+      anchors.bottom: settingsRectangle.bottom
       anchors.left: settingsColumn.right
       anchors.leftMargin: appWindow.guiMargin
       anchors.bottomMargin: appWindow.guiMargin
@@ -599,8 +599,8 @@ Rectangle{
     delegate.idleParent = root
     delegate.isMotor = true
     delegate.primitive = primitiveFactory.createObject(delegate.id)
-    delegate.primitive.positionBeat= 0;
-    delegate.primitive.lengthBeat= 4;
+    delegate.primitive.positionBeat= 0
+    delegate.primitive.lengthBeat= 4
     delegate.primitive.type = type
     delegate.primitive.frequency = frequencies[frequencySlider.value]
     delegate.primitive.velocity = leftSpeedSet.speed
@@ -613,8 +613,8 @@ Rectangle{
   Component.onCompleted:{
     // set the first beat at a fixed pixel distance from the left border of the
     // control box:
-    setDummyBeats();
-    createDelegate();
+    setDummyBeats()
+    delegate.updatePrimitive()
   }
 
   onDelegateChanged:{
