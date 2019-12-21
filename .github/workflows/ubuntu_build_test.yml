@@ -26,20 +26,21 @@ jobs:
 
     - name: Install dependencies
       run: |
+        sudo apt-get update
         sudo apt-get install cmake
-    
-    - name: Configure build
-      run: |
-        mkdir build
-        cd build/
-        echo ${Qt5_Dir}
-        echo $Qt5_Dir
-        echo $QT_DIRECTORY
-        #cmake -DCMAKE_PREFIX_PATH=${Qt5_Dir} -DCMAKE_BUILD_TYPE=Release ../
-        #./configure
-      env:
-        QT_DIRECTORY: Qt5_Dir
-      shell: bash
+        cmake --version
+#        wget https://cmake.org/files/v3.4/cmake-3.4.1-Linux-x86_64.tar.gz
+#        tar xf cmake-3.4.1-Linux-x86_64.tar.gz
+#        export PATH="`pwd`/cmake-3.4.1-Linux-x86_64/bin:$PATH" # save it in .bashrc if needed
+
+    # - name: Configure build
+    #   run: |
+    #     mkdir build
+    #     cd build/
+    #     cmake --version
+    #     echo ${Qt5_Dir}
+    #     #cmake -DCMAKE_PREFIX_PATH=${Qt5_Dir} -DCMAKE_BUILD_TYPE=Release ../
+    #     #./configure
     
     #- name: Build
     #  run: make
