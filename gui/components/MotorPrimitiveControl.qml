@@ -20,7 +20,8 @@
 import QtQuick 2.6
 import QtQuick.Controls 2.12
 import QtQuick.Dialogs 1.3
-import QtGraphicalEffects 1.13
+//import QtGraphicalEffects 1.13
+import QtGraphicalEffects 1.12
 import dancebots.backend 1.0
 import "../GuiStyle"
 
