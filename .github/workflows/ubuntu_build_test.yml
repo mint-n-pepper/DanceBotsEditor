@@ -28,9 +28,11 @@ jobs:
       run: |
         cmake --version
         which cmake
-        sudo apt-get upgrade
-        cmake --version
-        which cmake
+        sudo apt-get purge --auto-remove cmake
+
+#        sudo apt-get upgrade
+#        cmake --version
+#        which cmake
 
 #        sudo apt-get update
 #        sudo apt-get install apt-transport-https ca-certificates gnupg software-properties-common wget
