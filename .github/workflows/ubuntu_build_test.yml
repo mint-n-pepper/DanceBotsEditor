@@ -3,7 +3,6 @@ name: Ubuntu Build-Test
 on:
   push:
     branches:
-      - fix-build-errors
       - git-workflow
          
 jobs:
@@ -24,20 +23,17 @@ jobs:
         version: ${{ matrix.qt_version }}
         target: desktop
 
-    - name: Install dependencies
+    - name: Download cmake-3.16.2
       run: |
         wget https://github.com/Kitware/CMake/releases/download/v3.16.2/cmake-3.16.2-Linux-x86_64.tar.gz
         tar xvfz cmake-3.16.2-Linux-x86_64.tar.gz
-        export PATH="${PWD}/cmake-3.16.2-Linux-x86_64/bin:$PATH"
-        cmake --version
 
     - name: Configure build
       run: |
         mkdir build
         cd build/
-        cmake --version
-        echo ${Qt5_Dir}
-        cmake -DCMAKE_PREFIX_PATH=${Qt5_Dir} -DCMAKE_BUILD_TYPE=Release ../
+        echo "Qt5_Dir: ${Qt5_Dir}"
+        ../cmake-3.16.2-Linux-x86_64/bin/cmake -DCMAKE_PREFIX_PATH=${Qt5_Dir} -DCMAKE_BUILD_TYPE=Release ../
     #     #./configure
     
     #- name: Build
