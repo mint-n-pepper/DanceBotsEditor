@@ -47,7 +47,7 @@ Rectangle{
 	function updatePrimitive(){
     // only update if there is a primitive
     if(primitive){
-      textID.text=primitiveTextIDs[primitive.type]
+      textID.fullText = primitiveTextIDs[primitive.type]
       color= primitiveColors[primitive.type]
       x = beats[primitive.positionBeat] * appWindow.frameToPixels
           - beatBarWidth / 2.0
@@ -63,13 +63,26 @@ Rectangle{
 	Text
 	{
 		id: textID
-    text: "D"
+    property var fullText
+    text: fullText[0]
     color: Style.palette.prim_text
     x: Style.primitives.textPosX * root.height
     y: Style.primitives.textPosY * root.height
     font.pixelSize: Style.primitives.textSize * root.height
     font.bold: Style.primitives.textBold
-	} // text
+    Text
+    {
+      text: textID.fullText.substr(1)
+      elide: Text.ElideRight
+      clip: true
+      width: root.width - textID.width - textID.x
+      color: textID.color
+      anchors.left: textID.right
+      anchors.top: textID.top
+      font.pixelSize: textID.pixelSize
+      font.bold: Style.primitives.textBold
+    } // text
+  } // text
 
   MouseArea{
     id: dragArea
