@@ -63,7 +63,7 @@ Rectangle{
 	Text
 	{
 		id: textID
-    property var fullText
+    property var fullText: "Default Name"
     text: fullText[0]
     color: Style.palette.prim_text
     x: Style.primitives.textPosX * root.height
@@ -79,7 +79,7 @@ Rectangle{
       color: textID.color
       anchors.left: textID.right
       anchors.top: textID.top
-      font.pixelSize: textID.pixelSize
+      font.pixelSize: Style.primitives.textSize * root.height
       font.bold: Style.primitives.textBold
     } // text
   } // text
