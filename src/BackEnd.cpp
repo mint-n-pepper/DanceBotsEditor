@@ -1,107 +1,89 @@
 /*
-*  Dancebots GUI - Create choreographies for Dancebots
-*  https://github.com/philippReist/dancebots_gui
-*
-*  Copyright 2019 - mint & pepper
-*
-*  This program is free software : you can redistribute it and/or modify
-*  it under the terms of the GNU General Public License as published by
-*  the Free Software Foundation, either version 3 of the License, or
-*  (at your option) any later version.
-*
-*  This program is distributed in the hope that it will be useful,
-*  but WITHOUT ANY WARRANTY; without even the implied warranty of
-*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-*
-*  See the GNU General Public License for more details, available in the
-*  LICENSE file included in the repository.
-*/
+ *  Dancebots GUI - Create choreographies for Dancebots
+ *  https://github.com/philippReist/dancebots_gui
+ *
+ *  Copyright 2019 - mint & pepper
+ *
+ *  This program is free software : you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ *  See the GNU General Public License for more details, available in the
+ *  LICENSE file included in the repository.
+ */
 
 #include "BackEnd.h"
 
 #include <stdio.h>
-#include <QtDebug>
-#include <QThread>
-#include <QEventLoop>
-#include <QtConcurrent>
 #include <QDataStream>
+#include <QEventLoop>
+#include <QThread>
+#include <QtConcurrent>
+#include <QtDebug>
 
 #include "Primitive.h"
-#include "Utils.h"
 #include "PrimitiveToSignal.h"
+#include "Utils.h"
 
-BackEnd::BackEnd(QObject* parent) :
-  QObject{ parent },
-  mFileStatus{ "Idle" },
-  mAudioFile{},
-  mAudioPlayer{ new AudioPlayer{this} },
-  mBeatDetector{ static_cast<unsigned int>(mAudioFile.sampleRate) },
-  mLoadFuture{},
-  mLoadFutureWatcher{},
-  mSaveFuture{},
-  mSaveFutureWatcher{},
-  mMotorPrimitives{ new PrimitiveList{this} },
-  mLedPrimitives{ new PrimitiveList{this} }
-{
+BackEnd::BackEnd(QObject* parent)
+    : QObject{parent},
+      mFileStatus{"Idle"},
+      mAudioFile{},
+      mAudioPlayer{new AudioPlayer{this}},
+      mBeatDetector{static_cast<unsigned int>(mAudioFile.sampleRate)},
+      mLoadFuture{},
+      mLoadFutureWatcher{},
+      mSaveFuture{},
+      mSaveFutureWatcher{},
+      mMotorPrimitives{new PrimitiveList{this}},
+      mLedPrimitives{new PrimitiveList{this}} {
   // connect load and save thread finish signal to backend handler slots
-  connect(&mLoadFutureWatcher, &QFutureWatcher<bool>::finished,
-          this, &BackEnd::handleDoneLoading);
-  connect(&mSaveFutureWatcher, &QFutureWatcher<bool>::finished,
-          this, &BackEnd::handleDoneSaving);
+  connect(&mLoadFutureWatcher, &QFutureWatcher<bool>::finished, this,
+          &BackEnd::handleDoneLoading);
+  connect(&mSaveFutureWatcher, &QFutureWatcher<bool>::finished, this,
+          &BackEnd::handleDoneSaving);
 }
 
 //** PROPERTY SETTERS GETTERS AND NOTIFIERS **//
-QString BackEnd::songTitle() {
-  return mSongTitle;
-}
+QString BackEnd::songTitle() { return mSongTitle; }
 
-QString BackEnd::songComment() {
-  return mSongComment;
-}
+QString BackEnd::songComment() { return mSongComment; }
 
-QString BackEnd::songArtist() {
-  return mSongArtist;
-}
+QString BackEnd::songArtist() { return mSongArtist; }
 
-QString BackEnd::fileStatus() {
-  return mFileStatus;
-}
+QString BackEnd::fileStatus() { return mFileStatus; }
 
-PrimitiveList* BackEnd::motorPrimitives(void) {
-  return mMotorPrimitives;
-}
+PrimitiveList* BackEnd::motorPrimitives(void) { return mMotorPrimitives; }
 
-PrimitiveList* BackEnd::ledPrimitives(void) {
-  return mLedPrimitives;
-}
+PrimitiveList* BackEnd::ledPrimitives(void) { return mLedPrimitives; }
 
-AudioPlayer* BackEnd::audioPlayer(void) {
-  return mAudioPlayer;
-}
+AudioPlayer* BackEnd::audioPlayer(void) { return mAudioPlayer; }
 
 void BackEnd::setSongArtist(const QString& name) {
-  if(name == mSongArtist)
-    return;
+  if (name == mSongArtist) return;
 
   mSongArtist = name;
 }
 
 void BackEnd::setSongTitle(const QString& name) {
-  if(name == mSongTitle)
-    return;
+  if (name == mSongTitle) return;
 
   mSongTitle = name;
 }
 
 void BackEnd::setSongComment(const QString& comment) {
-  if(comment == mSongComment)
-    return;
+  if (comment == mSongComment) return;
   mSongComment = comment;
 }
 
 Q_INVOKABLE void BackEnd::loadMP3(const QString& filePath) {
   // convert to qurl and localized file path:
-  QUrl localFilePath{ filePath };
+  QUrl localFilePath{filePath};
   // clean models before loading:
   mMotorPrimitives->clear();
   mLedPrimitives->clear();
@@ -116,7 +98,7 @@ Q_INVOKABLE void BackEnd::loadMP3(const QString& filePath) {
 
 Q_INVOKABLE void BackEnd::saveMP3(const QString& filePath) {
   // convert to qurl and localized file path:
-  QUrl localFilePath{ filePath };
+  QUrl localFilePath{filePath};
   mSaveFuture = QtConcurrent::run(this, &BackEnd::saveMP3Worker,
                                   localFilePath.toLocalFile());
   mSaveFutureWatcher.setFuture(mSaveFuture);
@@ -126,7 +108,7 @@ void BackEnd::handleDoneLoading(void) {
   emit doneLoading(mLoadFuture.result());
   // read out primitives if it is a dancefile:
   // need to do that in main thread (here) as we are assigning the parent
-  if(mAudioFile.isDancefile()) {
+  if (mAudioFile.isDancefile()) {
     readPrimitivesFromPrependData();
   }
 
@@ -134,9 +116,7 @@ void BackEnd::handleDoneLoading(void) {
   mAudioPlayer->setAudioData(mAudioFile.mFloatMusic, mAudioFile.sampleRate);
 }
 
-void BackEnd::handleDoneSaving(void) {
-  emit doneSaving(mSaveFuture.result());
-}
+void BackEnd::handleDoneSaving(void) { emit doneSaving(mSaveFuture.result()); }
 
 bool BackEnd::loadMP3Worker(const QString& filePath) {
   mFileStatus = "Reading and decoding MP3...";
@@ -148,27 +128,28 @@ bool BackEnd::loadMP3Worker(const QString& filePath) {
 
   const AudioFile::Result res = mAudioFile.load(filePath);
 
-  if(AudioFile::Result::eSuccess != res) {
+  if (AudioFile::Result::eSuccess != res) {
     // loading failed, show an appropriate error message for a few seconds.
-    switch(res) {
-    case AudioFile::Result::eCorruptHeader:
-      mFileStatus = "ERROR: Corrupt Dancefile header. Cannot process file.";
-      break;
-    case AudioFile::Result::eFileDoesNotExist:
-      mFileStatus = "ERROR: File not found.";
-      break;
-    case AudioFile::Result::eMP3DecodingError:
-      mFileStatus = "ERROR: Cannot decode corrupt MP3 File. Try different file.";
-      break;
-    case AudioFile::Result::eIOError:
-      mFileStatus = "ERROR: File reading error. Try again or different file.";
-      break;
-    case AudioFile::Result::eNotAnMP3File:
-      mFileStatus = "ERROR: Not a valid MP3 file. Try different file.";
-      break;
-    default:
-      mFileStatus = "ERROR: Unexpected error loading file.";
-      break;
+    switch (res) {
+      case AudioFile::Result::eCorruptHeader:
+        mFileStatus = "ERROR: Corrupt Dancefile header. Cannot process file.";
+        break;
+      case AudioFile::Result::eFileDoesNotExist:
+        mFileStatus = "ERROR: File not found.";
+        break;
+      case AudioFile::Result::eMP3DecodingError:
+        mFileStatus =
+            "ERROR: Cannot decode corrupt MP3 File. Try different file.";
+        break;
+      case AudioFile::Result::eIOError:
+        mFileStatus = "ERROR: File reading error. Try again or different file.";
+        break;
+      case AudioFile::Result::eNotAnMP3File:
+        mFileStatus = "ERROR: Not a valid MP3 file. Try different file.";
+        break;
+      default:
+        mFileStatus = "ERROR: Unexpected error loading file.";
+        break;
     }
     emit fileStatusChanged();
     QThread::msleep(mErrorDisplayTimeMS);
@@ -176,24 +157,23 @@ bool BackEnd::loadMP3Worker(const QString& filePath) {
   }
 
   // otherwise, loading succeeded, set song and artist name:
-  mSongArtist = QString{ mAudioFile.getArtist().c_str() };
-  mSongTitle = QString{ mAudioFile.getTitle().c_str() };
-  mSongComment = QString{ mAudioFile.getComment().c_str() };
+  mSongArtist = QString{mAudioFile.getArtist().c_str()};
+  mSongTitle = QString{mAudioFile.getTitle().c_str()};
+  mSongComment = QString{mAudioFile.getComment().c_str()};
   emit songArtistChanged();
   emit songTitleChanged();
   emit songCommentChanged();
 
-  if(mAudioFile.isDancefile()) {
+  if (mAudioFile.isDancefile()) {
     mFileStatus = "Dancebot file detected, reading data...";
     emit fileStatusChanged();
     QThread::msleep(250);
     readBeatsFromPrependData();
-  }
-  else {
+  } else {
     mFileStatus = "Detecting Beats...";
     emit fileStatusChanged();
-    std::vector<long> tmpBeats = mBeatDetector.detectBeats(
-      mAudioFile.mFloatMusic);
+    std::vector<long> tmpBeats =
+        mBeatDetector.detectBeats(mAudioFile.mFloatMusic);
 
     // convert the detected beats to int. This is fine because even a int32
     // would be able to hold beats detected up to 13 hours in a 44.1kHz sampled
@@ -202,11 +182,11 @@ bool BackEnd::loadMP3Worker(const QString& filePath) {
     mBeatFrames.reserve(tmpBeats.size() + 2);
 
     // add zero beat if first detected beat is not at 0:
-    if(0 != tmpBeats.front()) {
+    if (0 != tmpBeats.front()) {
       mBeatFrames.push_back(0);
     }
 
-    for(size_t i = 0; i < tmpBeats.size(); ++i) {
+    for (size_t i = 0; i < tmpBeats.size(); ++i) {
       mBeatFrames.push_back(static_cast<int>(tmpBeats[i]));
     }
 
@@ -215,8 +195,10 @@ bool BackEnd::loadMP3Worker(const QString& filePath) {
   }
 
   // check if there are enough beats (four) to operate.
-  if(mBeatFrames.size() < 4) {
-    mFileStatus = "ERROR: Fewer than four beats detected. Cannot proceed. Try different file.";
+  if (mBeatFrames.size() < 4) {
+    mFileStatus =
+        "ERROR: Fewer than four beats detected. Cannot proceed. Try different "
+        "file.";
     QThread::msleep(mErrorDisplayTimeMS);
     emit fileStatusChanged();
     return false;
@@ -224,7 +206,7 @@ bool BackEnd::loadMP3Worker(const QString& filePath) {
   // calculate average beat duration in frames,
   // ignoring first and last beat-intervals
   size_t sum = 0;
-  for(size_t i = 2; i < mBeatFrames.size() - 1; ++i) {
+  for (size_t i = 2; i < mBeatFrames.size() - 1; ++i) {
     sum += static_cast<size_t>(mBeatFrames[i]) - mBeatFrames[i - 1];
   }
   mAverageBeatFrames = static_cast<int>(sum / (mBeatFrames.size() - 3u));
@@ -240,7 +222,7 @@ bool BackEnd::saveMP3Worker(const QString& fileName) {
   emit fileStatusChanged();
 
   // write prepend data:
-  if(!writePrependData()) {
+  if (!writePrependData()) {
     mFileStatus = "ERROR: Save data preparation failed. Sorry :(";
     emit fileStatusChanged();
     QThread::msleep(mErrorDisplayTimeMS);
@@ -260,27 +242,27 @@ bool BackEnd::saveMP3Worker(const QString& fileName) {
   mAudioFile.setComment(mSongComment.toStdString());
   AudioFile::Result res = mAudioFile.save(fileName);
 
-  if(AudioFile::Result::eSuccess != res) {
+  if (AudioFile::Result::eSuccess != res) {
     // loading failed, show an appropriate error message for a few seconds.
-    switch(res) {
-    case AudioFile::Result::eNoDataToSave:
-      mFileStatus = "ERROR: No data to save. Aborting.";
-      break;
-    case AudioFile::Result::eFileWriteError:
-      mFileStatus = "ERROR: Cannot write data to file.";
-      break;
-    case AudioFile::Result::eMP3EncodingError:
-      mFileStatus = "ERROR: MP3 encoding error.";
-      break;
-    case AudioFile::Result::eTagWriteError:
-      mFileStatus = "ERROR: Could not write ID3 tag to MP3 file.";
-      break;
-    case AudioFile::Result::eFileOpenError:
-      mFileStatus = "ERROR: Could not open / create output file.";
-      break;
-    default:
-      mFileStatus = "ERROR: Unexpected error saving file.";
-      break;
+    switch (res) {
+      case AudioFile::Result::eNoDataToSave:
+        mFileStatus = "ERROR: No data to save. Aborting.";
+        break;
+      case AudioFile::Result::eFileWriteError:
+        mFileStatus = "ERROR: Cannot write data to file.";
+        break;
+      case AudioFile::Result::eMP3EncodingError:
+        mFileStatus = "ERROR: MP3 encoding error.";
+        break;
+      case AudioFile::Result::eTagWriteError:
+        mFileStatus = "ERROR: Could not write ID3 tag to MP3 file.";
+        break;
+      case AudioFile::Result::eFileOpenError:
+        mFileStatus = "ERROR: Could not open / create output file.";
+        break;
+      default:
+        mFileStatus = "ERROR: Unexpected error saving file.";
+        break;
     }
     emit fileStatusChanged();
     QThread::msleep(mErrorDisplayTimeMS);
@@ -290,21 +272,15 @@ bool BackEnd::saveMP3Worker(const QString& fileName) {
   return true;
 }
 
-std::vector<int> BackEnd::getBeats(void) const {
-  return mBeatFrames;
-}
+std::vector<int> BackEnd::getBeats(void) const { return mBeatFrames; }
 
 int BackEnd::getAudioLengthInFrames(void) const {
   return static_cast<int>(mAudioFile.getLengthInFrames());
 }
 
-int BackEnd::getSampleRate(void) const {
-  return AudioFile::sampleRate;
-}
+int BackEnd::getSampleRate(void) const { return AudioFile::sampleRate; }
 
-int BackEnd::getAverageBeatFrames(void) const {
-  return mAverageBeatFrames;
-}
+int BackEnd::getAverageBeatFrames(void) const { return mAverageBeatFrames; }
 
 void BackEnd::printMotPrimitives(void) const {
   mMotorPrimitives->printPrimitives();
@@ -319,13 +295,11 @@ int BackEnd::getBeatAtFrame(const int frame) const {
   size_t ind = 0;
   // use binary search, as it is much faster for larger arrays
   // and about the same speed as linear search for smaller ones
-  int rv = utils::findInterval<int>(frame,
-                                    mBeatFrames,
-                                    ind,
+  int rv = utils::findInterval<int>(frame, mBeatFrames, ind,
                                     utils::SearchMethod::eBinary);
 
   // return -1 if search failed
-  if(rv < 0) {
+  if (rv < 0) {
     return -1;
   }
 
@@ -346,7 +320,7 @@ bool BackEnd::writePrependData(void) {
   dataStream << nBeats;
 
   // write out beats:
-  for(const int& beatFrame : mBeatFrames) {
+  for (const int& beatFrame : mBeatFrames) {
     // all beat frames are nonnegative and smaller than 32 bits
     dataStream << static_cast<quint32>(beatFrame);
   }
@@ -356,7 +330,7 @@ bool BackEnd::writePrependData(void) {
   quint32 nMotorPrimitives = static_cast<quint32>(motPrimitives.size());
   dataStream << nMotorPrimitives;
 
-  for(const auto& e : motPrimitives) {
+  for (const auto& e : motPrimitives) {
     const MotorPrimitive* const mp = reinterpret_cast<const MotorPrimitive*>(e);
     mp->serializeToStream(dataStream);
   }
@@ -366,7 +340,7 @@ bool BackEnd::writePrependData(void) {
   quint32 nLedPrimitives = static_cast<quint32>(ledPrimitives.size());
   dataStream << nLedPrimitives;
 
-  for(const auto& e : ledPrimitives) {
+  for (const auto& e : ledPrimitives) {
     const LEDPrimitive* const lp = reinterpret_cast<const LEDPrimitive*>(e);
     lp->serializeToStream(dataStream);
   }
@@ -387,7 +361,7 @@ bool BackEnd::readBeatsFromPrependData(void) {
   mBeatFrames.reserve(nBeats);
 
   // read out beats:
-  for(size_t i = 0; i < nBeats; ++i) {
+  for (size_t i = 0; i < nBeats; ++i) {
     quint32 beatFrame = 0;
     dataStream >> beatFrame;
     mBeatFrames.push_back(static_cast<int>(beatFrame));
@@ -408,7 +382,7 @@ bool BackEnd::readPrimitivesFromPrependData(void) {
   quint32 nMotorPrimitives = 0;
   dataStream >> nMotorPrimitives;
 
-  for(size_t i = 0; i < nMotorPrimitives; ++i) {
+  for (size_t i = 0; i < nMotorPrimitives; ++i) {
     MotorPrimitive* mp = new MotorPrimitive(dataStream, nullptr);
     mMotorPrimitives->add(mp);
   }
@@ -417,7 +391,7 @@ bool BackEnd::readPrimitivesFromPrependData(void) {
   quint32 nLedPrimitives = 0;
   dataStream >> nLedPrimitives;
 
-  for(size_t i = 0; i < nLedPrimitives; ++i) {
+  for (size_t i = 0; i < nLedPrimitives; ++i) {
     LEDPrimitive* lp = new LEDPrimitive(dataStream, nullptr);
     mLedPrimitives->add(lp);
   }

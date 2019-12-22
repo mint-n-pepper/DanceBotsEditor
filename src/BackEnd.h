@@ -1,29 +1,29 @@
 /*
-*  Dancebots GUI - Create choreographies for Dancebots
-*  https://github.com/philippReist/dancebots_gui
-*
-*  Copyright 2019 - mint & pepper
-*
-*  This program is free software : you can redistribute it and/or modify
-*  it under the terms of the GNU General Public License as published by
-*  the Free Software Foundation, either version 3 of the License, or
-*  (at your option) any later version.
-*
-*  This program is distributed in the hope that it will be useful,
-*  but WITHOUT ANY WARRANTY; without even the implied warranty of
-*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-*
-*  See the GNU General Public License for more details, available in the
-*  LICENSE file included in the repository.
-*/
+ *  Dancebots GUI - Create choreographies for Dancebots
+ *  https://github.com/philippReist/dancebots_gui
+ *
+ *  Copyright 2019 - mint & pepper
+ *
+ *  This program is free software : you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ *  See the GNU General Public License for more details, available in the
+ *  LICENSE file included in the repository.
+ */
 
 #ifndef BACKEND_H
 #define BACKEND_H
 
-#include <QObject>
-#include <QString>
 #include <QFuture>
 #include <QFutureWatcher>
+#include <QObject>
+#include <QString>
 
 #include "AudioFile.h"
 #include "AudioPlayer.h"
@@ -36,32 +36,21 @@
  */
 class BackEnd : public QObject {
   Q_OBJECT;
-  Q_PROPERTY(QString songArtist
-             READ songArtist
-             WRITE setSongArtist
-             NOTIFY songArtistChanged);
-  Q_PROPERTY(QString songTitle
-             READ songTitle
-             WRITE setSongTitle
-             NOTIFY songTitleChanged);
-  Q_PROPERTY(QString songComment
-             READ songComment
-             WRITE setSongComment
-             NOTIFY songCommentChanged);
-  Q_PROPERTY(QString fileStatus
-             READ fileStatus
-             NOTIFY fileStatusChanged);
-  Q_PROPERTY(PrimitiveList* motorPrimitives
-             READ motorPrimitives
-             NOTIFY motorPrimitivesChanged);
-  Q_PROPERTY(PrimitiveList* ledPrimitives
-             READ ledPrimitives
-             NOTIFY ledPrimitivesChanged);
-  Q_PROPERTY(AudioPlayer* audioPlayer
-             READ audioPlayer
-             NOTIFY audioPlayerChanged);
+  Q_PROPERTY(QString songArtist READ songArtist WRITE setSongArtist NOTIFY
+                 songArtistChanged);
+  Q_PROPERTY(QString songTitle READ songTitle WRITE setSongTitle NOTIFY
+                 songTitleChanged);
+  Q_PROPERTY(QString songComment READ songComment WRITE setSongComment NOTIFY
+                 songCommentChanged);
+  Q_PROPERTY(QString fileStatus READ fileStatus NOTIFY fileStatusChanged);
+  Q_PROPERTY(PrimitiveList* motorPrimitives READ motorPrimitives NOTIFY
+                 motorPrimitivesChanged);
+  Q_PROPERTY(PrimitiveList* ledPrimitives READ ledPrimitives NOTIFY
+                 ledPrimitivesChanged);
+  Q_PROPERTY(
+      AudioPlayer* audioPlayer READ audioPlayer NOTIFY audioPlayerChanged);
 
-public:
+ public:
   explicit BackEnd(QObject* parent = nullptr);
 
   /**
@@ -177,12 +166,12 @@ public:
    * \param[in] timeMS - time in milliseconds
    */
   Q_INVOKABLE void setErrorDisplayTime(const int timeMS) {
-    if(timeMS >= 0) {
+    if (timeMS >= 0) {
       mErrorDisplayTimeMS = timeMS;
     }
   }
 
-signals:
+ signals:
   void fileStatusChanged();
   void songArtistChanged();
   void songTitleChanged();
@@ -193,15 +182,15 @@ signals:
   void doneLoading(const bool result);
   void doneSaving(const bool result);
 
-public slots:
+ public slots:
   void handleDoneLoading(void);
   void handleDoneSaving(void);
   void printMotPrimitives(void) const;
   void printLedPrimitives(void) const;
 
-private:
+ private:
   // init to 100bpm
-  int mAverageBeatFrames{ 60 * AudioFile::sampleRate / 100 };
+  int mAverageBeatFrames{60 * AudioFile::sampleRate / 100};
   unsigned long mErrorDisplayTimeMS = 3000;
 
   // song ID3 tag strings
@@ -226,8 +215,8 @@ private:
   bool saveMP3Worker(const QString& fileName);
 
   // data models for motor and led primitives
-  PrimitiveList* mMotorPrimitives; // raw pointer fine because it is QObject
-  PrimitiveList* mLedPrimitives; // raw pointer fine because it is QObject
+  PrimitiveList* mMotorPrimitives;  // raw pointer fine because it is QObject
+  PrimitiveList* mLedPrimitives;    // raw pointer fine because it is QObject
 
   /**
    * \brief Write beats and primitives to MP3 prepend data
@@ -245,4 +234,4 @@ private:
   bool readPrimitivesFromPrependData(void);
 };
 
-#endif // BACKEND_H
+#endif  // BACKEND_H

@@ -1,21 +1,20 @@
 #ifndef DUMMYUI_H_
 #define DUMMYUI_H_
-#include <QObject>
 #include <QDebug>
+#include <QObject>
 
 #include "AudioPlayer.h"
 
-class DummyUI :
-  public QObject {
+class DummyUI : public QObject {
   Q_OBJECT;
 
-public:
+ public:
   DummyUI(AudioPlayer& player);
 
-private slots:
+ private slots:
   void receiveNotify(int timeMS);
 
-private:
+ private:
   AudioPlayer& mAudioPlayer;
 };
 
