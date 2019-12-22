@@ -26,11 +26,12 @@ import "../GuiStyle"
 Item {
   id: root
   property alias sliderPosition: songPositionSlider.visualPosition
-
   height: songPositionSlider.height + playControlItem.height
           + appWindow.guiMargin
 
   property int sliderHeight: width * Style.audioControl.sliderHeight
+
+  property real songPositionMS: 0.0
 
   enabled: false
 
@@ -40,7 +41,7 @@ Item {
       if(result){
         enabled = true
         backend.audioPlayer.setNotifyInterval(30);
-        songPositionSlider.value = 0
+        songPositionMS = 0.0
         songPositionSlider.to =
           backend.getAudioLengthInFrames() / backend.getSampleRate() * 1000;
       }
@@ -53,7 +54,7 @@ Item {
       // set slider to current position in music,
       // but only if user is not dragging slider at the moment:
       if(!songPositionSlider.pressed){
-        songPositionSlider.value = currentPosMS
+        songPositionMS = currentPosMS
       }
     }
   }
@@ -67,6 +68,7 @@ Item {
     anchors.horizontalCenter: root.horizontalCenter
     height: sliderHeight
     focusPolicy: Qt.NoFocus
+    value: songPositionMS
 
     onPressedChanged:{
       appWindow.grabFocus()

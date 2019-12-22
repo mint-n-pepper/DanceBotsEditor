@@ -197,7 +197,16 @@ ApplicationWindow {
     MouseArea
     {
       anchors.fill: parent
-      onClicked: { mouse.accepted = false }
+      onClicked: {
+         mouse.accepted = false
+         // jump song position to click location
+         var timeMS = Math.round(mouseX / appWindow.frameToPixels
+                                        / backend.getSampleRate() * 1000.0)
+         audioControl.songPositionMS = timeMS
+         if(ledPrimitiveControl.enabled){
+           backend.audioPlayer.seek(timeMS)
+         }
+       }
       onReleased: {
         if (!propagateComposedEvents) {
             propagateComposedEvents = true
