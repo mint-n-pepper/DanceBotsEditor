@@ -28,8 +28,7 @@ jobs:
         target: desktop
 
     - name: Check Qt lib
-        run: |
-          ls ${Qt5_Dir}/lib
+        run: ls ${Qt5_Dir}/lib
 
     # - name: Download cmake-3.16.2
     #   run: |
