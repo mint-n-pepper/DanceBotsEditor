@@ -40,4 +40,4 @@ jobs:
         ../cmake-3.16.2-Linux-x86_64/bin/cmake -DCMAKE_PREFIX_PATH=${Qt5_Dir} -DCMAKE_BUILD_TYPE=Release ../
     
     - name: Build
-     run: make
+      run: make
