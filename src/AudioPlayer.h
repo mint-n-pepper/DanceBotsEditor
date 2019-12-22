@@ -1,45 +1,42 @@
 /*
-*  Dancebots GUI - Create choreographies for Dancebots
-*  https://github.com/philippReist/dancebots_gui
-*
-*  Copyright 2019 - mint & pepper
-*
-*  This program is free software : you can redistribute it and/or modify
-*  it under the terms of the GNU General Public License as published by
-*  the Free Software Foundation, either version 3 of the License, or
-*  (at your option) any later version.
-*
-*  This program is distributed in the hope that it will be useful,
-*  but WITHOUT ANY WARRANTY; without even the implied warranty of
-*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-*
-*  See the GNU General Public License for more details, available in the
-*  LICENSE file included in the repository.
-*/
+ *  Dancebots GUI - Create choreographies for Dancebots
+ *  https://github.com/philippReist/dancebots_gui
+ *
+ *  Copyright 2019 - mint & pepper
+ *
+ *  This program is free software : you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ *  See the GNU General Public License for more details, available in the
+ *  LICENSE file included in the repository.
+ */
 
 #ifndef AUDIO_PLAYER_H_
 #define AUDIO_PLAYER_H_
 
+#include <QBuffer>
+#include <QByteArray>
+#include <QDataStream>
 #include <QObject>
 #include <QtMultimedia>
 #include <memory>
-#include <QByteArray>
-#include <QDataStream>
 #include <vector>
-#include <QBuffer>
 
 /** \class AudioPlayer
  * \brief Plays back audio from raw data to QAudioOutput
  */
-class AudioPlayer :
-  public QObject {
+class AudioPlayer : public QObject {
   Q_OBJECT;
 
-  Q_PROPERTY(bool isPlaying
-  READ isPlaying
-  NOTIFY isPlayingChanged)
+  Q_PROPERTY(bool isPlaying READ isPlaying NOTIFY isPlayingChanged)
 
-public:
+ public:
   explicit AudioPlayer(QObject* parent);
 
   /**
@@ -63,11 +60,9 @@ public:
    *
    * \return if player is playing (true)
    */
-  bool isPlaying(void) const {
-    return mIsPlaying;
-  }
+  bool isPlaying(void) const { return mIsPlaying; }
 
-signals:
+ signals:
   void isPlayingChanged(void);
 
   /**
@@ -84,7 +79,7 @@ signals:
    */
   void volumeAvailable(void);
 
-public slots:
+ public slots:
   /**
    * \brief Toggles playback between play and pause
    */
@@ -121,7 +116,7 @@ public slots:
    */
   void setNotifyInterval(const int intervalMS);
 
-private slots:
+ private slots:
   /**
    * \brief Handler for state changed signal
    *
@@ -135,17 +130,17 @@ private slots:
    */
   void handleAudioOutputNotify(void);
 
-private:
+ private:
   /**
    * \brief Connect internal signals and slots
    */
   void connectAudioOutputSignals();
 
-  bool mIsPlaying{ false };
-  qreal mVolumeLinear{ 1.0 }; /**< Audio volume in linear representation */
-  int mSampleRate{ 0 };
-  int mNotifyInterval{ 25 }; /**< Audio time update interval in MS */
-  const QDataStream::ByteOrder mEndianness{ QDataStream::LittleEndian };
+  bool mIsPlaying{false};
+  qreal mVolumeLinear{1.0}; /**< Audio volume in linear representation */
+  int mSampleRate{0};
+  int mNotifyInterval{25}; /**< Audio time update interval in MS */
+  const QDataStream::ByteOrder mEndianness{QDataStream::LittleEndian};
   std::unique_ptr<QAudioOutput> mAudioOutput;
   QByteArray mRawAudio;
   QBuffer mRawAudioBuffer;

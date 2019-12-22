@@ -1,25 +1,25 @@
 /*
-*  Dancebots GUI - Create choreographies for Dancebots
-*  https://github.com/philippReist/dancebots_gui
-*
-*  Copyright 2019 - mint & pepper
-*
-*  This program is free software : you can redistribute it and/or modify
-*  it under the terms of the GNU General Public License as published by
-*  the Free Software Foundation, either version 3 of the License, or
-*  (at your option) any later version.
-*
-*  This program is distributed in the hope that it will be useful,
-*  but WITHOUT ANY WARRANTY; without even the implied warranty of
-*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-*
-*  See the GNU General Public License for more details, available in the
-*  LICENSE file included in the repository.
-*/
+ *  Dancebots GUI - Create choreographies for Dancebots
+ *  https://github.com/philippReist/dancebots_gui
+ *
+ *  Copyright 2019 - mint & pepper
+ *
+ *  This program is free software : you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ *  See the GNU General Public License for more details, available in the
+ *  LICENSE file included in the repository.
+ */
 
-#include<vector>
-#include<memory>
 #include <BeatTrack.h>
+#include <memory>
+#include <vector>
 #include "kissfft.hh"
 
 /** \class BeatDetector
@@ -27,12 +27,12 @@
  * https://vamp-plugins.org/plugin-doc/qm-vamp-plugins.html
  */
 class BeatDetector {
-public:
+ public:
   /**
-  * \brief Constructs a beat detector object.
-  *
-  * \param[in] sampleRate in Hz of audio to be used in detection
-  */
+   * \brief Constructs a beat detector object.
+   *
+   * \param[in] sampleRate in Hz of audio to be used in detection
+   */
   explicit BeatDetector(const unsigned int sampleRate);
 
   /**
@@ -48,7 +48,7 @@ public:
    */
   bool isInitialized(void) { return mInitSuccess; };
 
-private:
+ private:
   const unsigned int mSampleRate;
   BeatTracker mBeatTracker;
   const size_t mStepSize;

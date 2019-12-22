@@ -1,21 +1,21 @@
 /*
-*  Dancebots GUI - Create choreographies for Dancebots
-*  https://github.com/philippReist/dancebots_gui
-*
-*  Copyright 2019 - mint & pepper
-*
-*  This program is free software : you can redistribute it and/or modify
-*  it under the terms of the GNU General Public License as published by
-*  the Free Software Foundation, either version 3 of the License, or
-*  (at your option) any later version.
-*
-*  This program is distributed in the hope that it will be useful,
-*  but WITHOUT ANY WARRANTY; without even the implied warranty of
-*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-*
-*  See the GNU General Public License for more details, available in the
-*  LICENSE file included in the repository.
-*/
+ *  Dancebots GUI - Create choreographies for Dancebots
+ *  https://github.com/philippReist/dancebots_gui
+ *
+ *  Copyright 2019 - mint & pepper
+ *
+ *  This program is free software : you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ *  See the GNU General Public License for more details, available in the
+ *  LICENSE file included in the repository.
+ */
 
 #ifndef PRIMITIVE_LIST_H_
 #define PRIMITIVE_LIST_H_
@@ -26,15 +26,12 @@
  * \brief Data model to store motor and led primitives in. See documentation of
  * QAbstractListModel for more information about overridden functions.
  */
-class PrimitiveList :
-  public QAbstractListModel {
+class PrimitiveList : public QAbstractListModel {
   Q_OBJECT;
 
-  Q_PROPERTY(QObject* parent
-             READ parent
-             WRITE setParent);
+  Q_PROPERTY(QObject* parent READ parent WRITE setParent);
 
-public:
+ public:
   explicit PrimitiveList(QObject* parent);
 
   /**
@@ -56,8 +53,7 @@ public:
   /**
    * \brief Set data of given index.
    */
-  bool setData(const QModelIndex& index,
-               const QVariant& value,
+  bool setData(const QModelIndex& index, const QVariant& value,
                int role = Qt::EditRole) override;
 
   /**
@@ -65,7 +61,7 @@ public:
    */
   const QList<QObject*>& getData(void);
 
-public slots:
+ public slots:
   /**
    * \brief Add item to model. The model will assume ownership of the object.
    *
@@ -95,14 +91,14 @@ public slots:
    */
   void callDataChanged(const int index);
 
-protected:
+ protected:
   /**
    * \brief Defines role names, i.e. maps role numbers to strings to use in qml.
    */
   QHash<int, QByteArray> roleNames() const override;
 
-private:
+ private:
   QList<QObject*> mData;
 };
 
-#endif // PRIMITIVE_LIST_H_
+#endif  // PRIMITIVE_LIST_H_

@@ -1,28 +1,28 @@
 /*
-*  Dancebots GUI - Create choreographies for Dancebots
-*  https://github.com/philippReist/dancebots_gui
-*
-*  Copyright 2019 - mint & pepper
-*
-*  This program is free software : you can redistribute it and/or modify
-*  it under the terms of the GNU General Public License as published by
-*  the Free Software Foundation, either version 3 of the License, or
-*  (at your option) any later version.
-*
-*  This program is distributed in the hope that it will be useful,
-*  but WITHOUT ANY WARRANTY; without even the implied warranty of
-*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-*
-*  See the GNU General Public License for more details, available in the
-*  LICENSE file included in the repository.
-*/
+ *  Dancebots GUI - Create choreographies for Dancebots
+ *  https://github.com/philippReist/dancebots_gui
+ *
+ *  Copyright 2019 - mint & pepper
+ *
+ *  This program is free software : you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ *  See the GNU General Public License for more details, available in the
+ *  LICENSE file included in the repository.
+ */
 
 #ifndef PRIMITIVE_H_
 #define PRIMITIVE_H_
 
-#include<QObject>
-#include<QDebug>
 #include <QDataStream>
+#include <QDebug>
+#include <QObject>
 
 /** \class BasePrimitive
  * \brief Base class providing common data members position, length, and
@@ -30,22 +30,16 @@
  */
 class BasePrimitive : public QObject {
   Q_OBJECT;
-  Q_PROPERTY(int positionBeat
-             MEMBER mPositionBeat
-             NOTIFY positionBeatChanged);
-  Q_PROPERTY(int lengthBeat
-             MEMBER mLengthBeat
-             NOTIFY lengthBeatChanged);
-  Q_PROPERTY(double frequency
-             MEMBER mFrequency
-             NOTIFY frequencyChanged);
+  Q_PROPERTY(int positionBeat MEMBER mPositionBeat NOTIFY positionBeatChanged);
+  Q_PROPERTY(int lengthBeat MEMBER mLengthBeat NOTIFY lengthBeatChanged);
+  Q_PROPERTY(double frequency MEMBER mFrequency NOTIFY frequencyChanged);
 
-public:
-  explicit BasePrimitive(QObject* const parent) : QObject{ parent } {};
-  virtual ~BasePrimitive() {};
+ public:
+  explicit BasePrimitive(QObject* const parent) : QObject{parent} {};
+  virtual ~BasePrimitive(){};
 
   // public members
-  double mFrequency{ 1.0f };
+  double mFrequency{1.0f};
   int mPositionBeat = 0u;
   int mLengthBeat = 0u;
 
@@ -54,7 +48,7 @@ public:
    */
   virtual void serializeToStream(QDataStream& stream) const = 0;
 
-signals:
+ signals:
   void positionBeatChanged(void);
   void lengthBeatChanged(void);
   void frequencyChanged(void);
@@ -68,23 +62,18 @@ class MotorPrimitive : public BasePrimitive {
   // make sure enum is scoped in QML as well
   Q_CLASSINFO("RegisterEnumClassesUnscoped", "false");
 
-  Q_PROPERTY(int velocity
-             MEMBER mVelocity
-             NOTIFY velocityChanged);
-  Q_PROPERTY(int velocityRight
-             MEMBER mVelocityRight
-             NOTIFY velocityRightChanged);
-  Q_PROPERTY(Type type
-             MEMBER mType
-             NOTIFY typeChanged);
+  Q_PROPERTY(int velocity MEMBER mVelocity NOTIFY velocityChanged);
+  Q_PROPERTY(
+      int velocityRight MEMBER mVelocityRight NOTIFY velocityRightChanged);
+  Q_PROPERTY(Type type MEMBER mType NOTIFY typeChanged);
 
-public:
+ public:
   enum class Type {
     Twist = 0,
     BackAndForth,
     Spin,
     Straight,
-    Custom // leave custom as last as used for counting types
+    Custom  // leave custom as last as used for counting types
   };
   Q_ENUM(Type);
 
@@ -97,16 +86,16 @@ public:
                           QObject* const parent = nullptr);
 
   // public members
-  int mVelocity{ 0 };
-  int mVelocityRight{ 0 };
-  Type mType{ Type::Twist };
+  int mVelocity{0};
+  int mVelocityRight{0};
+  Type mType{Type::Twist};
 
   /**
    * \brief Serialize motor primitive to data stream
    */
   void serializeToStream(QDataStream& stream) const override;
 
-signals:
+ signals:
   void velocityChanged(void);
   void velocityRightChanged(void);
   void typeChanged(void);
@@ -120,20 +109,16 @@ class LEDPrimitive : public BasePrimitive {
   // make sure enum is scoped in QML as well
   Q_CLASSINFO("RegisterEnumClassesUnscoped", "false");
 
-  Q_PROPERTY(std::vector<bool> leds
-             MEMBER mLeds
-             NOTIFY ledsChanged);
-  Q_PROPERTY(Type type
-             MEMBER mType
-             NOTIFY typeChanged);
+  Q_PROPERTY(std::vector<bool> leds MEMBER mLeds NOTIFY ledsChanged);
+  Q_PROPERTY(Type type MEMBER mType NOTIFY typeChanged);
 
-public:
+ public:
   enum class Type {
     KnightRider = 0,
     Alternate,
     Blink,
     Constant,
-    Random // leave random as last as used for counting types
+    Random  // leave random as last as used for counting types
   };
   Q_ENUM(Type);
 
@@ -147,7 +132,7 @@ public:
 
   // public members
   std::vector<bool> mLeds;
-  Type mType{ Type::KnightRider };
+  Type mType{Type::KnightRider};
 
   /**
    * \brief Serialize motor primitive to data stream
@@ -159,9 +144,9 @@ public:
    */
   quint8 getLedByte(void) const;
 
-signals:
+ signals:
   void ledsChanged(void);
   void typeChanged(void);
 };
 
-#endif // !PRIMITIVE_H_
+#endif  // !PRIMITIVE_H_

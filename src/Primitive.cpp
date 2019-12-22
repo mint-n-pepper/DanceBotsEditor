@@ -1,30 +1,28 @@
 /*
-*  Dancebots GUI - Create choreographies for Dancebots
-*  https://github.com/philippReist/dancebots_gui
-*
-*  Copyright 2019 - mint & pepper
-*
-*  This program is free software : you can redistribute it and/or modify
-*  it under the terms of the GNU General Public License as published by
-*  the Free Software Foundation, either version 3 of the License, or
-*  (at your option) any later version.
-*
-*  This program is distributed in the hope that it will be useful,
-*  but WITHOUT ANY WARRANTY; without even the implied warranty of
-*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-*
-*  See the GNU General Public License for more details, available in the
-*  LICENSE file included in the repository.
-*/
+ *  Dancebots GUI - Create choreographies for Dancebots
+ *  https://github.com/philippReist/dancebots_gui
+ *
+ *  Copyright 2019 - mint & pepper
+ *
+ *  This program is free software : you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ *  See the GNU General Public License for more details, available in the
+ *  LICENSE file included in the repository.
+ */
 
 #include "Primitive.h"
 
-MotorPrimitive::MotorPrimitive(QObject* const parent)
-  : BasePrimitive{ parent } {
-}
+MotorPrimitive::MotorPrimitive(QObject* const parent) : BasePrimitive{parent} {}
 
 MotorPrimitive::MotorPrimitive(QDataStream& initStream, QObject* const parent)
-  : BasePrimitive{ parent } {
+    : BasePrimitive{parent} {
   // and initialize members from data stream
   quint16 beatPosition = 0;
   quint16 beatLength = 0;
@@ -34,8 +32,8 @@ MotorPrimitive::MotorPrimitive(QDataStream& initStream, QObject* const parent)
   qint8 velocityRight = 0;
 
   // get from stream:
-  initStream >> beatPosition >> beatLength >> type >> frequency >> velocity
-    >> velocityRight;
+  initStream >> beatPosition >> beatLength >> type >> frequency >> velocity >>
+      velocityRight;
 
   // and write to members:
   mPositionBeat = beatPosition;
@@ -57,18 +55,14 @@ void MotorPrimitive::serializeToStream(QDataStream& stream) const {
 
   // and save to stream:
   stream << beatPosition << beatLength << type << frequency << velocity
-    << velocityRight;
+         << velocityRight;
 }
 
 LEDPrimitive::LEDPrimitive(QObject* const parent)
-  : BasePrimitive{ parent },
-  mLeds(8, true)
-{
-};
+    : BasePrimitive{parent}, mLeds(8, true){};
 
 LEDPrimitive::LEDPrimitive(QDataStream& initStream, QObject* const parent)
-  : BasePrimitive{ parent },
-  mLeds(8, true) {
+    : BasePrimitive{parent}, mLeds(8, true) {
   // and initialize members from data stream
   quint16 beatPosition = 0;
   quint16 beatLength = 0;
@@ -85,7 +79,7 @@ LEDPrimitive::LEDPrimitive(QDataStream& initStream, QObject* const parent)
   mType = static_cast<Type>(type);
   mFrequency = frequency;
 
-  for(size_t i = 0; i < mLeds.size(); ++i) {
+  for (size_t i = 0; i < mLeds.size(); ++i) {
     mLeds[i] = leds & (1u << i);
   }
 }
@@ -106,8 +100,8 @@ void LEDPrimitive::serializeToStream(QDataStream& stream) const {
 
 quint8 LEDPrimitive::getLedByte(void) const {
   quint8 leds = 0u;
-  for(size_t i = 0; i < mLeds.size(); ++i) {
-    if(mLeds[i]) {
+  for (size_t i = 0; i < mLeds.size(); ++i) {
+    if (mLeds[i]) {
       leds |= (1u << i);
     }
   }
