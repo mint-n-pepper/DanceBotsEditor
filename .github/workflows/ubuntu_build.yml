@@ -4,8 +4,7 @@ on:
   push:
     branches:
       - master
-      - devel
-      - git-workflow
+      - develop
 
 jobs:
   build:

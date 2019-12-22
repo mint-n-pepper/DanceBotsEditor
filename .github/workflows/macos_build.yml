@@ -4,9 +4,8 @@ on:
   push:
     branches:
       - master
-      - devel
-      - git-workflow
-         
+      - develop
+
 jobs:
   build:
     name: Test build on ${{ matrix.os }} with Qt ${{ matrix.qt_version }}
