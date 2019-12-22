@@ -1,0 +1,44 @@
+name: macOS Build-Test
+
+on:
+  push:
+    branches:
+      - git-workflow
+         
+jobs:
+  build:
+    name: Test build on ${{ matrix.os }} with Qt ${{ matrix.qt_version }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: ['macOS-latest']
+        qt_version: ['5.12.6']
+    
+    steps:
+    - uses: actions/checkout@v1
+    
+    - name: Check Developer Tools
+      run: gcc --version
+
+    # - name: Update git submodules
+    #   run: |
+    #     git submodule update --init --recursive
+    
+    # - name: Install Qt ${{ matrix.qt_version }}
+    #   uses: jurplel/install-qt-action@v2.2.1
+    #   with:
+    #     version: ${{ matrix.qt_version }}
+    #     target: desktop
+
+    # - name: Download cmake-3.16.2
+    #   run: |
+    #     wget https://github.com/Kitware/CMake/releases/download/v3.16.2/cmake-3.16.2-Darwin-x86_64.tar.gz
+    #     tar xvfz cmake-3.16.2-Darwin-x86_64.tar.gz
+
+    # - name: Configure & Build
+    #   run: |
+    #     mkdir build
+    #     cd build/
+    #     echo "Qt5_Dir: ${Qt5_Dir}"
+    #     ../cmake-3.16.2-Darwin-x86_64/bin/cmake -DCMAKE_PREFIX_PATH=${Qt5_Dir} -DCMAKE_BUILD_TYPE=Release ../
+    #     make -j
