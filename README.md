@@ -1,10 +1,5 @@
-![](https://github.com/actions/dancebots_gui/workflows/macOS%20Build/badge.svg?branch=master)
-![](https://github.com/actions/dancebots_gui/workflows/Ubuntu%20Build/badge.svg?branch=master)
-![](https://github.com/actions/dancebots_gui/workflows/Ubuntu%20Build/badge.svg?branch=devel)
-![](https://github.com/actions/dancebots_gui/workflows/macOS%20Build/badge.svg?branch=devel)
-![](https://github.com/actions/dancebots_gui/workflows/Ubuntu%20Build/badge.svg?branch=git-workflow)
-![](https://github.com/actions/dancebots_gui/workflows/macOS%20Build/badge.svg?branch=git-workflow)
-![](https://github.com/actions/dancebots_gui/workflows/macOS%20Build/badge.svg?branch=git-workflow?event=pull_request)
+![](https://github.com/philippReist/dancebots_gui/workflows/macOS%20Build/badge.svg)
+![](https://github.com/philippReist/dancebots_gui/workflows/Ubuntu%20Build/badge.svg)
 
 # Build & Deployment Instructions
 ## Windows
@@ -29,37 +24,37 @@
 
 ## macOS
 ### Prequisites
-Install [Xcode](https://developer.apple.com/xcode/):
-```
-xcode-select--install
-```
-If that fails, follow the instructions [here](https://www.ics.uci.edu/~pattis/common/handouts/macmingweclipse/allexperimental/macxcodecommandlinetools.html)
+1. Install [Xcode](https://developer.apple.com/xcode/):
+   ```
+   xcode-select--install
+   ```
+   If that fails, follow the instructions [here](https://www.ics.uci.edu/~pattis/common/handouts/macmingweclipse/allexperimental/macxcodecommandlinetools.html)
 
-Install [CMake](https://cmake.org/) 3.15 or above. The easiest is to first try with [Homebrew](https://brew.sh/):
-```
-brew install cmake
-```
+2. Install [CMake](https://cmake.org/) 3.15 or above. The easiest is to first try with [Homebrew](https://brew.sh/):
+   ```
+   brew install cmake
+   ```
 
-Install 5.12.6 LTS from [online installer](https://www.qt.io/download).
+3. Install 5.12.6 LTS from [online installer](https://www.qt.io/download).
 
-Clone the repository and update submodules:
-```
-git submodule update --init --recursive
-```
+4. Clone the repository and update submodules:
+   ```
+   git submodule update --init --recursive
+   ```
 
 ### Build
-Navigate to the `dancebots_gui` directory and create a `build` directory:
-```
-cd dancebots_gui/
-mkdir build
-```
+1. Navigate to the `dancebots_gui` directory and create a `build` directory:
+   ```
+   cd dancebots_gui/
+   mkdir build
+   ```
 
-Navigate to the `build` directory, configure for release, and build the project:
-```
-cd build/
-cmake -DCMAKE_PREFIX_PATH=/path/to/Qt/5.12.6/clang_64/ -DCMAKE_BUILD_TYPE=Release ../
-make -j dancebotsEditor
-```
+2. Navigate to the `build` directory, configure for release, and build the project:
+   ```
+   cd build/
+   cmake -DCMAKE_PREFIX_PATH=/path/to/Qt/5.12.6/clang_64/ -DCMAKE_BUILD_TYPE=Release ../
+   make -j dancebotsEditor
+   ```
 
 ### Deploy
 1. Go to the subfolder ```gui/mac_os_rc```, and run the script ```deploy.sh ../../build```, where the first command line argument is the path to your build folder. The script then creates the folder ```DancebotsEditor.app``` in your build folder and copies the executable, icon, and run settings files to the appropriate subfolders.
@@ -70,40 +65,40 @@ make -j dancebotsEditor
 	where the ```-dmg``` option creates an app dmg file. You should replace the Qt install folder and gui folders with the appropriate locations.
 
 
-## Ubuntu
+## Ubuntu 
 ### Prerequisites
-Install build dependencies:
-```
-sudo apt-get install build-essential libpulse-dev libgl1-mesa-dev 
-```
+1. Install build dependencies:
+   ```
+   sudo apt-get install build-essential libpulse-dev libgl1-mesa-dev 
+   ```
 
-Install [CMake](https://cmake.org/) 3.15 or above. The easiest is to first try with your package manager:
-```
-sudo apt-get install cmake
-```
+2. Install [CMake](https://cmake.org/) 3.15 or above. The easiest is to first try with your package manager:
+   ```
+   sudo apt-get install cmake
+   ```
 
-Install 5.12.6 LTS from [online installer](https://www.qt.io/download), selecting gcc 64 bit version.
+3. Install 5.12.6 LTS from [online installer](https://www.qt.io/download), selecting gcc 64 bit version.
 
-Clone the repository and update submodules:
-```
-git submodule update --init --recursive
-```
+3. Clone the repository and update submodules:
+   ```
+   git submodule update --init --recursive
+   ```
 
 ### Build
-Navigate to the `dancebots_gui` directory and create a `build` directory:
-```
-cd dancebots_gui/
-mkdir build
-```
+1. Navigate to the `dancebots_gui` directory and create a `build` directory:
+   ```
+   cd dancebots_gui/
+   mkdir build
+   ```
 
-Navigate to the `build` directory, configure for release, and build the project:
-```
-cd build/
-cmake -DCMAKE_PREFIX_PATH=/path/to/Qt/5.12.6/gcc_64 -DCMAKE_BUILD_TYPE=Release ../
-make -j dancebotsEditor
-```
+2. Navigate to the `build` directory, configure for release, and build the project:
+   ```
+   cd build/
+   cmake -DCMAKE_PREFIX_PATH=/path/to/Qt/5.12.6/gcc_64 -DCMAKE_BUILD_TYPE=Release ../
+   make -j dancebotsEditor
+   ```
 
-The `dancebotsEditor` binary will be located in `/path/to/dancebots_gui/build/gui/`.
+   The `dancebotsEditor` binary will be located in `/path/to/dancebots_gui/build/gui/`.
 
 
 # Style Guide
