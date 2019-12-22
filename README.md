@@ -1,4 +1,7 @@
-# Deployment / Building
+![](https://github.com/philippReist/dancebots_gui/workflows/macOS%20Build/badge.svg)
+![](https://github.com/philippReist/dancebots_gui/workflows/Ubuntu%20Build/badge.svg)
+
+# Build & Deployment Instructions
 ## Windows
 ### Build
 1. Install ```cmake``` from https://cmake.org/download/.
@@ -19,20 +22,40 @@
 	```
 	This adds all necessary dlls to the deployment folder.
 
-## MacOS
+## macOS
+### Prequisites
+1. Install [Xcode](https://developer.apple.com/xcode/):
+   ```
+   xcode-select--install
+   ```
+   If that fails, follow the instructions [here](https://www.ics.uci.edu/~pattis/common/handouts/macmingweclipse/allexperimental/macxcodecommandlinetools.html).
+
+2. Install [CMake](https://cmake.org/) 3.15 or above. The easiest is to use [Homebrew](https://brew.sh/):
+   ```
+   brew install cmake
+   ```
+
+3. Install Qt 5.12.6 LTS. The easiest is to use the [online installer](https://www.qt.io/download). Take of the installation directory as you will need it later on.
+
+4. Clone the repository and update submodules:
+   ```
+   git submodule update --init --recursive
+   ```
+
 ### Build
-1. Install ```cmake```, probably easiest using homebrew.
-2. Install XCode https://developer.apple.com/xcode/
-3. Install Qt 5.12.6 LTS from https://www.qt.io/. You only have to select/install the MacOS version.
-4. Create the environment variable ```CMAKE_PREFIX_PATH``` and set it to the path to the Qt clang_64 folder of the 5.12.6 installation, e.g. do ```EXPORT CMAKE_PREFIX_PATH=/Users/philipp/Qt/5.12.6/clang_64/```, or add this command to the ```.bash_profile``` in your home folder.
-5. Clone the repo, best using the ```--recursive``` option to init and download all submodules.
-6. Create a build folder in the cloned repo folder (e.g. ```dancebots_gui/build```).
-7. In the build folder, run CMAKE with the release type:
-	```
-	cmake .. -DCMAKE_BUILD_TYPE=Release
-	```
-	where the .. will point to the repository root folder.
-8. Build the gui by running ```make dancebotsEditor``` in the build folder.
+1. Navigate to the `dancebots_gui` directory and create a `build` directory:
+   ```
+   cd dancebots_gui/
+   mkdir build
+   ```
+
+2. Navigate to the `build` directory, configure for release, and build the project:
+   ```
+   cd build/
+   cmake -DCMAKE_PREFIX_PATH=/path/to/Qt/5.12.6/clang_64/ -DCMAKE_BUILD_TYPE=Release ../
+   make -j dancebotsEditor
+   ```
+
 ### Deploy
 1. Go to the subfolder ```gui/mac_os_rc```, and run the script ```deploy.sh ../../build```, where the first command line argument is the path to your build folder. The script then creates the folder ```DancebotsEditor.app``` in your build folder and copies the executable, icon, and run settings files to the appropriate subfolders.
 2. Run the Qt deployment tool on the app folder to copy the appropriate frameworks to the app:
@@ -41,24 +64,42 @@
 	```
 	where the ```-dmg``` option creates an app dmg file. You should replace the Qt install folder and gui folders with the appropriate locations.
 
-## Debian/Ubuntu
-1. Install 5.12.6 LTS from [online installer](https://www.qt.io/download), selecting gcc 64 bit version.
-2. Install `cmake`:
+
+## Ubuntu 
+### Prerequisites
+1. Install build dependencies:
+   ```
+   sudo apt-get install build-essential libpulse-dev libgl1-mesa-dev 
+   ```
+
+2. Install [CMake](https://cmake.org/) 3.15 or above. The easiest is to use the package manager:
    ```
    sudo apt-get install cmake
    ```
-3. Install build dependencies:
-	```
-	sudo apt-get install libgl1-mesa-dev build-essential
-	```
-4. In the `build` directory, configure for release:
+
+3. Install Qt 5.12.6 LTS (gcc 64-bit). The easiest is to use the [online installer](https://www.qt.io/download). Take of the installation directory as you will need it later on.
+
+3. Clone the repository and update submodules:
    ```
-   cmake -DCMAKE_PREFIX_PATH=/path/to/Qt/<VERSION>/gcc_64 -DCMAKE_BUILD_TYPE=Release ../
+   git submodule update --init --recursive
    ```
-5. In the `build` directory, build the project:
+
+### Build
+1. Navigate to the `dancebots_gui` directory and create a `build` directory:
    ```
-   make dancebotsEditor
+   cd dancebots_gui/
+   mkdir build
    ```
+
+2. Navigate to the `build` directory, configure for release, and build the project:
+   ```
+   cd build/
+   cmake -DCMAKE_PREFIX_PATH=/path/to/Qt/5.12.6/gcc_64 -DCMAKE_BUILD_TYPE=Release ../
+   make -j dancebotsEditor
+   ```
+
+   The `dancebotsEditor` binary will be located in `/path/to/dancebots_gui/build/gui/`.
+
 
 # Style Guide
 
