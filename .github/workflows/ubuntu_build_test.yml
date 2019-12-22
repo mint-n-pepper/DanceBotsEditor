@@ -20,7 +20,7 @@ jobs:
     - name: Update git submodules
       run: |
          git submodule update --init --recursive
-         
+
     - name: Install Qt ${{ matrix.qt_version }}
       uses: jurplel/install-qt-action@v2.2.1
       with:
@@ -38,7 +38,6 @@ jobs:
         cd build/
         echo "Qt5_Dir: ${Qt5_Dir}"
         ../cmake-3.16.2-Linux-x86_64/bin/cmake -DCMAKE_PREFIX_PATH=${Qt5_Dir} -DCMAKE_BUILD_TYPE=Release ../
-        #./configure
     
     - name: Build
      run: make
