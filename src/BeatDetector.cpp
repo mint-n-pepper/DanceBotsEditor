@@ -49,9 +49,9 @@ BeatDetector::BeatDetector(const unsigned int sampleRate)
 
 const float BeatDetector::mPI = 3.14159265358979323846f;
 
-std::vector<long> BeatDetector::detectBeats(
+std::vector<int> BeatDetector::detectBeats(
     const std::vector<float>& monoMusicData) {
-  std::vector<long> retVal{};
+  std::vector<int> retVal{};
   if (!mInitSuccess) {
     // failed to init in constructor, return and leave vector empty
     return retVal;
@@ -59,14 +59,13 @@ std::vector<long> BeatDetector::detectBeats(
 
   const size_t kDataLength = monoMusicData.size();
 
-  if (!kDataLength) {
-    // no data in vector
-    // TODO: Check that some min length is satisfied, too (e.g. min 1 block)
+  if (kDataLength < 2 * mBlockSize) {
+    // not enough data in vector
     return retVal;
   }
 
   // push all data into beattracker
-  for (long i = 0; i < kDataLength; i += mStepSize) {
+  for (size_t i = 0; i < kDataLength; i += mStepSize) {
     // figure out if we can process an entire block or if we need to
     // figure out how many samples to process
     size_t count = kDataLength - i;
@@ -117,8 +116,8 @@ std::vector<long> BeatDetector::detectBeats(
     // Get remaining beats
     for (auto feature : features[0]) {
       if (feature.hasTimestamp) {
-        retVal.push_back(Vamp::RealTime::realTime2Frame(
-            feature.timestamp + adjustment, mSampleRate));
+        retVal.push_back(static_cast<int>(Vamp::RealTime::realTime2Frame(
+            feature.timestamp + adjustment, mSampleRate)));
       }
     }
   }

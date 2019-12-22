@@ -1,3 +1,22 @@
+/*
+ *  Dancebots GUI - Create choreographies for Dancebots
+ *  https://github.com/philippReist/dancebots_gui
+ *
+ *  Copyright 2019 - mint & pepper
+ *
+ *  This program is free software : you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ *  See the GNU General Public License for more details, available in the
+ *  LICENSE file included in the repository.
+ */
+
 #include <AudioFile.h>
 
 #include <gtest/gtest.h>
@@ -10,7 +29,7 @@
 namespace {
 class BeatDetectTest : public ::testing::Test {
  public:
-  BeatDetectTest() : mBeatDetector(mSampleRate){};
+  BeatDetectTest() : mBeatDetector(mSampleRate) {}
 
  protected:
   static void SetUpTestSuite(void) {
@@ -23,9 +42,9 @@ class BeatDetectTest : public ::testing::Test {
     std::remove(fileTemp.toStdString().c_str());
   }
 
-  void printBeats(const std::vector<long>& beats);
-  void compareBeats(const std::vector<long>& beatsA,
-                    const std::vector<long>& beatsB);
+  void printBeats(const std::vector<int>& beats);
+  void compareBeats(const std::vector<int>& beatsA,
+                    const std::vector<int>& beatsB);
   BeatDetector mBeatDetector;
 
   static const int mSampleRate{44100};
@@ -66,7 +85,7 @@ TEST_F(BeatDetectTest, beatConsistency) {
     AudioFile mp3File44k{};
     mp3File44k.load(testFile);
 
-    std::vector<long> firstBeats =
+    std::vector<int> firstBeats =
         mBeatDetector.detectBeats(mp3File44k.mFloatMusic);
 
     // write some data to file:
@@ -88,7 +107,7 @@ TEST_F(BeatDetectTest, beatConsistency) {
     const int nChecks = 50;  // run 50 cycles to check beat consistency
 
     // allow for >100ms beat-time deviation at most maxNdeviate times:
-    const long maxDeviation = 0.1 * mSampleRate;
+    const int maxDeviation = 0.1 * mSampleRate;
     int maxNdeviate = 2 * firstBeats.size() / 100;
     if (maxNdeviate < 1) maxNdeviate = 1;
 
@@ -102,7 +121,7 @@ TEST_F(BeatDetectTest, beatConsistency) {
 
       // now verify that number of beats is the same and that beats are roughly
       // at the same location
-      std::vector<long> checkBeats =
+      std::vector<int> checkBeats =
           mBeatDetector.detectBeats(checkFile.mFloatMusic);
 
       // number of beats, abort if not equal number as comparison below
@@ -111,10 +130,10 @@ TEST_F(BeatDetectTest, beatConsistency) {
 
       // individual beats:
       int nDiff = 0;
-      long maxDiff = 0;
+      size_t maxDiff = 0;
       int deviated = 0;
       for (int j = 0; j < firstBeats.size(); ++j) {
-        long absDiff = abs(firstBeats[j] - checkBeats[j]);
+        int absDiff = abs(firstBeats[j] - checkBeats[j]);
 
         if (absDiff) nDiff++;
 
@@ -145,7 +164,7 @@ TEST_F(BeatDetectTest, beatConsistency) {
   }  // testfiles for loop
 }
 
-void BeatDetectTest::printBeats(const std::vector<long>& beats) {
+void BeatDetectTest::printBeats(const std::vector<int>& beats) {
   std::cout << "detected " << beats.size() << " beats" << std::endl;
   size_t i = 0;
   for (const auto& b : beats) {
@@ -153,8 +172,8 @@ void BeatDetectTest::printBeats(const std::vector<long>& beats) {
   }
 }
 
-void BeatDetectTest::compareBeats(const std::vector<long>& beatsA,
-                                  const std::vector<long>& beatsB) {
+void BeatDetectTest::compareBeats(const std::vector<int>& beatsA,
+                                  const std::vector<int>& beatsB) {
   std::cout << "detected " << beatsA.size() << " beats in A and "
             << beatsB.size() << " beats in B" << std::endl;
   const size_t minSize =

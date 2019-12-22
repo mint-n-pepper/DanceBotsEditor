@@ -172,7 +172,7 @@ bool BackEnd::loadMP3Worker(const QString& filePath) {
   } else {
     mFileStatus = "Detecting Beats...";
     emit fileStatusChanged();
-    std::vector<long> tmpBeats =
+    std::vector<int> tmpBeats =
         mBeatDetector.detectBeats(mAudioFile.mFloatMusic);
 
     // convert the detected beats to int. This is fine because even a int32
@@ -230,7 +230,8 @@ bool BackEnd::saveMP3Worker(const QString& fileName) {
   }
 
   // instantiate primitive to audio signal converter
-  PrimitiveToSignal primitiveConverter(mBeatFrames, mAudioFile);
+  PrimitiveToSignal primitiveConverter(mBeatFrames,
+                                       &mAudioFile);
   primitiveConverter.convert(mMotorPrimitives->getData(),
                              mLedPrimitives->getData());
 
@@ -295,7 +296,9 @@ int BackEnd::getBeatAtFrame(const int frame) const {
   size_t ind = 0;
   // use binary search, as it is much faster for larger arrays
   // and about the same speed as linear search for smaller ones
-  int rv = utils::findInterval<int>(frame, mBeatFrames, ind,
+  int rv = utils::findInterval<int>(frame,
+                                    mBeatFrames,
+                                    &ind,
                                     utils::SearchMethod::eBinary);
 
   // return -1 if search failed
@@ -313,7 +316,7 @@ bool BackEnd::writePrependData(void) {
 
   // create and open buffer to stream data into:
   QDataStream dataStream(&mAudioFile.mMP3PrependData, QIODevice::WriteOnly);
-  AudioFile::applyDataStreamSettings(dataStream);
+  AudioFile::applyDataStreamSettings(&dataStream);
 
   // write number of beats first:
   quint32 nBeats = static_cast<quint32>(mBeatFrames.size());
@@ -332,7 +335,7 @@ bool BackEnd::writePrependData(void) {
 
   for (const auto& e : motPrimitives) {
     const MotorPrimitive* const mp = reinterpret_cast<const MotorPrimitive*>(e);
-    mp->serializeToStream(dataStream);
+    mp->serializeToStream(&dataStream);
   }
 
   // next, write out led primitives:
@@ -342,7 +345,7 @@ bool BackEnd::writePrependData(void) {
 
   for (const auto& e : ledPrimitives) {
     const LEDPrimitive* const lp = reinterpret_cast<const LEDPrimitive*>(e);
-    lp->serializeToStream(dataStream);
+    lp->serializeToStream(&dataStream);
   }
 
   return true;
@@ -351,7 +354,7 @@ bool BackEnd::writePrependData(void) {
 bool BackEnd::readBeatsFromPrependData(void) {
   // create and open buffer to stream data into:
   QDataStream dataStream(&mAudioFile.mMP3PrependData, QIODevice::ReadOnly);
-  AudioFile::applyDataStreamSettings(dataStream);
+  AudioFile::applyDataStreamSettings(&dataStream);
 
   // read number of beats first:
   quint32 nBeats = 0;
@@ -373,7 +376,7 @@ bool BackEnd::readBeatsFromPrependData(void) {
 bool BackEnd::readPrimitivesFromPrependData(void) {
   // create and open buffer to stream data into:
   QDataStream dataStream(&mAudioFile.mMP3PrependData, QIODevice::ReadOnly);
-  AudioFile::applyDataStreamSettings(dataStream);
+  AudioFile::applyDataStreamSettings(&dataStream);
 
   // seek to end of beats:
   dataStream.device()->seek(4 * (mBeatFrames.size() + 1));
@@ -383,7 +386,7 @@ bool BackEnd::readPrimitivesFromPrependData(void) {
   dataStream >> nMotorPrimitives;
 
   for (size_t i = 0; i < nMotorPrimitives; ++i) {
-    MotorPrimitive* mp = new MotorPrimitive(dataStream, nullptr);
+    MotorPrimitive* mp = new MotorPrimitive(&dataStream, nullptr);
     mMotorPrimitives->add(mp);
   }
 
@@ -392,7 +395,7 @@ bool BackEnd::readPrimitivesFromPrependData(void) {
   dataStream >> nLedPrimitives;
 
   for (size_t i = 0; i < nLedPrimitives; ++i) {
-    LEDPrimitive* lp = new LEDPrimitive(dataStream, nullptr);
+    LEDPrimitive* lp = new LEDPrimitive(&dataStream, nullptr);
     mLedPrimitives->add(lp);
   }
 

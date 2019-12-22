@@ -22,7 +22,7 @@
 #include <random>
 
 PrimitiveToSignal::PrimitiveToSignal(const std::vector<int>& beatFrames,
-                                     AudioFile& audioFile,
+                                     AudioFile* audioFile,
                                      const size_t bitTimeZeroUS)
     : mBeatFrames{beatFrames},
       mAudioFile{audioFile},
@@ -47,9 +47,9 @@ void PrimitiveToSignal::updateBitTimings(void) {
   mBitTimeResetUS = resetTimeMultiplier * mBitTimeZeroUS;
 
   // and convert to sample timings:
-  mNzeroSamples = (mBitTimeZeroUS * mAudioFile.sampleRate) / 1e6 + 1;
-  mNoneSamples = (mBitTimeOneUS * mAudioFile.sampleRate) / 1e6 + 1;
-  mNresetSamples = (mBitTimeResetUS * mAudioFile.sampleRate) / 1e6 + 1;
+  mNzeroSamples = (mBitTimeZeroUS * mAudioFile->sampleRate) / 1e6 + 1;
+  mNoneSamples = (mBitTimeOneUS * mAudioFile->sampleRate) / 1e6 + 1;
+  mNresetSamples = (mBitTimeResetUS * mAudioFile->sampleRate) / 1e6 + 1;
 }
 
 void PrimitiveToSignal::convert(const QList<QObject*>& motorPrimitives,
@@ -121,20 +121,20 @@ void PrimitiveToSignal::processPrimitivesAtBeat(
     if (motorPrimitive) {
       double relativeBeat =
           (currentBeat - motorPrimitive->mPositionBeat) + beatFraction;
-      getMotorVelocities(relativeBeat, motorPrimitive, data);
+      getMotorVelocities(relativeBeat, motorPrimitive, &data);
     }
 
     if (ledPrimitive) {
       double relativeBeat =
           (currentBeat - ledPrimitive->mPositionBeat) + beatFraction;
-      getLEDs(relativeBeat, ledPrimitive, data);
+      getLEDs(relativeBeat, ledPrimitive, &data);
     }
     float tempCommandLevel = mCommandLevel;
-    size_t commandLength = generateCommand(data);
+    size_t commandLength = generateCommand(&data);
     if (commandLength + currentFrame < endFrame) {
       // the command fits, write to audio data:
       std::copy(mCommandBuffer.begin(), mCommandBuffer.begin() + commandLength,
-                mAudioFile.mFloatData.begin() + currentFrame);
+                mAudioFile->mFloatData.begin() + currentFrame);
       currentFrame += commandLength;
     } else {
       // not enough space to write command. Restore command level to last:
@@ -147,7 +147,7 @@ void PrimitiveToSignal::processPrimitivesAtBeat(
         mCommandLevel = -mCommandLevel;
       }
       for (size_t i = currentFrame; i < endFrame; ++i) {
-        mAudioFile.mFloatData[i] = mCommandLevel;
+        mAudioFile->mFloatData[i] = mCommandLevel;
       }
       currentFrame = endFrame;
       mCommandLevel = -mCommandLevel;
@@ -157,32 +157,32 @@ void PrimitiveToSignal::processPrimitivesAtBeat(
 
 void PrimitiveToSignal::getMotorVelocities(
     const double relativeBeat, const MotorPrimitive* const motorPrimitive,
-    Data& data) const {
+    Data* data) const {
   switch (motorPrimitive->mType) {
     case MotorPrimitive::Type::BackAndForth: {
       double angle = relativeBeat * motorPrimitive->mFrequency * 2.0 * pi;
-      data.velocityLeft =
+      data->velocityLeft =
           static_cast<qint8>(round(motorPrimitive->mVelocity * sin(angle)));
-      data.velocityRight = data.velocityLeft;
+      data->velocityRight = data->velocityLeft;
       break;
     }
     case MotorPrimitive::Type::Custom:
-      data.velocityLeft = motorPrimitive->mVelocity;
-      data.velocityRight = motorPrimitive->mVelocityRight;
+      data->velocityLeft = motorPrimitive->mVelocity;
+      data->velocityRight = motorPrimitive->mVelocityRight;
       break;
     case MotorPrimitive::Type::Spin:
-      data.velocityLeft = -motorPrimitive->mVelocity;
-      data.velocityRight = motorPrimitive->mVelocity;
+      data->velocityLeft = -motorPrimitive->mVelocity;
+      data->velocityRight = motorPrimitive->mVelocity;
       break;
     case MotorPrimitive::Type::Straight:
-      data.velocityLeft = motorPrimitive->mVelocity;
-      data.velocityRight = motorPrimitive->mVelocity;
+      data->velocityLeft = motorPrimitive->mVelocity;
+      data->velocityRight = motorPrimitive->mVelocity;
       break;
     case MotorPrimitive::Type::Twist: {
       double angle = relativeBeat * motorPrimitive->mFrequency * 2.0 * pi;
-      data.velocityLeft =
+      data->velocityLeft =
           static_cast<qint8>(-round(motorPrimitive->mVelocity * sin(angle)));
-      data.velocityRight = -data.velocityLeft;
+      data->velocityRight = -data->velocityLeft;
       break;
     }
   }
@@ -190,16 +190,16 @@ void PrimitiveToSignal::getMotorVelocities(
 
 void PrimitiveToSignal::getLEDs(const double relativeBeat,
                                 const LEDPrimitive* const ledPrimitive,
-                                Data& data) {
+                                Data* data) {
   switch (ledPrimitive->mType) {
     case LEDPrimitive::Type::Alternate: {
       quint32 period =
           static_cast<quint32>(relativeBeat * 2.0 * ledPrimitive->mFrequency);
       if (period % 2) {
         // inverted
-        data.leds = ~ledPrimitive->getLedByte();
+        data->leds = ~ledPrimitive->getLedByte();
       } else {
-        data.leds = ledPrimitive->getLedByte();
+        data->leds = ledPrimitive->getLedByte();
       }
       break;
     }
@@ -208,20 +208,20 @@ void PrimitiveToSignal::getLEDs(const double relativeBeat,
           static_cast<quint32>(relativeBeat * 2.0 * ledPrimitive->mFrequency);
       if (period % 2) {
         // turn off
-        data.leds = 0;
+        data->leds = 0;
       } else {
-        data.leds = ledPrimitive->getLedByte();
+        data->leds = ledPrimitive->getLedByte();
       }
       break;
     }
     case LEDPrimitive::Type::Constant:
-      data.leds = ledPrimitive->getLedByte();
+      data->leds = ledPrimitive->getLedByte();
       break;
     case LEDPrimitive::Type::KnightRider: {
       double angle = ledPrimitive->mFrequency * relativeBeat * 2.0 * pi;
       quint8 pos = static_cast<quint8>(
           round(mKnightRiderAmplitude * (1.0 + sin(angle))));
-      data.leds = mKnightRiderByte << pos;
+      data->leds = mKnightRiderByte << pos;
       break;
     }
     case LEDPrimitive::Type::Random: {
@@ -239,13 +239,13 @@ void PrimitiveToSignal::getLEDs(const double relativeBeat,
         mLastRandomLedPeriod = period;
       }
 
-      data.leds = mRandomLed;
+      data->leds = mRandomLed;
       break;
     }
   }
 }
 
-size_t PrimitiveToSignal::generateCommand(const Data& data) {
+size_t PrimitiveToSignal::generateCommand(const Data* const data) {
   size_t length = mNresetSamples;
   for (size_t i = 0; i < mNresetSamples; ++i) {
     mCommandBuffer[i] = mCommandLevel;
@@ -253,12 +253,12 @@ size_t PrimitiveToSignal::generateCommand(const Data& data) {
   // flip command level
   mCommandLevel = -mCommandLevel;
 
-  quint8 leftVelByte = velocityToByte(data.velocityLeft);
-  quint8 rightVelByte = velocityToByte(data.velocityRight);
+  quint8 leftVelByte = velocityToByte(data->velocityLeft);
+  quint8 rightVelByte = velocityToByte(data->velocityRight);
 
   length += writeByteToBuffer(leftVelByte, length);
   length += writeByteToBuffer(rightVelByte, length);
-  length += writeByteToBuffer(data.leds, length);
+  length += writeByteToBuffer(data->leds, length);
   return length;
 }
 

@@ -17,17 +17,17 @@
  *  LICENSE file included in the repository.
  */
 
-#ifndef AUDIO_FILE_H_
-#define AUDIO_FILE_H_
-
-#include <QDataStream>
-#include <QtCore/QFile>
-#include <vector>
+#ifndef SRC_AUDIOFILE_H_
+#define SRC_AUDIOFILE_H_
 
 #include <id3v2tag.h>
 #include <mpegfile.h>
 #include <mpegheader.h>
 #include <tbytevectorstream.h>
+#include <QDataStream>
+#include <QtCore/QFile>
+#include <vector>
+#include <string>
 
 /** \class AudioFile
  * \brief Loads, de- and encodes, and saves Dancebot audio MP3 files
@@ -79,7 +79,7 @@ class AudioFile {
   // PUBLIC METHODS //
   /** \brief Default constructor that returns an empty AudioFile object
    */
-  explicit AudioFile(void);
+  AudioFile(void);
 
   /**
    * \brief Loads an MP3 file from a file path and returns processing result
@@ -171,7 +171,7 @@ class AudioFile {
    * \param[in] beatFrames vector of detected beats, location in frames/samples
    * \return 0 if success and 1 if failure
    */
-  int savePCMBeats(const QString fileName, const std::vector<long>& beatFrames);
+  int savePCMBeats(const QString fileName, const std::vector<int>& beatFrames);
 
   /** \brief Returns pointer to raw MP3 file data
    * \return const pointer to data
@@ -185,7 +185,7 @@ class AudioFile {
 
   /** \brief Applies data stream settings to QDataStream
    */
-  static void applyDataStreamSettings(QDataStream& stream);
+  static void applyDataStreamSettings(QDataStream* stream);
 
  private:
   /** Lame encoding status enum */
@@ -240,7 +240,7 @@ class AudioFile {
    * \param[in] file - to search
    * \return position of first occurance, or size of file if not found
    */
-  size_t findHeaderCode(QFile& file);
+  size_t findHeaderCode(QFile* file);
 
   /** \brief encode data in music and data stream to raw mp3 data
    * \return Lame Encoder status codes, see above
@@ -248,4 +248,4 @@ class AudioFile {
   LameEncCodes encode(void);
 };
 
-#endif  // AUDIO_FILE_H_ header guard
+#endif  // SRC_AUDIOFILE_H_

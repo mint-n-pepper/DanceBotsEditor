@@ -17,8 +17,8 @@
  *  LICENSE file included in the repository.
  */
 
-#ifndef PRIMITIVE_LIST_H_
-#define PRIMITIVE_LIST_H_
+#ifndef SRC_PRIMITIVELIST_H_
+#define SRC_PRIMITIVELIST_H_
 
 #include <QAbstractListModel>
 
@@ -101,4 +101,4 @@ class PrimitiveList : public QAbstractListModel {
   QList<QObject*> mData;
 };
 
-#endif  // PRIMITIVE_LIST_H_
+#endif  // SRC_PRIMITIVELIST_H_

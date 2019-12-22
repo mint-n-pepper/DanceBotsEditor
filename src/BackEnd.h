@@ -17,13 +17,13 @@
  *  LICENSE file included in the repository.
  */
 
-#ifndef BACKEND_H
-#define BACKEND_H
-
+#ifndef SRC_BACKEND_H_
+#define SRC_BACKEND_H_
 #include <QFuture>
 #include <QFutureWatcher>
 #include <QObject>
 #include <QString>
+#include <vector>
 
 #include "AudioFile.h"
 #include "AudioPlayer.h"
@@ -191,7 +191,7 @@ class BackEnd : public QObject {
  private:
   // init to 100bpm
   int mAverageBeatFrames{60 * AudioFile::sampleRate / 100};
-  unsigned long mErrorDisplayTimeMS = 3000;
+  int mErrorDisplayTimeMS = 3000;
 
   // song ID3 tag strings
   QString mSongArtist;
@@ -234,4 +234,4 @@ class BackEnd : public QObject {
   bool readPrimitivesFromPrependData(void);
 };
 
-#endif  // BACKEND_H
+#endif  // SRC_BACKEND_H_

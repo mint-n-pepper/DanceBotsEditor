@@ -1,10 +1,27 @@
-#include <iostream>
+/*
+ *  Dancebots GUI - Create choreographies for Dancebots
+ *  https://github.com/philippReist/dancebots_gui
+ *
+ *  Copyright 2019 - mint & pepper
+ *
+ *  This program is free software : you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ *  See the GNU General Public License for more details, available in the
+ *  LICENSE file included in the repository.
+ */
 
-#include <gtest/gtest.h>
 #include <QByteArray>
 #include <QDataStream>
+#include <gtest/gtest.h>
+#include <iostream>
 #include <random>
-
 #include "AudioFile.h"
 #include "Primitive.h"
 
@@ -19,7 +36,7 @@ void checkLedPrimitivesEqual(const LEDPrimitive& prim,
 // signals
 class PrimitivesTest : public ::testing::Test {
  protected:
-  PrimitivesTest(void){};
+  PrimitivesTest(void) {}
 };
 
 TEST_F(PrimitivesTest, singleMotorTest) {
@@ -44,15 +61,15 @@ TEST_F(PrimitivesTest, singleMotorTest) {
   // create datastream
   QByteArray dataArray;
   QDataStream dataStream(&dataArray, QIODevice::ReadWrite);
-  AudioFile::applyDataStreamSettings(dataStream);
+  AudioFile::applyDataStreamSettings(&dataStream);
 
   // serialize primitive
-  prim.serializeToStream(dataStream);
+  prim.serializeToStream(&dataStream);
 
   // and create a new primitive from the stream:
   dataStream.device()->reset();
 
-  MotorPrimitive checkPrim(dataStream);
+  MotorPrimitive checkPrim(&dataStream);
 
   // and verify data:
   checkMotorPrimitivesEqual(prim, checkPrim);
@@ -84,18 +101,18 @@ TEST_F(PrimitivesTest, RandomMotorArrayTest) {
   // serialize all to stream:
   QByteArray dataArray;
   QDataStream dataStream(&dataArray, QIODevice::ReadWrite);
-  AudioFile::applyDataStreamSettings(dataStream);
+  AudioFile::applyDataStreamSettings(&dataStream);
 
   // serialize primitive
   for (const auto& p : primitives) {
-    p->serializeToStream(dataStream);
+    p->serializeToStream(&dataStream);
   }
 
   // and recreate primitives from stream
   dataStream.device()->reset();
 
   for (size_t i = 0; i < primitives.size(); ++i) {
-    MotorPrimitive checkPrim(dataStream);
+    MotorPrimitive checkPrim(&dataStream);
     checkMotorPrimitivesEqual(*primitives.at(i), checkPrim);
   }
 }
@@ -120,15 +137,15 @@ TEST_F(PrimitivesTest, singleLedTest) {
   // create datastream
   QByteArray dataArray;
   QDataStream dataStream(&dataArray, QIODevice::ReadWrite);
-  AudioFile::applyDataStreamSettings(dataStream);
+  AudioFile::applyDataStreamSettings(&dataStream);
 
   // serialize primitive
-  prim.serializeToStream(dataStream);
+  prim.serializeToStream(&dataStream);
 
   // and create a new primitive from the stream:
   dataStream.device()->reset();
 
-  LEDPrimitive checkPrim(dataStream);
+  LEDPrimitive checkPrim(&dataStream);
 
   // and verify data:
   checkLedPrimitivesEqual(prim, checkPrim);
@@ -160,18 +177,18 @@ TEST_F(PrimitivesTest, RandomLEDArrayTest) {
   // serialize all to stream:
   QByteArray dataArray;
   QDataStream dataStream(&dataArray, QIODevice::ReadWrite);
-  AudioFile::applyDataStreamSettings(dataStream);
+  AudioFile::applyDataStreamSettings(&dataStream);
 
   // serialize primitive
   for (const auto& p : primitives) {
-    p->serializeToStream(dataStream);
+    p->serializeToStream(&dataStream);
   }
 
   // and recreate primitives from stream
   dataStream.device()->reset();
 
   for (size_t i = 0; i < primitives.size(); ++i) {
-    LEDPrimitive checkPrim(dataStream);
+    LEDPrimitive checkPrim(&dataStream);
     checkLedPrimitivesEqual(*primitives.at(i), checkPrim);
   }
 }

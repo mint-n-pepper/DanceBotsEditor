@@ -17,8 +17,10 @@
  *  LICENSE file included in the repository.
  */
 
-#ifndef PRIMITIVE_TO_SIGNAL_H_
-#define PRIMITIVE_TO_SIGNAL_H_
+#ifndef SRC_PRIMITIVETOSIGNAL_H_
+#define SRC_PRIMITIVETOSIGNAL_H_
+
+#include <vector>
 
 #include "AudioFile.h"
 #include "Primitive.h"
@@ -37,7 +39,7 @@ class PrimitiveToSignal {
    * \param[in] bitTimeZeroUS - zero bit timing in micro seconds
    */
   explicit PrimitiveToSignal(const std::vector<int>& beatFrames,
-                             AudioFile& audioFile,
+                             AudioFile* audioFile,
                              const size_t bitTimeZeroUS = 181u);
 
   /**
@@ -66,7 +68,7 @@ class PrimitiveToSignal {
   // VARIABLES
   // audio and beat data:
   const std::vector<int>& mBeatFrames;
-  AudioFile& mAudioFile;
+  AudioFile* mAudioFile;
 
   float mDataLevel{0.75};
   quint8 mNknightRiderLeds{3};
@@ -132,7 +134,7 @@ class PrimitiveToSignal {
    */
   void getMotorVelocities(const double relativeBeat,
                           const MotorPrimitive* const motorPrimitive,
-                          Data& data) const;
+                          Data* data) const;
 
   /**
    * \brief Calculate current led states based on primitive and current
@@ -144,14 +146,15 @@ class PrimitiveToSignal {
    * \param[in] data - the command data to populate with calculated values
    */
   void getLEDs(const double relativeBeat,
-               const LEDPrimitive* const ledPrimitive, Data& data);
+               const LEDPrimitive* const ledPrimitive,
+               Data* data);
   /**
    * \brief Writes given command data to data audio signal buffer
    *
    * \param[in] data - the command data to write to the data signal
    * \return The length of the command in audio samples
    */
-  size_t generateCommand(const Data& data);
+  size_t generateCommand(const Data* const data);
 
   /**
    * \brief Writes a single byte to the command buffer
@@ -172,4 +175,4 @@ class PrimitiveToSignal {
   quint8 velocityToByte(const qint8 velocity) const;
 };
 
-#endif
+#endif  // SRC_PRIMITIVETOSIGNAL_H_

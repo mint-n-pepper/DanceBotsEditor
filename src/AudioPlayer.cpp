@@ -215,7 +215,7 @@ void AudioPlayer::setNotifyInterval(const int intervalMS) {
 }
 
 void AudioPlayer::handleStateChanged(QAudio::State newState) {
-  // TODO: might have to implement error handling here
+  // TODO(PhilippReist): might have to implement error handling here
   switch (newState) {
     case QAudio::ActiveState:
       mIsPlaying = true;

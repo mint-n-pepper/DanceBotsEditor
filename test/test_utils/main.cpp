@@ -1,7 +1,26 @@
-#include <iostream>
+/*
+ *  Dancebots GUI - Create choreographies for Dancebots
+ *  https://github.com/philippReist/dancebots_gui
+ *
+ *  Copyright 2019 - mint & pepper
+ *
+ *  This program is free software : you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ *  See the GNU General Public License for more details, available in the
+ *  LICENSE file included in the repository.
+ */
 
 #include <gtest/gtest.h>
 #include <chrono>
+
+#include <iostream>
 #include <random>
 #include <string>
 #include "Utils.h"
@@ -11,7 +30,7 @@ namespace {
 // signals
 class UtilsTest : public ::testing::Test {
  protected:
-  UtilsTest(void){};
+  UtilsTest(void) {}
 };
 
 TEST_F(UtilsTest, EdgeCases) {
@@ -25,7 +44,7 @@ TEST_F(UtilsTest, EdgeCases) {
   for (const auto& m : methods) {
     for (size_t i = 0; i < edgeValues.size(); ++i) {
       size_t ind = 0;
-      int rv = utils::findInterval<int>(edgeValues[i], intervals, ind, m);
+      int rv = utils::findInterval<int>(edgeValues[i], intervals, &ind, m);
       EXPECT_EQ(rv, expectedReturns[i]);
       EXPECT_EQ(ind, expectedIndices[i]);
     }
@@ -36,7 +55,7 @@ TEST_F(UtilsTest, Search) {
   const std::vector<size_t> arraySizes{10, 11, 100, 1000, 10000};
   const std::vector<utils::SearchMethod> methods{utils::SearchMethod::eBinary,
                                                  utils::SearchMethod::eLinear};
-  std::vector<unsigned long> averageSearchTimes[2];
+  std::vector<size_t> averageSearchTimes[2];
   averageSearchTimes[0].resize(arraySizes.size());
   averageSearchTimes[1].resize(arraySizes.size());
 
@@ -57,14 +76,14 @@ TEST_F(UtilsTest, Search) {
                       return n;
                     });
       std::uniform_int_distribution<int> uniform(0, intervals.back() - 1);
-      unsigned long averageDurationUs = 0;
+      size_t averageDurationUs = 0;
       for (size_t iE = 0; iE < N_EVALS; ++iE) {
         // get random value:
         const int value = uniform(gen);
         size_t ind = 0;
         // time it:
         auto start = std::chrono::high_resolution_clock::now();
-        int rv = utils::findInterval<int>(value, intervals, ind, methods[iM]);
+        int rv = utils::findInterval<int>(value, intervals, &ind, methods[iM]);
         auto end = std::chrono::high_resolution_clock::now();
         auto elapsed =
             std::chrono::duration_cast<std::chrono::nanoseconds>(end - start);

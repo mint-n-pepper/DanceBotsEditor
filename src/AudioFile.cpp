@@ -18,16 +18,15 @@
  */
 
 #include "AudioFile.h"
+// typedef sample_t to include encoder.h that contains the en-/decoder
+// delay defines
+typedef float sample_t;
+#include <encoder.h>
 #include <lame.h>
 #include <limits.h>
 #include <sndfile.h>
 #include <cmath>
 #include "dsp/rateconversion/Resampler.h"
-
-// typedef sample_t to include encoder.h that contains the en-/decoder
-// delay defines
-typedef float sample_t;
-#include <encoder.h>
 
 // class constants:
 const QByteArray AudioFile::danceFileHeaderCode("DancebotsDancefile");
@@ -39,7 +38,7 @@ static void lame_print_f(const char* format, va_list ap) { return; }
 }
 
 // Constructor, empty
-AudioFile::AudioFile(void){};
+AudioFile::AudioFile(void) {}
 
 auto AudioFile::load(const QString filePath) -> Result {
   // check if file exists:
@@ -53,15 +52,13 @@ auto AudioFile::load(const QString filePath) -> Result {
   file.open(QIODevice::ReadOnly);
 
   // find header code:
-  size_t headerInd = findHeaderCode(file);
+  size_t headerInd = findHeaderCode(&file);
   // and seek to the position - if there is no header, the end of the file is
   // seeked, and the header compare below will fail
   file.seek(headerInd);
 
   // read file header to detect a dancefile
   const QByteArray header = file.read(danceFileHeaderCode.size());
-  // TODO: Search further into the file for header in case user re-tagged and
-  // a tag is present at the head of the file
 
   // check if a valid header is present
   if (danceFileHeaderCode == header) {
@@ -76,7 +73,7 @@ auto AudioFile::load(const QString filePath) -> Result {
 
     // convert size bytes to size int nData
     QDataStream nDataStream(headerNData);
-    applyDataStreamSettings(nDataStream);
+    applyDataStreamSettings(&nDataStream);
     quint32 nData;
     nDataStream >> nData;
 
@@ -130,14 +127,14 @@ auto AudioFile::load(const QString filePath) -> Result {
     // the file is not an mp3 / mpeg file
     clear();
     return Result::eNotAnMP3File;
-  };
+  }
 
   // decode the MP3 data
   if (decode() < 0) {
     // if decode returns -1, there was a decoding error
     clear();
     return Result::eMP3DecodingError;
-  };
+  }
 
   mHasData = true;
   return Result::eSuccess;
@@ -175,7 +172,7 @@ auto AudioFile::save(const QString file) -> Result {
   const quint32 kHeaderLength = mMP3PrependData.size();
   QByteArray sizeBytes;
   QDataStream sizeBytesStream(&sizeBytes, QIODevice::WriteOnly);
-  applyDataStreamSettings(sizeBytesStream);
+  applyDataStreamSettings(&sizeBytesStream);
 
   sizeBytesStream << kHeaderLength;
   outFile.write(sizeBytes);
@@ -424,7 +421,7 @@ int AudioFile::decode(void) {
   return 0;
 }
 
-size_t AudioFile::findHeaderCode(QFile& file) {
+size_t AudioFile::findHeaderCode(QFile* file) {
   int headerInd{0};
   size_t filePosition{0};
   const size_t fileReadStep{1024};
@@ -433,7 +430,7 @@ size_t AudioFile::findHeaderCode(QFile& file) {
   QByteArray readData;
   readData.resize(fileReadStep);
 
-  qint64 nRead = file.read(readData.data(), fileReadStep);
+  qint64 nRead = file->read(readData.data(), fileReadStep);
 
   // keep searching while there is data available and no match is found:
   while (nRead > 0) {
@@ -459,7 +456,7 @@ size_t AudioFile::findHeaderCode(QFile& file) {
     } else {
       // otherwise keep reading
       filePosition += nRead;
-      nRead = file.read(readData.data(), fileReadStep);
+      nRead = file->read(readData.data(), fileReadStep);
     }
   }
   return filePosition;
@@ -601,7 +598,7 @@ int AudioFile::savePCM(const QString fileName) {
 }
 
 int AudioFile::savePCMBeats(const QString fileName,
-                            const std::vector<long>& beatFrames) {
+                            const std::vector<int>& beatFrames) {
   if (!mHasData) {
     // no data, abort
     return 1;
@@ -662,8 +659,8 @@ int AudioFile::savePCMBeats(const QString fileName,
   return 0;
 }
 
-void AudioFile::applyDataStreamSettings(QDataStream& stream) {
-  stream.setVersion(dataStreamVersion);
-  stream.setByteOrder(dataByteOrder);
-  stream.setFloatingPointPrecision(dataFloatPrecision);
+void AudioFile::applyDataStreamSettings(QDataStream* stream) {
+  stream->setVersion(dataStreamVersion);
+  stream->setByteOrder(dataByteOrder);
+  stream->setFloatingPointPrecision(dataFloatPrecision);
 }

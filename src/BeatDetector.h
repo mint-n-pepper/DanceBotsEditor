@@ -17,6 +17,9 @@
  *  LICENSE file included in the repository.
  */
 
+#ifndef SRC_BEATDETECTOR_H_
+#define SRC_BEATDETECTOR_H_
+
 #include <BeatTrack.h>
 #include <memory>
 #include <vector>
@@ -41,12 +44,12 @@ class BeatDetector {
    * \param[in] monoMusicData - raw audio data in normalized float [-1.0 1.0]
    * format and sampled at sampleRate passed into constructor
    */
-  std::vector<long> detectBeats(const std::vector<float>& monoMusicData);
+  std::vector<int> detectBeats(const std::vector<float>& monoMusicData);
 
   /**
    * \brief Check if init was successful
    */
-  bool isInitialized(void) { return mInitSuccess; };
+  bool isInitialized(void) { return mInitSuccess; }
 
  private:
   const unsigned int mSampleRate;
@@ -64,3 +67,5 @@ class BeatDetector {
 
   static const float mPI;
 };
+
+#endif  // SRC_BEATDETECTOR_H_

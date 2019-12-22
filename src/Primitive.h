@@ -17,12 +17,13 @@
  *  LICENSE file included in the repository.
  */
 
-#ifndef PRIMITIVE_H_
-#define PRIMITIVE_H_
+#ifndef SRC_PRIMITIVE_H_
+#define SRC_PRIMITIVE_H_
 
 #include <QDataStream>
 #include <QDebug>
 #include <QObject>
+#include <vector>
 
 /** \class BasePrimitive
  * \brief Base class providing common data members position, length, and
@@ -35,8 +36,8 @@ class BasePrimitive : public QObject {
   Q_PROPERTY(double frequency MEMBER mFrequency NOTIFY frequencyChanged);
 
  public:
-  explicit BasePrimitive(QObject* const parent) : QObject{parent} {};
-  virtual ~BasePrimitive(){};
+  explicit BasePrimitive(QObject* const parent) : QObject{parent} {}
+  virtual ~BasePrimitive() {}
 
   // public members
   double mFrequency{1.0f};
@@ -46,7 +47,7 @@ class BasePrimitive : public QObject {
   /**
    * \brief Serialize primitive to data stream
    */
-  virtual void serializeToStream(QDataStream& stream) const = 0;
+  virtual void serializeToStream(QDataStream* stream) const = 0;
 
  signals:
   void positionBeatChanged(void);
@@ -82,7 +83,7 @@ class MotorPrimitive : public BasePrimitive {
   /**
    * \brief Construct motor primitive from data stream
    */
-  explicit MotorPrimitive(QDataStream& initStream,
+  explicit MotorPrimitive(QDataStream* initStream,
                           QObject* const parent = nullptr);
 
   // public members
@@ -93,7 +94,7 @@ class MotorPrimitive : public BasePrimitive {
   /**
    * \brief Serialize motor primitive to data stream
    */
-  void serializeToStream(QDataStream& stream) const override;
+  void serializeToStream(QDataStream* stream) const override;
 
  signals:
   void velocityChanged(void);
@@ -127,7 +128,7 @@ class LEDPrimitive : public BasePrimitive {
   /**
    * \brief Construct motor primitive from data stream
    */
-  explicit LEDPrimitive(QDataStream& initStream,
+  explicit LEDPrimitive(QDataStream* initStream,
                         QObject* const parent = nullptr);
 
   // public members
@@ -137,7 +138,7 @@ class LEDPrimitive : public BasePrimitive {
   /**
    * \brief Serialize motor primitive to data stream
    */
-  void serializeToStream(QDataStream& stream) const override;
+  void serializeToStream(QDataStream* stream) const override;
 
   /**
    * \brief Convert LED vector to single byte
@@ -149,4 +150,4 @@ class LEDPrimitive : public BasePrimitive {
   void typeChanged(void);
 };
 
-#endif  // !PRIMITIVE_H_
+#endif  // SRC_PRIMITIVE_H_

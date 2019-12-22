@@ -17,8 +17,8 @@
  *  LICENSE file included in the repository.
  */
 
-#ifndef AUDIO_PLAYER_H_
-#define AUDIO_PLAYER_H_
+#ifndef SRC_AUDIOPLAYER_H_
+#define SRC_AUDIOPLAYER_H_
 
 #include <QBuffer>
 #include <QByteArray>
@@ -146,4 +146,4 @@ class AudioPlayer : public QObject {
   QBuffer mRawAudioBuffer;
 };
 
-#endif
+#endif  // SRC_AUDIOPLAYER_H_
