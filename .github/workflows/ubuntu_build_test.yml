@@ -17,15 +17,15 @@ jobs:
     steps:
     - uses: actions/checkout@v1
     
-    - name: Download Dependencies
+    - name: Update git submodules
+      run: |
+        git submodule update --init --recursive
+    
+    - name: Install Libraries
       run: |
         sudo apt-get update
         sudo apt-get install libgl1-mesa-dev build-essential libpulse-dev
     
-    - name: Update git submodules
-      run: |
-        git submodule update --init --recursive
-
     - name: Install Qt ${{ matrix.qt_version }}
       uses: jurplel/install-qt-action@v2.2.1
       with:
@@ -41,6 +41,5 @@ jobs:
       run: |
         mkdir build
         cd build/
-        echo "Qt5_Dir: ${Qt5_Dir}"
         ../cmake-3.16.2-Linux-x86_64/bin/cmake -DCMAKE_PREFIX_PATH=${Qt5_Dir} -DCMAKE_BUILD_TYPE=Release ../
         make -j
