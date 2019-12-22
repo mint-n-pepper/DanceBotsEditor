@@ -24,7 +24,7 @@
 	```
 	This adds all necessary dlls to the deployment folder.
 
-## MacOS
+## macOS
 ### Prequisites
 Install [Xcode](https://developer.apple.com/xcode/):
 ```
@@ -67,7 +67,7 @@ make dancebotsEditor
 	where the ```-dmg``` option creates an app dmg file. You should replace the Qt install folder and gui folders with the appropriate locations.
 
 
-## Debian/Ubuntu
+## Ubuntu
 ### Prerequisites
 Install build dependencies:
 ```
