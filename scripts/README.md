@@ -1,14 +1,14 @@
 # Scripts
 
-This folder contains scripts for the build system. These scripts can also be used for git-prehooks on \*nix systems.
+This folder contains scripts to be used for git-prehooks on \*nix systems.
 
 ## Prerequisites
 ### Python3, PIP, and Virtual Environments
-* Instructions for setting up Python's PIP and virual environments can be found [here](https://gist.github.com/Geoyi/d9fab4f609e9f75941946be45000632b)
+* Instructions for setting up Python's PIP and virtual environments can be found [here](https://gist.github.com/Geoyi/d9fab4f609e9f75941946be45000632b)
 
 
 ### Clang Formatter
-`clang-format` will be used to auto-formatting code and maintaining code style consistency.
+`clang-format` will be used to auto-format code and maintain code style consistency.
 ```
 sudo apt-get install clang-format
 ```
@@ -19,13 +19,12 @@ Useful references:
 
 
 ## Setup
-Install prerequisites and run:
+Install prerequisites and run the following command to complete setup:
 ```
 ./setup.sh
 ```
 
 ## Usage
-`lint.sh`
 Auto-format and lint code.
 ```
 ./lint.sh

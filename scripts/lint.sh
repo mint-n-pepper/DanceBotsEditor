@@ -35,7 +35,7 @@ CLANG_FORMAT_STYLE_FILE="Google"
 # auto-format and lint each folder
 for FOLDER in "../gui/" "../src/" "../test/"; do
 	# auto-format
-	find "${FOLDER}" -regex '.*\.\(cpp\|hpp\|c\|h\)' -exec clang-format -style="${CLANG_FORMAT_STYLE_FILE}" {} \;
+	find "${FOLDER}" -regex '.*\.\(cpp\|hpp\|c\|h\)' -exec clang-format -i -style="${CLANG_FORMAT_STYLE_FILE}" {} \;
 
 	# lint recursively
 	cpplint --recursive "${FOLDER}"
