@@ -3,6 +3,8 @@ name: Ubuntu Build-Test
 on:
   push:
     branches:
+      - master
+      - devel
       - git-workflow
          
 jobs:
@@ -24,7 +26,7 @@ jobs:
     - name: Install Libraries
       run: |
         sudo apt-get update
-        sudo apt-get install libgl1-mesa-dev build-essential libpulse-dev
+        sudo apt-get install build-essential libpulse-dev libgl1-mesa-dev
     
     - name: Install Qt ${{ matrix.qt_version }}
       uses: jurplel/install-qt-action@v2.2.1

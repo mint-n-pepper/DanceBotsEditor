@@ -3,6 +3,8 @@ name: macOS Build-Test
 on:
   push:
     branches:
+      - master
+      - devel
       - git-workflow
          
 jobs:
