@@ -28,14 +28,14 @@
    ```
    xcode-select--install
    ```
-   If that fails, follow the instructions [here](https://www.ics.uci.edu/~pattis/common/handouts/macmingweclipse/allexperimental/macxcodecommandlinetools.html)
+   If that fails, follow the instructions [here](https://www.ics.uci.edu/~pattis/common/handouts/macmingweclipse/allexperimental/macxcodecommandlinetools.html).
 
-2. Install [CMake](https://cmake.org/) 3.15 or above. The easiest is to first try with [Homebrew](https://brew.sh/):
+2. Install [CMake](https://cmake.org/) 3.15 or above. The easiest is to use [Homebrew](https://brew.sh/):
    ```
    brew install cmake
    ```
 
-3. Install 5.12.6 LTS from [online installer](https://www.qt.io/download).
+3. Install Qt 5.12.6 LTS. The easiest is to use the [online installer](https://www.qt.io/download). Take of the installation directory as you will need it later on.
 
 4. Clone the repository and update submodules:
    ```
@@ -72,12 +72,12 @@
    sudo apt-get install build-essential libpulse-dev libgl1-mesa-dev 
    ```
 
-2. Install [CMake](https://cmake.org/) 3.15 or above. The easiest is to first try with your package manager:
+2. Install [CMake](https://cmake.org/) 3.15 or above. The easiest is to use the package manager:
    ```
    sudo apt-get install cmake
    ```
 
-3. Install 5.12.6 LTS from [online installer](https://www.qt.io/download), selecting gcc 64 bit version.
+3. Install Qt 5.12.6 LTS (gcc 64-bit). The easiest is to use the [online installer](https://www.qt.io/download). Take of the installation directory as you will need it later on.
 
 3. Clone the repository and update submodules:
    ```
