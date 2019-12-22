@@ -20,7 +20,7 @@
 import QtQuick 2.6
 import QtQuick.Controls 2.12
 import QtQuick.Dialogs 1.3
-import QtGraphicalEffects 1.13
+import QtGraphicalEffects 1.12
 import dancebots.backend 1.0
 import "../GuiStyle"
 
@@ -326,7 +326,7 @@ Rectangle{
     Rectangle{
       id: dummyTimerBar
       height: appWindow.width * Style.primitives.height * Style.timerBar.height
-      anchors.bottom: parent.bottom
+      anchors.bottom: settingsRectangle.bottom
       anchors.left: settingsColumn.right
       anchors.leftMargin: appWindow.guiMargin
       anchors.bottomMargin: appWindow.guiMargin
@@ -338,8 +338,8 @@ Rectangle{
     delegate.dragTarget = ledBar.dragTarget
     delegate.idleParent = root
     delegate.primitive = primitiveFactory.createObject(delegate.id)
-    delegate.primitive.positionBeat= 0;
-    delegate.primitive.lengthBeat= 4;
+    delegate.primitive.positionBeat= 0
+    delegate.primitive.lengthBeat= 4
     delegate.primitive.type = type
     delegate.primitive.frequency = frequencies[frequencySlider.value]
     delegate.primitive.leds = leds
@@ -351,8 +351,8 @@ Rectangle{
   Component.onCompleted:{
     // set the first beat at a fixed pixel distance from the left border of the
     // control box:
-    setDummyBeats();
-    createDelegate();
+    setDummyBeats()
+    delegate.updatePrimitive()
   }
 
   onDelegateChanged:{
