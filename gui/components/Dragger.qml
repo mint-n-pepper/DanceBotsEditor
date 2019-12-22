@@ -42,6 +42,13 @@ Item{
     Drag.start()
   }
 
+  onHasChildrenChanged: {
+    // if a child is added, make sure the other dragger is cleaned
+    if(hasChildren){
+      cleanOther()
+    }
+  }
+
   onXChanged: {
     // only process if we are hovering over the timer bar
     if(Drag.active && Drag.target){
@@ -132,7 +139,6 @@ Item{
   }
 
   function clean(whiteListItem){
-    cleanOther()
     var removeIndex = 0
     while(children.length > removeIndex && children[removeIndex]){
       if(children[removeIndex] === whiteListItem){

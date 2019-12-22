@@ -154,7 +154,11 @@ QtObject {
     // Spin = 2
     // Straight = 3
     // Custom = 4
-    property var textID: ["T", "B", "S", "D", "C"]
+    property var textID: ["Twist",
+                          "Back and Forth",
+                          "Spin",
+                          "Drive Straight",
+                          "Custom"]
     property var colors: ["#09C1FE", "#5486FD", "#54FDE3", "#54FD9C", "#A2FD54"]
   }
 
@@ -165,7 +169,11 @@ QtObject {
     // Blink = 2
     // Constant = 3
     // Random = 4
-    property var textID: ["K", "A", "B", "C", "R"]
+    property var textID: ["Knight Rider",
+                          "Alternate",
+                          "Blink",
+                          "Constant",
+                          "Random"]
     property var colors: ["#FF656B", "#FF438B", "#FF43F8", "#9B65FF", "#FFD54A"]
   }
 
