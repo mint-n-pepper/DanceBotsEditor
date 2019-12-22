@@ -1,7 +1,10 @@
-![](https://github.com/actions/dancebots_gui/workflows/macOS%20Build-Test/badge.svg)
-![](https://github.com/actions/dancebots_gui/workflows/Ubuntu%20Build-Test/badge.svg)
-![](https://github.com/actions/dancebots_gui/workflows/Ubuntu%20Build-Test/badge.svg?branch=git-workflow)
-![](https://github.com/actions/dancebots_gui/workflows/macOS%20Build-Test/badge.svg?branch=git-workflow)
+![](https://github.com/actions/dancebots_gui/workflows/macOS%20Build/badge.svg?branch=master)
+![](https://github.com/actions/dancebots_gui/workflows/Ubuntu%20Build/badge.svg?branch=master)
+![](https://github.com/actions/dancebots_gui/workflows/Ubuntu%20Build/badge.svg?branch=devel)
+![](https://github.com/actions/dancebots_gui/workflows/macOS%20Build/badge.svg?branch=devel)
+![](https://github.com/actions/dancebots_gui/workflows/Ubuntu%20Build/badge.svg?branch=git-workflow)
+![](https://github.com/actions/dancebots_gui/workflows/macOS%20Build/badge.svg?branch=git-workflow)
+![](https://github.com/actions/dancebots_gui/workflows/macOS%20Build/badge.svg?branch=git-workflow?event=pull_request)
 
 # Build & Deployment Instructions
 ## Windows
@@ -55,7 +58,7 @@ Navigate to the `build` directory, configure for release, and build the project:
 ```
 cd build/
 cmake -DCMAKE_PREFIX_PATH=/path/to/Qt/5.12.6/clang_64/ -DCMAKE_BUILD_TYPE=Release ../
-make dancebotsEditor
+make -j dancebotsEditor
 ```
 
 ### Deploy
@@ -97,7 +100,7 @@ Navigate to the `build` directory, configure for release, and build the project:
 ```
 cd build/
 cmake -DCMAKE_PREFIX_PATH=/path/to/Qt/5.12.6/gcc_64 -DCMAKE_BUILD_TYPE=Release ../
-make dancebotsEditor
+make -j dancebotsEditor
 ```
 
 The `dancebotsEditor` binary will be located in `/path/to/dancebots_gui/build/gui/`.
