@@ -4,8 +4,8 @@ find_package(Qt5 COMPONENTS Widgets REQUIRED)
 
 set(SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/../../src/AudioFile.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/../../src/BeatDetector.cpp)
-    
-set(INCLUDE_DIRS  ${CMAKE_CURRENT_SOURCE_DIR}/../../src
+
+set(INCLUDE_DIRS  ${CMAKE_SOURCE_DIR}
                   ${CMAKE_CURRENT_SOURCE_DIR}/../../lib/kissfft)
 
 include_directories(${INCLUDE_DIRS})

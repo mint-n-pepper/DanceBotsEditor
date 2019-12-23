@@ -26,8 +26,8 @@
 #include <tbytevectorstream.h>
 #include <QDataStream>
 #include <QtCore/QFile>
-#include <vector>
 #include <string>
+#include <vector>
 
 /** \class AudioFile
  * \brief Loads, de- and encodes, and saves Dancebot audio MP3 files

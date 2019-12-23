@@ -17,14 +17,15 @@
  *  LICENSE file included in the repository.
  */
 
-#include <AudioFile.h>
-
 #include <gtest/gtest.h>
+
 #include <QDir>
 #include <QtCore/QFile>
+
 #include <string>
 
-#include "BeatDetector.h"
+#include "src/AudioFile.h"
+#include "src/BeatDetector.h"
 
 namespace {
 class BeatDetectTest : public ::testing::Test {

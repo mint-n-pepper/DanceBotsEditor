@@ -21,7 +21,7 @@ set(SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/../src/AudioFile.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/../src/PrimitiveToSignal.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp)
 
-set(INCLUDE_DIRS  ${CMAKE_CURRENT_SOURCE_DIR}/../src
+set(INCLUDE_DIRS  ${CMAKE_SOURCE_DIR}
                   ${CMAKE_CURRENT_SOURCE_DIR}/../lib/kissfft)
 
 include_directories(${INCLUDE_DIRS})

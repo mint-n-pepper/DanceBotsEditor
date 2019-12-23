@@ -18,11 +18,11 @@
 # | ------- 	| ------- | ------- |
 # | Variable 	| `fileName` | camelCase |
 # | Member Variable | `mFileName` | m + CamelCase|
-# | Constant	| `fileName` | like variable | 
+# | Constant	| `fileName` | like variable |
 # | Enum | `eWriteOnly` | e + CamelCase|
 # | Class | `FileHandler` | CamelCase|
 # | Files | `FileHandler.h` | CamelCase + file ending|
-# 
+#
 # ## Indentation / Tabs
 # are two spaces.
 
@@ -38,7 +38,7 @@ for FOLDER in "../gui/" "../src/" "../test/"; do
 	find "${FOLDER}" -regex '.*\.\(cpp\|hpp\|c\|h\)' -exec clang-format -i -style="${CLANG_FORMAT_STYLE_FILE}" {} \;
 
 	# lint recursively
-	# cpplint --recursive "${FOLDER}"
+	cpplint --recursive --filter=-whitespace/indent "${FOLDER}"
 done
 
 # close Python virtual environment

@@ -22,7 +22,7 @@
 #include <QDebug>
 #include <QObject>
 
-#include "AudioPlayer.h"
+#include "src/AudioPlayer.h"
 
 class DummyUI : public QObject {
   Q_OBJECT;

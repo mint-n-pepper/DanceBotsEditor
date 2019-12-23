@@ -17,13 +17,15 @@
  *  LICENSE file included in the repository.
  */
 
-#include "AudioFile.h"
-#include "AudioPlayer.h"
 #include "DummyUI.h"
 
 #include <QDebug>
 #include <QGuiApplication>
+
 #include <string>
+
+#include "src/AudioFile.h"
+#include "src/AudioPlayer.h"
 
 const QString fileMusic44k{"./../test_mp3_files/in44100.mp3"};
 

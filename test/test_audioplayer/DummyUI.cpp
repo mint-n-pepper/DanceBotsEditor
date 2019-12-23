@@ -17,7 +17,7 @@
  *  LICENSE file included in the repository.
  */
 
-#include "DummyUI.h"
+#include "test/test_audioplayer/DummyUI.h"
 
 DummyUI::DummyUI(AudioPlayer* player) : mAudioPlayer{player} {
   connect(player, &AudioPlayer::notify, this, &DummyUI::receiveNotify);

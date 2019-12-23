@@ -17,7 +17,7 @@
  *  LICENSE file included in the repository.
  */
 
-#include <AudioFile.h>
+#include <src/AudioFile.h>
 
 #include <gtest/gtest.h>
 #include <QtCore/QFile>

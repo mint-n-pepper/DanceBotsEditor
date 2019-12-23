@@ -17,7 +17,9 @@
  *  LICENSE file included in the repository.
  */
 
-#include "AudioPlayer.h"
+#include "src/AudioPlayer.h"
+
+#include <algorithm>
 
 AudioPlayer::AudioPlayer(QObject* parent)
     : QObject{parent}, mRawAudioBuffer(&mRawAudio, this) {}

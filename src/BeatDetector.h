@@ -20,9 +20,10 @@
 #ifndef SRC_BEATDETECTOR_H_
 #define SRC_BEATDETECTOR_H_
 
-#include <BeatTrack.h>
 #include <memory>
 #include <vector>
+
+#include "BeatTrack.h"
 #include "kissfft.hh"
 
 /** \class BeatDetector

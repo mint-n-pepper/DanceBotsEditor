@@ -17,7 +17,7 @@
  *  LICENSE file included in the repository.
  */
 
-#include "BeatDetector.h"
+#include "src/BeatDetector.h"
 
 BeatDetector::BeatDetector(const unsigned int sampleRate)
     : mSampleRate{sampleRate},

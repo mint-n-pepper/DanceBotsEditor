@@ -17,7 +17,9 @@
  *  LICENSE file included in the repository.
  */
 
-#include "PrimitiveToSignal.h"
+#include "src/PrimitiveToSignal.h"
+
+#include <algorithm>
 #include <cmath>
 #include <random>
 

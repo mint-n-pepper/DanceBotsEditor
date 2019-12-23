@@ -4,7 +4,7 @@ set(CMAKE_AUTOMOC ON)
 
 find_package(Qt5 COMPONENTS Widgets REQUIRED)
 
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../src/)
+include_directories(${CMAKE_SOURCE_DIR})
 
 set(HEADERS ${CMAKE_CURRENT_SOURCE_DIR}/../../src/Primitive.h
             ${CMAKE_CURRENT_SOURCE_DIR}/../../src/AudioFile.h)

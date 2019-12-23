@@ -22,8 +22,8 @@
 
 #include <vector>
 
-#include "AudioFile.h"
-#include "Primitive.h"
+#include "src/AudioFile.h"
+#include "src/Primitive.h"
 
 /** \class PrimitiveToSignal
  * \brief Converts motor and led primitives to data audio signal for Dancebot
@@ -146,8 +146,7 @@ class PrimitiveToSignal {
    * \param[in] data - the command data to populate with calculated values
    */
   void getLEDs(const double relativeBeat,
-               const LEDPrimitive* const ledPrimitive,
-               Data* data);
+               const LEDPrimitive* const ledPrimitive, Data* data);
   /**
    * \brief Writes given command data to data audio signal buffer
    *

@@ -19,16 +19,18 @@
 
 #ifndef SRC_BACKEND_H_
 #define SRC_BACKEND_H_
+
 #include <QFuture>
 #include <QFutureWatcher>
 #include <QObject>
 #include <QString>
+
 #include <vector>
 
-#include "AudioFile.h"
-#include "AudioPlayer.h"
-#include "BeatDetector.h"
-#include "PrimitiveList.h"
+#include "src/AudioFile.h"
+#include "src/AudioPlayer.h"
+#include "src/BeatDetector.h"
+#include "src/PrimitiveList.h"
 
 /** \class BackEnd
  * \brief Backend class providing primitive models and audio data handling and

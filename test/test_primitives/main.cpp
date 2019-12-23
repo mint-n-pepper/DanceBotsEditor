@@ -17,13 +17,13 @@
  *  LICENSE file included in the repository.
  */
 
+#include <gtest/gtest.h>
 #include <QByteArray>
 #include <QDataStream>
-#include <gtest/gtest.h>
 #include <iostream>
 #include <random>
-#include "AudioFile.h"
-#include "Primitive.h"
+#include "src/AudioFile.h"
+#include "src/Primitive.h"
 
 namespace {
 // check functions:

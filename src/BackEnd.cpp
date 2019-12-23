@@ -17,18 +17,19 @@
  *  LICENSE file included in the repository.
  */
 
-#include "BackEnd.h"
+#include "src/BackEnd.h"
 
 #include <stdio.h>
+
 #include <QDataStream>
 #include <QEventLoop>
 #include <QThread>
 #include <QtConcurrent>
 #include <QtDebug>
 
-#include "Primitive.h"
-#include "PrimitiveToSignal.h"
-#include "Utils.h"
+#include "src/Primitive.h"
+#include "src/PrimitiveToSignal.h"
+#include "src/Utils.h"
 
 BackEnd::BackEnd(QObject* parent)
     : QObject{parent},
@@ -230,8 +231,7 @@ bool BackEnd::saveMP3Worker(const QString& fileName) {
   }
 
   // instantiate primitive to audio signal converter
-  PrimitiveToSignal primitiveConverter(mBeatFrames,
-                                       &mAudioFile);
+  PrimitiveToSignal primitiveConverter(mBeatFrames, &mAudioFile);
   primitiveConverter.convert(mMotorPrimitives->getData(),
                              mLedPrimitives->getData());
 
@@ -296,9 +296,7 @@ int BackEnd::getBeatAtFrame(const int frame) const {
   size_t ind = 0;
   // use binary search, as it is much faster for larger arrays
   // and about the same speed as linear search for smaller ones
-  int rv = utils::findInterval<int>(frame,
-                                    mBeatFrames,
-                                    &ind,
+  int rv = utils::findInterval<int>(frame, mBeatFrames, &ind,
                                     utils::SearchMethod::eBinary);
 
   // return -1 if search failed

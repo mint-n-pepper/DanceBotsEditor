@@ -17,7 +17,7 @@
  *  LICENSE file included in the repository.
  */
 
-#include "AudioFile.h"
+#include "src/AudioFile.h"
 // typedef sample_t to include encoder.h that contains the en-/decoder
 // delay defines
 typedef float sample_t;
@@ -25,7 +25,10 @@ typedef float sample_t;
 #include <lame.h>
 #include <limits.h>
 #include <sndfile.h>
+
+#include <algorithm>
 #include <cmath>
+
 #include "dsp/rateconversion/Resampler.h"
 
 // class constants:

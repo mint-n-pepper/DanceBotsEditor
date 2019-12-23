@@ -17,7 +17,7 @@
  *  LICENSE file included in the repository.
  */
 
-#include "Primitive.h"
+#include "src/Primitive.h"
 
 MotorPrimitive::MotorPrimitive(QObject* const parent) : BasePrimitive{parent} {}
 
@@ -33,7 +33,7 @@ MotorPrimitive::MotorPrimitive(QDataStream* initStream, QObject* const parent)
 
   // get from stream:
   *initStream >> beatPosition >> beatLength >> type >> frequency >> velocity >>
-    velocityRight;
+      velocityRight;
 
   // and write to members:
   mPositionBeat = beatPosition;

@@ -17,9 +17,11 @@
  *  LICENSE file included in the repository.
  */
 
-#include "PrimitiveList.h"
+#include "src/PrimitiveList.h"
+
 #include <QDebug>
-#include "Primitive.h"
+
+#include "src/Primitive.h"
 
 PrimitiveList::PrimitiveList(QObject* parent)
     : QAbstractListModel{parent}, mData{} {};

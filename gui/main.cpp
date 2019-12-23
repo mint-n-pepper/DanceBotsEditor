@@ -22,8 +22,8 @@
 #include <QQmlContext>
 #include <QtSvg>
 
-#include "BackEnd.h"
-#include "Primitive.h"
+#include "src/BackEnd.h"
+#include "src/Primitive.h"
 
 int main(int argc, char* argv[]) {
   QCoreApplication::setOrganizationName("MINT&Pepper");

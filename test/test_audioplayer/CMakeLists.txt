@@ -14,7 +14,7 @@ set(HEADERS ${CMAKE_CURRENT_SOURCE_DIR}/../../src/AudioFile.h
             ${CMAKE_CURRENT_SOURCE_DIR}/../../src/AudioPlayer.h
             ${CMAKE_CURRENT_SOURCE_DIR}/DummyUI.h)
 
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../src)
+include_directories(${CMAKE_SOURCE_DIR})
 source_group("Headers" FILES ${HEADERS})
 
 add_executable(${PROJECT_NAME} main.cpp ${AUDIOFILE_SRC} ${HEADERS})

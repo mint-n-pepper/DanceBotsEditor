@@ -6,7 +6,7 @@ set(AUDIOFILE_SRC ${CMAKE_CURRENT_SOURCE_DIR}/../../src/AudioFile.cpp)
 
 set(HEADERS ${CMAKE_CURRENT_SOURCE_DIR}/../../src/AudioFile.h)
 
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../src)
+include_directories(${CMAKE_SOURCE_DIR})
 source_group("Headers" FILES ${HEADERS})
 
 add_executable(${PROJECT_NAME} main.cpp ${AUDIOFILE_SRC} ${HEADERS})
