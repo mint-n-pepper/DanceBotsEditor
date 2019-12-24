@@ -70,10 +70,9 @@ QtObject {
   property var creditsText:{
     'Copyright (c) 2019 - mint & pepper -
     <a href="https://www.mintpepper.ch">mintpepper.ch</a> <br>
-    Authors: Philipp Reist, Robin Hanhart, and Raymond Oung<br>
-    Source code available at
-    <a href="https://github.com/philippReist/dancebots_gui">
-    https://github.com/philippReist/dancebots_gui</a><br><br>
+    Authors: Philipp Reist, Robin Hanhart, and Raymond Oung <br>
+    Source code and more info available at
+    <a href="https://www.dancebots.ch">dancebots.ch</a> <br><br>
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
