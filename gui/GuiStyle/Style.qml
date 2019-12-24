@@ -136,13 +136,6 @@ QtObject {
     property color ac_songPositionSliderHandle: mp_green
     property color ac_songPositionSliderHandleBorder: mp_black
 
-
-    // volume slider
-    property color ac_volumeSliderBar: mp_lightgrey
-    property color ac_volumeSliderBarActivePart: "grey"
-    property color ac_volumeSliderHandle: "grey"
-    property color ac_volumeSliderIconColor: "#B9B9B9"
-
     // timer display
     property color ac_timerFont: "lightgrey"
   }
@@ -362,12 +355,5 @@ QtObject {
 
     // timer visuals
     property real timerFontSize: 0.8 // ratio of sliderHeight
-
-    // Volume controls
-    property real volumeSliderHeight: 0.7 // ratio of sliderHeight
-    property real volmeSliderBarSize: 0.2 // ratio of slider handle size
-    property real volumeSliderWidth: 0.15 // ratio of window width
-    property real volumeIconScale: 0.75 // ratio of sliderHeight
-
   }
 }

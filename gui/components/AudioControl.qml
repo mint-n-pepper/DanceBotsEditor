@@ -215,58 +215,5 @@ Item {
                       * root.sliderHeight
       color: Style.palette.ac_timerFont
     }
-
-    Row{
-      id: volumeRow
-      anchors.right: playControlItem.right
-      anchors.verticalCenter: playControlItem.verticalCenter
-      spacing: appWindow.guiMargin
-      Connections{
-        target: backend.audioPlayer
-        onVolumeAvailable:{
-          volumeSlider.value = backend.audioPlayer.getCurrentLogVolume()
-        }
-      }
-
-      Item{
-        width: speakerImage.width
-        height: speakerImage.height
-        anchors.verticalCenter: parent.verticalCenter
-        Image{
-          id: speakerImage
-          source: "../icons/volume.svg"
-          anchors.verticalCenter: parent.verticalCenter
-          width: root.sliderHeight * Style.audioControl.volumeIconScale
-          height: width
-          visible: false
-        }
-
-        ColorOverlay{
-          anchors.fill: speakerImage
-          source: speakerImage
-          color: Style.palette.ac_volumeSliderIconColor
-          antialiasing: true
-        }
-      }
-
-      ScalableSlider{
-        id: volumeSlider
-        from: 0.0
-        to: 1.0
-        value: 1.0
-        anchors.verticalCenter: parent.verticalCenter
-        height: root.sliderHeight * Style.audioControl.volumeSliderHeight
-        width: root.width * Style.audioControl.volumeSliderWidth
-        focusPolicy: Qt.NoFocus
-        live: true
-        onPressedChanged: appWindow.grabFocus()
-        onValueChanged: backend.audioPlayer.setVolume(value)
-
-        sliderBarSize: Style.audioControl.volmeSliderBarSize
-        backgroundColor: Style.palette.ac_volumeSliderBar
-        backgroundActiveColor: Style.palette.ac_volumeSliderBarActivePart
-        handleColor: Style.palette.ac_volumeSliderHandle
-      }
-    }
   } // play control item
 }
