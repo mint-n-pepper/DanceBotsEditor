@@ -20,6 +20,7 @@
 import QtQuick 2.6
 import QtQuick.Controls 2.12
 import QtQuick.Dialogs 1.3
+import QtQuick.Window 2.1
 
 import "components"
 import "GuiStyle"
@@ -35,6 +36,20 @@ ApplicationWindow {
                   + timerBarFlickable.height
                   + audioControl.height
                   + 4 * guiMargin)
+
+  onHeightChanged: {
+    // unless maximized, enforce proper window height
+    if(visibility !== Window.Maximized){
+      height = componentsHeight
+    }
+  }
+
+  onVisibilityChanged: {
+    if(Window.Windowed === visibility){
+      // after return from maximized, enforce proper window height
+      height = componentsHeight
+    }
+  }
 
   visible: true
   title: "Dancebots Editor"

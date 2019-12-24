@@ -84,7 +84,10 @@ TEST_F(BeatDetectTest, beatConsistency) {
     std::cout << "Now testing on file " << testFile.toStdString() << std::endl;
 
     AudioFile mp3File44k{};
-    mp3File44k.load(testFile);
+    AudioFile::Result res = mp3File44k.load(testFile);
+
+    // do not proceed if file fails to load
+    ASSERT_EQ(res, AudioFile::Result::eSuccess);
 
     std::vector<int> firstBeats =
         mBeatDetector.detectBeats(mp3File44k.mFloatMusic);
@@ -116,6 +119,9 @@ TEST_F(BeatDetectTest, beatConsistency) {
       // load the temp file:
       AudioFile checkFile{};
       AudioFile::Result result = checkFile.load(fileTemp);
+
+      // loading must succeed to proceed
+      ASSERT_EQ(result, AudioFile::Result::eSuccess);
 
       // make sure same number of audio samples:
       EXPECT_EQ(mp3File44k.mFloatMusic.size(), checkFile.mFloatMusic.size());
