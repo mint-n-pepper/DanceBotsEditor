@@ -120,15 +120,10 @@ Rectangle{
     }
 
     onPositionChanged:{
-      // figure out in what part of the primitive the cursor is
-      // and then change the mouse pointer accordingly
-      if(!dragActive && isFromBar && mouseX > width - resizeMargin){
-        cursorShape = Qt.SizeHorCursor
-      }else{
-        cursorShape = Qt.ArrowCursor
-      }
 
       if(doResize && pressed){
+        // keep cursor shape as horizontal resize cursor
+        cursorShape = Qt.SizeHorCursor
         // do resize
         var currentFrame = (parent.x + mouseX) / appWindow.frameToPixels;
         if(currentFrame > backend.getAudioLengthInFrames()){
@@ -163,6 +158,15 @@ Rectangle{
             idleParent.parent.setOccupied(parent.primitive)
             parent.updatePrimitive()
           }
+        }
+      }else{
+        if(!dragActive && isFromBar
+               && mouseX > width - resizeMargin){
+          // if not resizing , figure out in what part of the primitive the
+          // cursor is and then change the mouse pointer accordingly
+          cursorShape = Qt.SizeHorCursor
+        }else{
+          cursorShape = Qt.ArrowCursor
         }
       }
     }

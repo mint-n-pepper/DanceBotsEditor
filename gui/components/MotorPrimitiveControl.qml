@@ -262,10 +262,10 @@ Rectangle{
               text: {
                 switch(type){
                 case MotorPrimitive.Type.Custom:
-                  return "Velocity L"
+                  return "Speed L"
                 case MotorPrimitive.Type.Straight:
                 case MotorPrimitive.Type.Spin:
-                  return "Velocity"
+                  return "Speed"
                 case MotorPrimitive.Type.Twist:
                 case MotorPrimitive.Type.BackAndForth:
                   return "Amplitude"
@@ -514,7 +514,7 @@ Rectangle{
               font.pixelSize: Style.primitiveControl.sliderLabelTextSize
                               * parent.height
               font.capitalization: Font.AllUppercase
-              text: "Velocity R"
+              text: "Speed R"
               verticalAlignment: Text.AlignVCenter
               color: Style.palette.pc_sliderText
             }
