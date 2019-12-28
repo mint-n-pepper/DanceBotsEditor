@@ -34,7 +34,8 @@ Rectangle{
   property var delegate: null
   property var averageBeatFrames: 60 * 441 // 100 bpm @ 44.1kHz
   enabled: false
-  property var margin: width * Style.primitiveControl.margin
+  property bool showDragHint: true
+
   property int type
 
   onTypeChanged: {
@@ -135,41 +136,48 @@ Rectangle{
     anchors.leftMargin: appWindow.guiMargin
     anchors.rightMargin: appWindow.guiMargin
     anchors.bottomMargin: appWindow.guiMargin
-    property var minHeight: dummyTimerBar.height + 2 * appWindow.guiMargin
-    height: settingsColumn.height + 2 * appWindow.guiMargin < minHeight ?
-     minHeight : settingsColumn.height + 2 * appWindow.guiMargin
+    property var minHeight: dummyTimerBar.effectiveHeight
+                            + 2 * appWindow.guiMargin
+    property var settingsHeight: settingsColumn.height
+                                 + 2 * settingsColumn.anchors.bottomMargin
+    height:  settingsHeight < minHeight ? minHeight : settingsHeight
     anchors.left: titleBar.right
     anchors.right: root.right
     anchors.bottom: root.bottom
+
+    property real contentLeftRightPadding: appWindow.guiMargin
+    property real contentWidth: width - 2 * contentLeftRightPadding
 
     color: Style.palette.pc_settingsBoxBackground
 
     Column{
       id: settingsColumn
-      width: radios.width * (1.0 - Style.primitiveControl.primitiveBoxWidth)
+      // width is set to be width of surrounding rectangle minus
+      // left margin and minus primitive area width
+      width: settingsRectangle.contentWidth
+             * (1.0 - Style.primitiveControl.primitiveBoxWidth)
       anchors.left: parent.left
+      anchors.leftMargin: settingsRectangle.contentLeftRightPadding
       anchors.bottom: parent.bottom
-      anchors.bottomMargin: appWindow.guiMargin
-      padding: appWindow.guiMargin
+      anchors.bottomMargin: 2 * appWindow.guiMargin
       spacing: sliderHeight * Style.primitiveControl.sliderVSpacing
       property real sliderHeight: root.width * Style.primitiveControl.sliderHeight
       property real labelWidth: width * Style.primitiveControl.sliderLabelWidth
       property real iconWidth: width * Style.primitiveControl.sliderIconWidth
       property real valueWidth: width * Style.primitiveControl.sliderValueWidth
-      property real sliderItemSpacing: sliderHeight
-                                      * Style.primitiveControl.sliderItemHSpacing
+      property real sliderHSpacing: sliderHeight
+                                    * Style.primitiveControl.sliderItemHSpacing
       property real sliderWidth: width
                                 - labelWidth
                                 - valueWidth
                                 - 2 * iconWidth
-                                - 4 * sliderItemSpacing
-                                - appWindow.guiMargin
+                                - 4 * sliderHSpacing
       property real dirRadioSize: radios.radioHeight
                                   * Style.primitiveControl.directionRadioSize
 
       FrequencySlider{
         id: frequencySliderRow
-        spacing: settingsColumn.sliderItemSpacing
+        spacing: settingsColumn.sliderHSpacing
         height: settingsColumn.sliderHeight
         labelWidth: settingsColumn.labelWidth
         iconWidth: settingsColumn.iconWidth
@@ -258,15 +266,35 @@ Rectangle{
 
     Rectangle{
       id: dummyTimerBar
-      height: appWindow.width * Style.primitives.height * Style.timerBar.height
+      property real effectiveHeight: dragHint.visible ?
+                                       dragHint.height + height
+                                     : height
+      // dummy timer bar has same height as primitives
+      height: appWindow.width
+              * Style.primitives.height
+              * Style.timerBar.height
+      width: settingsRectangle.contentWidth
+             * Style.primitiveControl.primitiveBoxWidth
       anchors.bottom: settingsRectangle.bottom
       anchors.left: settingsColumn.right
-      anchors.leftMargin: appWindow.guiMargin
       anchors.bottomMargin: appWindow.guiMargin
+      color: "transparent"
+      Text{
+        id: dragHint
+        text: "Drag me!"
+        color: Style.palette.pc_controlsFonts
+        anchors.bottom: dummyTimerBar.top
+        width: dummyTimerBar.width
+        font.pixelSize: parent.height * Style.primitiveControl.dragHintTextSize
+        visible: root.showDragHint
+      }
     }
   }
 
   function createDelegate(){
+    if(root.enabled && root.showDragHint){
+      showDragHint = false
+    }
     delegate = delegateFactory.createObject(dummyTimerBar)
     delegate.dragTarget = ledBar.dragTarget
     delegate.idleParent = root

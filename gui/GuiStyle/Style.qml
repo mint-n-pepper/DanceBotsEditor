@@ -272,7 +272,8 @@ QtObject {
     property real typeRadioTextPadding: 0.25 // ratio of radio height
 
     // primitive box
-    property real primitiveBoxWidth: 0.25 // ratio of available width
+    property real primitiveBoxWidth: 0.2 // ratio of available width
+    property real dragHintTextSize: 0.2 // ratio of primitive height
 
     // setting box
 
@@ -283,7 +284,7 @@ QtObject {
     property real sliderTickWidth: 2 // ratio of slider bar height
     property real sliderLabelWidth: 0.25 // ratio of width available for settings sliders
     property real sliderLabelTextSize: 0.8 // ratio of slider height
-    property real sliderValueWidth: 0.04 // ratio of width available for settings sliders
+    property real sliderValueWidth: 0.1 // ratio of width available for settings sliders
     property real sliderValueTextSize: 0.6 // ratio of slider height
     property real sliderFractionTextSize: 0.6 // ratio of slider height
     property real sliderIconWidth: 0.08 // ratio of box width
@@ -301,8 +302,6 @@ QtObject {
   // Timer bar window
   property QtObject timerBar: QtObject{
     property real height: 0.055 // ratio of window width
-    // margin to other GUI elements
-    property real margin: 0.125 // ratio of timerBar height
     // space between timer bars
     property real spacing: 0.125 // ratio of timerBar height
     property real beatWidth: 2.0/80.0 // line width of beat indicators
