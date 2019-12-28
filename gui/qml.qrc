@@ -19,6 +19,9 @@
         <file>components/ConfirmPopup.qml</file>
         <file>components/AboutPopup.qml</file>
         <file>components/AboutText.qml</file>
+        <file>components/FrequencySlider.qml</file>
+        <file>components/DiscreteSlider.qml</file>
+        <file>components/FractionDisplay.qml</file>
         <file>GuiStyle/Style.qml</file>
         <file>GuiStyle/qmldir</file>
         <file>icons/stop.svg</file>

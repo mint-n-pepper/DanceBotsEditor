@@ -82,7 +82,7 @@ QtObject {
 
     property color pc_moveBoxBackground: mp_mediumgrey // Dark grey background
     property color pc_moveBoxColor: mp_yellow // Mint & Pepper Yellow
-    property color pc_ledBoxBackground: "#4B4B4B" // Dark grey background
+    property color pc_ledBoxBackground: mp_mediumgrey // Dark grey background
     property color pc_ledBoxColor: mp_orange // Mint & Pepper Orange
     property color pc_settingsBoxColor: mw_background // Settings box same as background
 
@@ -97,8 +97,9 @@ QtObject {
 
     // sliders
     property color pc_settingsBoxBackground: "#393939"
-    property color pc_sliderBar: "black"
-    property color pc_sliderBarActivePart: "#222222"
+    property color pc_sliderBar: mp_black
+    property color pc_sliderBarActivePart: mp_mediumgrey
+    property color pc_sliderBarTicks: mp_black
     property color pc_sliderHandle: "white"
     property color pc_sliderText: pc_controlsFonts
     property color pc_sliderIcon: pc_controlsFonts
@@ -278,8 +279,13 @@ QtObject {
     // sliders:
     property real sliderHeight: 0.035 // ratio of box width
     property real sliderBarSize: 0.2 // ratio of slider handle size
+    property real sliderTickHeight: 2.5 // ratio of slider bar height
+    property real sliderTickWidth: 0.45 // ratio of slider bar height
     property real sliderLabelWidth: 0.25 // ratio of width available for settings sliders
     property real sliderLabelTextSize: 0.8 // ratio of slider height
+    property real sliderValueWidth: 0.04 // ratio of width available for settings sliders
+    property real sliderValueTextSize: 0.6 // ratio of slider height
+    property real sliderFractionTextSize: 0.6 // ratio of slider height
     property real sliderIconWidth: 0.08 // ratio of box width
     property real sliderItemHSpacing: 0.4 // ratio of sliderHeight
     property real sliderVSpacing: 0.75 // ratio of sliderHeight
