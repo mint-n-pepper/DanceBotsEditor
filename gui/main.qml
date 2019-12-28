@@ -213,15 +213,18 @@ ApplicationWindow {
     {
       anchors.fill: parent
       onClicked: {
-         mouse.accepted = false
-         // jump song position to click location
-         var timeMS = Math.round(mouseX / appWindow.frameToPixels
+        mouse.accepted = false
+        // only jump if the mouse click is not deselecting primitives:
+        if(!ledDragger.hasChildren && !motDragger.hasChildren){
+          // jump song position to click location
+          var timeMS = Math.round(mouseX / appWindow.frameToPixels
                                         / backend.getSampleRate() * 1000.0)
          audioControl.songPositionMS = timeMS
-         if(ledPrimitiveControl.enabled){
+         if(backend.audioFile.hasData()){
            backend.audioPlayer.seek(timeMS)
-         }
-       }
+          }
+        }
+      }
       onReleased: {
         if (!propagateComposedEvents) {
             propagateComposedEvents = true
