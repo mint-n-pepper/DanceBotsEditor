@@ -220,7 +220,7 @@ ApplicationWindow {
           var timeMS = Math.round(mouseX / appWindow.frameToPixels
                                         / backend.getSampleRate() * 1000.0)
          audioControl.songPositionMS = timeMS
-         if(backend.audioFile.hasData()){
+         if(backend.mp3Loaded){
            backend.audioPlayer.seek(timeMS)
           }
         }
@@ -310,7 +310,7 @@ ApplicationWindow {
 
   Faders{
     id: faders
-    visible: ledPrimitiveControl.enabled
+    visible: backend.mp3Loaded
     anchors.fill: timerBarFlickable
     contentPosition: timerBarFlickable.contentX
   }
@@ -331,7 +331,7 @@ ApplicationWindow {
     width: appWindow.width
     height: appWindow.height - titleBar.height - fileControl.height
     color: Style.palette.mw_disableOverlay
-    visible: !ledPrimitiveControl.enabled
+    visible: !backend.mp3Loaded
   }
 
   function grabFocus(){

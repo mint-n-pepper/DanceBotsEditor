@@ -59,6 +59,10 @@ QString BackEnd::songArtist() { return mSongArtist; }
 
 QString BackEnd::fileStatus() { return mFileStatus; }
 
+bool BackEnd::mp3Loaded() {
+  return mAudioFile.hasData();
+}
+
 PrimitiveList* BackEnd::motorPrimitives(void) { return mMotorPrimitives; }
 
 PrimitiveList* BackEnd::ledPrimitives(void) { return mLedPrimitives; }
@@ -107,6 +111,7 @@ Q_INVOKABLE void BackEnd::saveMP3(const QString& filePath) {
 
 void BackEnd::handleDoneLoading(void) {
   emit doneLoading(mLoadFuture.result());
+  emit mp3LoadedChanged();
   // read out primitives if it is a dancefile:
   // need to do that in main thread (here) as we are assigning the parent
   if (mAudioFile.isDancefile()) {

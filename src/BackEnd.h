@@ -51,6 +51,7 @@ class BackEnd : public QObject {
                  ledPrimitivesChanged);
   Q_PROPERTY(
       AudioPlayer* audioPlayer READ audioPlayer NOTIFY audioPlayerChanged);
+  Q_PROPERTY(bool mp3Loaded READ mp3Loaded NOTIFY mp3LoadedChanged);
 
  public:
   explicit BackEnd(QObject* parent = nullptr);
@@ -58,22 +59,27 @@ class BackEnd : public QObject {
   /**
    * \brief Get ID3-Tag song artist string
    */
-  QString songArtist();
+  QString songArtist(void);
 
   /**
    * \brief Get ID3-Tag song title string
    */
-  QString songTitle();
+  QString songTitle(void);
 
   /**
    * \brief Get ID3-Tag song comment string
    */
-  QString songComment();
+  QString songComment(void);
 
   /**
    * \brief Get file load and save status string
    */
-  QString fileStatus();
+  QString fileStatus(void);
+
+  /**
+  * \brief Get flag indicating that backend has an MP3 loaded
+  */
+  bool mp3Loaded(void);
 
   /**
    * \brief Get motor primitive model
@@ -178,6 +184,7 @@ class BackEnd : public QObject {
   void songArtistChanged();
   void songTitleChanged();
   void songCommentChanged();
+  void mp3LoadedChanged();
   void motorPrimitivesChanged();
   void ledPrimitivesChanged();
   void audioPlayerChanged();
