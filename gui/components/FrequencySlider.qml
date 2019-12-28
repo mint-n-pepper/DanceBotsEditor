@@ -55,18 +55,15 @@ Row{
     id: frequencySlider
     height: root.height
     width: root.sliderWidth
+    value: 2
 
     numberOfSteps: numerators.length
-
-    live: true
-    snapMode: Slider.SnapAlways
 
     Keys.onPressed: appWindow.handleKey(event)
     sliderBarSize: Style.primitiveControl.sliderBarSize
     tickMarkHeight: Style.primitiveControl.sliderTickHeight
     tickMarkWidth: Style.primitiveControl.sliderTickWidth
     backgroundColor: Style.palette.pc_sliderBar
-    backgroundActiveColor: Style.palette.pc_sliderBarActivePart
     ticksColor: Style.palette.pc_sliderBarTicks
     handleColor: Style.palette.pc_sliderHandle
   }

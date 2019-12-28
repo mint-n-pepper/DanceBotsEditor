@@ -37,9 +37,6 @@ Rectangle{
   property var margin: width * Style.primitiveControl.margin
   property int type
 
-  // frequencies that can be set with slider
-  property var frequencies: [0.25, 0.33, 0.5, 0.66, 1.0, 1.5, 2.0, 3.0, 4.0]
-
   onTypeChanged: {
     delegate.primitive.type = type
     delegate.updatePrimitive()
@@ -153,102 +150,38 @@ Rectangle{
       anchors.left: parent.left
       anchors.bottom: parent.bottom
       anchors.bottomMargin: appWindow.guiMargin
-      anchors.leftMargin: appWindow.guiMargin
       padding: appWindow.guiMargin
       spacing: sliderHeight * Style.primitiveControl.sliderVSpacing
       property real sliderHeight: root.width * Style.primitiveControl.sliderHeight
       property real labelWidth: width * Style.primitiveControl.sliderLabelWidth
       property real iconWidth: width * Style.primitiveControl.sliderIconWidth
+      property real valueWidth: width * Style.primitiveControl.sliderValueWidth
       property real sliderItemSpacing: sliderHeight
                                       * Style.primitiveControl.sliderItemHSpacing
       property real sliderWidth: width
                                 - labelWidth
+                                - valueWidth
                                 - 2 * iconWidth
-                                - 3 * sliderItemSpacing
-                                - 2 * appWindow.guiMargin
+                                - 4 * sliderItemSpacing
+                                - appWindow.guiMargin
       property real dirRadioSize: radios.radioHeight
                                   * Style.primitiveControl.directionRadioSize
 
-      Row{
+      FrequencySlider{
         id: frequencySliderRow
         spacing: settingsColumn.sliderItemSpacing
+        height: settingsColumn.sliderHeight
+        labelWidth: settingsColumn.labelWidth
+        iconWidth: settingsColumn.iconWidth
+        valueWidth: settingsColumn.valueWidth
+        sliderWidth: settingsColumn.sliderWidth
+
+        // frequencies that can be set with slider
+        numerators:   [1, 1, 1, 2, 1, 3, 2, 3, 4]
+        denominators: [4, 3, 2, 3, 1, 2, 1, 1, 1]
+
         visible: !constantRadio.checked
-        Item{
-          height: settingsColumn.sliderHeight
-          width: settingsColumn.labelWidth
-          Text{
-            font.pixelSize: Style.primitiveControl.sliderLabelTextSize
-                            * parent.height
-            font.capitalization: Font.AllUppercase
-            text: "Frequency"
-            verticalAlignment: Text.AlignVCenter
-            color: Style.palette.pc_sliderText
-          }
-        }
-
-        Item{
-          width: settingsColumn.iconWidth
-          height: settingsColumn.sliderHeight
-          Image{
-            id: lowFreq
-            anchors.centerIn: parent
-            source: "../icons/lowFreq.svg"
-            sourceSize.width: parent.width
-            antialiasing: true
-            visible: false
-          }
-
-          ColorOverlay{
-            anchors.fill: lowFreq
-            source: lowFreq
-            color: Style.palette.pc_sliderIcon
-            antialiasing: true
-            visible: true
-          }
-        }
-
-        ScalableSlider{
-          id: frequencySlider
-          height: settingsColumn.sliderHeight
-          width: settingsColumn.sliderWidth
-          from: 0.0
-          value: 2.0
-          to: frequencies.length - 1.0
-          stepSize: 1.0
-          live: true
-          snapMode: Slider.SnapAlways
-          onValueChanged: {
-            delegate.primitive.frequency = frequencies[value]
-            delegate.updateToolTip()
-          }
-          Keys.onPressed: appWindow.handleKey(event)
-          sliderBarSize: Style.primitiveControl.sliderBarSize
-          backgroundColor: Style.palette.pc_sliderBar
-          backgroundActiveColor: Style.palette.pc_sliderBarActivePart
-          handleColor: Style.palette.pc_sliderHandle
-        }
-
-        Item{
-          width: settingsColumn.iconWidth
-          height: settingsColumn.sliderHeight
-          Image{
-            id: highFreq
-            anchors.centerIn: parent
-            source: "../icons/highFreq.svg"
-            sourceSize.width: parent.width
-            antialiasing: true
-            visible: false
-          }
-
-          ColorOverlay{
-            anchors.fill: highFreq
-            source: highFreq
-            color: Style.palette.pc_sliderIcon
-            antialiasing: true
-            visible: true
-          }
-        }
-      } // frequency row
+      }
 
       Row{
         id: ledSet
@@ -341,7 +274,7 @@ Rectangle{
     delegate.primitive.positionBeat= 0
     delegate.primitive.lengthBeat= 4
     delegate.primitive.type = type
-    delegate.primitive.frequency = frequencies[frequencySlider.value]
+    delegate.primitive.frequency = frequencySliderRow.value
     delegate.primitive.leds = leds
 
     delegate.anchors.verticalCenter = dummyTimerBar.verticalCenter

@@ -35,7 +35,6 @@ Slider {
 
   // color definitions
   property color backgroundColor: "grey"
-  property color backgroundActiveColor: "#444444"
   property color ticksColor: "grey"
   property color handleColor: "white"
   property color handleBorderColor: "black"
@@ -47,6 +46,7 @@ Slider {
   to: numberOfSteps - 1
   stepSize: 1
   snapMode: Slider.SnapAlways
+  live: true
 
   background:Rectangle{
     id: bgRect
@@ -70,13 +70,6 @@ Slider {
         radius: height/2
         color: ticksColor
       }
-    }
-
-    Rectangle{
-      width: root.visualPosition * (bgRect.width + tickMarks.tickWidth)
-      height: bgRect.height
-      color: backgroundActiveColor
-      x: -tickMarks.tickWidth/2
     }
   }
 

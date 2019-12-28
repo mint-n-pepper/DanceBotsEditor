@@ -26,11 +26,8 @@ Rectangle{
   anchors.top: (parent.isMotor || !parent.isFromBar) ? undefined : parent.bottom
   anchors.bottom: (parent.isMotor || !parent.isFromBar) ? parent.top : undefined
   // visible is disabled if a drag is active or if there is no primitive data
-  // it is enabled under the above plus:
-  //    - showData is triggered through a hover
-  //    - the parent primitive is in a control box (!isFromBar) and enabled
-  visible: !parent.dragActive && primitive && (parent.showData
-           || (!parent.isFromBar && parent.enabled))
+  // it is enabled under the above if showData is triggered through a hover
+  visible: !parent.dragActive && primitive && parent.showData
   color: Style.palette.prim_toolTipBackground
   width: parent.isMotor ? motorColumn.width : ledColumn.width
   height: parent.isMotor ? motorColumn.height : ledColumn.height

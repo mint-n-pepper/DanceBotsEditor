@@ -174,9 +174,9 @@ Rectangle{
         Component.onCompleted: updateSpeed()
         function updateSpeed(){
           if(leftForwardRadio.checked){
-            speed = velocitySlider.value
+            speed = velocitySlider.value * 10
           }else{
-            speed = -velocitySlider.value
+            speed = -velocitySlider.value * 10
           }
           delegate.primitive.velocity = speed
           delegate.updateToolTip();
@@ -313,21 +313,19 @@ Rectangle{
                        || type === MotorPrimitive.Type.BackAndForth
             }
           }
-          ScalableSlider{
+          DiscreteSlider{
             id: velocitySlider
             height: settingsColumn.sliderHeight
             width: settingsColumn.sliderWidth
-            from: 0.0
-            value: 60.0
-            to: 100.0
-            stepSize: 1.0
-            live: true
-            snapMode: Slider.SnapAlways
+            numberOfSteps: 11
+            value: 5
             onValueChanged: leftSpeedSet.updateSpeed()
             Keys.onPressed: appWindow.handleKey(event)
             sliderBarSize: Style.primitiveControl.sliderBarSize
+            tickMarkHeight: Style.primitiveControl.sliderTickHeight
+            tickMarkWidth: Style.primitiveControl.sliderTickWidth
             backgroundColor: Style.palette.pc_sliderBar
-            backgroundActiveColor: Style.palette.pc_sliderBarActivePart
+            ticksColor: Style.palette.pc_sliderBarTicks
             handleColor: Style.palette.pc_sliderHandle
           }
 
@@ -370,7 +368,15 @@ Rectangle{
                        || type === MotorPrimitive.Type.BackAndForth
             }
           }
-        }
+          Text{
+            id: valueDisplay
+            text: (velocitySlider.value * 10).toString()
+            color: Style.palette.pc_controlsFonts
+            font.pixelSize: settingsColumn.sliderHeight
+                            * Style.primitiveControl.sliderValueTextSize
+            anchors.verticalCenter: velocitySlider.verticalCenter
+          }
+        } // speed column
       } // left speed column
 
       FrequencySlider{
@@ -395,9 +401,9 @@ Rectangle{
         Component.onCompleted: updateSpeed()
         function updateSpeed(){
           if(rightForwardRadio.checked){
-            speed = rightVelocitySlider.value
+            speed = rightVelocitySlider.value * 10
           }else{
-            speed = -rightVelocitySlider.value
+            speed = -rightVelocitySlider.value * 10
           }
           delegate.primitive.velocityRight = speed
           delegate.updateToolTip();
@@ -474,21 +480,19 @@ Rectangle{
             }
           }
 
-          ScalableSlider{
+          DiscreteSlider{
             id: rightVelocitySlider
             height: settingsColumn.sliderHeight
             width: settingsColumn.sliderWidth
-            from: 0.0
-            value: 60.0
-            to: 100.0
-            stepSize: 1.0
-            live: true
-            snapMode: Slider.SnapAlways
+            numberOfSteps: 11
+            value: 3
             onValueChanged: rightSpeedSet.updateSpeed()
             Keys.onPressed: appWindow.handleKey(event)
             sliderBarSize: Style.primitiveControl.sliderBarSize
+            tickMarkHeight: Style.primitiveControl.sliderTickHeight
+            tickMarkWidth: Style.primitiveControl.sliderTickWidth
             backgroundColor: Style.palette.pc_sliderBar
-            backgroundActiveColor: Style.palette.pc_sliderBarActivePart
+            ticksColor: Style.palette.pc_sliderBarTicks
             handleColor: Style.palette.pc_sliderHandle
           }
 
@@ -511,6 +515,14 @@ Rectangle{
               antialiasing: true
               visible: true
             }
+          }
+          Text{
+            id: rightValueDisplay
+            text: (rightVelocitySlider.value * 10).toString()
+            color: Style.palette.pc_controlsFonts
+            font.pixelSize: settingsColumn.sliderHeight
+                            * Style.primitiveControl.sliderValueTextSize
+            anchors.verticalCenter: rightVelocitySlider.verticalCenter
           }
         } // right speed slider row
       } // right speed column

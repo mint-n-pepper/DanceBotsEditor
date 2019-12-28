@@ -279,8 +279,8 @@ QtObject {
     // sliders:
     property real sliderHeight: 0.035 // ratio of box width
     property real sliderBarSize: 0.2 // ratio of slider handle size
-    property real sliderTickHeight: 2.5 // ratio of slider bar height
-    property real sliderTickWidth: 0.45 // ratio of slider bar height
+    property real sliderTickHeight: 2 // ratio of slider bar height
+    property real sliderTickWidth: 2 // ratio of slider bar height
     property real sliderLabelWidth: 0.25 // ratio of width available for settings sliders
     property real sliderLabelTextSize: 0.8 // ratio of slider height
     property real sliderValueWidth: 0.04 // ratio of width available for settings sliders
