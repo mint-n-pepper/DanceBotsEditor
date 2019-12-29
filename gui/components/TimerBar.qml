@@ -160,6 +160,16 @@ Canvas{
         // set width of ghosts to primitive width:
         ghosts[i].width = drag.source.children[i].width
       }
+      // show and init position of beat indicator
+      // get current frame and beat location of leftmost primitive edge
+      var currentFrame = (drag.x - drag.source.hotSpotOffsetX)
+                         / appWindow.frameToPixels
+      var beatLoc = backend.getBeatAtFrame(currentFrame)
+      if(beatLoc >= 0){
+        // update beat indicator:
+        beatIndicator.text = beatLoc
+        beatIndicator.x = beats[beatLoc] * appWindow.frameToPixels
+      }
       beatIndicator.visible = true
     }
 
