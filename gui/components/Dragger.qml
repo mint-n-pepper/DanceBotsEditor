@@ -28,13 +28,31 @@ Item{
   property bool copy: false
   property bool dragActive: Drag.active
 
+  property real minChildX: 0.0
+  property real maxChildX: 0.0
+  property real hotSpotOffsetX: 0.0
+
+  property int beatOffset: 0
+
   signal dragXChanged(int minChildX, int maxChildX)
 
   function startDrag(controlPressed){
     copy = controlPressed
-    Drag.hotSpot.x = children[0].x
+    calculateEdges()
+    // set hotspot to center of dragged primitives
+    hotSpotOffsetX = (maxChildX - minChildX) / 2
+    Drag.hotSpot.x = minChildX + hotSpotOffsetX
     Drag.hotSpot.y = children[0].y + children[0].height / 2
-    clearOccupancy() // clear occupancy
+
+    // if the primitives are from the bar, shrink the auto-scroll boundaries
+    // if the primitive set is wider than the area shown
+    if(children[0].isFromBar){
+      checkBarBoundaries()
+    }
+
+    // clear timer bar occupancy
+    clearOccupancy()
+
     if(copy){
       // copy primitives
       copyPrimitives()
@@ -52,19 +70,6 @@ Item{
   onXChanged: {
     // only process if we are hovering over the timer bar
     if(Drag.active && Drag.target){
-      // calculate left and right edges of children
-      var minChildX = children[0].x
-      var maxChildX = children[0].x + children[0].width
-
-      for(var i = 1; i < children.length; ++i){
-        if(children[i].x < minChildX){
-          minChildX = children[i].x
-        }
-        if(children[i].x + children[i].width > maxChildX){
-          maxChildX = children[i].x + children[i].width
-        }
-      }
-
       dragXChanged(x + minChildX, x + maxChildX)
     }
   }
@@ -75,6 +80,43 @@ Item{
       if(children[children.length - 1 ].isFromBar
           !== children[children.length - 2 ].isFromBar){
         clean(children[children.length - 1])
+      }
+    }
+  }
+
+  function checkBarBoundaries(){
+    // check if scroll margins are already exceeded and adjust if necessary:
+    if(minChildX <
+        timerBarFlickable.contentX + timerBarFlickable.scrollMargin){
+      // set minChildX slightly above scroll threshold
+      minChildX = timerBarFlickable.contentX
+                  + 1.1 * timerBarFlickable.scrollMargin
+    }
+
+    if(maxChildX >
+        timerBarFlickable.contentX
+        + timerBarFlickable.width
+        - timerBarFlickable.scrollMargin){
+      // set maxChildX slightly below scroll threshold
+      maxChildX = timerBarFlickable.contentX
+                  + timerBarFlickable.width
+                  - 1.1 * timerBarFlickable.scrollMargin
+    }
+  }
+
+  function calculateEdges(){
+    // calculate left and right edges of children
+    minChildX = children[0].x
+    beatOffset = children[0].primitive.positionBeat
+    maxChildX = children[0].x + children[0].width
+
+    for(var i = 1; i < children.length; ++i){
+      if(children[i].x < minChildX){
+        minChildX = children[i].x
+        beatOffset = children[i].primitive.positionBeat
+      }
+      if(children[i].x + children[i].width > maxChildX){
+        maxChildX = children[i].x + children[i].width
       }
     }
   }

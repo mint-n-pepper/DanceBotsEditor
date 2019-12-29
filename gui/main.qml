@@ -193,14 +193,16 @@ ApplicationWindow {
       onTriggered: timerBarFlickable.hoverScroll()
     }
 
+    property real scrollMargin: Style.timerBar.scrollMargin * appWindow.width
+
     function processMouseMove(minX, maxX){
       if(minX - timerBarFlickable.contentX
-          < Style.timerBar.scrollMargin * appWindow.width){
+          < timerBarFlickable.scrollMargin){
         timerBarFlickable.hoverScrollRight = false
         scrollTimer.start()
       }else if(maxX - timerBarFlickable.contentX
                > timerBarFlickable.width
-               - Style.timerBar.scrollMargin * appWindow.width){
+               - timerBarFlickable.scrollMargin){
         timerBarFlickable.hoverScrollRight = true
         scrollTimer.start()
       }

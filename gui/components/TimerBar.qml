@@ -119,13 +119,14 @@ Canvas{
     onDropped:{
       beatIndicator.visible = false
       drag.source.reset()
-      var currentFrame = drag.x / appWindow.frameToPixels;
+      var currentFrame = (drag.x - drag.source.hotSpotOffsetX)
+                         / appWindow.frameToPixels
       var beatLoc = backend.getBeatAtFrame(currentFrame)
       var positions = []
       var lengths = []
       if(beatLoc >= 0 && drag.source.hasChildren){
         // update ghosts for each child in dragger
-        var beatOffset = drag.source.children[0].primitive.positionBeat
+        var beatOffset = drag.source.beatOffset
         var allValid = true
         for(var i = 0; i < drag.source.children.length; ++i){
           var primitive = drag.source.children[i].primitive
@@ -170,40 +171,48 @@ Canvas{
     }
 
     onPositionChanged:{
-      var currentFrame = drag.x / appWindow.frameToPixels;
+      // get current frame and beat location of leftmost primitive edge
+      var currentFrame = (drag.x - drag.source.hotSpotOffsetX)
+                         / appWindow.frameToPixels
       var beatLoc = backend.getBeatAtFrame(currentFrame)
       if(beatLoc >= 0){
         // update beat indicator:
         beatIndicator.text = beatLoc
         beatIndicator.x = beats[beatLoc] * appWindow.frameToPixels
-        // update ghosts for each child in dragger
-        var beatOffset = drag.source.children[0].primitive.positionBeat
-        for(var i = 0; i < drag.source.children.length; ++i){
-          var primitive = drag.source.children[i].primitive
-          var startBeat = beatLoc + primitive.positionBeat - beatOffset
-          ghosts[i].visible = true
-          ghosts[i].x = beats[startBeat] * appWindow.frameToPixels
-          var validLength = getValidLength(startBeat, primitive.lengthBeat)
-          if(validLength > 0){
-            ghosts[i].isValid = true
-            var endPixel = beats[startBeat + validLength] * appWindow.frameToPixels
-            ghosts[i].width = endPixel - ghosts[i].x
-          }else{
-            ghosts[i].isValid = false
-          }
+      }
 
-          // check if length of drag shape can be corrected:
-          var end = primitive.lengthBeat + startBeat
-          if(end < beats.length){
-            drag.source.children[i].width= (beats[end] - beats[startBeat])
-              * appWindow.frameToPixels;
-          }
+      // update ghosts for each child in dragger
+      var beatOffset = drag.source.beatOffset
+      for(var i = 0; i < drag.source.children.length; ++i){
+        var primitive = drag.source.children[i].primitive
+        var startBeat = beatLoc + primitive.positionBeat - beatOffset
+        ghosts[i].visible = true
+        ghosts[i].x = beats[startBeat] * appWindow.frameToPixels
+
+        var validLength = getValidLength(startBeat, primitive.lengthBeat)
+        if(validLength > 0){
+          ghosts[i].isValid = true
+          var endPixel = beats[startBeat + validLength] * appWindow.frameToPixels
+          ghosts[i].width = endPixel - ghosts[i].x
+        }else{
+          ghosts[i].isValid = false
+        }
+
+        // check if length of drag shape can be corrected:
+        var end = primitive.lengthBeat + startBeat
+        if(end < beats.length){
+          drag.source.children[i].width= (beats[end] - beats[startBeat])
+            * appWindow.frameToPixels;
         }
       }
     }
   }
 
   function getValidLength(start, length){
+    // if primitive start is out of bounds, return 0, no valid length found
+    if(start < 0 || start > occupied.length - 1){
+      return 0
+    }
     var validLength = 0
     var end = start + length;
     if(end > occupied.length - 1){

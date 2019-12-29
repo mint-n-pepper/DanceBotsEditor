@@ -120,7 +120,6 @@ Rectangle{
     }
 
     onPositionChanged:{
-
       if(doResize && pressed){
         // keep cursor shape as horizontal resize cursor
         cursorShape = Qt.SizeHorCursor
@@ -202,8 +201,12 @@ Rectangle{
             parent.state = "onDrag"
           }
         }else{
-          // with no modifiers, toggle while deselecting others
-          if(parent.state == "onDrag"){
+          // with no modifiers:
+          // deselect all others if there is more than one primitive selected
+          if(dragTarget.children.length > 1){
+            dragTarget.clean(root)
+          // toggle if only one selected
+          }else if(parent.state == "onDrag"){
             dragTarget.clean()
           }else{
             parent.state = "onDrag"
