@@ -235,6 +235,11 @@ class BackEnd : public QObject {
   bool writePrependData(void);
 
   /**
+   * \brief Serializes beats and primitives to a data stream
+   */
+  bool serializeBeatsAndPrimitives(QDataStream* const stream);
+
+  /**
    * \brief Extract beat frames from prepend data
    */
   bool readBeatsFromPrependData(void);

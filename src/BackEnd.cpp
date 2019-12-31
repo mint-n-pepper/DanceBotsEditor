@@ -59,9 +59,7 @@ QString BackEnd::songArtist() { return mSongArtist; }
 
 QString BackEnd::fileStatus() { return mFileStatus; }
 
-bool BackEnd::mp3Loaded() {
-  return mAudioFile.hasData();
-}
+bool BackEnd::mp3Loaded() { return mAudioFile.hasData(); }
 
 PrimitiveList* BackEnd::motorPrimitives(void) { return mMotorPrimitives; }
 
@@ -321,36 +319,39 @@ bool BackEnd::writePrependData(void) {
   QDataStream dataStream(&mAudioFile.mMP3PrependData, QIODevice::WriteOnly);
   AudioFile::applyDataStreamSettings(&dataStream);
 
+  return serializeBeatsAndPrimitives(&dataStream);
+}
+
+bool BackEnd::serializeBeatsAndPrimitives(QDataStream* const stream) {
   // write number of beats first:
   quint32 nBeats = static_cast<quint32>(mBeatFrames.size());
-  dataStream << nBeats;
+  *stream << nBeats;
 
   // write out beats:
   for (const int& beatFrame : mBeatFrames) {
     // all beat frames are nonnegative and smaller than 32 bits
-    dataStream << static_cast<quint32>(beatFrame);
+    *stream << static_cast<quint32>(beatFrame);
   }
 
   // next, write out motor primitives:
   const QList<QObject*> motPrimitives = mMotorPrimitives->getData();
   quint32 nMotorPrimitives = static_cast<quint32>(motPrimitives.size());
-  dataStream << nMotorPrimitives;
+  *stream << nMotorPrimitives;
 
   for (const auto& e : motPrimitives) {
     const MotorPrimitive* const mp = reinterpret_cast<const MotorPrimitive*>(e);
-    mp->serializeToStream(&dataStream);
+    mp->serializeToStream(stream);
   }
 
   // next, write out led primitives:
   const QList<QObject*> ledPrimitives = mLedPrimitives->getData();
   quint32 nLedPrimitives = static_cast<quint32>(ledPrimitives.size());
-  dataStream << nLedPrimitives;
+  *stream << nLedPrimitives;
 
   for (const auto& e : ledPrimitives) {
     const LEDPrimitive* const lp = reinterpret_cast<const LEDPrimitive*>(e);
-    lp->serializeToStream(&dataStream);
+    lp->serializeToStream(stream);
   }
-
   return true;
 }
 
@@ -382,7 +383,9 @@ bool BackEnd::readPrimitivesFromPrependData(void) {
   AudioFile::applyDataStreamSettings(&dataStream);
 
   // seek to end of beats:
-  dataStream.device()->seek(4 * (mBeatFrames.size() + 1));
+  quint32 nBeats = 0;
+  dataStream >> nBeats;  // read number of beats
+  dataStream.device()->seek(4u * static_cast<size_t>(nBeats + 1));
 
   // next, read out motor primitives:
   quint32 nMotorPrimitives = 0;
