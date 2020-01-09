@@ -1,0 +1,37 @@
+name: Windows Build
+
+on:
+  push:
+    branches:
+      - master
+      - develop
+      - 
+
+jobs:
+  build:
+    name: Test build on ${{ matrix.os }} with Qt ${{ matrix.qt_version }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: ['windows-latest']
+        qt_version: ['5.12.6']
+    
+    steps:
+    - uses: actions/checkout@v1
+    
+    - name: Update git submodules
+      run: |
+        git submodule update --init --recursive
+    
+    - name: Install Qt ${{ matrix.qt_version }}
+      uses: jurplel/install-qt-action@v2.2.1
+      with:
+        version: ${{ matrix.qt_version }}
+        target: desktop
+
+    - name: Configure & Build
+      run: |
+        mkdir build
+        cd build/
+        cmake -DCMAKE_PREFIX_PATH=${Qt5_Dir} -DCMAKE_BUILD_TYPE=Release -G "Visual Studio 16 2019" ../
+        C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\MSBuild\Current\Bin\MSBuild.exe .\dancebots_gui.sln /p:Configuration=Release /p:Platform=x64 /m
