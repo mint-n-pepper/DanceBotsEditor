@@ -3,8 +3,8 @@ name: Windows Build
 on:
   push:
     branches:
-      - master
-      - develop
+      # - master
+      # - develop
       - build-test-windows
 
 jobs:
@@ -33,5 +33,6 @@ jobs:
       run: |
         mkdir build
         cd build/
-        cmake -DCMAKE_PREFIX_PATH=${Qt5_Dir} -DCMAKE_BUILD_TYPE=Release -G "Visual Studio 15 2017" ../
+        pwd
+#        cmake -DCMAKE_PREFIX_PATH=${Qt5_Dir} -DCMAKE_BUILD_TYPE=Release -G "Visual Studio 15 2017" ../
 #       C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\MSBuild\Current\Bin\MSBuild.exe .\dancebots_gui.sln /p:Configuration=Release /p:Platform=x64 /m
