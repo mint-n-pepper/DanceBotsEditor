@@ -179,6 +179,7 @@ class BackEnd : public QObject {
     }
   }
 
+// NOLINTNEXTLINE
  signals:
   void fileStatusChanged();
   void songArtistChanged();
@@ -191,6 +192,7 @@ class BackEnd : public QObject {
   void doneLoading(const bool result);
   void doneSaving(const bool result);
 
+// NOLINTNEXTLINE
  public slots:
   void handleDoneLoading(void);
   void handleDoneSaving(void);

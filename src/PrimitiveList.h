@@ -61,6 +61,7 @@ class PrimitiveList : public QAbstractListModel {
    */
   const QList<QObject*>& getData(void);
 
+// NOLINTNEXTLINE
  public slots:
   /**
    * \brief Add item to model. The model will assume ownership of the object.

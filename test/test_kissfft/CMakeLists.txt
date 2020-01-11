@@ -1,8 +1,8 @@
 project(test-kissfft)
 
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../lib/kissfft)
+include_directories(${CMAKE_SOURCE_DIR})
 
-set(HEADERS ${CMAKE_CURRENT_SOURCE_DIR}/../../lib/kissfft/kissfft.hh)
+set(HEADERS ${CMAKE_SOURCE_DIR}/lib/kissfft/kissfft.hh)
 
 source_group("Header Files" FILES ${HEADERS})
 

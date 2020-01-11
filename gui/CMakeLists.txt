@@ -52,13 +52,12 @@ else()
   add_executable(${PROJECT_NAME} ${SOURCES} ${APP_RESOURCES} ${HEADERS} ${QMLS})
 endif()
 
-# copy visual studio user file to binary folder to have
+# configure visual studio user file to binary folder to have
 # qt in debug path:
 if(WIN32)
-  file(COPY ../template.vcxproj.user
-       DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
-  file(RENAME ${CMAKE_CURRENT_BINARY_DIR}/template.vcxproj.user
-              ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.vcxproj.user)
+  configure_file(${CMAKE_SOURCE_DIR}/template.vcxproj.in
+                 ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.vcxproj.user
+                 @ONLY)
 endif()
 
 target_link_libraries(  ${PROJECT_NAME}
@@ -67,7 +66,7 @@ target_link_libraries(  ${PROJECT_NAME}
                         Qt5::Qml
                         Qt5::Multimedia
                         Qt5::Concurrent
-			Qt5::Svg
+                        Qt5::Svg
                         lib-qm-dsp
                         lib-qm-vamp
                         mp3lame

@@ -23,8 +23,8 @@
 #include <memory>
 #include <vector>
 
-#include "BeatTrack.h"
-#include "kissfft.hh"
+#include "lib/qm-vamp-plugins/plugins/BeatTrack.h"
+#include "lib/kissfft/kissfft.hh"
 
 /** \class BeatDetector
  * \brief Detects beats in mono music data using the Queen Mary VAMP plugins

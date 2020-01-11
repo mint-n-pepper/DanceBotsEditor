@@ -21,6 +21,7 @@
 #define TEST_TEST_AUDIOPLAYER_DUMMYUI_H_
 #include <QDebug>
 #include <QObject>
+#include <QGuiApplication>
 
 #include "src/AudioPlayer.h"
 
@@ -28,13 +29,14 @@ class DummyUI : public QObject {
   Q_OBJECT;
 
  public:
-  explicit DummyUI(AudioPlayer* player);
-
+  DummyUI(AudioPlayer* player, QGuiApplication* app);
+// NOLINTNEXTLINE
  private slots:
   void receiveNotify(int timeMS);
 
  private:
   AudioPlayer* mAudioPlayer;
+  QGuiApplication* mApp;
 };
 
 #endif  // TEST_TEST_AUDIOPLAYER_DUMMYUI_H_

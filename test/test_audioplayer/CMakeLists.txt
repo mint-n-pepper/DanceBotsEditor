@@ -6,13 +6,14 @@ set(CMAKE_AUTOMOC ON)
 
 find_package(Qt5 COMPONENTS Widgets Multimedia REQUIRED)
 
-set(AUDIOFILE_SRC ${CMAKE_CURRENT_SOURCE_DIR}/../../src/AudioFile.cpp
-                  ${CMAKE_CURRENT_SOURCE_DIR}/../../src/AudioPlayer.cpp
+set(AUDIOFILE_SRC ${CMAKE_SOURCE_DIR}/src/AudioFile.cpp
+                  ${CMAKE_SOURCE_DIR}/src/AudioPlayer.cpp
                   ${CMAKE_CURRENT_SOURCE_DIR}/DummyUI.cpp)
 
-set(HEADERS ${CMAKE_CURRENT_SOURCE_DIR}/../../src/AudioFile.h
-            ${CMAKE_CURRENT_SOURCE_DIR}/../../src/AudioPlayer.h
-            ${CMAKE_CURRENT_SOURCE_DIR}/DummyUI.h)
+set(HEADERS ${CMAKE_SOURCE_DIR}/src/AudioFile.h
+            ${CMAKE_SOURCE_DIR}/src/AudioPlayer.h
+            ${CMAKE_CURRENT_SOURCE_DIR}/DummyUI.h
+            ${CMAKE_SOURCE_DIR}/test/TestFolderPath.h)
 
 include_directories(${CMAKE_SOURCE_DIR})
 source_group("Headers" FILES ${HEADERS})
@@ -30,10 +31,9 @@ target_link_libraries(  ${PROJECT_NAME}
 # copy visual studio user file to binary folder to have
 # qt in debug path:
 if(WIN32)
-  file(COPY ../../template.vcxproj.user
-       DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
-  file(RENAME ${CMAKE_CURRENT_BINARY_DIR}/template.vcxproj.user
-              ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.vcxproj.user)
+  configure_file(${CMAKE_SOURCE_DIR}/template.vcxproj.in
+			   ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.vcxproj.user
+			   @ONLY)
 endif()
 
 # group libraries in IDE folder:

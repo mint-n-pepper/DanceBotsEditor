@@ -17,24 +17,13 @@
  *  LICENSE file included in the repository.
  */
 
-#include "test/test_audioplayer/DummyUI.h"
+#ifndef TEST_TESTFOLDERPATH_H_
+#define TEST_TESTFOLDERPATH_H_
 
-DummyUI::DummyUI(AudioPlayer* player, QGuiApplication* app)
-    : mAudioPlayer{player}, mApp{app} {
-  connect(player, &AudioPlayer::notify, this, &DummyUI::receiveNotify);
-}
+#include <QString>
 
-void DummyUI::receiveNotify(int timeMS) {
-  static int count = 0;
-  qDebug() << "Notify at " << timeMS << " milliseconds";
+// disable overlong lint error message
+// NOLINTNEXTLINE
+static const QString testFolderPath{"@TEST_FOLDER_PATH@"};
 
-  // and play with seek by rewinding to 1s after 2s
-  if (timeMS > 2000) {
-    qDebug() << "Rewinding to 1000ms";
-    mAudioPlayer->seek(1000);
-    // quit application after two rewinds:
-    if (count++ > 1) {
-      mApp->quit();
-    }
-  }
-}
+#endif  // TEST_TESTFOLDERPATH_H_
