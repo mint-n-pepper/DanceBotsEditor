@@ -23,7 +23,7 @@
 #include <cstdint>
 #include <iostream>
 
-#include "kissfft.hh"
+#include "lib/kissfft/kissfft.hh"
 
 namespace {
 // Test Fixture Class that creates FFT class to run some tests on sample

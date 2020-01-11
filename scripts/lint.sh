@@ -38,7 +38,7 @@ for FOLDER in "../gui/" "../src/" "../test/"; do
 	find "${FOLDER}" -regex '.*\.\(cpp\|hpp\|c\|h\)' -exec clang-format -i -style="${CLANG_FORMAT_STYLE_FILE}" {} \;
 
 	# lint recursively
-	cpplint --recursive --filter=-whitespace/indent "${FOLDER}"
+	cpplint --recursive "${FOLDER}"
 done
 
 # close Python virtual environment

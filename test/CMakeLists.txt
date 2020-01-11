@@ -5,6 +5,6 @@ add_subdirectory(test_utils)
 add_subdirectory(test_beatdetect)
 add_subdirectory(test_primitives)
 
-# COPY TEST MP3 to build test folder
-FILE(COPY ${CMAKE_CURRENT_SOURCE_DIR}/test_mp3_files
-     DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+# Configure header that has path for unit tests to find MP3 files:
+SET(TEST_FOLDER_PATH ${CMAKE_CURRENT_SOURCE_DIR}/test_mp3_files/)
+configure_file(TestFolderPath.in ${CMAKE_CURRENT_SOURCE_DIR}/TestFolderPath.h)

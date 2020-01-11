@@ -26,8 +26,9 @@
 
 #include "src/AudioFile.h"
 #include "src/AudioPlayer.h"
+#include "test/TestFolderPath.h"
 
-const QString fileMusic44k{"./../test_mp3_files/in44100.mp3"};
+const QString fileMusic44k{testFolderPath + "in44100.mp3"};
 
 int main(int argc, char* argv[]) {
   AudioFile mp3File44k{};
@@ -46,7 +47,7 @@ int main(int argc, char* argv[]) {
   AudioPlayer player(&app);
   player.setNotifyInterval(500);
 
-  DummyUI dummyUI{&player};
+  DummyUI dummyUI{&player, &app};
 
   player.setAudioData(mp3File44k.mFloatMusic, mp3File44k.sampleRate);
 
