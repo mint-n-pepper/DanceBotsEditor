@@ -17,8 +17,8 @@
  *  LICENSE file included in the repository.
  */
 
-#ifndef TEST_TESTFOLDERPATH_H_
-#define TEST_TESTFOLDERPATH_H_
+#ifndef TEST_TEST_FOLDER_PATH_H_
+#define TEST_TEST_FOLDER_PATH_H_
 
 #include <QString>
 
@@ -26,4 +26,4 @@
 // NOLINTNEXTLINE
 static const QString testFolderPath{"@TEST_FOLDER_PATH@"};
 
-#endif  // TEST_TESTFOLDERPATH_H_
+#endif  // TEST_TEST_FOLDER_PATH_H_

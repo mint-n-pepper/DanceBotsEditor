@@ -2,11 +2,11 @@ project(test-utils)
 
 include_directories(${CMAKE_SOURCE_DIR})
 
-set(HEADERS ${CMAKE_SOURCE_DIR}/src/Utils.h)
+set(HEADERS ${CMAKE_SOURCE_DIR}/src/utils.h)
 
 source_group("Header Files" FILES ${HEADERS})
 
-add_executable(${PROJECT_NAME} main.cpp ${HEADERS})
+add_executable(${PROJECT_NAME} main.cc ${HEADERS})
 
 target_link_libraries(  ${PROJECT_NAME}
                         gtest)

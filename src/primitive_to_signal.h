@@ -17,13 +17,13 @@
  *  LICENSE file included in the repository.
  */
 
-#ifndef SRC_PRIMITIVETOSIGNAL_H_
-#define SRC_PRIMITIVETOSIGNAL_H_
+#ifndef SRC_PRIMITIVE_TO_SIGNAL_H_
+#define SRC_PRIMITIVE_TO_SIGNAL_H_
 
 #include <vector>
 
-#include "src/AudioFile.h"
-#include "src/Primitive.h"
+#include "src/audio_file.h"
+#include "src/primitive.h"
 
 /** \class PrimitiveToSignal
  * \brief Converts motor and led primitives to data audio signal for Dancebot
@@ -174,4 +174,4 @@ class PrimitiveToSignal {
   quint8 velocityToByte(const qint8 velocity) const;
 };
 
-#endif  // SRC_PRIMITIVETOSIGNAL_H_
+#endif  // SRC_PRIMITIVE_TO_SIGNAL_H_

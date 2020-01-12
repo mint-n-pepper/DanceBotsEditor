@@ -17,7 +17,7 @@
  *  LICENSE file included in the repository.
  */
 
-#include "src/AudioPlayer.h"
+#include "src/audio_player.h"
 
 #include <algorithm>
 

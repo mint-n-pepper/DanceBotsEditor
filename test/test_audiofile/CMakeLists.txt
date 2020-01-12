@@ -2,16 +2,16 @@ project(test-audiofile)
 
 find_package(Qt5 COMPONENTS Widgets REQUIRED)
 
-set(AUDIOFILE_SRC ${CMAKE_SOURCE_DIR}/src/AudioFile.cpp)
+set(AUDIOFILE_SRC ${CMAKE_SOURCE_DIR}/src/audio_file.cc)
 
-set(HEADERS ${CMAKE_SOURCE_DIR}/src/AudioFile.h
-            ${CMAKE_SOURCE_DIR}/test/TestFolderPath.h
+set(HEADERS ${CMAKE_SOURCE_DIR}/src/audio_file.h
+            ${CMAKE_SOURCE_DIR}/test/test_folder_path.h
 )
 
 include_directories(${CMAKE_SOURCE_DIR})
 source_group("Headers" FILES ${HEADERS})
 
-add_executable(${PROJECT_NAME} main.cpp ${AUDIOFILE_SRC} ${HEADERS})
+add_executable(${PROJECT_NAME} main.cc ${AUDIOFILE_SRC} ${HEADERS})
 
 target_link_libraries(${PROJECT_NAME}
                       gtest

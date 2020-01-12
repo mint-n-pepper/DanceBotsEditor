@@ -27,10 +27,10 @@
 
 #include <vector>
 
-#include "src/AudioFile.h"
-#include "src/AudioPlayer.h"
-#include "src/BeatDetector.h"
-#include "src/PrimitiveList.h"
+#include "src/audio_file.h"
+#include "src/audio_player.h"
+#include "src/beat_detector.h"
+#include "src/primitive_list.h"
 
 /** \class BackEnd
  * \brief Backend class providing primitive models and audio data handling and

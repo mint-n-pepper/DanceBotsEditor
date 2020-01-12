@@ -17,7 +17,7 @@
  *  LICENSE file included in the repository.
  */
 
-#include "src/AudioFile.h"
+#include "src/audio_file.h"
 // typedef sample_t to include encoder.h that contains the en-/decoder
 // delay defines
 typedef float sample_t;

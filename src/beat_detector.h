@@ -17,8 +17,8 @@
  *  LICENSE file included in the repository.
  */
 
-#ifndef SRC_BEATDETECTOR_H_
-#define SRC_BEATDETECTOR_H_
+#ifndef SRC_BEAT_DETECTOR_H_
+#define SRC_BEAT_DETECTOR_H_
 
 #include <memory>
 #include <vector>
@@ -69,4 +69,4 @@ class BeatDetector {
   static const float mPI;
 };
 
-#endif  // SRC_BEATDETECTOR_H_
+#endif  // SRC_BEAT_DETECTOR_H_

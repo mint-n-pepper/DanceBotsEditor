@@ -17,18 +17,17 @@
  *  LICENSE file included in the repository.
  */
 
-#include "DummyUI.h"
-
 #include <QDebug>
 #include <QGuiApplication>
 
 #include <string>
 
-#include "src/AudioFile.h"
-#include "src/AudioPlayer.h"
-#include "test/TestFolderPath.h"
+#include "test/test_audioplayer/dummy_ui.h"
+#include "test/test_folder_path.h"
+#include "src/audio_file.h"
+#include "src/audio_player.h"
 
-const QString fileMusic44k{testFolderPath + "in44100.mp3"};
+const QString fileMusic44k{kTestFolderPath + "in44100.mp3"};
 
 int main(int argc, char* argv[]) {
   AudioFile mp3File44k{};

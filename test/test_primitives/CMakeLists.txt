@@ -6,14 +6,14 @@ find_package(Qt5 COMPONENTS Widgets REQUIRED)
 
 include_directories(${CMAKE_SOURCE_DIR})
 
-set(HEADERS ${CMAKE_SOURCE_DIR}/src/Primitive.h
-            ${CMAKE_SOURCE_DIR}/src/AudioFile.h)
+set(HEADERS ${CMAKE_SOURCE_DIR}/src/primitive.h
+            ${CMAKE_SOURCE_DIR}/src/audio_file.h)
 
 source_group("Header Files" FILES ${HEADERS})
 
-set(TEST_SRC ${CMAKE_SOURCE_DIR}/src/Primitive.cpp
-             ${CMAKE_SOURCE_DIR}/src/AudioFile.cpp
-             ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp)
+set(TEST_SRC ${CMAKE_SOURCE_DIR}/src/primitive.cc
+             ${CMAKE_SOURCE_DIR}/src/audio_file.cc
+             ${CMAKE_CURRENT_SOURCE_DIR}/main.cc)
 
 add_executable(${PROJECT_NAME} ${TEST_SRC} ${HEADERS})
 

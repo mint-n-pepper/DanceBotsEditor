@@ -22,8 +22,9 @@
 #include <QDataStream>
 #include <iostream>
 #include <random>
-#include "src/AudioFile.h"
-#include "src/Primitive.h"
+
+#include "src/audio_file.h"
+#include "src/primitive.h"
 
 namespace {
 // check functions:

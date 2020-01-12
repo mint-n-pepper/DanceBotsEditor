@@ -6,19 +6,19 @@ set(CMAKE_AUTOMOC ON)
 
 find_package(Qt5 COMPONENTS Widgets Multimedia REQUIRED)
 
-set(AUDIOFILE_SRC ${CMAKE_SOURCE_DIR}/src/AudioFile.cpp
-                  ${CMAKE_SOURCE_DIR}/src/AudioPlayer.cpp
-                  ${CMAKE_CURRENT_SOURCE_DIR}/DummyUI.cpp)
+set(AUDIOFILE_SRC ${CMAKE_SOURCE_DIR}/src/audio_file.cc
+                  ${CMAKE_SOURCE_DIR}/src/audio_player.cc
+                  ${CMAKE_CURRENT_SOURCE_DIR}/dummy_ui.cc)
 
-set(HEADERS ${CMAKE_SOURCE_DIR}/src/AudioFile.h
-            ${CMAKE_SOURCE_DIR}/src/AudioPlayer.h
-            ${CMAKE_CURRENT_SOURCE_DIR}/DummyUI.h
-            ${CMAKE_SOURCE_DIR}/test/TestFolderPath.h)
+set(HEADERS ${CMAKE_SOURCE_DIR}/src/audio_file.h
+            ${CMAKE_SOURCE_DIR}/src/audio_player.h
+            ${CMAKE_CURRENT_SOURCE_DIR}/dummy_ui.h
+            ${CMAKE_SOURCE_DIR}/test/test_folder_path.h)
 
 include_directories(${CMAKE_SOURCE_DIR})
 source_group("Headers" FILES ${HEADERS})
 
-add_executable(${PROJECT_NAME} main.cpp ${AUDIOFILE_SRC} ${HEADERS})
+add_executable(${PROJECT_NAME} main.cc ${AUDIOFILE_SRC} ${HEADERS})
 
 target_link_libraries(  ${PROJECT_NAME}
                         lib-qm-dsp

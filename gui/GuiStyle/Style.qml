@@ -142,7 +142,7 @@ QtObject {
   }
 
   property QtObject motorPrimitive: QtObject{
-    // see Primitive.h for mapping of type to color
+    // see primitive.h for mapping of type to color
     // Twist = 0
     // BackAndForth = 1
     // Spin = 2
@@ -157,7 +157,7 @@ QtObject {
   }
 
   property QtObject ledPrimitive: QtObject{
-    // see Primitive.h for mapping of type to color
+    // see primitive.h for mapping of type to color
     // KnightRider = 0
     // Alternate = 1
     // Blink = 2

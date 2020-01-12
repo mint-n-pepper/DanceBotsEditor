@@ -17,24 +17,27 @@
  *  LICENSE file included in the repository.
  */
 
-#include "test/test_audioplayer/DummyUI.h"
+#include <QGuiApplication>
+#include <QQmlApplicationEngine>
+#include <QQmlContext>
+#include <QtSvg>
 
-DummyUI::DummyUI(AudioPlayer* player, QGuiApplication* app)
-    : mAudioPlayer{player}, mApp{app} {
-  connect(player, &AudioPlayer::notify, this, &DummyUI::receiveNotify);
-}
+#include "src/backend.h"
+#include "src/primitive.h"
 
-void DummyUI::receiveNotify(int timeMS) {
-  static int count = 0;
-  qDebug() << "Notify at " << timeMS << " milliseconds";
+int main(int argc, char* argv[]) {
+  QCoreApplication::setOrganizationName("MINT&Pepper");
 
-  // and play with seek by rewinding to 1s after 2s
-  if (timeMS > 2000) {
-    qDebug() << "Rewinding to 1000ms";
-    mAudioPlayer->seek(1000);
-    // quit application after two rewinds:
-    if (count++ > 1) {
-      mApp->quit();
-    }
-  }
+  QGuiApplication app(argc, argv);
+
+  BackEnd backend{&app};
+
+  qmlRegisterType<MotorPrimitive>("dancebots.backend", 1, 0, "MotorPrimitive");
+  qmlRegisterType<LEDPrimitive>("dancebots.backend", 1, 0, "LEDPrimitive");
+
+  QQmlApplicationEngine engine;
+  engine.rootContext()->setContextProperty("backend", &backend);
+  engine.load(QUrl(QStringLiteral("qrc:/qml/main.qml")));
+
+  return app.exec();
 }

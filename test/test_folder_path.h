@@ -17,26 +17,13 @@
  *  LICENSE file included in the repository.
  */
 
-#ifndef TEST_TEST_AUDIOPLAYER_DUMMYUI_H_
-#define TEST_TEST_AUDIOPLAYER_DUMMYUI_H_
-#include <QDebug>
-#include <QObject>
-#include <QGuiApplication>
+#ifndef TEST_TEST_FOLDER_PATH_H_
+#define TEST_TEST_FOLDER_PATH_H_
 
-#include "src/AudioPlayer.h"
+#include <QString>
 
-class DummyUI : public QObject {
-  Q_OBJECT;
-
- public:
-  DummyUI(AudioPlayer* player, QGuiApplication* app);
+// disable overlong lint error message
 // NOLINTNEXTLINE
- private slots:
-  void receiveNotify(int timeMS);
+static const QString kTestFolderPath{"C:/Users/philipp/Git/dancebots_gui/test/test_mp3_files/"};
 
- private:
-  AudioPlayer* mAudioPlayer;
-  QGuiApplication* mApp;
-};
-
-#endif  // TEST_TEST_AUDIOPLAYER_DUMMYUI_H_
+#endif  // TEST_TEST_FOLDER_PATH_H_

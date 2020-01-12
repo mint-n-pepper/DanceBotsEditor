@@ -24,9 +24,9 @@
 
 #include <string>
 
-#include "src/AudioFile.h"
-#include "src/BeatDetector.h"
-#include "test/TestFolderPath.h"
+#include "src/audio_file.h"
+#include "src/beat_detector.h"
+#include "test/test_folder_path.h"
 
 namespace {
 class BeatDetectTest : public ::testing::Test {
@@ -57,13 +57,13 @@ class BeatDetectTest : public ::testing::Test {
 
 const int BeatDetectTest::mSampleRate;
 const QString BeatDetectTest::fullFilesFolder{"fullFiles/"};
-const QString BeatDetectTest::dpTestFile{testFolderPath +
+const QString BeatDetectTest::dpTestFile{kTestFolderPath +
                                          "dp_getlucky_20s.mp3"};
-const QString BeatDetectTest::fileTemp{testFolderPath + "temp_BDT.mp3"};
+const QString BeatDetectTest::fileTemp{kTestFolderPath + "temp_BDT.mp3"};
 
 TEST_F(BeatDetectTest, beatConsistency) {
   // see if there is a full files folder:
-  QDir fullFileFolder{testFolderPath + fullFilesFolder};
+  QDir fullFileFolder{kTestFolderPath + fullFilesFolder};
 
   QStringList testFiles;
 
@@ -158,8 +158,8 @@ TEST_F(BeatDetectTest, beatConsistency) {
 
       // print all beats if deviation is too large
       if (!(deviated < maxNdeviate)) {
-        checkFile.savePCMBeats(testFolderPath + "deviated.wav", firstBeats);
-        mp3File44k.savePCMBeats(testFolderPath + "original.wav", firstBeats);
+        checkFile.savePCMBeats(kTestFolderPath + "deviated.wav", firstBeats);
+        mp3File44k.savePCMBeats(kTestFolderPath + "original.wav", firstBeats);
         compareBeats(checkBeats, firstBeats);
       }
       checkFile.save(fileTemp);

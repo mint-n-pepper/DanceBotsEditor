@@ -17,7 +17,7 @@
  *  LICENSE file included in the repository.
  */
 
-#include "src/BackEnd.h"
+#include "src/backend.h"
 
 #include <stdio.h>
 
@@ -27,9 +27,9 @@
 #include <QtConcurrent>
 #include <QtDebug>
 
-#include "src/Primitive.h"
-#include "src/PrimitiveToSignal.h"
-#include "src/Utils.h"
+#include "src/primitive.h"
+#include "src/primitive_to_signal.h"
+#include "src/utils.h"
 
 BackEnd::BackEnd(QObject* parent)
     : QObject{parent},

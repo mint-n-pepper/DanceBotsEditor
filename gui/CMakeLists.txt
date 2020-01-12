@@ -12,28 +12,28 @@ find_package(Qt5 COMPONENTS Core Quick Qml Concurrent Multimedia Svg REQUIRED)
 # Telling CMake location of our app .qrc file
 qt5_add_resources(APP_RESOURCES ${CMAKE_CURRENT_SOURCE_DIR}/qml.qrc)
 
-set(SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/../src/AudioFile.cpp
-            ${CMAKE_CURRENT_SOURCE_DIR}/../src/AudioPlayer.cpp
-            ${CMAKE_CURRENT_SOURCE_DIR}/../src/BackEnd.cpp
-            ${CMAKE_CURRENT_SOURCE_DIR}/../src/BeatDetector.cpp
-            ${CMAKE_CURRENT_SOURCE_DIR}/../src/Primitive.cpp
-            ${CMAKE_CURRENT_SOURCE_DIR}/../src/PrimitiveList.cpp
-            ${CMAKE_CURRENT_SOURCE_DIR}/../src/PrimitiveToSignal.cpp
-            ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp)
+set(SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/../src/audio_file.cc
+            ${CMAKE_CURRENT_SOURCE_DIR}/../src/audio_player.cc
+            ${CMAKE_CURRENT_SOURCE_DIR}/../src/backend.cc
+            ${CMAKE_CURRENT_SOURCE_DIR}/../src/beat_detector.cc
+            ${CMAKE_CURRENT_SOURCE_DIR}/../src/primitive.cc
+            ${CMAKE_CURRENT_SOURCE_DIR}/../src/primitive_list.cc
+            ${CMAKE_CURRENT_SOURCE_DIR}/../src/primitive_to_signal.cc
+            ${CMAKE_CURRENT_SOURCE_DIR}/main.cc)
 
 set(INCLUDE_DIRS  ${CMAKE_SOURCE_DIR}
                   ${CMAKE_CURRENT_SOURCE_DIR}/../lib/kissfft)
 
 include_directories(${INCLUDE_DIRS})
 
-set(HEADERS ${CMAKE_CURRENT_SOURCE_DIR}/../src/AudioFile.h
-            ${CMAKE_CURRENT_SOURCE_DIR}/../src/AudioPlayer.h
-            ${CMAKE_CURRENT_SOURCE_DIR}/../src/Primitive.h
-            ${CMAKE_CURRENT_SOURCE_DIR}/../src/Utils.h
-            ${CMAKE_CURRENT_SOURCE_DIR}/../src/BackEnd.h
-            ${CMAKE_CURRENT_SOURCE_DIR}/../src/BeatDetector.h
-            ${CMAKE_CURRENT_SOURCE_DIR}/../src/PrimitiveList.h
-            ${CMAKE_CURRENT_SOURCE_DIR}/../src/PrimitiveToSignal.h
+set(HEADERS ${CMAKE_CURRENT_SOURCE_DIR}/../src/audio_file.h
+            ${CMAKE_CURRENT_SOURCE_DIR}/../src/audio_player.h
+            ${CMAKE_CURRENT_SOURCE_DIR}/../src/primitive.h
+            ${CMAKE_CURRENT_SOURCE_DIR}/../src/utils.h
+            ${CMAKE_CURRENT_SOURCE_DIR}/../src/backend.h
+            ${CMAKE_CURRENT_SOURCE_DIR}/../src/beat_detector.h
+            ${CMAKE_CURRENT_SOURCE_DIR}/../src/primitive_list.h
+            ${CMAKE_CURRENT_SOURCE_DIR}/../src/primitive_to_signal.h
             ${CMAKE_CURRENT_SOURCE_DIR}/../lib/kissfft/kissfft.hh)
 
 source_group("Header Files" FILES ${HEADERS})

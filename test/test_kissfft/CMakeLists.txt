@@ -6,7 +6,7 @@ set(HEADERS ${CMAKE_SOURCE_DIR}/lib/kissfft/kissfft.hh)
 
 source_group("Header Files" FILES ${HEADERS})
 
-add_executable(${PROJECT_NAME} main.cpp ${HEADERS})
+add_executable(${PROJECT_NAME} main.cc ${HEADERS})
 
 target_link_libraries(  ${PROJECT_NAME}
                         gtest)

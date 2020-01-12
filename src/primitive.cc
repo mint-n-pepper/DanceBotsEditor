@@ -17,7 +17,7 @@
  *  LICENSE file included in the repository.
  */
 
-#include "src/Primitive.h"
+#include "src/primitive.h"
 
 MotorPrimitive::MotorPrimitive(QObject* const parent) : BasePrimitive{parent} {}
 

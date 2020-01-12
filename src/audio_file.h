@@ -17,8 +17,8 @@
  *  LICENSE file included in the repository.
  */
 
-#ifndef SRC_AUDIOFILE_H_
-#define SRC_AUDIOFILE_H_
+#ifndef SRC_AUDIO_FILE_H_
+#define SRC_AUDIO_FILE_H_
 
 #include <id3v2tag.h>
 #include <mpegfile.h>
@@ -248,4 +248,4 @@ class AudioFile {
   LameEncCodes encode(void);
 };
 
-#endif  // SRC_AUDIOFILE_H_
+#endif  // SRC_AUDIO_FILE_H_
