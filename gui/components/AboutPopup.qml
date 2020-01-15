@@ -40,18 +40,19 @@ Popup{
     color: "transparent"
   }
 
-  contentItem: Rectangle{
-    id: ciRect
-    width: root.width
-    height: root.height
-    color: Style.palette.ap_background
-    Text{
-      id: instructionText
-      width: parent.width - appWindow.guiMargin * 2
-      font.pixelSize: root.width * Style.aboutPopup.textFontSize
-      textFormat: Text.RichText
-      text: textContent.helpText
-      padding: appWindow.guiMargin
+  contentItem: 
+    Rectangle{
+      id: ciRect
+      width: root.width
+      height: root.height
+      color: Style.palette.ap_background
+      Text{
+        id: instructionText
+        width: parent.width - appWindow.guiMargin * 2
+        font.pixelSize: root.width * Style.aboutPopup.textFontSize
+        textFormat: Text.RichText
+        text: textContent.helpText
+        padding: appWindow.guiMargin
     }
 
     Text{
@@ -59,7 +60,7 @@ Popup{
       width: parent.width - appWindow.guiMargin * 2
       wrapMode: Text.WordWrap
       font.pixelSize: root.width * Style.aboutPopup.creditsTextSize
-      textFormat: Text.StyledText
+      textFormat: Text.RichText
       text: textContent.creditsText
       padding: appWindow.guiMargin
       anchors.bottom: parent.bottom
