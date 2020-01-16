@@ -3,9 +3,8 @@ name: macOS Build
 on:
   push:
     branches:
-      # - master
-      # - develop
-      - workflow-add-tests
+      - master
+      - develop
 
 jobs:
   build:
