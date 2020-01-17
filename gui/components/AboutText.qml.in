@@ -57,7 +57,7 @@ QtObject {
           <td>Select multiple items</td>
         </tr>
         <tr>
-          <td rowspan="2">Ctrl</td>
+          <td rowspan="2">${CTRL_CMD_KEY}</td>
           <td>Copy on timeline while dragging</td>
         </tr>
         <tr>
@@ -105,7 +105,7 @@ QtObject {
       GNU General Public License for more details, available at
       <a href="https://www.gnu.org/licenses">https://www.gnu.org/licenses</a>.</p>
 
-      <p>Dancebot Editor 3bb6e65</p>
+      <p>Dancebot Editor ${VERSION}</p>
     </body>
     </html>
     '

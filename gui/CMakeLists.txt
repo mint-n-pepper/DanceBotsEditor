@@ -60,6 +60,22 @@ if(WIN32)
                  @ONLY)
 endif()
 
+# assign version number
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/lib/cmake")
+include(version)
+version_from_git()
+set(VERSION "${VERSION}")
+configure_file(${CMAKE_SOURCE_DIR}/gui/components/AboutText.qml.in ${CMAKE_SOURCE_DIR}/gui/components/AboutText.qml)
+
+# assign keyboard shortcuts
+if(APPLE)
+  set(CTRL_CMD_KEY "⌘ Cmd")
+else()
+  set(CTRL_CMD_KEY "Ctrl")
+endif()
+configure_file(${CMAKE_SOURCE_DIR}/gui/components/AboutText.qml.in ${CMAKE_SOURCE_DIR}/gui/components/AboutText.qml)
+
+
 target_link_libraries(  ${PROJECT_NAME}
                         Qt5::Core
                         Qt5::Quick

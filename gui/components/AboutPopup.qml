@@ -40,12 +40,16 @@ Popup{
     color: "transparent"
   }
 
-  contentItem: 
-    Rectangle{
-      id: ciRect
-      width: root.width
-      height: root.height
-      color: Style.palette.ap_background
+  contentItem: Rectangle{
+    id: ciRect
+    width: root.width
+    height: root.height
+    color: Style.palette.ap_background
+    
+    Column{
+      spacing: 2
+      width: parent.width - appWindow.guiMargin * 2
+
       Text{
         id: instructionText
         width: parent.width - appWindow.guiMargin * 2
@@ -53,18 +57,18 @@ Popup{
         textFormat: Text.RichText
         text: textContent.helpText
         padding: appWindow.guiMargin
-    }
+      }
 
-    Text{
-      id: creditsText
-      width: parent.width - appWindow.guiMargin * 2
-      wrapMode: Text.WordWrap
-      font.pixelSize: root.width * Style.aboutPopup.creditsTextSize
-      textFormat: Text.RichText
-      text: textContent.creditsText
-      padding: appWindow.guiMargin
-      anchors.bottom: parent.bottom
-      onLinkActivated: Qt.openUrlExternally(link)
+      Text{
+        id: creditsText
+        width: parent.width - appWindow.guiMargin * 2
+        wrapMode: Text.WordWrap
+        font.pixelSize: root.width * Style.aboutPopup.creditsTextSize
+        textFormat: Text.RichText
+        text: textContent.creditsText
+        padding: appWindow.guiMargin
+        onLinkActivated: Qt.openUrlExternally(link)
+      }
     }
   }
 }

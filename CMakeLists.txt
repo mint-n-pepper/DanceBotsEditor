@@ -11,6 +11,7 @@ set(USE_FOLDERS ON)
 # settings on Windows
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 
+# add subdirectories
 add_subdirectory(${CMAKE_SOURCE_DIR}/lib)
 add_subdirectory(${CMAKE_SOURCE_DIR}/test)
 add_subdirectory(${CMAKE_SOURCE_DIR}/gui)
