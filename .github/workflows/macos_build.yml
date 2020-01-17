@@ -3,9 +3,8 @@ name: macOS Build
 on:
   push:
     branches:
-      # - master
-      # - develop
-      - fix-issue-12
+      - master
+      - develop
 
 jobs:
   build:
