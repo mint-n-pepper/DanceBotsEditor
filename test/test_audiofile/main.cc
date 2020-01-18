@@ -54,13 +54,13 @@ TEST_F(AudioFileTest, testAudioFileNotExist) {
   AudioFile fakeFile{};
   auto result = fakeFile.load(testFolderPath + fakeFileName);
 
-  EXPECT_EQ(result, AudioFile::Result::eFileDoesNotExist);
+  EXPECT_EQ(result, AudioFile::Result::FileDoesNotExist);
   EXPECT_FALSE(fakeFile.hasData());
 
   // try to save empty audiofile
   result = fakeFile.save(fileTemp);
 
-  EXPECT_EQ(result, AudioFile::Result::eNoDataToSave);
+  EXPECT_EQ(result, AudioFile::Result::NoDataToSave);
 }
 
 TEST_F(AudioFileTest, testSave) {
@@ -101,7 +101,7 @@ TEST_F(AudioFileTest, testSave) {
   EXPECT_STREQ(artist.c_str(), checkFile.getArtist().c_str());
 
   // check header data:
-  EXPECT_EQ(result, AudioFile::Result::eSuccess);
+  EXPECT_EQ(result, AudioFile::Result::Success);
   EXPECT_TRUE(checkFile.isDancefile());
   EXPECT_EQ(checkFile.mMP3PrependData.size(), nPrePendData);
 
@@ -140,7 +140,7 @@ TEST_F(AudioFileTest, test44kFile) {
   AudioFile mp3File44k{};
   auto result = mp3File44k.load(fileMusic44k);
 
-  ASSERT_EQ(result, AudioFile::Result::eSuccess);
+  ASSERT_EQ(result, AudioFile::Result::Success);
   ASSERT_TRUE(mp3File44k.hasData());
 
   EXPECT_FALSE(mp3File44k.isDancefile());
@@ -167,7 +167,7 @@ TEST_F(AudioFileTest, testClear) {
   AudioFile mp3File44k{};
   auto result = mp3File44k.load(fileMusic44k);
 
-  ASSERT_EQ(result, AudioFile::Result::eSuccess);
+  ASSERT_EQ(result, AudioFile::Result::Success);
   ASSERT_TRUE(mp3File44k.hasData());
 
   // clear data:

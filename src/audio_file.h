@@ -38,17 +38,17 @@ class AudioFile {
   /** Result enum that indicates file processing outcomes
    */
   enum class Result {
-    eSuccess,
-    eNotAnMP3File,
-    eCorruptHeader,
-    eIOError,
-    eFileWriteError,
-    eFileOpenError,
-    eFileDoesNotExist,
-    eMP3DecodingError,
-    eMP3EncodingError,
-    eTagWriteError,
-    eNoDataToSave
+    Success,
+    NotAnMP3File,
+    CorruptHeader,
+    IOError,
+    FileWriteError,
+    FileOpenError,
+    FileDoesNotExist,
+    MP3DecodingError,
+    MP3EncodingError,
+    TagWriteError,
+    NoDataToSave
   };
 
   /** String code at beginning and end of pre-pended header data */
@@ -190,14 +190,14 @@ class AudioFile {
  private:
   /** Lame encoding status enum */
   enum class LameEncCodes {
-    eEncodeSuccess = 0,
-    eMP3BufTooSmall = -1,
-    eMallocProblem = -2,
-    eInitNotCalled = -3,
-    ePsychoIssue = -4,
-    ePCMDataNotSameLength = -5,
-    eNoPCMData = -6,
-    eLameInitFailed = -7
+    EncodeSuccess = 0,
+    MP3BufferTooSmall = -1,
+    MallocProblem = -2,
+    InitNotCalled = -3,
+    PsychoIssue = -4,
+    PCMDataNotSameLength = -5,
+    NoPCMData = -6,
+    LameInitFailed = -7
   };
 
   /** MP3 file data container: */

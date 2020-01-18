@@ -48,7 +48,7 @@ auto AudioFile::load(const QString filePath) -> Result {
   QFile file{filePath};
 
   if (!file.exists()) {
-    return Result::eFileDoesNotExist;
+    return Result::FileDoesNotExist;
   }
 
   // the file exists, so open it:
@@ -71,7 +71,7 @@ auto AudioFile::load(const QString filePath) -> Result {
     // check if we could read all header-size bytes:
     if (headerNData.size() < headerSizeNBytes) {
       // could not read them, header "corrupt", i.e file ends prematurely
-      return Result::eCorruptHeader;
+      return Result::CorruptHeader;
     }
 
     // convert size bytes to size int nData
@@ -83,7 +83,7 @@ auto AudioFile::load(const QString filePath) -> Result {
     // verify that nData is shorter than the file is long:
     if (file.pos() + nData > file.size()) {
       // file is too small to contain header size as given in nData
-      return Result::eCorruptHeader;
+      return Result::CorruptHeader;
     }
 
     // at this point the data will be loaded and we purge any exising data
@@ -103,7 +103,7 @@ auto AudioFile::load(const QString filePath) -> Result {
     } else {
       // code mismatch, report corrupt header
       clear();
-      return Result::eCorruptHeader;
+      return Result::CorruptHeader;
     }
   } else {
     // the header is not equal to the dancefile code
@@ -122,50 +122,50 @@ auto AudioFile::load(const QString filePath) -> Result {
   // ensure all is read:
   if (nRead < file.size() - file.pos()) {
     clear();
-    return Result::eIOError;
+    return Result::IOError;
   }
 
   // read out the MP3 Tags:
   if (readTag()) {
     // the file is not an mp3 / mpeg file
     clear();
-    return Result::eNotAnMP3File;
+    return Result::NotAnMP3File;
   }
 
   // decode the MP3 data
   if (decode() < 0) {
     // if decode returns -1, there was a decoding error
     clear();
-    return Result::eMP3DecodingError;
+    return Result::MP3DecodingError;
   }
 
   mHasData = true;
-  return Result::eSuccess;
+  return Result::Success;
   // do not need to close the file as the QFile destructor will take care of it
 }
 
 auto AudioFile::save(const QString file) -> Result {
   // ensure there is data available:
   if (!mHasData) {
-    return Result::eNoDataToSave;
+    return Result::NoDataToSave;
   }
 
   // 1. encode MP3, 2. Write TAG info, 3. write to file with header pre-pend
-  if (LameEncCodes::eEncodeSuccess != encode()) {
-    return Result::eMP3EncodingError;
+  if (LameEncCodes::EncodeSuccess != encode()) {
+    return Result::MP3EncodingError;
   }
 
   // write tag info:
   if (writeTag()) {
     // something went wrong with writing the tag
-    return Result::eTagWriteError;
+    return Result::TagWriteError;
   }
 
   // otherwise save:
   QFile outFile(file);
 
   if (!outFile.open(QIODevice::WriteOnly)) {
-    return Result::eFileOpenError;
+    return Result::FileOpenError;
   }
 
   // write header data:
@@ -196,13 +196,13 @@ auto AudioFile::save(const QString file) -> Result {
     const qint64 res = outFile.write(&*dataIt, nFeed);
 
     if (res < 0) {
-      return Result::eFileWriteError;
+      return Result::FileWriteError;
     }
     dataIt += res;
   }
 
   // do not need to close file as QFile destructor will take care of it
-  return Result::eSuccess;
+  return Result::Success;
 }
 
 void AudioFile::clear(void) {
@@ -469,10 +469,10 @@ auto AudioFile::encode(void) -> LameEncCodes {
   // in order to encode, both pcm buffers need to be non-empty
   // and of the same length:
   if (!mFloatData.size()) {
-    return LameEncCodes::eNoPCMData;
+    return LameEncCodes::NoPCMData;
   }
   if (mFloatData.size() != mFloatMusic.size()) {
-    return LameEncCodes::ePCMDataNotSameLength;
+    return LameEncCodes::PCMDataNotSameLength;
   }
 
   lame_t gfp;
@@ -493,7 +493,7 @@ auto AudioFile::encode(void) -> LameEncCodes {
 
   if (0 > lame_init_params(gfp)) {
     lame_close(gfp);
-    return LameEncCodes::eLameInitFailed;
+    return LameEncCodes::LameInitFailed;
   }
 
   // create temporary mp3 data ByteVector:
@@ -561,7 +561,7 @@ auto AudioFile::encode(void) -> LameEncCodes {
   mRawMP3Data.swap(tempMP3);
 
   lame_close(gfp);
-  return LameEncCodes::eEncodeSuccess;
+  return LameEncCodes::EncodeSuccess;
 }
 
 int AudioFile::savePCM(const QString fileName) {

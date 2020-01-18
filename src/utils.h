@@ -23,7 +23,7 @@
 #include <vector>
 
 namespace utils {
-enum class SearchMethod { eBinary = 0, eLinear };
+enum class SearchMethod { Binary = 0, Linear };
 
 /**
  * \brief Find index of first element smaller equal to a given value in a
@@ -46,7 +46,7 @@ enum class SearchMethod { eBinary = 0, eLinear };
  */
 template <class T>
 int findInterval(const T value, const std::vector<T>& intervals, size_t* ind,
-                 const SearchMethod method = SearchMethod::eBinary) {
+                 const SearchMethod method = SearchMethod::Binary) {
   // check if intervals contains at least two values:
   if (intervals.size() < 2) {
     return -1;
@@ -58,7 +58,7 @@ int findInterval(const T value, const std::vector<T>& intervals, size_t* ind,
 
   // otherwise, find interval
   switch (method) {
-    case SearchMethod::eBinary: {
+    case SearchMethod::Binary: {
       // init index to 0
       *ind = 0;
       // init step size to half vector size
@@ -79,7 +79,7 @@ int findInterval(const T value, const std::vector<T>& intervals, size_t* ind,
       }
       break;
     }
-    case SearchMethod::eLinear: {
+    case SearchMethod::Linear: {
       *ind = 0;
       while (intervals[*ind] <= value) {
         *ind += 1;

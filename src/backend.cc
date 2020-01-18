@@ -132,23 +132,23 @@ bool BackEnd::loadMP3Worker(const QString& filePath) {
 
   const AudioFile::Result res = mAudioFile.load(filePath);
 
-  if (AudioFile::Result::eSuccess != res) {
+  if (AudioFile::Result::Success != res) {
     // loading failed, show an appropriate error message for a few seconds.
     switch (res) {
-      case AudioFile::Result::eCorruptHeader:
+      case AudioFile::Result::CorruptHeader:
         mFileStatus = "ERROR: Corrupt Dancefile header. Cannot process file.";
         break;
-      case AudioFile::Result::eFileDoesNotExist:
+      case AudioFile::Result::FileDoesNotExist:
         mFileStatus = "ERROR: File not found.";
         break;
-      case AudioFile::Result::eMP3DecodingError:
+      case AudioFile::Result::MP3DecodingError:
         mFileStatus =
             "ERROR: Cannot decode corrupt MP3 File. Try different file.";
         break;
-      case AudioFile::Result::eIOError:
+      case AudioFile::Result::IOError:
         mFileStatus = "ERROR: File reading error. Try again or different file.";
         break;
-      case AudioFile::Result::eNotAnMP3File:
+      case AudioFile::Result::NotAnMP3File:
         mFileStatus = "ERROR: Not a valid MP3 file. Try different file.";
         break;
       default:
@@ -246,22 +246,22 @@ bool BackEnd::saveMP3Worker(const QString& fileName) {
   mAudioFile.setComment(mSongComment.toStdString());
   AudioFile::Result res = mAudioFile.save(fileName);
 
-  if (AudioFile::Result::eSuccess != res) {
+  if (AudioFile::Result::Success != res) {
     // loading failed, show an appropriate error message for a few seconds.
     switch (res) {
-      case AudioFile::Result::eNoDataToSave:
+      case AudioFile::Result::NoDataToSave:
         mFileStatus = "ERROR: No data to save. Aborting.";
         break;
-      case AudioFile::Result::eFileWriteError:
+      case AudioFile::Result::FileWriteError:
         mFileStatus = "ERROR: Cannot write data to file.";
         break;
-      case AudioFile::Result::eMP3EncodingError:
+      case AudioFile::Result::MP3EncodingError:
         mFileStatus = "ERROR: MP3 encoding error.";
         break;
-      case AudioFile::Result::eTagWriteError:
+      case AudioFile::Result::TagWriteError:
         mFileStatus = "ERROR: Could not write ID3 tag to MP3 file.";
         break;
-      case AudioFile::Result::eFileOpenError:
+      case AudioFile::Result::FileOpenError:
         mFileStatus = "ERROR: Could not open / create output file.";
         break;
       default:
@@ -300,7 +300,7 @@ int BackEnd::getBeatAtFrame(const int frame) const {
   // use binary search, as it is much faster for larger arrays
   // and about the same speed as linear search for smaller ones
   int rv = utils::findInterval<int>(frame, mBeatFrames, &ind,
-                                    utils::SearchMethod::eBinary);
+                                    utils::SearchMethod::Binary);
 
   // return -1 if search failed
   if (rv < 0) {

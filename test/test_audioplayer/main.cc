@@ -33,7 +33,7 @@ int main(int argc, char* argv[]) {
   AudioFile mp3File44k{};
   AudioFile::Result res = mp3File44k.load(fileMusic44k);
 
-  if (res != AudioFile::Result::eSuccess) {
+  if (res != AudioFile::Result::Success) {
     qDebug() << " error loading file ";
     return 0;
   }

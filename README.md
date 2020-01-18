@@ -30,7 +30,7 @@
 	```bash
 	msbuild dancebotsEditor.vcxproj /p:Configuration=Release /p:Platform=x64
 	```
-	
+
 ### Deploy
 1. Copy the ```.exe``` file to a deployment folder, or leave it in the ```build/gui/Release``` folder as shown below.
 2. Run the Qt deployment tool on the executable, pointing it to the QML folder and adding some extra flags:
@@ -88,11 +88,11 @@
 	where the ```-dmg``` option creates an app dmg file. You should replace the Qt install folder and gui folders with the appropriate locations.
 
 
-## Ubuntu 
+## Ubuntu
 ### Prerequisites
 1. Install build dependencies:
    ```
-   sudo apt-get install build-essential libpulse-dev libgl1-mesa-dev 
+   sudo apt-get install build-essential libpulse-dev libgl1-mesa-dev
    ```
 
 2. Install [CMake](https://cmake.org/) 3.15 or above. The easiest is to use the package manager:
@@ -126,16 +126,20 @@
 
 # Style Guide
 
+We are using `cpplint` for static code analysis, and therefore (roughly) follow the [Google C++ Style Guide](https://google.github.io/styleguide/cppguide.html).
+
 ## Naming
+
+We cannot follow the Google naming style to the letter due to naming restrictions by Qt (lower-case starting signals, upper-case enums). Therefore, we use the following naming convention
 
 | Element 	| Example | Comment |
 | ------- 	| ------- | ------- |
 | Variable 	| `fileName` | camelCase |
 | Member Variable | `mFileName` | m + CamelCase|
 | Constant	| `fileName` | like variable |
-| Enum | `eWriteOnly` | e + CamelCase|
+| Enum | `WriteOnly` | CamelCase|
 | Class | `FileHandler` | CamelCase|
-| Files | `FileHandler.h` | CamelCase + file ending|
+| Files | `file_handler.[h\|cc]` | lower_case + file ending|
 
 ## Indentation / Tabs
 are two spaces.
@@ -156,12 +160,12 @@ Use following template:
 ```
 
 ## Header Guards
-Use the standard define guards, e.g.
+Use define guards following [Google Style](https://google.github.io/styleguide/cppguide.html#The__define_Guard) minus the project name, i.e. for the header file `audio_file.h` in folder `dancebots_gui/src` (where `dancebots_gui` is the repo root folder), use
 ```cpp
-	#ifndef AUDIO_FILE_H_
-	#define AUDIO_FILE_H_
+	#ifndef SRC_AUDIO_FILE_H_
+	#define SRC_AUDIO_FILE_H_
 
-	#endif // AUDIO_FILE_H_
+	#endif  // SRC_AUDIO_FILE_H_
 ```
 # License and Credits
 The GUI source code is distributed under the terms of the [GNU General Public License 3.0](https://spdx.org/licenses/GPL-3.0.html). See the LICENSE file for more information.

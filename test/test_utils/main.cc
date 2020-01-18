@@ -38,8 +38,8 @@ TEST_F(UtilsTest, EdgeCases) {
   const std::vector<int> edgeValues{-10, 0, 20, 30};
   const std::vector<size_t> expectedIndices{0, 0, 0, 0};
   const std::vector<int> expectedReturns{-1, 0, -1, -1};
-  const std::vector<utils::SearchMethod> methods{utils::SearchMethod::eBinary,
-                                                 utils::SearchMethod::eLinear};
+  const std::vector<utils::SearchMethod> methods{utils::SearchMethod::Binary,
+                                                 utils::SearchMethod::Linear};
 
   for (const auto& m : methods) {
     for (size_t i = 0; i < edgeValues.size(); ++i) {
@@ -53,8 +53,8 @@ TEST_F(UtilsTest, EdgeCases) {
 
 TEST_F(UtilsTest, Search) {
   const std::vector<size_t> arraySizes{10, 11, 100, 1000, 10000};
-  const std::vector<utils::SearchMethod> methods{utils::SearchMethod::eBinary,
-                                                 utils::SearchMethod::eLinear};
+  const std::vector<utils::SearchMethod> methods{utils::SearchMethod::Binary,
+                                                 utils::SearchMethod::Linear};
   std::vector<size_t> averageSearchTimes[2];
   averageSearchTimes[0].resize(arraySizes.size());
   averageSearchTimes[1].resize(arraySizes.size());
