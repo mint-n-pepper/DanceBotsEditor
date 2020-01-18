@@ -27,7 +27,7 @@
 #include "src/audio_file.h"
 #include "src/audio_player.h"
 
-const QString fileMusic44k{kTestFolderPath + "in44100.mp3"};
+const QString fileMusic44k{testFolderPath + "in44100.mp3"};
 
 int main(int argc, char* argv[]) {
   AudioFile mp3File44k{};

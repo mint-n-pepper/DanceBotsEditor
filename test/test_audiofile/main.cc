@@ -42,8 +42,8 @@ class AudioFileTest : public ::testing::Test {
   static const std::vector<QString> fileNames;
 };
 
-const QString AudioFileTest::fileMusic44k{kTestFolderPath + "in44100.mp3"};
-const QString AudioFileTest::fileTemp{kTestFolderPath + "temp_AT.mp3"};
+const QString AudioFileTest::fileMusic44k{testFolderPath + "in44100.mp3"};
+const QString AudioFileTest::fileTemp{testFolderPath + "temp_AT.mp3"};
 const std::vector<QString> AudioFileTest::fileNames{
     "in8000.mp3", "in11025.mp3", "in22050.mp3", "in32000.mp3", "in48000.mp3"};
 
@@ -52,7 +52,7 @@ TEST_F(AudioFileTest, testAudioFileNotExist) {
   const QString fakeFileName("fakefakefile.mp3");
 
   AudioFile fakeFile{};
-  auto result = fakeFile.load(kTestFolderPath + fakeFileName);
+  auto result = fakeFile.load(testFolderPath + fakeFileName);
 
   EXPECT_EQ(result, AudioFile::Result::eFileDoesNotExist);
   EXPECT_FALSE(fakeFile.hasData());
@@ -124,7 +124,7 @@ TEST_F(AudioFileTest, testResample) {
     size_t testRange = sampleRange;
     if (filename == "in8000.mp3") testRange = sampleRange8k;
     AudioFile resampleFile{};
-    resampleFile.load(kTestFolderPath + filename);
+    resampleFile.load(testFolderPath + filename);
     // ensure resampled total samples are close to 44.1k Hz file
     // because of large deviation in 8kHz file, have quite broad threshold
     EXPECT_GT(resampleFile.mFloatMusic.size(), nSamples - testRange)
