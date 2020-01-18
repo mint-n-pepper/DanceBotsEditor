@@ -23,7 +23,7 @@
 #include <iostream>
 #include <random>
 #include <string>
-#include "src/Utils.h"
+#include "src/utils.h"
 
 namespace {
 // Test Fixture Class that creates FFT class to run some tests on sample
@@ -102,6 +102,7 @@ TEST_F(UtilsTest, Search) {
     }
   }
 
+#if 0
   // print results:
   std::vector<std::string> searchTypeStrings{"BINARY", "LINEAR"};
   for (size_t i = 0; i < 2; ++i) {
@@ -112,6 +113,7 @@ TEST_F(UtilsTest, Search) {
                 << "nS" << std::endl;
     }
   }
+#endif
 }
 }  // namespace
 

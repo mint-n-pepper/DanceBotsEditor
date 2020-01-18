@@ -77,8 +77,8 @@ class BackEnd : public QObject {
   QString fileStatus(void);
 
   /**
-  * \brief Get flag indicating that backend has an MP3 loaded
-  */
+   * \brief Get flag indicating that backend has an MP3 loaded
+   */
   bool mp3Loaded(void);
 
   /**
@@ -179,7 +179,7 @@ class BackEnd : public QObject {
     }
   }
 
-// NOLINTNEXTLINE
+  // NOLINTNEXTLINE
  signals:
   void fileStatusChanged();
   void songArtistChanged();
@@ -192,7 +192,7 @@ class BackEnd : public QObject {
   void doneLoading(const bool result);
   void doneSaving(const bool result);
 
-// NOLINTNEXTLINE
+  // NOLINTNEXTLINE
  public slots:
   void handleDoneLoading(void);
   void handleDoneSaving(void);

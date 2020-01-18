@@ -22,10 +22,10 @@
 
 #include <string>
 
-#include "test/test_audioplayer/dummy_ui.h"
-#include "test/test_folder_path.h"
 #include "src/audio_file.h"
 #include "src/audio_player.h"
+#include "test/test_audioplayer/dummy_ui.h"
+#include "test/test_folder_path.h"
 
 const QString fileMusic44k{testFolderPath + "in44100.mp3"};
 

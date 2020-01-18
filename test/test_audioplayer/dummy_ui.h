@@ -20,8 +20,8 @@
 #ifndef TEST_TEST_AUDIOPLAYER_DUMMY_UI_H_
 #define TEST_TEST_AUDIOPLAYER_DUMMY_UI_H_
 #include <QDebug>
-#include <QObject>
 #include <QGuiApplication>
+#include <QObject>
 
 #include "src/audio_player.h"
 
@@ -30,7 +30,7 @@ class DummyUI : public QObject {
 
  public:
   DummyUI(AudioPlayer* player, QGuiApplication* app);
-// NOLINTNEXTLINE
+  // NOLINTNEXTLINE
  private slots:
   void receiveNotify(int timeMS);
 

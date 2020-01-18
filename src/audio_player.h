@@ -62,7 +62,7 @@ class AudioPlayer : public QObject {
    */
   bool isPlaying(void) const { return mIsPlaying; }
 
-// NOLINTNEXTLINE
+  // NOLINTNEXTLINE
  signals:
   void isPlayingChanged(void);
 
@@ -80,7 +80,7 @@ class AudioPlayer : public QObject {
    */
   void volumeAvailable(void);
 
-// NOLINTNEXTLINE
+  // NOLINTNEXTLINE
  public slots:
   /**
    * \brief Toggles playback between play and pause
@@ -118,7 +118,7 @@ class AudioPlayer : public QObject {
    */
   void setNotifyInterval(const int intervalMS);
 
-// NOLINTNEXTLINE
+  // NOLINTNEXTLINE
  private slots:
   /**
    * \brief Handler for state changed signal
