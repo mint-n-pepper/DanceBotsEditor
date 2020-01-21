@@ -24,7 +24,7 @@ usage()
   echo "  qt-bin-dir            QT bin directory"
   echo "  qml-dir               QML directory"
   echo ""
-  exit
+  exit 1
 }
 
 # arguments
@@ -62,6 +62,13 @@ cp -vf "${BUILD_DIR}/gui/${APP_NAME}" "${BUILD_DIR}/${APP_NAME}.app/Contents/Mac
 cp -vf ./applogo.icns "${BUILD_DIR}/${APP_NAME}.app/Contents/Resources/"
 cp -vf ./Info.plist "${BUILD_DIR}/${APP_NAME}.app/Contents"
 
-# copy the appropriate frameworks to the app
+# copy the appropriate frameworks to the app and generate DMG file
 cd "${BUILD_DIR}"
 "${QT_BIN_DIR}/macdeployqt" "./${APP_NAME}.app" -qmldir="${QML_DIR}" -dmg
+
+# finish
+echo "Output"
+echo "${BUILD_DIR}/${APP_NAME}.app"
+echo "${BUILD_DIR}/${APP_NAME}.dmg"
+echo "Done"
+exit 0

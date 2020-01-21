@@ -80,12 +80,27 @@
    ```
 
 ### Deploy
-1. Go to the subfolder ```gui/mac_os_rc```, and run the script ```deploy.sh ../../build```, where the first command line argument is the path to your build folder. The script then creates the folder ```DancebotsEditor.app``` in your build folder and copies the executable, icon, and run settings files to the appropriate subfolders.
-2. Run the Qt deployment tool on the app folder to copy the appropriate frameworks to the app:
-	```
-		~/Qt/5.12.6/clang_64/bin/macdeployqt ./dancebotsEditor.app -qmldir=/Users/philipp/Git/dancebots_gui/gui -dmg
-	```
-	where the ```-dmg``` option creates an app dmg file. You should replace the Qt install folder and gui folders with the appropriate locations.
+To generate a macOS app and dmg file, go to `gui/mac_os_rc` and run the `deploy.sh` script.
+
+```
+usage: deploy.sh <build-dir> <qt-bin-dir> <qml-dir>
+
+Deploy app for macOS
+
+positional arguments:
+
+  build-dir             cmake build directory
+  qt-bin-dir            QT bin directory
+  qml-dir               QML directory
+```
+
+The script will create `DancebotsEditor.app` in your `build` directory and copy the executable, icon, and run settings to the appropriate sub-directories. From this it will also generate a DMG file.
+
+For example:
+```
+cd gui/mac_os_rc/
+./deploy.sh ../../build/ ~/Qt/5.12.6/clang_64/bin/ ../
+```
 
 
 ## Ubuntu
