@@ -49,7 +49,7 @@
 ### Prequisites
 1. Install [Xcode](https://developer.apple.com/xcode/):
    ```
-   xcode-select--install
+   xcode-select --install
    ```
    If that fails, follow the instructions [here](https://www.ics.uci.edu/~pattis/common/handouts/macmingweclipse/allexperimental/macxcodecommandlinetools.html).
 
@@ -58,7 +58,7 @@
    brew install cmake
    ```
 
-3. Install Qt 5.12.6 LTS. The easiest is to use the [online installer](https://www.qt.io/download). Take of the installation directory as you will need it later on.
+3. Install Qt 5.12.6 LTS (macOS). The easiest is to use the [online installer](https://www.qt.io/download). Take note of the installation directory as you will need it in the Build and Deploy steps.
 
 4. Clone the repository and update submodules:
    ```
@@ -76,11 +76,11 @@
    ```
    cd build/
    cmake -DCMAKE_PREFIX_PATH=/path/to/Qt/5.12.6/clang_64/ -DCMAKE_BUILD_TYPE=Release ../
-   make -j dancebotsEditor
+   make -j
    ```
 
 ### Deploy
-To generate a macOS app and DMG file, go to `gui/mac_os_rc` and run the `deploy.sh` script.
+To generate a macOS app and DMG file, go to the `gui/mac_os_rc` directory and run the `deploy.sh` script.
 
 ```
 usage: deploy.sh <build-dir> <qt-bin-dir> <qml-dir>
@@ -100,7 +100,7 @@ cd gui/mac_os_rc/
 ./deploy.sh ../../build/ ~/Qt/5.12.6/clang_64/bin/ ../
 ```
 
-The script will create `DancebotsEditor.app` in your `build` directory and copy the executable, icon, and configurations to the appropriate sub-directories. It will also generate a DMG file.
+The script will create `Dancebots Editor.app` and `Dancebots Editor.dmg` in your `build` directory.
 
 
 ## Ubuntu
@@ -115,7 +115,7 @@ The script will create `DancebotsEditor.app` in your `build` directory and copy 
    sudo apt-get install cmake
    ```
 
-3. Install Qt 5.12.6 LTS (gcc 64-bit). The easiest is to use the [online installer](https://www.qt.io/download). Take of the installation directory as you will need it later on.
+3. Install Qt 5.12.6 LTS (gcc 64-bit). The easiest is to use the [online installer](https://www.qt.io/download). Take note of the installation directory as you will need it in the Build step.
 
 3. Clone the repository and update submodules:
    ```
@@ -133,10 +133,10 @@ The script will create `DancebotsEditor.app` in your `build` directory and copy 
    ```
    cd build/
    cmake -DCMAKE_PREFIX_PATH=/path/to/Qt/5.12.6/gcc_64 -DCMAKE_BUILD_TYPE=Release ../
-   make -j dancebotsEditor
+   make -j
    ```
 
-   The `dancebotsEditor` binary will be located in `/path/to/dancebots_gui/build/gui/`.
+The `dancebotsEditor` binary will be located in the `build/gui` directory.
 
 
 # Style Guide
