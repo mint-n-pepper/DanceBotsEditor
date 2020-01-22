@@ -80,7 +80,7 @@
    ```
 
 ### Deploy
-To generate a macOS app and dmg file, go to `gui/mac_os_rc` and run the `deploy.sh` script.
+To generate a macOS app and DMG file, go to `gui/mac_os_rc` and run the `deploy.sh` script.
 
 ```
 usage: deploy.sh <build-dir> <qt-bin-dir> <qml-dir>
@@ -94,13 +94,13 @@ positional arguments:
   qml-dir               QML directory
 ```
 
-The script will create `DancebotsEditor.app` in your `build` directory and copy the executable, icon, and run settings to the appropriate sub-directories. From this it will also generate a DMG file.
-
 For example:
 ```
 cd gui/mac_os_rc/
 ./deploy.sh ../../build/ ~/Qt/5.12.6/clang_64/bin/ ../
 ```
+
+The script will create `DancebotsEditor.app` in your `build` directory and copy the executable, icon, and configurations to the appropriate sub-directories. It will also generate a DMG file.
 
 
 ## Ubuntu
