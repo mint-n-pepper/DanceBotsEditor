@@ -323,9 +323,8 @@ QtObject {
     property real timeBarWidth: 3.0/80.0 // ratio of height
     property real timeBarScrollOffset: 25.0/80.0 // ratio of height
 
-    // how many seconds of music to show in window, which
-    // determines beat/samples scaling to window size
-    property real secondsInWindow: 40.0
+    // target average beat spacing, as ratio of window width
+    property real beatSpacing: 0.013
 
     // beat indicator
     property real beatIndicatorFontSize: 16.0 / 80.0 // ratio of timerbar height
