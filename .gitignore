@@ -14,3 +14,9 @@ doc
 
 # ignore auto-generated files
 scripts/venv/
+
+# ignore vscode generated files
+.vscode 
+
+# ignore Qtcreator CMake processing file
+CMakeLists.txt.user

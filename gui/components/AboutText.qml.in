@@ -2,7 +2,7 @@
 *  Dancebots GUI - Create choreographies for Dancebots
 *  https://github.com/philippReist/dancebots_gui
 *
-*  Copyright 2019 - mint & pepper
+*  Copyright 2020 - mint & pepper
 *
 *  This program is free software : you can redistribute it and/or modify
 *  it under the terms of the GNU General Public License as published by
@@ -37,17 +37,31 @@ QtObject {
 
     <body>
       <h3>How To</h3>
-      <ol>
-        <li>Load MP3</li>
-        <li>Edit and drag <i>Move</i> and <i>Light</i> items to the timeline</li>
-        <li>Save MP3</li>
-        <li>Play on an MP3 player connected to a Dancebot</li>
-      </ol>
-
-      <br>
+      <table style="width:100%;">
+        <tr>
+          <td>1.</td>
+          <td>Load MP3</td>
+        </tr>
+        <tr>
+          <td>2.</td>
+          <td>Edit and drag Moves and Lights to the timelines</td>
+        </tr>
+        <tr>
+          <td>3.</td>
+          <td>Save MP3 (your work is saved in the same file)</td>
+        </tr>
+        <tr>
+          <td>4.</td>
+          <td>Play on an MP3 player connected to a Dancebot</td>
+        </tr>
+        <tr>
+          <td>5.</td>
+          <td>Reload the MP3 and keep editing your choreography</td>
+        </tr>
+      </table>
 
       <h3>Shortcuts</h3>
-      <table style="width:100%; margin-left:15px;">
+      <table style="width:100%">
         <tr>
           <td>Space</td>
           <td>Play/Pause</td>
@@ -88,24 +102,26 @@ QtObject {
     '
     <html>
     <body>
-      <p>Copyright &copy; 2020 — mint & pepper —
-      <a href="https://www.mintpepper.ch">https://www.mintpepper.ch</a><br>
-      Authors: Philipp Reist, Robin Hanhart, and Raymond Oung<br>
+      <p>
+      Copyright &copy; 2020 — mint & pepper —
+      <a href="https://www.mintpepper.ch">https://www.mintpepper.ch</a>
+      </p>
+      
+      <p>
+      Authors: Philipp Reist, Robin Hanhart, and Raymond Oung
+      </p>
+      
+      <p>
       Source code and more info available at
-      <a href="https://www.dancebots.ch">https://www.dancebots.ch</a></p>
+      <a href="https://www.dancebots.ch">https://www.dancebots.ch</a>
+      </p>
 
-      <p>This program is free software: you can redistribute it and/or modify
-      it under the terms of the GNU General Public License as published by
-      the Free Software Foundation, either version 3 of the License, or
-      (at your option) any later version.</p>
+      <p>This program is free software licensed under the GNU GPL 3.0 and comes
+      with absolutely no warranty. For more details, see
+      <a href="https://www.gnu.org/licenses">here</a>.
+      </p>
 
-      <p>This program is distributed in the hope that it will be useful,
-      but WITHOUT ANY WARRANTY; without even the implied warranty of
-      MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-      GNU General Public License for more details, available at
-      <a href="https://www.gnu.org/licenses">https://www.gnu.org/licenses</a>.</p>
-
-      <p>Dancebot Editor ${VERSION}</p>
+      <p>Version: ${VERSION}</p>
     </body>
     </html>
     '

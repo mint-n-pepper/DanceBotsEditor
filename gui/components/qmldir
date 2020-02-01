@@ -1,0 +1,2 @@
+module components
+singleton ToolTipTexts 1.0 ToolTipTexts.qml

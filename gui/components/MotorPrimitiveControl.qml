@@ -2,7 +2,7 @@
 *  Dancebots GUI - Create choreographies for Dancebots
 *  https://github.com/philippReist/dancebots_gui
 *
-*  Copyright 2019 - mint & pepper
+*  Copyright 2020 - mint & pepper
 *
 *  This program is free software : you can redistribute it and/or modify
 *  it under the terms of the GNU General Public License as published by
@@ -220,6 +220,23 @@ Rectangle{
               }
             }
             color: Style.palette.pc_sliderText
+            GuiToolTip{
+              toolTipText: {
+                switch(type){
+                case MotorPrimitive.Type.Custom:
+                  return ToolTipTexts.directionLeftWheel
+                case MotorPrimitive.Type.Straight:
+                case MotorPrimitive.Type.Spin:
+                  return ToolTipTexts.directionSpinStraight
+                case MotorPrimitive.Type.Twist:
+                case MotorPrimitive.Type.BackAndForth:
+                  return ToolTipTexts.startDirectionTwistBackAndForth
+                default:
+                  return ""
+                }
+              }
+            }
+            z: 1000 // put above other elements so that the tooltip is above
           }
 
           DirectionRadio{
@@ -283,6 +300,25 @@ Rectangle{
               verticalAlignment: Text.AlignVCenter
               color: Style.palette.pc_sliderText
             }
+            GuiToolTip{
+              toolTipText: {
+                switch(type){
+                case MotorPrimitive.Type.Custom:
+                  return ToolTipTexts.speedLeft
+                case MotorPrimitive.Type.Straight:
+                  return ToolTipTexts.speedStraight
+                case MotorPrimitive.Type.Spin:
+                  return ToolTipTexts.speedSpin
+                case MotorPrimitive.Type.Twist:
+                  return ToolTipTexts.amplitudeTwist
+                case MotorPrimitive.Type.BackAndForth:
+                  return ToolTipTexts.amplitudeBackAndForth
+                default:
+                  return ""
+                }
+              }
+            }
+            z: 1000 // put above other elements so that the tooltip is above            
           }
 
           Item{
@@ -398,7 +434,7 @@ Rectangle{
         iconWidth: settingsColumn.iconWidth
         valueWidth: settingsColumn.valueWidth
         sliderWidth: settingsColumn.sliderWidth
-
+        toolTipText: ToolTipTexts.motionFrequency
         // frequencies that can be set with slider
         numerators: [1, 1, 1, 2, 1]
         denominators: [4, 3, 2, 3, 1]
@@ -434,6 +470,11 @@ Rectangle{
             font.capitalization: Font.AllUppercase
             text: "Direction R"
             color: Style.palette.pc_sliderText
+            
+            GuiToolTip{
+              toolTipText: ToolTipTexts.directionRightWheel
+            }
+            z: 1000 // put above other elements so that the tooltip is above  
           }
 
           DirectionRadio{
@@ -467,6 +508,11 @@ Rectangle{
               text: "Speed R"
               verticalAlignment: Text.AlignVCenter
               color: Style.palette.pc_sliderText
+              width: settingsColumn.labelWidth
+              GuiToolTip{
+                toolTipText: ToolTipTexts.speedRight
+              }
+              z: 1000 // put above other elements so that the tooltip is above 
             }
           }
 

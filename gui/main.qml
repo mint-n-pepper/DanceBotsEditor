@@ -2,7 +2,7 @@
 *  Dancebots GUI - Create choreographies for Dancebots
 *  https://github.com/philippReist/dancebots_gui
 *
-*  Copyright 2019 - mint & pepper
+*  Copyright 2020 - mint & pepper
 *
 *  This program is free software : you can redistribute it and/or modify
 *  it under the terms of the GNU General Public License as published by
@@ -52,7 +52,7 @@ ApplicationWindow {
   }
 
   visible: true
-  title: "Dancebots Editor"
+  title: "DanceBots Editor"
 
   color: Style.palette.mw_background
 

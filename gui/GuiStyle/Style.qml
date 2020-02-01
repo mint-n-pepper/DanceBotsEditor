@@ -3,7 +3,7 @@
 *  Dancebots GUI - Create choreographies for Dancebots
 *  https://github.com/philippReist/dancebots_gui
 *
-*  Copyright 2019 - mint & pepper
+*  Copyright 2020 - mint & pepper
 *
 *  This program is free software : you can redistribute it and/or modify
 *  it under the terms of the GNU General Public License as published by
@@ -64,6 +64,10 @@ QtObject {
     property color tb_font: mp_white
     property color tb_logo: mp_white
 
+    //* GUI TOOLTIPS *//
+    property color gtt_background: mw_background
+    property color gtt_text: mp_white
+
     //* FILE CONTROL BAR *//
     property color fc_background: mp_green
     property color fc_buttonEnabled: "#63DD7F"
@@ -79,7 +83,6 @@ QtObject {
 
     //* PRIMITIVE CONTROL BOXES *//
     // backgrounds
-
     property color pc_moveBoxBackground: mp_mediumgrey // Dark grey background
     property color pc_moveBoxColor: mp_yellow // Mint & Pepper Yellow
     property color pc_ledBoxBackground: mp_mediumgrey // Dark grey background
@@ -203,9 +206,8 @@ QtObject {
 
   // about popup
   property QtObject aboutPopup: QtObject{
-    property real width: 0.4 // ratio of window width
-    property real textFontSize: 0.035 // ratio of width
-    property real creditsTextSize: 0.023 // ratio of width
+    property real textFontSize: 0.013 // ratio of window width
+    property real creditsTextSize: 0.01 // ratio of width
   }
 
   // Title bar
@@ -217,12 +219,25 @@ QtObject {
     property real horizontalPadding: 0.2 // relative to bar height
   }
 
+  // GUI Tooltips:
+  property QtObject toolTips: QtObject{
+    property int showDelayMS: 300 // delay in milliseconds before appearance
+    // max width, rel. to tooltip item width before wrapping text
+    property real maxWidth: 2.0
+    // all size quantities below are relative to parent height
+    property real textSize: 0.75
+    // offset in y (up if shown on top, down if shown below)
+    property real offsetY: 0.4
+    property real textPadding: 0.4 // padding around text to surrounding box
+    property real offsetX: -textPadding // align tt text with the parent text
+  }
+
   // MP3 File Control Box
   property QtObject fileControl: QtObject{
     // box
     property real height: 0.04 // ratio of window width
     // the width of the box is equal to the window width
-
+ 
     // buttons and text fields all have the same height
     property real itemHeight: 0.8 // ratio of box height
 

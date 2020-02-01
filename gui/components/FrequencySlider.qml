@@ -15,6 +15,7 @@ Row{
                        / denominators[frequencySlider.value]
   property var numerators: [1, 1]
   property var denominators: [2, 1]
+  property var toolTipText: "SET THIS WHERE YOU USE IT"
 
   onValueChanged: {
     delegate.primitive.frequency = value
@@ -28,6 +29,10 @@ Row{
     text: "Frequency"
     verticalAlignment: Text.AlignVCenter
     color: Style.palette.pc_sliderText
+    GuiToolTip{
+      toolTipText: root.toolTipText
+    }
+    z: 1000 // put above other elements so that the tooltip is above others
   }
 
   Item{

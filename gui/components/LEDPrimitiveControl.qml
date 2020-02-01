@@ -2,7 +2,7 @@
 *  Dancebots GUI - Create choreographies for Dancebots
 *  https://github.com/philippReist/dancebots_gui
 *
-*  Copyright 2019 - mint & pepper
+*  Copyright 2020 - mint & pepper
 *
 *  This program is free software : you can redistribute it and/or modify
 *  it under the terms of the GNU General Public License as published by
@@ -189,6 +189,20 @@ Rectangle{
         denominators: [4, 3, 2, 3, 1, 2, 1, 1, 1]
 
         visible: !constantRadio.checked
+        toolTipText: {
+          switch(type){
+          case LEDPrimitive.Type.KnightRider:
+            return ToolTipTexts.freqKnightRider
+          case LEDPrimitive.Type.Alternate:
+            return ToolTipTexts.freqAlternate
+          case LEDPrimitive.Type.Blink:
+            return ToolTipTexts.freqBlink
+          case LEDPrimitive.Type.Random:
+            return ToolTipTexts.freqRandom
+          default:
+            return ""
+          }
+        }
       }
 
       Row{
@@ -204,6 +218,20 @@ Rectangle{
             text: "LEDs"
             verticalAlignment: Text.AlignVCenter
             color: Style.palette.pc_sliderText
+          }
+          GuiToolTip{
+            toolTipText: {
+              switch(type){
+              case LEDPrimitive.Type.Alternate:
+                return ToolTipTexts.ledAlternate
+              case LEDPrimitive.Type.Blink:
+                return ToolTipTexts.ledBlink
+              case LEDPrimitive.Type.Constant:
+                return ToolTipTexts.ledConstant
+              default:
+                return ""
+              }
+            }
           }
         }
 

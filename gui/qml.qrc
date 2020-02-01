@@ -1,6 +1,7 @@
 <RCC>
     <qresource prefix="/qml">
         <file>main.qml</file>
+        <file>components/qmldir</file>
         <file>components/AudioControl.qml</file>
         <file>components/Dragger.qml</file>
         <file>components/FileProcessPopup.qml</file>
@@ -22,6 +23,8 @@
         <file>components/FrequencySlider.qml</file>
         <file>components/DiscreteSlider.qml</file>
         <file>components/FractionDisplay.qml</file>
+		<file>components/GuiToolTip.qml</file>
+        <file>components/ToolTipTexts.qml</file>
         <file>GuiStyle/Style.qml</file>
         <file>GuiStyle/qmldir</file>
         <file>icons/stop.svg</file>

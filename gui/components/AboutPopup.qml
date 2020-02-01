@@ -2,7 +2,7 @@
 *  Dancebots GUI - Create choreographies for Dancebots
 *  https://github.com/philippReist/dancebots_gui
 *
-*  Copyright 2019 - mint & pepper
+*  Copyright 2020 - mint & pepper
 *
 *  This program is free software : you can redistribute it and/or modify
 *  it under the terms of the GNU General Public License as published by
@@ -25,11 +25,8 @@ Popup{
   id: root
   parent: Overlay.overlay
   anchors.centerIn: parent
+  height: appWindow.height
   modal: true
-  width: appWindow.width * Style.aboutPopup.width
-  height: appWindow.height - 2 * appWindow.guiMargin
-  padding: appWindow.guiMargin
-
   property var textContent: AboutText{}
 
   Overlay.modal: Rectangle{
@@ -40,34 +37,37 @@ Popup{
     color: "transparent"
   }
 
-  contentItem: Rectangle{
-    id: ciRect
-    width: root.width
-    height: root.height
-    color: Style.palette.ap_background
-    
-    Column{
-      spacing: 2
-      width: parent.width - appWindow.guiMargin * 2
-
-      Text{
-        id: instructionText
-        width: parent.width - appWindow.guiMargin * 2
-        font.pixelSize: root.width * Style.aboutPopup.textFontSize
-        textFormat: Text.RichText
-        text: textContent.helpText
-        padding: appWindow.guiMargin
+  contentItem: Item{
+    Text{
+      id: instructionText
+      anchors.horizontalCenter: parent.horizontalCenter
+      width: contentWidth + 2 * padding
+      font.pixelSize: appWindow.width * Style.aboutPopup.textFontSize
+      textFormat: Text.RichText
+      text: textContent.helpText
+      padding: appWindow.guiMargin
+      Rectangle{
+        anchors.fill:parent
+        color: Style.palette.ap_background
+        z: -1
       }
+    }
 
-      Text{
-        id: creditsText
-        width: parent.width - appWindow.guiMargin * 2
-        wrapMode: Text.WordWrap
-        font.pixelSize: root.width * Style.aboutPopup.creditsTextSize
-        textFormat: Text.RichText
-        text: textContent.creditsText
-        padding: appWindow.guiMargin
-        onLinkActivated: Qt.openUrlExternally(link)
+    Text{
+      anchors.top: instructionText.bottom
+      anchors.horizontalCenter: instructionText.horizontalCenter
+      id: creditsText
+      width: instructionText.width
+      wrapMode: Text.WordWrap
+      font.pixelSize: appWindow.width * Style.aboutPopup.creditsTextSize
+      textFormat: Text.RichText
+      text: textContent.creditsText
+      padding: appWindow.guiMargin
+      onLinkActivated: Qt.openUrlExternally(link)
+      Rectangle{
+        anchors.fill:parent
+        color: Style.palette.ap_background
+        z: -1
       }
     }
   }
