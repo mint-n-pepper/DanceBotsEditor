@@ -379,7 +379,7 @@ int AudioFile::decode(void) {
 
   // cut off extra sample block at end:
   if (mIsDanceFile) {
-    mFloatMusic.resize(mFloatMusic.size() - mp3BlockSize);
+    mFloatMusic.resize(mFloatMusic.size() - mp3BlockSize)
   }
 
   // calculate rms of music pcm data:
