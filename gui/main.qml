@@ -323,9 +323,11 @@ Connections{
       id: timeIndicator
       color: Style.palette.tim_timeIndicator
       width: Style.timerBar.timeBarWidth * motorBar.height
-      height: timerBarColumn.height
+      height: timerBarColumn.height * Style.timerBar.timeBarHeight
+      radius: width / 2.0
       property var position: 0
-      x: position - width/2
+      x: position - width / 2.0
+      y: (timerBarColumn.height - height) / 2.0
     }
   } // timer bar flickable
 

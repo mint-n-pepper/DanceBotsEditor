@@ -321,7 +321,10 @@ QtObject {
     // space between timer bars
     property real spacing: 0.125 // ratio of timerBar height
     property real beatWidth: 2.0/80.0 // line width of beat indicators
-    property real timeBarWidth: 3.0/80.0 // ratio of height
+
+    // moving time indicator
+    property real timeBarWidth: 3.0/80.0 // ratio of single timer bar height
+    property real timeBarHeight: 1.07 // ratio of height
     property real timeBarScrollOffset: 25.0/80.0 // ratio of height
 
     // target average beat spacing, as ratio of window width
