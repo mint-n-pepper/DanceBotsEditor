@@ -38,7 +38,6 @@ QtObject {
     property color mp_darkgrey: "#262626" // Dark grey
     property color mp_black: "#151515" // Almost black
 
-
     //* MAIN WINDOW *//
     property color mw_background: mp_black
     property color mw_disableOverlay: "#88444444"
@@ -126,6 +125,8 @@ QtObject {
     property color prim_toolTipFont: mp_white
     property color prim_toolTipLEDon: "lime"
     property color prim_toolTipLEDoff: "lightslategrey"
+    property color prim_resizeHandleOverlay: "#66989898"
+    property color prim_resizeHandleSmallMark: mp_black
     // for primitive type colors see just below
 
     //* AUDIO CONTROL *//
@@ -320,12 +321,14 @@ QtObject {
     // space between timer bars
     property real spacing: 0.125 // ratio of timerBar height
     property real beatWidth: 2.0/80.0 // line width of beat indicators
-    property real timeBarWidth: 3.0/80.0 // ratio of height
+
+    // moving time indicator
+    property real timeBarWidth: 3.0/80.0 // ratio of single timer bar height
+    property real timeBarHeight: 1.07 // ratio of height
     property real timeBarScrollOffset: 25.0/80.0 // ratio of height
 
-    // how many seconds of music to show in window, which
-    // determines beat/samples scaling to window size
-    property real secondsInWindow: 40.0
+    // target average beat spacing, as ratio of window width
+    property real beatSpacing: 0.013
 
     // beat indicator
     property real beatIndicatorFontSize: 16.0 / 80.0 // ratio of timerbar height
@@ -354,6 +357,8 @@ QtObject {
     // margin of primitive at which a drag causes a size change
     // is capped at half primtive width
     property real resizeMarginRight: 0.14 // ratio of height
+    // small extra mark inside resize handle (width = to prim border width)
+    property real resizeHandleSmallMarkHeight: 0.15 // ratio of height
 
     // TOOLTIP STYLE
     property real toolTipFontSize: 16.0 / 72.0 // ratio of height

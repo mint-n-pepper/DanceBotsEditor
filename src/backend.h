@@ -201,8 +201,8 @@ class BackEnd : public QObject {
 
  private:
   // init to 100bpm
-  int mAverageBeatFrames{60 * AudioFile::sampleRate / 100};
-  int mErrorDisplayTimeMS = 3000;
+  int mAverageBeatFrames{23000};  // number from daft punk get lucky
+  int mErrorDisplayTimeMS{3000};
 
   // song ID3 tag strings
   QString mSongArtist;

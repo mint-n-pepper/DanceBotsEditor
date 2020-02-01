@@ -60,6 +60,33 @@ Rectangle{
     }
 	} // update primitive
 
+  Rectangle{
+    id: resizeHandle
+    color: Style.palette.prim_resizeHandleOverlay
+    anchors.right: root.right
+    height: root.height
+    width: dragArea.resizeMargin
+    visible: root.isFromBar
+    Rectangle{
+      height: Style.primitives.resizeHandleSmallMarkHeight * parent.height
+      radius: width / 2.0
+      width: root.border.width
+      anchors.centerIn: parent
+      color: Style.palette.prim_resizeHandleSmallMark
+    }
+  }
+
+  Rectangle{
+    // redraw border to hide uneven resize handle borders
+    id: borderRect
+    height: root.height
+    width: root.width
+    radius: root.radius
+    border.color: Style.palette.prim_border
+    border.width: root.border.width
+    color: "transparent"
+  }
+
 	Text
 	{
 		id: textID
@@ -95,7 +122,7 @@ Rectangle{
 
     property var resizeMargin: Style.primitives.resizeMarginRight * root.height
     property bool doResize: false
-    hoverEnabled: parent.isFromBar
+    hoverEnabled: true
 
     onWidthChanged: {
       if(resizeMargin > width / 2){
@@ -165,7 +192,7 @@ Rectangle{
           // cursor is and then change the mouse pointer accordingly
           cursorShape = Qt.SizeHorCursor
         }else{
-          cursorShape = Qt.ArrowCursor
+          cursorShape = Qt.SizeAllCursor
         }
       }
     }
@@ -251,7 +278,7 @@ Rectangle{
     id: selectionHighlight
     visible: false
     color: Style.palette.prim_highlight
-    anchors.fill: parent
+    anchors.fill: root
   }
 
   function updateToolTip(){

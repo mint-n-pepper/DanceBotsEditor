@@ -44,6 +44,13 @@ ApplicationWindow {
     }
   }
 
+  onWidthChanged:{
+    if(backend.mp3Loaded && backend.getAverageBeatFrames() > 0){
+      frameToPixels = width * Style.timerBar.beatSpacing
+                                    / backend.getAverageBeatFrames()
+    }
+  }
+
   onVisibilityChanged: {
     if(Window.Windowed === visibility){
       // after return from maximized, enforce proper window height
@@ -56,10 +63,22 @@ ApplicationWindow {
 
   color: Style.palette.mw_background
 
-  property real frameToPixels: width / (Style.timerBar.secondsInWindow
-                                         * backend.getSampleRate())
+  property int initAvgBeatFrames: 23000 // daft punk get lucky value
+  property real frameToPixels: width * Style.timerBar.beatSpacing
+                                    / initAvgBeatFrames
 
   property real guiMargin: width * Style.main.margin
+
+Connections{
+  target: backend
+  onDoneLoading:{
+    if(result && backend.getAverageBeatFrames() > 0){
+      // adjust frame to Pixels to get beat spacing independent of bpm
+      frameToPixels = width * Style.timerBar.beatSpacing
+                                    / backend.getAverageBeatFrames()
+    }
+  }
+}
 
   MouseArea{
     id: sceneClickCatcher
@@ -304,9 +323,11 @@ ApplicationWindow {
       id: timeIndicator
       color: Style.palette.tim_timeIndicator
       width: Style.timerBar.timeBarWidth * motorBar.height
-      height: timerBarColumn.height
+      height: timerBarColumn.height * Style.timerBar.timeBarHeight
+      radius: width / 2.0
       property var position: 0
-      x: position - width/2
+      x: position - width / 2.0
+      y: (timerBarColumn.height - height) / 2.0
     }
   } // timer bar flickable
 
