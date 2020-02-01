@@ -32,7 +32,7 @@ Rectangle{
   property var primitiveColors: Style.ledPrimitive.colors
   property var primitiveTextIDs: Style.ledPrimitive.textID
   property var delegate: null
-  property var averageBeatFrames: 60 * 441 // 100 bpm @ 44.1kHz
+  property var averageBeatFrames: appWindow.initAvgBeatFrames
   enabled: false
   property bool showDragHint: true
 

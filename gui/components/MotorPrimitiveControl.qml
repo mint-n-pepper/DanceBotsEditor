@@ -35,7 +35,7 @@ Rectangle{
 
   property var delegate: null
   property var beats: []
-  property var averageBeatFrames: 60 * 441 // 100 bpm @ 44.1kHz
+  property var averageBeatFrames: appWindow.initAvgBeatFrames
   property int type
 
   onTypeChanged: {

@@ -56,10 +56,22 @@ ApplicationWindow {
 
   color: Style.palette.mw_background
 
-  property real frameToPixels: width / (Style.timerBar.secondsInWindow
-                                         * backend.getSampleRate())
+  property int initAvgBeatFrames: 23000 // daft punk get lucky value
+  property real frameToPixels: width * Style.timerBar.beatSpacing
+                                    / initAvgBeatFrames
 
   property real guiMargin: width * Style.main.margin
+
+Connections{
+  target: backend
+  onDoneLoading:{
+    if(result && backend.getAverageBeatFrames() > 0){
+      // adjust frame to Pixels to get beat spacing independent of bpm
+      frameToPixels = width * Style.timerBar.beatSpacing
+                                    / backend.getAverageBeatFrames()
+    }
+  }
+}
 
   MouseArea{
     id: sceneClickCatcher
