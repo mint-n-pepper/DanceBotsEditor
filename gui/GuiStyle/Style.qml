@@ -38,7 +38,6 @@ QtObject {
     property color mp_darkgrey: "#262626" // Dark grey
     property color mp_black: "#151515" // Almost black
 
-
     //* MAIN WINDOW *//
     property color mw_background: mp_black
     property color mw_disableOverlay: "#88444444"
@@ -126,6 +125,8 @@ QtObject {
     property color prim_toolTipFont: mp_white
     property color prim_toolTipLEDon: "lime"
     property color prim_toolTipLEDoff: "lightslategrey"
+    property color prim_resizeHandleOverlay: "#66989898"
+    property color prim_resizeHandleSmallMark: mp_black
     // for primitive type colors see just below
 
     //* AUDIO CONTROL *//
@@ -353,6 +354,8 @@ QtObject {
     // margin of primitive at which a drag causes a size change
     // is capped at half primtive width
     property real resizeMarginRight: 0.14 // ratio of height
+    // small extra mark inside resize handle (width = to prim border width)
+    property real resizeHandleSmallMarkHeight: 0.15 // ratio of height
 
     // TOOLTIP STYLE
     property real toolTipFontSize: 16.0 / 72.0 // ratio of height

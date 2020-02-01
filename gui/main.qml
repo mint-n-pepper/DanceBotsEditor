@@ -44,6 +44,13 @@ ApplicationWindow {
     }
   }
 
+  onWidthChanged:{
+    if(backend.mp3Loaded && backend.getAverageBeatFrames() > 0){
+      frameToPixels = width * Style.timerBar.beatSpacing
+                                    / backend.getAverageBeatFrames()
+    }
+  }
+
   onVisibilityChanged: {
     if(Window.Windowed === visibility){
       // after return from maximized, enforce proper window height
