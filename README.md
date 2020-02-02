@@ -1,5 +1,13 @@
 ![](https://github.com/philippReist/dancebots_gui/workflows/macOS%20Build/badge.svg)
 ![](https://github.com/philippReist/dancebots_gui/workflows/Ubuntu%20Build/badge.svg)
+# Introduction
+The Dancebots Editor allows creating choreographies for Dancebots, which are small and inexpensive differential drive robots that can move and blink their eight LEDs. They are designed to be built from scratch by children, see [here](https://www.dancebots.ch/) for more information.
+
+The editor works as follows:
+1. The user can load an MP3 into the editor. The backend will decode the MP3 and extract the music beat locations from the audio.
+2. Next, the user can create a choreography by configuring and placing motion and LED primitives on the music timeline. Since the primitives use the extracted beats as their time unit, it is straightforward to create good-looking choreographies.
+3. When done with editing, the user saves the music and choreography to an MP3 file. In the left channel, the software re-encodes the music data (R+L channel are mixed when decoding); in the right channel, the software writes a signal that encodes the motion and LED commands for the robot to parse, see [here](https://www.dancebots.ch/?page_id=92) for more info.
+4. In addition to the music and choreography signal, the software pre-pends the primitive data that makes up the choreography to the MP3 data. This allows re-loading a Dancebot MP3 file and adapting the choreography further.
 
 # Build & Deployment Instructions
 ## Windows
