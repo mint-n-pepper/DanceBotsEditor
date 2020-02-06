@@ -8,6 +8,7 @@ on:
   release:
     types:
       - published
+      - prereleased
 
 jobs:
   build:
@@ -47,7 +48,7 @@ jobs:
       run: |
         cd gui/mac_os_rc/
         sh deploy.sh ../../build/ "${Qt5_Dir}/bin/" ../ 
-        mv ../../build/Dancebots\ Editor.dmg ../../build/dancebots_editor-darwin.dmg
+        mv ../../build/Dancebots\ Editor.dmg ../../build/dancebots-editor-darwin.dmg
 
     - name: Upload Release Asset
       id: upload-release-asset 
@@ -57,7 +58,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: "https://uploads.github.com/repos/${{ github.repository }}/releases/${{ github.event.release.id }}/assets{?name,label}"
-        asset_path: build/dancebots_editor-darwin.dmg
-        asset_name: dancebots_editor-darwin.dmg
+        asset_path: build/dancebots-editor-darwin.dmg
+        asset_name: dancebots-editor-darwin.dmg
         asset_content_type: application/x-apple-diskimage
 
