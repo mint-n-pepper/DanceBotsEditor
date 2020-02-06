@@ -13,34 +13,49 @@ The editor works as follows:
 ## Windows
 ### Prequisites
 1. Install [CMake](https://cmake.org/) 3.15 or above. 
-	* Add `cmake`'s `bin` folder to PATH environment variable
+   * Add `cmake`'s `bin` folder to the `PATH` environment variable
 
 2. Install [Visual Studio Community](https://visualstudio.microsoft.com/)
-	* Install `Desktop development with C++` workload, see [here for instructions](https://devblogs.microsoft.com/cppblog/windows-desktop-development-with-c-in-visual-studio/)
+   * Install `Desktop development with C++` workload, see [here for instructions](https://devblogs.microsoft.com/cppblog/windows-desktop-development-with-c-in-visual-studio/)
 
-3. Install [Qt](https://www.qt.io/) 5.12.6 LTS (gcc 64-bit). The easiest is to use the [online installer](https://www.qt.io/download). Take note of the installation directory as you will need it later on.
-	* You will only need the `MSVC` `64-bit` version
+3. Install [Qt](https://www.qt.io/) 5.12.6 LTS. The easiest is to use the [online installer](https://www.qt.io/download). Take note of the installation directory as you will need it later on.
+   * You will only need the `MSVC` `64-bit` version
 
 4. Install [Git](https://git-scm.com/download/win). The commands in the following steps are run in the `Git Bash`.
 
 5. Clone the repository and update submodules:
-	```
-	git submodule update --init --recursive
-	```
+   ```
+   git submodule update --init --recursive
+   ```
 
 ### Build
 1. Navigate to the `dancebots_gui` directory and create a `build` directory:
-	```
-	cd dancebots_gui/
-	mkdir build
-	```
+   ```
+   cd dancebots_gui/
+   mkdir build
+   ```
 
-2. Navigate to the `build` directory, configure for release, and build the project:
-	```
-	cd build/
-	cmake -DCMAKE_PREFIX_PATH=/path/to/Qt/5.12.6/msvc2015_64/ -DCMAKE_BUILD_TYPE=Release -G "Visual Studio 16 2019" ../
-	C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Current\Bin\MSBuild.exe .\dancebots_gui.sln /p:Configuration=Release /p:Platform=x64 /m
-	```
+2. Navigate to the `build` directory, configure for release:
+   ```
+   cd build/
+   cmake -DCMAKE_PREFIX_PATH=/path/to/Qt/5.12.6/msvc2015_64/ -DCMAKE_BUILD_TYPE=Release -G "Visual Studio 16 2019" ../
+   ```
+   You may need to update the generator flag (-G) depending on the Visual Studio version that you are using. To check what generators are available, run `cmake -G`.
+
+3. The `build` folder should now contain a Visual Studio solution (.sln) and project files. You can build the project using the Visual Studio IDE or command line. 
+   
+   a. Using the Visual Studio IDE, open the `dancebots_gui.sln` file and build the `dancebotsEditor` project in `Release` and 64-bit (x64). 
+
+   b. To build on the command line using `x64 Native Tools Command Prompt for VS 2019` (or whatever Visual Studio version you are using), navigate to `dancebots_gui/build/gui/` and run:
+   ```
+   msbuild dancebotsEditor.vcxproj /p:Configuration=Release /p:Platform=x64 /m
+   ```
+
+   c. To build on the command line using `PowerShell`, run:
+   ```
+   C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Current\Bin\MSBuild.exe .\dancebots_gui.sln /p:Configuration=Release /p:Platform=x64 /m
+   ```
+   You may need to edit the path depending on the Visual Studio version that you are using.
 
 --------------------------------
 
@@ -64,16 +79,16 @@ The editor works as follows:
 ### Deploy
 1. Copy the ```.exe``` file to a deployment folder, or leave it in the ```build/gui/Release``` folder as shown below.
 2. Run the Qt deployment tool on the executable, pointing it to the QML folder and adding some extra flags:
-	```
-	windeployqt.exe C:\\Users\\philipp\\Git\\dbgui\\dancebots_gui\\build\\gui\\Release\\dancebotsEditor.exe --qmldir C:\\Users\\philipp\\Git\\dbgui\\dancebots_gui\\gui  --no-translations --release
-	```
-	This adds all necessary Qt ```.dll``` and ```QML``` files to the deployment folder.
+   ```
+   windeployqt.exe C:\\Users\\philipp\\Git\\dbgui\\dancebots_gui\\build\\gui\\Release\\dancebotsEditor.exe --qmldir C:\\Users\\philipp\\Git\\dbgui\\dancebots_gui\\gui  --no-translations --release
+   ```
+   This adds all necessary Qt ```.dll``` and ```QML``` files to the deployment folder.
 3. From the Visual Studio install folder, go to the redistributable subfolder, e.g. ```C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Redist\MSVC\14.23.27820\x64\Microsoft.VC142.CRT```, and copy the following x64 ```.dll``` files to the deployment folder (same folder as executable), so that the users do not have to install the redistributable package:
-	```bash
-		msvcp140.dll
-		vcruntime140.dll
-		vcruntime140_1.dll
-	```
+   ```bash
+      msvcp140.dll
+      vcruntime140.dll
+      vcruntime140_1.dll
+   ```
 
 ## macOS
 ### Prequisites
@@ -181,11 +196,11 @@ We are using `cpplint` for static code analysis, and therefore (roughly) follow 
 
 We cannot follow the Google naming style to the letter due to naming restrictions by Qt (lower-case starting signals, upper-case enums). Therefore, we use the following naming convention
 
-| Element 	| Example | Comment |
-| ------- 	| ------- | ------- |
-| Variable 	| `fileName` | camelCase |
+| Element   | Example | Comment |
+| -------   | ------- | ------- |
+| Variable  | `fileName` | camelCase |
 | Member Variable | `mFileName` | m + CamelCase|
-| Constant	| `fileName` | like variable |
+| Constant  | `fileName` | like variable |
 | Enum | `WriteOnly` | CamelCase|
 | Class | `FileHandler` | CamelCase|
 | Files | `file_handler.[h\|cc]` | lower_case + file ending|
@@ -197,24 +212,24 @@ are two spaces.
 
 Use following template:
 ```cpp
-	/**
-	\brief  Calculate convolution of two signals.
+   /**
+   \brief  Calculate convolution of two signals.
 
-			Some more detailed description or an example goes here.
-	\param[in] Signal A
-	\param[in] Signal B
-	\param[out] Convolution A * B
-	\return Whether the operation was successful (0) or not (1).
-	*/
+         Some more detailed description or an example goes here.
+   \param[in] Signal A
+   \param[in] Signal B
+   \param[out] Convolution A * B
+   \return Whether the operation was successful (0) or not (1).
+   */
 ```
 
 ## Header Guards
 Use define guards following [Google Style](https://google.github.io/styleguide/cppguide.html#The__define_Guard) minus the project name, i.e. for the header file `audio_file.h` in folder `dancebots_gui/src` (where `dancebots_gui` is the repo root folder), use
 ```cpp
-	#ifndef SRC_AUDIO_FILE_H_
-	#define SRC_AUDIO_FILE_H_
+   #ifndef SRC_AUDIO_FILE_H_
+   #define SRC_AUDIO_FILE_H_
 
-	#endif  // SRC_AUDIO_FILE_H_
+   #endif  // SRC_AUDIO_FILE_H_
 ```
 # License and Credits
 The GUI source code is distributed under the terms of the [GNU General Public License 3.0](https://spdx.org/licenses/GPL-3.0.html). See the LICENSE file for more information.

@@ -1,11 +1,10 @@
 name: Windows Build
 
 on:
-  push:
+  pull_request:
     branches:
-      # - master
-      # - develop
-      - build-test-windows
+      - master
+      - develop
 
 jobs:
   build:
