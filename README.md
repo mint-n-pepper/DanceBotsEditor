@@ -11,20 +11,40 @@ The editor works as follows:
 
 # Build & Deployment Instructions
 ## Windows
+### Prequisites
+1. Install [CMake](https://cmake.org/) 3.15 or above. 
+	* Add `cmake`'s `bin` folder to PATH environment variable
+
+2. Install [Visual Studio Community](https://visualstudio.microsoft.com/)
+	* Install `Desktop development with C++` workload, see [here for instructions](https://devblogs.microsoft.com/cppblog/windows-desktop-development-with-c-in-visual-studio/)
+
+3. Install [Qt](https://www.qt.io/) 5.12.6 LTS (gcc 64-bit). The easiest is to use the [online installer](https://www.qt.io/download). Take note of the installation directory as you will need it later on.
+	* You will only need the `MSVC` `64-bit` version
+
+4. Install [Git](https://git-scm.com/download/win). The commands in the following steps are run in the `Git Bash`.
+
+5. Clone the repository and update submodules:
+	```
+	git submodule update --init --recursive
+	```
+
 ### Build
-1. Install ```cmake``` from https://cmake.org/download/. Make sure its ```bin``` folder is in the path so that you can use cmake from the command line.
-2. Install Visual Studio Community 2019 from https://visualstudio.microsoft.com/.
-3. Install Qt 5.12.6 LTS from https://www.qt.io/. You only have to select/install the MSVC 2015 64-bit version.
-4. Install Git from https://git-scm.com/download/win. The following commands are run in the ```Git Bash```.
-5. Clone the repository, best using the ```--recursive``` option to init and download all submodules, i.e. run
-	```git
-	git clone --recursive https://github.com/philippReist/dancebots_gui.git
+1. Navigate to the `dancebots_gui` directory and create a `build` directory:
 	```
-	or, if you use ssh,
-	```git
-	git clone --recursive git@github.com:philippReist/dancebots_gui.git
+	cd dancebots_gui/
+	mkdir build
 	```
-6.  CD into the cloned repository, create a ```build``` folder, and run ```cmake``` in it:
+
+2. Navigate to the `build` directory, configure for release, and build the project:
+	```
+	cd build/
+	cmake -DCMAKE_PREFIX_PATH=/path/to/Qt/5.12.6/msvc2015_64/ -DCMAKE_BUILD_TYPE=Release -G "Visual Studio 16 2019" ../
+	C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Current\Bin\MSBuild.exe .\dancebots_gui.sln /p:Configuration=Release /p:Platform=x64 /m
+	```
+
+--------------------------------
+
+1.  CD into the cloned repository, create a ```build``` folder, and run ```cmake``` in it:
 	```bash
 	cd dancebots_gui
 	mkdir build
@@ -38,6 +58,8 @@ The editor works as follows:
 	```bash
 	msbuild dancebotsEditor.vcxproj /p:Configuration=Release /p:Platform=x64
 	```
+--------------------------------
+
 
 ### Deploy
 1. Copy the ```.exe``` file to a deployment folder, or leave it in the ```build/gui/Release``` folder as shown below.
@@ -66,7 +88,7 @@ The editor works as follows:
    brew install cmake
    ```
 
-3. Install Qt 5.12.6 LTS (macOS). The easiest is to use the [online installer](https://www.qt.io/download). Take note of the installation directory as you will need it in the Build and Deploy steps.
+3. Install [Qt](https://www.qt.io/) 5.12.6 LTS. The easiest is to use the [online installer](https://www.qt.io/download). Take note of the installation directory as you will need it later on.
 
 4. Clone the repository and update submodules:
    ```
@@ -123,7 +145,11 @@ The script will create `Dancebots Editor.app` and `Dancebots Editor.dmg` in your
    sudo apt-get install cmake
    ```
 
+<<<<<<< HEAD
 3. Install the Qt 5.12.6 LTS Desktop gcc 64-bit component. The easiest is to use the [online installer](https://www.qt.io/download). Take note of the installation directory as you will need it in the Build step.
+=======
+3. Install [Qt](https://www.qt.io/) 5.12.6 LTS (gcc 64-bit). The easiest is to use the [online installer](https://www.qt.io/download). Take note of the installation directory as you will need it later on.
+>>>>>>> Re-writes Window build instructions
 
 3. Clone the repository and update submodules:
    ```
