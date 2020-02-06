@@ -5,6 +5,9 @@ on:
     branches:
       - master
       - develop
+  release:
+    types:
+      - published
 
 jobs:
   build:
@@ -36,6 +39,25 @@ jobs:
         cmake -DCMAKE_PREFIX_PATH="${Qt5_Dir}" -DCMAKE_BUILD_TYPE=Release ../
         make -j
 
-    - name: Run Tests
+    - name: Unit Tests
       run: |
         sh scripts/run_tests.sh build
+
+    - name: Deploy
+      run: |
+        cd gui/mac_os_rc/
+        sh deploy.sh ../../build/ "${Qt5_Dir}/bin/" ../ 
+        mv build/Dancebots\ Editor.dmg build/dancebots_editor-darwin.dmg
+
+    - name: Upload Release Asset
+      id: upload-release-asset 
+      if: startsWith(github.ref, 'refs/tags/')
+      uses: actions/upload-release-asset@v1.0.1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: "https://uploads.github.com/repos/${{ github.repository }}/releases/${{ github.event.release.id }}/assets{?name,label}"
+        asset_path: build/dancebots_editor-darwin.dmg
+        asset_name: dancebots_editor-darwin.dmg
+        asset_content_type: application/x-apple-diskimage
+
