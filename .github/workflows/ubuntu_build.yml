@@ -55,8 +55,9 @@ jobs:
 
     - name: Deploy
       run: |
-        mv build/gui/dancebotGui ../dancebots_editor
-        tar -zcvf build/dancebots_editor-ubuntu.tar.gz build/dancebots_editor 
+        cd build/
+        mv gui/dancebotsEditor dancebots_editor
+        tar -zcvf dancebots_editor-ubuntu.tar.gz dancebots_editor 
 
     - name: Upload Release Asset
       id: upload-release-asset 

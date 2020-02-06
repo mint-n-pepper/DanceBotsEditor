@@ -47,7 +47,7 @@ jobs:
       run: |
         cd gui/mac_os_rc/
         sh deploy.sh ../../build/ "${Qt5_Dir}/bin/" ../ 
-        mv build/Dancebots\ Editor.dmg build/dancebots_editor-darwin.dmg
+        mv ../../build/Dancebots\ Editor.dmg ../../build/dancebots_editor-darwin.dmg
 
     - name: Upload Release Asset
       id: upload-release-asset 
