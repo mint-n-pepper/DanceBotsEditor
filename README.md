@@ -162,13 +162,9 @@ The script will create `Dancebots Editor.app` and `Dancebots Editor.dmg` in your
    sudo apt-get install cmake
    ```
 
-<<<<<<< HEAD
 3. Install the Qt 5.12.6 LTS Desktop gcc 64-bit component. The easiest is to use the [online installer](https://www.qt.io/download). Take note of the installation directory as you will need it in the Build step.
-=======
-3. Install [Qt](https://www.qt.io/) 5.12.6 LTS (gcc 64-bit). The easiest is to use the [online installer](https://www.qt.io/download). Take note of the installation directory as you will need it later on.
->>>>>>> Re-writes Window build instructions
 
-3. Clone the repository and update submodules:
+4. Clone the repository and update submodules:
    ```
    git submodule update --init --recursive
    ```
