@@ -1,5 +1,7 @@
-![](https://github.com/philippReist/dancebots_gui/workflows/macOS%20Build/badge.svg)
-![](https://github.com/philippReist/dancebots_gui/workflows/Ubuntu%20Build/badge.svg)
+![Windows Build](https://github.com/philippReist/dancebots_gui/workflows/Windows%20Build/badge.svg)
+![macOS Build](https://github.com/philippReist/dancebots_gui/workflows/macOS%20Build/badge.svg)
+![Ubuntu Build](https://github.com/philippReist/dancebots_gui/workflows/Ubuntu%20Build/badge.svg)
+
 # Introduction
 The Dancebots Editor allows creating choreographies for Dancebots, which are small and inexpensive differential drive robots that can move and blink their eight LEDs. They are designed to be built from scratch by children, see [here](https://www.dancebots.ch/) for more information.
 
