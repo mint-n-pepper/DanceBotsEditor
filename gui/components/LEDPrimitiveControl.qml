@@ -94,7 +94,7 @@ Rectangle{
       text: qsTr("KnightRider")
       onPressed: appWindow.grabFocus()
       onToggled: type=LEDPrimitive.Type.KnightRider
-      mainColor: Style.palette.pc_ledBoxColor
+      mainColor: Style.ledPrimitive.colors[0]
       height: radios.radioHeight
     }
     TypeRadio {
@@ -102,7 +102,7 @@ Rectangle{
       text: qsTr("Alternate")
       onPressed: appWindow.grabFocus()
       onToggled: type=LEDPrimitive.Type.Alternate
-      mainColor: Style.palette.pc_ledBoxColor
+      mainColor: Style.ledPrimitive.colors[1]
       height: radios.radioHeight
     }
     TypeRadio {
@@ -110,7 +110,7 @@ Rectangle{
       text: qsTr("Blink")
       onPressed: appWindow.grabFocus()
       onToggled: type=LEDPrimitive.Type.Blink
-      mainColor: Style.palette.pc_ledBoxColor
+      mainColor: Style.ledPrimitive.colors[2]
       height: radios.radioHeight
     }
     TypeRadio {
@@ -118,7 +118,7 @@ Rectangle{
       text: qsTr("Constant")
       onPressed: appWindow.grabFocus()
       onToggled: type=LEDPrimitive.Type.Constant
-      mainColor: Style.palette.pc_ledBoxColor
+      mainColor: Style.ledPrimitive.colors[3]
       height: radios.radioHeight
     }
     TypeRadio {
@@ -126,7 +126,7 @@ Rectangle{
       text: qsTr("Random")
       onPressed: appWindow.grabFocus()
       onToggled: type=LEDPrimitive.Type.Random
-      mainColor: Style.palette.pc_ledBoxColor
+      mainColor: Style.ledPrimitive.colors[4]
       height: radios.radioHeight
     }
   } // radios column
@@ -139,11 +139,13 @@ Rectangle{
     property var minHeight: dummyTimerBar.effectiveHeight
                             + 2 * appWindow.guiMargin
     property var settingsHeight: settingsColumn.height
-                                 + 2 * settingsColumn.anchors.bottomMargin
+                                 + 4 * appWindow.guiMargin
     height:  settingsHeight < minHeight ? minHeight : settingsHeight
     anchors.left: titleBar.right
     anchors.right: root.right
-    anchors.bottom: root.bottom
+    // move box to hug the radios
+    anchors.top: radios.bottom
+    anchors.topMargin: -appWindow.guiMargin
 
     property real contentLeftRightPadding: appWindow.guiMargin
     property real contentWidth: width - 2 * contentLeftRightPadding
@@ -158,9 +160,9 @@ Rectangle{
              * (1.0 - Style.primitiveControl.primitiveBoxWidth)
       anchors.left: parent.left
       anchors.leftMargin: settingsRectangle.contentLeftRightPadding
-      anchors.bottom: parent.bottom
-      anchors.bottomMargin: 2 * appWindow.guiMargin
-      spacing: sliderHeight * Style.primitiveControl.sliderVSpacing
+      anchors.top: parent.top
+      anchors.topMargin: 2 * appWindow.guiMargin
+      spacing: appWindow.guiMargin
       property real sliderHeight: root.width * Style.primitiveControl.sliderHeight
       property real labelWidth: width * Style.primitiveControl.sliderLabelWidth
       property real iconWidth: width * Style.primitiveControl.sliderIconWidth

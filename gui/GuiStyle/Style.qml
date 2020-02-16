@@ -86,7 +86,7 @@ QtObject {
     property color pc_moveBoxColor: mp_yellow // Mint & Pepper Yellow
     property color pc_ledBoxBackground: mp_mediumgrey // Dark grey background
     property color pc_ledBoxColor: mp_orange // Mint & Pepper Orange
-    property color pc_settingsBoxColor: mw_background // Settings box same as background
+    property color pc_settingsBoxBackground: "#393939"
 
     // Controls Fonts
     property color pc_controlsFonts: "white"
@@ -98,7 +98,6 @@ QtObject {
     property color pc_typeRadioBorder: mp_yellow
 
     // sliders
-    property color pc_settingsBoxBackground: "#393939"
     property color pc_sliderBar: mp_black
     property color pc_sliderBarActivePart: mp_mediumgrey
     property color pc_sliderBarTicks: mp_black
@@ -269,7 +268,6 @@ QtObject {
   property QtObject primitiveControl: QtObject{
     // box
     property real width: 0.48 // ratio of window width
-    property real heightRatio: 0.45 // ratio of box width
 
     // title
     property real titleFontSize: 0.63 // ratio to titleWidth
@@ -284,8 +282,14 @@ QtObject {
 
     // type radios
     property real typeRadioHeight: 0.07 // ratio of box width
+    property real typeRadioRadius: 0.1 // ratio of radio height
     property real typeRadioBorderWidth: 0.05 // ratio of radio height
+    // when type radio is selected, border grows and flips to tab background
+    // color, set ratio here:
+    property real typeRadioActiveBorderWidthRatio: 1.25 // ratio of border width
     property real typeRadioTextPadding: 0.25 // ratio of radio height
+    // ratio of available height = radio height - 2 * textPadding
+    property real typeRadioTextHeight: 0.65
 
     // primitive box
     property real primitiveBoxWidth: 0.2 // ratio of available width
@@ -305,7 +309,6 @@ QtObject {
     property real sliderFractionTextSize: 0.6 // ratio of slider height
     property real sliderIconWidth: 0.08 // ratio of box width
     property real sliderItemHSpacing: 0.4 // ratio of sliderHeight
-    property real sliderVSpacing: 0.75 // ratio of sliderHeight
     // narrower spacing between direction and velocity sliders for custom type
     property real dirToSliderSpacingCustom: 0.375 // ratio of sliderVSpacing
 

@@ -38,6 +38,14 @@ Rectangle{
   property var averageBeatFrames: appWindow.initAvgBeatFrames
   property int type
 
+  property real sliderHeight: root.width
+                            * Style.primitiveControl.sliderHeight
+  property var radioHeight: root.width
+                          * Style.primitiveControl.typeRadioHeight
+
+  // size height to fit biggest controls, custom drive, exactly
+  height: radioHeight + 4 * sliderHeight + 10 * appWindow.guiMargin
+
   onTypeChanged: {
     delegate.primitive.type = type
     delegate.updatePrimitive()
@@ -79,8 +87,6 @@ Rectangle{
     padding: appWindow.guiMargin
     anchors.top: titleBar.top
     width: root.width - titleBar.width
-    property var radioHeight: root.width
-                              * Style.primitiveControl.typeRadioHeight
     spacing: (width - 2 * padding
               - twistRadio.width
               - spinRadio.width
@@ -92,8 +98,8 @@ Rectangle{
       checked: true
       onPressed: appWindow.grabFocus()
       onToggled: type = MotorPrimitive.Type.Twist
-      height: radios.radioHeight
-      mainColor: Style.palette.pc_moveBoxColor
+      height: root.radioHeight
+      mainColor: Style.motorPrimitive.colors[0]
       text: qsTr("Twist")
     }
     TypeRadio {
@@ -101,48 +107,49 @@ Rectangle{
       text: qsTr("Spin")
       onPressed: appWindow.grabFocus()
       onToggled: type=MotorPrimitive.Type.Spin
-      mainColor: Style.palette.pc_moveBoxColor
-      height: radios.radioHeight
+      mainColor: Style.motorPrimitive.colors[1]
+      height: root.radioHeight
     }
     TypeRadio {
       id: backForthRadio
       text: qsTr("Back and Forth")
       onPressed: appWindow.grabFocus()
       onToggled: type=MotorPrimitive.Type.BackAndForth
-      mainColor: Style.palette.pc_moveBoxColor
-      height: radios.radioHeight
+      mainColor: Style.motorPrimitive.colors[2]
+      height: root.radioHeight
     }
     TypeRadio {
       id: driveStraightRadio
       text: qsTr("Drive Straight")
       onPressed: appWindow.grabFocus()
       onToggled: type=MotorPrimitive.Type.Straight
-      mainColor: Style.palette.pc_moveBoxColor
-      height: radios.radioHeight
+      mainColor: Style.motorPrimitive.colors[3]
+      height: root.radioHeight
     }
     TypeRadio {
       id: customRadio
       text: qsTr("Custom")
       onPressed: appWindow.grabFocus()
       onToggled: type=MotorPrimitive.Type.Custom
-      mainColor: Style.palette.pc_moveBoxColor
-      height: radios.radioHeight
+      mainColor: Style.motorPrimitive.colors[4]
+      height: root.radioHeight
     }
-  } // radios column
+  } // radios row
 
   Rectangle {
     id: settingsRectangle
     anchors.leftMargin: appWindow.guiMargin
     anchors.rightMargin: appWindow.guiMargin
-    anchors.bottomMargin: appWindow.guiMargin
     property var minHeight: dummyTimerBar.effectiveHeight
                             + 2 * appWindow.guiMargin
     property var settingsHeight: settingsColumn.height
-                                 + 2 * settingsColumn.anchors.bottomMargin
+                                 + 4 * appWindow.guiMargin
     height:  settingsHeight < minHeight ? minHeight : settingsHeight
     anchors.left: titleBar.right
     anchors.right: root.right
-    anchors.bottom: root.bottom
+    // move box to hug the radios
+    anchors.top: radios.bottom
+    anchors.topMargin: -appWindow.guiMargin
 
     property real contentLeftRightPadding: appWindow.guiMargin
     property real contentWidth: width - 2 * contentLeftRightPadding
@@ -157,14 +164,9 @@ Rectangle{
              * (1.0 - Style.primitiveControl.primitiveBoxWidth)
       anchors.left: parent.left
       anchors.leftMargin: settingsRectangle.contentLeftRightPadding
-      anchors.bottom: parent.bottom
-      anchors.bottomMargin: 2 * appWindow.guiMargin
-      // spacing changes when right speed is visible to get clear separations
-      spacing: rightSpeedSet.visible ?
-        2 * sliderHeight * Style.primitiveControl.sliderVSpacing
-        :  sliderHeight * Style.primitiveControl.sliderVSpacing
-      property real sliderHeight: root.width
-                                  * Style.primitiveControl.sliderHeight
+      anchors.top: parent.top
+      anchors.topMargin: 2 * appWindow.guiMargin
+      spacing: appWindow.guiMargin
       property real labelWidth: width * Style.primitiveControl.sliderLabelWidth
       property real iconWidth: width * Style.primitiveControl.sliderIconWidth
       property real valueWidth: width * Style.primitiveControl.sliderValueWidth
@@ -193,16 +195,13 @@ Rectangle{
           delegate.updateToolTip();
         }
         property var speed: 0
-        spacing: {type !== MotorPrimitive.Type.Custom ?
-                       settingsColumn.spacing
-                     : settingsColumn.spacing
-                       * Style.primitiveControl.dirToSliderSpacingCustom}
+        spacing: appWindow.guiMargin
         Row{
           id: directionRadios
           width: settingsColumn.width
           spacing: settingsColumn.spacing
           Text{
-            height: settingsColumn.sliderHeight
+            height: root.sliderHeight
             width: settingsColumn.labelWidth
             font.pixelSize: Style.primitiveControl.sliderLabelTextSize
                             * height
@@ -279,7 +278,7 @@ Rectangle{
         Row{
           spacing: settingsColumn.sliderHSpacing
           Item{
-            height: settingsColumn.sliderHeight
+            height: root.sliderHeight
             width: settingsColumn.labelWidth
             Text{
               font.pixelSize: Style.primitiveControl.sliderLabelTextSize
@@ -323,7 +322,7 @@ Rectangle{
 
           Item{
             width: settingsColumn.iconWidth
-            height: settingsColumn.sliderHeight
+            height: root.sliderHeight
             Image{
               id: turtle
               anchors.centerIn: parent
@@ -362,7 +361,7 @@ Rectangle{
           }
           DiscreteSlider{
             id: velocitySlider
-            height: settingsColumn.sliderHeight
+            height: root.sliderHeight
             width: settingsColumn.sliderWidth
             numberOfSteps: 11
             value: 5
@@ -378,7 +377,7 @@ Rectangle{
 
           Item{
             width: settingsColumn.iconWidth
-            height: settingsColumn.sliderHeight
+            height: root.sliderHeight
             Image{
               id: rabbit
               anchors.centerIn: parent
@@ -419,7 +418,7 @@ Rectangle{
             id: valueDisplay
             text: (velocitySlider.value * 10).toString()
             color: Style.palette.pc_controlsFonts
-            font.pixelSize: settingsColumn.sliderHeight
+            font.pixelSize: root.sliderHeight
                             * Style.primitiveControl.sliderValueTextSize
             anchors.verticalCenter: velocitySlider.verticalCenter
           }
@@ -429,7 +428,7 @@ Rectangle{
       FrequencySlider{
         id: frequencySliderRow
         spacing: settingsColumn.sliderHSpacing
-        height: settingsColumn.sliderHeight
+        height: root.sliderHeight
         labelWidth: settingsColumn.labelWidth
         iconWidth: settingsColumn.iconWidth
         valueWidth: settingsColumn.valueWidth
@@ -456,14 +455,15 @@ Rectangle{
           delegate.updateToolTip();
         }
         property var speed: 0
-        spacing: settingsColumn.spacing
-                   * Style.primitiveControl.dirToSliderSpacingCustom
+        // add extra top padding to get extra spacing to Left settings
+        topPadding: appWindow.guiMargin
+        spacing: appWindow.guiMargin
         Row{
           id: directionRadiosRight
           width: settingsColumn.width
           spacing: settingsColumn.spacing
           Text{
-            height: settingsColumn.sliderHeight
+            height: root.sliderHeight
             width: settingsColumn.labelWidth
             font.pixelSize: Style.primitiveControl.sliderLabelTextSize
                             * height
@@ -498,7 +498,7 @@ Rectangle{
         Row{
           spacing: settingsColumn.sliderHSpacing
           Item{
-            height: settingsColumn.sliderHeight
+            height: root.sliderHeight
             width: settingsColumn.labelWidth
             Text{
               id: rightSpeedLabel
@@ -518,7 +518,7 @@ Rectangle{
 
           Item{
             width: settingsColumn.iconWidth
-            height: settingsColumn.sliderHeight
+            height: root.sliderHeight
             Image{
               id: turtleR
               anchors.centerIn: parent
@@ -539,7 +539,7 @@ Rectangle{
 
           DiscreteSlider{
             id: rightVelocitySlider
-            height: settingsColumn.sliderHeight
+            height: root.sliderHeight
             width: settingsColumn.sliderWidth
             numberOfSteps: 11
             value: 3
@@ -555,7 +555,7 @@ Rectangle{
 
           Item{
             width: settingsColumn.iconWidth
-            height: settingsColumn.sliderHeight
+            height: root.sliderHeight
             Image{
               id: rabbitR
               anchors.centerIn: parent
@@ -577,7 +577,7 @@ Rectangle{
             id: rightValueDisplay
             text: (rightVelocitySlider.value * 10).toString()
             color: Style.palette.pc_controlsFonts
-            font.pixelSize: settingsColumn.sliderHeight
+            font.pixelSize: root.sliderHeight
                             * Style.primitiveControl.sliderValueTextSize
             anchors.verticalCenter: rightVelocitySlider.verticalCenter
           }

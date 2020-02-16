@@ -36,11 +36,27 @@ RadioButton {
     radius: height * Style.primitiveControl.typeRadioRadius
     anchors.verticalCenter: root.verticalCenter
     color: "transparent"
-    border.color: root.mainColor
-    border.width: height * Style.primitiveControl.typeRadioBorderWidth
+    border.color: root.checked ? Style.palette.pc_settingsBoxBackground 
+                               : root.mainColor
+    property var borderWidth: height * Style.primitiveControl.typeRadioBorderWidth
+    border.width: root.checked ?
+      Style.primitiveControl.typeRadioActiveBorderWidthRatio * borderWidth
+      : borderWidth
+    
+    // continuous tab fix rectangle
     Rectangle{
-      anchors.fill: parent
-      radius: parent.radius
+      height: 2 * parent.border.width
+      width: parent.width
+      y: parent.height - height
+      color: Style.palette.pc_settingsBoxBackground
+      visible: root.checked
+    }
+    // active indicator color rect
+    Rectangle{
+      height: parent.height - 2 * parent.border.width
+      width: parent.width - 2 * parent.border.width
+      anchors.centerIn: parent
+      radius: parent.radius * height / parent.height
       color: root.mainColor
       visible: root.checked
     }
@@ -51,7 +67,8 @@ RadioButton {
     text: root.text
     z: 1000
     padding: root.height * Style.primitiveControl.typeRadioTextPadding
-    font.pixelSize: root.height - 2.7 * padding
+    font.pixelSize: Style.primitiveControl.typeRadioTextHeight 
+                    * (root.height - 2.0 * padding)
     font.capitalization: Font.AllUppercase
     font.bold: true;
     verticalAlignment: Text.AlignVCenter

@@ -111,7 +111,6 @@ Connections{
     anchors.left: fileControl.left
     anchors.leftMargin: appWindow.guiMargin
     width: appWindow.width * (0.5 - 1.5 * Style.main.margin)
-    height: width * Style.primitiveControl.heightRatio
   }
 
   LEDPrimitiveControl{
@@ -120,7 +119,7 @@ Connections{
     anchors.leftMargin: appWindow.guiMargin
     anchors.top: motorPrimitiveControl.top
     width: appWindow.width * (0.5 - 1.5 * Style.main.margin)
-    height: width * Style.primitiveControl.heightRatio
+    height: motorPrimitiveControl.height
   }
 
   AudioControl{
