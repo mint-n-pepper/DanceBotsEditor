@@ -156,7 +156,7 @@ QtObject {
                           "Spin",
                           "Drive Straight",
                           "Custom"]
-    property var colors: ["#09C1FE", "#5486FD", "#54FDE3", "#54FD9C", "#A2FD54"]
+    property var colors: ["#FAFA5F", "#FFE627", "#FFA310", "#FD642C", "#FF4040"]
   }
 
   property QtObject ledPrimitive: QtObject{
@@ -171,7 +171,7 @@ QtObject {
                           "Blink",
                           "Constant",
                           "Random"]
-    property var colors: ["#FF656B", "#FF438B", "#FF43F8", "#9B65FF", "#FFD54A"]
+    property var colors: ["#1DD2FF", "#0AAAFF", "#9188FF", "#BD71FF", "#FF52C8"]
   }
 
   // Main window
@@ -237,7 +237,7 @@ QtObject {
     // box
     property real height: 0.04 // ratio of window width
     // the width of the box is equal to the window width
- 
+
     // buttons and text fields all have the same height
     property real itemHeight: 0.8 // ratio of box height
 
