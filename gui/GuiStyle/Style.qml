@@ -28,9 +28,11 @@ QtObject {
   property QtObject palette: QtObject{
     //* GLOBAL COLORS *//
     property color mp_yellow: "#ECD600" // Mint & Pepper Yellow
-    property color mp_yellow_fade: "#E0C639" // Mint & Pepper Yellow
-    property color mp_orange: "#FF7F33" // Mint & Pepper Orange
-    property color mp_orange_fade: "#E67C3D" // Mint & Pepper Orange
+    property color mp_yellow_fade: "#E0C639" // Mint & Pepper Yellow faded
+    property color mp_orange: "#BF4812" // Mint & Pepper Orange
+    property color mp_orange_fade: "#A54920" // Mint & Pepper Orange faded
+    property color mp_blue: "#0884AA" // Mint & Pepper Blue
+    property color mp_blue_fade: "#117492" // Mint & Pepper Blue faded
     property color mp_green: "#63DD7F" // Mint & Pepper Green
     property color mp_white: "#F5F5F5" // Almost white
     property color mp_lightgrey: "#262626" // Light grey
@@ -82,10 +84,11 @@ QtObject {
 
     //* PRIMITIVE CONTROL BOXES *//
     // backgrounds
-    property color pc_moveBoxBackground: mp_mediumgrey // Dark grey background
-    property color pc_moveBoxColor: mp_yellow // Mint & Pepper Yellow
+    property color pc_titlebar_background: mp_darkgrey // Title bar background
+    property color pc_moveBoxBackground: mp_mediumgrey // Moves box background
+    property color pc_moveBoxColor: mp_orange // Moves box color
     property color pc_ledBoxBackground: mp_mediumgrey // Dark grey background
-    property color pc_ledBoxColor: mp_orange // Mint & Pepper Orange
+    property color pc_ledBoxColor: mp_blue // Lights Box color
     property color pc_settingsBoxBackground: "#393939"
 
     // Controls Fonts
@@ -95,7 +98,7 @@ QtObject {
     property color pc_directionRadioBG: mp_black
     property color pc_directionRadioIndicator: "white"
     property color pc_typeRadioFontActive: mp_mediumgrey
-    property color pc_typeRadioBorder: mp_yellow
+    property color pc_typeRadioBorder: mp_blue
 
     // sliders
     property color pc_sliderBar: mp_black
@@ -106,8 +109,8 @@ QtObject {
     property color pc_sliderIcon: pc_controlsFonts
 
     //* TIMER BARS *//
-    property color tim_moveBoxColor: mp_yellow_fade
-    property color tim_ledBoxColor: mp_orange_fade
+    property color tim_moveBoxColor: mp_orange_fade
+    property color tim_ledBoxColor: mp_blue_fade
     property color tim_beatMarks: mp_black
     property color tim_timeIndicator: "red"
     property color tim_ghostColorValid: "#8840DF40"
@@ -270,9 +273,10 @@ QtObject {
     property real width: 0.48 // ratio of window width
 
     // title
-    property real titleFontSize: 0.63 // ratio to titleWidth
-    property real titleWidth: 0.07 // ratio to box width
-    property real titleLetterSpacing: 3 // letter spacing between characters
+    property real titleFontSize: 0.55 // ratio to titleWidth
+    property real titleWidth: 0.06 // ratio to box width
+    property real titleBorderWidth: 0.01 // ratio to box width
+    property real titleLetterSpacing: 2.7 // letter spacing between characters
 
     // direction Radios
     property real directionRadioHeight: 1.0 // ratio of slider height
@@ -283,10 +287,11 @@ QtObject {
     // type radios
     property real typeRadioHeight: 0.07 // ratio of box width
     property real typeRadioRadius: 0.1 // ratio of radio height
-    property real typeRadioBorderWidth: 0.05 // ratio of radio height
+    property real typeRadioBorderWidth: 0.06 // ratio of radio height
     // when type radio is selected, border grows and flips to tab background
     // color, set ratio here:
-    property real typeRadioActiveBorderWidthRatio: 1.25 // ratio of border width
+    property real typeRadioActiveBorderWidthRatio: 2.0 // ratio of border width
+    property real typeRadioActiveHeightRatio: 1.45 // ratio of border width
     property real typeRadioTextPadding: 0.25 // ratio of radio height
     // ratio of available height = radio height - 2 * textPadding
     property real typeRadioTextHeight: 0.65

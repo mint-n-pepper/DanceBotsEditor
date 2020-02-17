@@ -67,7 +67,7 @@ Rectangle{
     id: titleBar
     height: root.height
     width: Style.primitiveControl.titleWidth * root.width
-    color: Style.palette.pc_moveBoxColor
+    color: Style.palette.pc_titlebar_background
     Text{
       anchors.centerIn: parent
       text: qsTr("Moves")
@@ -78,15 +78,25 @@ Rectangle{
       font.capitalization: Font.AllUppercase
       font.bold: true;
       rotation : 270
+      color: Style.palette.pc_moveBoxColor
     }
+  }
+
+  Rectangle{
+    id: titleBarBorder
+    height: root.height
+    anchors.left: titleBar.right
+    width: Style.primitiveControl.titleBorderWidth * root.width
+    color: Style.palette.pc_moveBoxColor
   }
 
   Row{
     id: radios
-    anchors.left: titleBar.right
+    anchors.left: titleBarBorder.right
     padding: appWindow.guiMargin
     anchors.top: titleBar.top
-    width: root.width - titleBar.width
+    anchors.topMargin: 0.5 * appWindow.guiMargin
+    width: root.width - titleBar.width - titleBarBorder.width
     spacing: (width - 2 * padding
               - twistRadio.width
               - spinRadio.width
@@ -145,11 +155,11 @@ Rectangle{
     property var settingsHeight: settingsColumn.height
                                  + 4 * appWindow.guiMargin
     height:  settingsHeight < minHeight ? minHeight : settingsHeight
-    anchors.left: titleBar.right
+    anchors.left: titleBarBorder.right
     anchors.right: root.right
     // move box to hug the radios
     anchors.top: radios.bottom
-    anchors.topMargin: -appWindow.guiMargin
+    anchors.topMargin: -appWindow.guiMargin / 4
 
     property real contentLeftRightPadding: appWindow.guiMargin
     property real contentWidth: width - 2 * contentLeftRightPadding
@@ -317,7 +327,7 @@ Rectangle{
                 }
               }
             }
-            z: 1000 // put above other elements so that the tooltip is above            
+            z: 1000 // put above other elements so that the tooltip is above
           }
 
           Item{
@@ -470,11 +480,11 @@ Rectangle{
             font.capitalization: Font.AllUppercase
             text: "Direction R"
             color: Style.palette.pc_sliderText
-            
+
             GuiToolTip{
               toolTipText: ToolTipTexts.directionRightWheel
             }
-            z: 1000 // put above other elements so that the tooltip is above  
+            z: 1000 // put above other elements so that the tooltip is above
           }
 
           DirectionRadio{
@@ -512,7 +522,7 @@ Rectangle{
               GuiToolTip{
                 toolTipText: ToolTipTexts.speedRight
               }
-              z: 1000 // put above other elements so that the tooltip is above 
+              z: 1000 // put above other elements so that the tooltip is above
             }
           }
 

@@ -60,7 +60,7 @@ Rectangle{
     id: titleBar
     height: root.height
     width: Style.primitiveControl.titleWidth * root.width
-    color: Style.palette.pc_ledBoxColor
+    color: Style.palette.pc_titlebar_background
     Text{
       anchors.centerIn: parent
       text: qsTr("Lights")
@@ -71,15 +71,25 @@ Rectangle{
       font.capitalization: Font.AllUppercase
       font.bold: true;
       rotation : 270
+      color: Style.palette.pc_ledBoxColor
     }
+  }
+
+  Rectangle{
+    id: titleBarBorder
+    height: root.height
+    anchors.left: titleBar.right
+    width: Style.primitiveControl.titleBorderWidth * root.width
+    color: Style.palette.pc_ledBoxColor
   }
 
   Row{
     id: radios
-    anchors.left: titleBar.right
+    anchors.left: titleBarBorder.right
     padding: appWindow.guiMargin
     anchors.top: titleBar.top
-    width: root.width - titleBar.width
+    anchors.topMargin: 0.5 * appWindow.guiMargin
+    width: root.width - titleBar.width - titleBarBorder.width
     property var radioHeight: root.width
                               * Style.primitiveControl.typeRadioHeight
     spacing: (width - 2 * padding
@@ -135,17 +145,16 @@ Rectangle{
     id: settingsRectangle
     anchors.leftMargin: appWindow.guiMargin
     anchors.rightMargin: appWindow.guiMargin
-    anchors.bottomMargin: appWindow.guiMargin
     property var minHeight: dummyTimerBar.effectiveHeight
                             + 2 * appWindow.guiMargin
     property var settingsHeight: settingsColumn.height
-                                 + 4 * appWindow.guiMargin
+                                 + 2 * settingsColumn.anchors.bottomMargin
     height:  settingsHeight < minHeight ? minHeight : settingsHeight
-    anchors.left: titleBar.right
+    anchors.left: titleBarBorder.right
     anchors.right: root.right
     // move box to hug the radios
     anchors.top: radios.bottom
-    anchors.topMargin: -appWindow.guiMargin
+    anchors.topMargin: -appWindow.guiMargin / 4
 
     property real contentLeftRightPadding: appWindow.guiMargin
     property real contentWidth: width - 2 * contentLeftRightPadding
@@ -162,7 +171,7 @@ Rectangle{
       anchors.leftMargin: settingsRectangle.contentLeftRightPadding
       anchors.top: parent.top
       anchors.topMargin: 2 * appWindow.guiMargin
-      spacing: appWindow.guiMargin
+      spacing: sliderHeight * Style.primitiveControl.sliderVSpacing
       property real sliderHeight: root.width * Style.primitiveControl.sliderHeight
       property real labelWidth: width * Style.primitiveControl.sliderLabelWidth
       property real iconWidth: width * Style.primitiveControl.sliderIconWidth
