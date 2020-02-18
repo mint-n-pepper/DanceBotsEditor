@@ -64,12 +64,15 @@ Rectangle{
     id: resizeHandle
     color: Style.palette.prim_resizeHandleOverlay
     anchors.right: root.right
+    opacity: Style.primitives.resizeHandleOpacity
     height: root.height
     width: dragArea.resizeMargin
     visible: root.isFromBar
+
     Rectangle{
       height: Style.primitives.resizeHandleSmallMarkHeight * parent.height
       radius: width / 2.0
+      opacity: 1.0
       width: root.border.width
       anchors.centerIn: parent
       color: Style.palette.prim_resizeHandleSmallMark

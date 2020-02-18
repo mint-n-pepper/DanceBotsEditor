@@ -127,7 +127,7 @@ QtObject {
     property color prim_toolTipFont: mp_white
     property color prim_toolTipLEDon: "lime"
     property color prim_toolTipLEDoff: "lightslategrey"
-    property color prim_resizeHandleOverlay: "#66989898"
+    property color prim_resizeHandleOverlay: mp_lightgrey
     property color prim_resizeHandleSmallMark: mp_black
     // for primitive type colors see just below
 
@@ -287,12 +287,12 @@ QtObject {
     // type radios
     property real typeRadioHeight: 0.07 // ratio of box width
     property real typeRadioRadius: 0.1 // ratio of radio height
-    property real typeRadioBorderWidth: 0.06 // ratio of radio height
+    property real typeRadioBorderWidth: 0.05 // ratio of radio height
     // when type radio is selected, border grows and flips to tab background
     // color, set ratio here:
     property real typeRadioActiveBorderWidthRatio: 2.0 // ratio of border width
-    property real typeRadioActiveHeightRatio: 1.45 // ratio of border width
-    property real typeRadioTextPadding: 0.25 // ratio of radio height
+    property real typeRadioActiveHeightRatio: 1.35 // ratio of border width
+    property real typeRadioTextPadding: 0.24 // ratio of radio height
     // ratio of available height = radio height - 2 * textPadding
     property real typeRadioTextHeight: 0.65
 
@@ -320,7 +320,7 @@ QtObject {
     // led toggles
     property real ledRadioDiameter: 0.8 // ratio of type radio diameter
     property real ledRadioSpacing: 0.35 // ratio of diameter
-    property real ledTextSize: 1.0 // ratio of diameter
+    property real ledTextSize: 1.0 // ratio of diameterg
   }
 
   // Timer bar window
@@ -364,9 +364,11 @@ QtObject {
     property real borderWidth: 2.0 / 72.0 // ratio of height
     // margin of primitive at which a drag causes a size change
     // is capped at half primtive width
-    property real resizeMarginRight: 0.14 // ratio of height
+    property real resizeMarginRight: 0.17 // ratio of height
+    property real resizeHandleOpacity: 0.40 // ratio of height
+
     // small extra mark inside resize handle (width = to prim border width)
-    property real resizeHandleSmallMarkHeight: 0.15 // ratio of height
+    property real resizeHandleSmallMarkHeight: 0.20 // ratio of height
 
     // TOOLTIP STYLE
     property real toolTipFontSize: 16.0 / 72.0 // ratio of height
@@ -379,7 +381,7 @@ QtObject {
     property real sliderHeight: 0.02 // ratio of window width
 
     // Play Slider
-    property real sliderHandleBorderWidth: 2 // border width
+    property real sliderHandleBorderWidth: 3 // border width
 
     // Play / Pause Buttons
     property real buttonHeight: 1.8 // ratio of sliderHeight
