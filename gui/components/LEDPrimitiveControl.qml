@@ -154,7 +154,7 @@ Rectangle{
     anchors.right: root.right
     // move box to hug the radios
     anchors.top: radios.bottom
-    anchors.topMargin: -appWindow.guiMargin / 3
+    anchors.topMargin: 0
 
     property real contentLeftRightPadding: appWindow.guiMargin
     property real contentWidth: width - 2 * contentLeftRightPadding

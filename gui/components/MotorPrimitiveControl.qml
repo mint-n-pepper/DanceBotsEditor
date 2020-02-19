@@ -44,7 +44,7 @@ Rectangle{
                           * Style.primitiveControl.typeRadioHeight
 
   // size height to fit biggest controls, custom drive, exactly
-  height: radioHeight + 4 * sliderHeight + 10 * appWindow.guiMargin
+  height: radioHeight + 4 * sliderHeight + 11 * appWindow.guiMargin
 
   onTypeChanged: {
     delegate.primitive.type = type
@@ -113,18 +113,18 @@ Rectangle{
       text: qsTr("Twist")
     }
     TypeRadio {
-      id: spinRadio
-      text: qsTr("Spin")
-      onPressed: appWindow.grabFocus()
-      onToggled: type=MotorPrimitive.Type.Spin
-      mainColor: Style.motorPrimitive.colors[1]
-      height: root.radioHeight
-    }
-    TypeRadio {
       id: backForthRadio
       text: qsTr("Back and Forth")
       onPressed: appWindow.grabFocus()
       onToggled: type=MotorPrimitive.Type.BackAndForth
+      mainColor: Style.motorPrimitive.colors[1]
+      height: root.radioHeight
+    }
+    TypeRadio {
+      id: spinRadio
+      text: qsTr("Spin")
+      onPressed: appWindow.grabFocus()
+      onToggled: type=MotorPrimitive.Type.Spin
       mainColor: Style.motorPrimitive.colors[2]
       height: root.radioHeight
     }
@@ -159,7 +159,7 @@ Rectangle{
     anchors.right: root.right
     // move box to hug the radios
     anchors.top: radios.bottom
-    anchors.topMargin: -appWindow.guiMargin / 3
+    anchors.topMargin: 0
 
     property real contentLeftRightPadding: appWindow.guiMargin
     property real contentWidth: width - 2 * contentLeftRightPadding
