@@ -299,6 +299,7 @@ QtObject {
     // primitive box
     property real primitiveBoxWidth: 0.2 // ratio of available width
     property real dragHintTextSize: 0.2 // ratio of primitive height
+    property real selectionHighlightOpacity: 0.65 // ratio of primitive height
 
     // setting box
 
@@ -320,7 +321,7 @@ QtObject {
     // led toggles
     property real ledRadioDiameter: 0.8 // ratio of type radio diameter
     property real ledRadioSpacing: 0.35 // ratio of diameter
-    property real ledTextSize: 1.0 // ratio of diameterg
+    property real ledTextSize: 1.0 // ratio of diameter
   }
 
   // Timer bar window

@@ -282,6 +282,9 @@ Rectangle{
     visible: false
     color: Style.palette.prim_highlight
     anchors.fill: root
+    opacity: Style.primitiveControl.selectionHighlightOpacity
+    border.color: Style.palette.prim_border
+    border.width: Style.primitives.borderWidth * height
   }
 
   function updateToolTip(){
