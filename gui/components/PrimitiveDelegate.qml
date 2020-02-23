@@ -64,16 +64,21 @@ Rectangle{
     id: resizeHandle
     color: Style.palette.prim_resizeHandleOverlay
     anchors.right: root.right
+    opacity: Style.primitives.resizeHandleOpacity
     height: root.height
     width: dragArea.resizeMargin
     visible: root.isFromBar
-    Rectangle{
-      height: Style.primitives.resizeHandleSmallMarkHeight * parent.height
-      radius: width / 2.0
-      width: root.border.width
-      anchors.centerIn: parent
-      color: Style.palette.prim_resizeHandleSmallMark
-    }
+  }
+
+  Rectangle{
+    height: Style.primitives.resizeHandleSmallMarkHeight * root.height
+    radius: width / 2.0
+    width: root.border.width
+    anchors.left: resizeHandle.left
+    anchors.verticalCenter: root.verticalCenter
+    anchors.leftMargin: resizeHandle.width/2.0 - root.border.width
+    color: Style.palette.prim_resizeHandleSmallMark
+    visible: root.isFromBar
   }
 
   Rectangle{
@@ -120,13 +125,17 @@ Rectangle{
     property bool shiftPressed: false
     property bool dragActive: drag.active
 
-    property var resizeMargin: Style.primitives.resizeMarginRight * root.height
+    property var resizeMargin: Style.primitives.resizeMarginRight
+                              * appWindow.avgBeatWidth
     property bool doResize: false
     hoverEnabled: true
 
     onWidthChanged: {
       if(resizeMargin > width / 2){
         resizeMargin = width / 2
+      }else{
+        resizeMargin = Style.primitives.resizeMarginRight
+                              * appWindow.avgBeatWidth
       }
     }
 
@@ -213,7 +222,7 @@ Rectangle{
 
     onReleased: {
       // unless a drag is active, handle de- selection
-      if (!drag.active && !doResize) {
+      if (!drag.active && !doResize && isFromBar) {
         // if shift was pressed, we keep selecting and do not
         // deselect
         if(shiftPressed){
@@ -279,6 +288,9 @@ Rectangle{
     visible: false
     color: Style.palette.prim_highlight
     anchors.fill: root
+    opacity: Style.primitiveControl.selectionHighlightOpacity
+    border.color: Style.palette.prim_border
+    border.width: Style.primitives.borderWidth * height
   }
 
   function updateToolTip(){
