@@ -60,7 +60,7 @@ Rectangle{
     id: titleBar
     height: root.height
     width: Style.primitiveControl.titleWidth * root.width
-    color: Style.palette.pc_ledBoxColor
+    color: Style.palette.pc_titlebar_background
     Text{
       anchors.centerIn: parent
       text: qsTr("Lights")
@@ -71,18 +71,29 @@ Rectangle{
       font.capitalization: Font.AllUppercase
       font.bold: true;
       rotation : 270
+      color: Style.palette.pc_ledBoxColor
     }
+  }
+
+  Rectangle{
+    id: titleBarBorder
+    height: root.height
+    anchors.left: titleBar.right
+    width: Style.primitiveControl.titleBorderWidth * root.width
+    color: Style.palette.pc_ledBoxColor
   }
 
   Row{
     id: radios
-    anchors.left: titleBar.right
-    padding: appWindow.guiMargin
+    anchors.left: titleBarBorder.right
+    topPadding: appWindow.guiMargin
+    leftPadding: appWindow.guiMargin
+    rightPadding: appWindow.guiMargin
     anchors.top: titleBar.top
-    width: root.width - titleBar.width
+    width: root.width - titleBar.width - titleBarBorder.width
     property var radioHeight: root.width
                               * Style.primitiveControl.typeRadioHeight
-    spacing: (width - 2 * padding
+    spacing: (width - 2 * appWindow.guiMargin
               - knightRiderRadio.width
               - alternateRadio.width
               - blinkRadio.width
@@ -94,7 +105,7 @@ Rectangle{
       text: qsTr("KnightRider")
       onPressed: appWindow.grabFocus()
       onToggled: type=LEDPrimitive.Type.KnightRider
-      mainColor: Style.palette.pc_ledBoxColor
+      mainColor: Style.ledPrimitive.colors[0]
       height: radios.radioHeight
     }
     TypeRadio {
@@ -102,7 +113,7 @@ Rectangle{
       text: qsTr("Alternate")
       onPressed: appWindow.grabFocus()
       onToggled: type=LEDPrimitive.Type.Alternate
-      mainColor: Style.palette.pc_ledBoxColor
+      mainColor: Style.ledPrimitive.colors[1]
       height: radios.radioHeight
     }
     TypeRadio {
@@ -110,7 +121,7 @@ Rectangle{
       text: qsTr("Blink")
       onPressed: appWindow.grabFocus()
       onToggled: type=LEDPrimitive.Type.Blink
-      mainColor: Style.palette.pc_ledBoxColor
+      mainColor: Style.ledPrimitive.colors[2]
       height: radios.radioHeight
     }
     TypeRadio {
@@ -118,7 +129,7 @@ Rectangle{
       text: qsTr("Constant")
       onPressed: appWindow.grabFocus()
       onToggled: type=LEDPrimitive.Type.Constant
-      mainColor: Style.palette.pc_ledBoxColor
+      mainColor: Style.ledPrimitive.colors[3]
       height: radios.radioHeight
     }
     TypeRadio {
@@ -126,7 +137,7 @@ Rectangle{
       text: qsTr("Random")
       onPressed: appWindow.grabFocus()
       onToggled: type=LEDPrimitive.Type.Random
-      mainColor: Style.palette.pc_ledBoxColor
+      mainColor: Style.ledPrimitive.colors[4]
       height: radios.radioHeight
     }
   } // radios column
@@ -135,15 +146,17 @@ Rectangle{
     id: settingsRectangle
     anchors.leftMargin: appWindow.guiMargin
     anchors.rightMargin: appWindow.guiMargin
-    anchors.bottomMargin: appWindow.guiMargin
     property var minHeight: dummyTimerBar.effectiveHeight
                             + 2 * appWindow.guiMargin
     property var settingsHeight: settingsColumn.height
-                                 + 2 * settingsColumn.anchors.bottomMargin
+                                 + 4 * appWindow.guiMargin
     height:  settingsHeight < minHeight ? minHeight : settingsHeight
-    anchors.left: titleBar.right
+    anchors.left: titleBarBorder.right
     anchors.right: root.right
-    anchors.bottom: root.bottom
+    // move box to hug the radios
+    anchors.top: radios.bottom
+    anchors.topMargin: Style.primitiveControl.typeRadioToSettingsBox
+                       * appWindow.guiMargin
 
     property real contentLeftRightPadding: appWindow.guiMargin
     property real contentWidth: width - 2 * contentLeftRightPadding
@@ -158,9 +171,9 @@ Rectangle{
              * (1.0 - Style.primitiveControl.primitiveBoxWidth)
       anchors.left: parent.left
       anchors.leftMargin: settingsRectangle.contentLeftRightPadding
-      anchors.bottom: parent.bottom
-      anchors.bottomMargin: 2 * appWindow.guiMargin
-      spacing: sliderHeight * Style.primitiveControl.sliderVSpacing
+      anchors.top: parent.top
+      anchors.topMargin: 2 * appWindow.guiMargin
+      spacing: appWindow.guiMargin
       property real sliderHeight: root.width * Style.primitiveControl.sliderHeight
       property real labelWidth: width * Style.primitiveControl.sliderLabelWidth
       property real iconWidth: width * Style.primitiveControl.sliderIconWidth

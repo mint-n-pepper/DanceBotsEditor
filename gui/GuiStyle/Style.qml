@@ -28,9 +28,11 @@ QtObject {
   property QtObject palette: QtObject{
     //* GLOBAL COLORS *//
     property color mp_yellow: "#ECD600" // Mint & Pepper Yellow
-    property color mp_yellow_fade: "#E0C639" // Mint & Pepper Yellow
-    property color mp_orange: "#FF7F33" // Mint & Pepper Orange
-    property color mp_orange_fade: "#E67C3D" // Mint & Pepper Orange
+    property color mp_yellow_fade: "#E0C639" // Mint & Pepper Yellow faded
+    property color mp_orange: "#BF4812" // Mint & Pepper Orange
+    property color mp_orange_fade: "#A54920" // Mint & Pepper Orange faded
+    property color mp_blue: "#0884AA" // Mint & Pepper Blue
+    property color mp_blue_fade: "#117492" // Mint & Pepper Blue faded
     property color mp_green: "#63DD7F" // Mint & Pepper Green
     property color mp_white: "#F5F5F5" // Almost white
     property color mp_lightgrey: "#262626" // Light grey
@@ -82,11 +84,12 @@ QtObject {
 
     //* PRIMITIVE CONTROL BOXES *//
     // backgrounds
-    property color pc_moveBoxBackground: mp_mediumgrey // Dark grey background
-    property color pc_moveBoxColor: mp_yellow // Mint & Pepper Yellow
+    property color pc_titlebar_background: mp_darkgrey // Title bar background
+    property color pc_moveBoxBackground: mp_mediumgrey // Moves box background
+    property color pc_moveBoxColor: mp_orange // Moves box color
     property color pc_ledBoxBackground: mp_mediumgrey // Dark grey background
-    property color pc_ledBoxColor: mp_orange // Mint & Pepper Orange
-    property color pc_settingsBoxColor: mw_background // Settings box same as background
+    property color pc_ledBoxColor: mp_blue // Lights Box color
+    property color pc_settingsBoxBackground: "#393939"
 
     // Controls Fonts
     property color pc_controlsFonts: "white"
@@ -95,10 +98,9 @@ QtObject {
     property color pc_directionRadioBG: mp_black
     property color pc_directionRadioIndicator: "white"
     property color pc_typeRadioFontActive: mp_mediumgrey
-    property color pc_typeRadioBorder: mp_yellow
+    property color pc_typeRadioBorder: mp_blue
 
     // sliders
-    property color pc_settingsBoxBackground: "#393939"
     property color pc_sliderBar: mp_black
     property color pc_sliderBarActivePart: mp_mediumgrey
     property color pc_sliderBarTicks: mp_black
@@ -107,8 +109,8 @@ QtObject {
     property color pc_sliderIcon: pc_controlsFonts
 
     //* TIMER BARS *//
-    property color tim_moveBoxColor: mp_yellow_fade
-    property color tim_ledBoxColor: mp_orange_fade
+    property color tim_moveBoxColor: mp_orange_fade
+    property color tim_ledBoxColor: mp_blue_fade
     property color tim_beatMarks: mp_black
     property color tim_timeIndicator: "red"
     property color tim_ghostColorValid: "#8840DF40"
@@ -125,7 +127,7 @@ QtObject {
     property color prim_toolTipFont: mp_white
     property color prim_toolTipLEDon: "lime"
     property color prim_toolTipLEDoff: "lightslategrey"
-    property color prim_resizeHandleOverlay: "#66989898"
+    property color prim_resizeHandleOverlay: mp_lightgrey
     property color prim_resizeHandleSmallMark: mp_black
     // for primitive type colors see just below
 
@@ -157,7 +159,7 @@ QtObject {
                           "Spin",
                           "Drive Straight",
                           "Custom"]
-    property var colors: ["#09C1FE", "#5486FD", "#54FDE3", "#54FD9C", "#A2FD54"]
+    property var colors: ["#FAFA5F", "#FFE627", "#FFA310", "#FD642C", "#FF4040"]
   }
 
   property QtObject ledPrimitive: QtObject{
@@ -172,7 +174,7 @@ QtObject {
                           "Blink",
                           "Constant",
                           "Random"]
-    property var colors: ["#FF656B", "#FF438B", "#FF43F8", "#9B65FF", "#FFD54A"]
+    property var colors: ["#1DD2FF", "#0AAAFF", "#9188FF", "#BD71FF", "#FF52C8"]
   }
 
   // Main window
@@ -238,7 +240,7 @@ QtObject {
     // box
     property real height: 0.04 // ratio of window width
     // the width of the box is equal to the window width
- 
+
     // buttons and text fields all have the same height
     property real itemHeight: 0.8 // ratio of box height
 
@@ -269,12 +271,12 @@ QtObject {
   property QtObject primitiveControl: QtObject{
     // box
     property real width: 0.48 // ratio of window width
-    property real heightRatio: 0.45 // ratio of box width
 
     // title
-    property real titleFontSize: 0.63 // ratio to titleWidth
-    property real titleWidth: 0.07 // ratio to box width
-    property real titleLetterSpacing: 3 // letter spacing between characters
+    property real titleFontSize: 0.55 // ratio to titleWidth
+    property real titleWidth: 0.06 // ratio to box width
+    property real titleBorderWidth: 0.01 // ratio to box width
+    property real titleLetterSpacing: 2.7 // letter spacing between characters
 
     // direction Radios
     property real directionRadioHeight: 1.0 // ratio of slider height
@@ -284,12 +286,21 @@ QtObject {
 
     // type radios
     property real typeRadioHeight: 0.07 // ratio of box width
+    property real typeRadioRadius: 0.1 // ratio of radio height
     property real typeRadioBorderWidth: 0.05 // ratio of radio height
-    property real typeRadioTextPadding: 0.25 // ratio of radio height
+    // when type radio is selected, border grows and flips to tab background
+    // color, set ratio here:
+    property real typeRadioActiveBorderWidthRatio: 2.6 // ratio of border width
+    property real typeRadioTextPadding: 0.24 // ratio of radio height
+    // ratio of available height = radio height - 2 * textPadding
+    property real typeRadioTextHeight: 0.65
+    // distance type radio to settings box
+    property real typeRadioToSettingsBox: 0.5 // ratio of guimargin
 
     // primitive box
     property real primitiveBoxWidth: 0.2 // ratio of available width
     property real dragHintTextSize: 0.2 // ratio of primitive height
+    property real selectionHighlightOpacity: 0.65 // ratio of primitive height
 
     // setting box
 
@@ -305,10 +316,6 @@ QtObject {
     property real sliderFractionTextSize: 0.6 // ratio of slider height
     property real sliderIconWidth: 0.08 // ratio of box width
     property real sliderItemHSpacing: 0.4 // ratio of sliderHeight
-    property real sliderVSpacing: 0.75 // ratio of sliderHeight
-    // narrower spacing between direction and velocity sliders for custom type
-    property real dirToSliderSpacingCustom: 0.375 // ratio of sliderVSpacing
-
     // led toggles
     property real ledRadioDiameter: 0.8 // ratio of type radio diameter
     property real ledRadioSpacing: 0.35 // ratio of diameter
@@ -356,9 +363,11 @@ QtObject {
     property real borderWidth: 2.0 / 72.0 // ratio of height
     // margin of primitive at which a drag causes a size change
     // is capped at half primtive width
-    property real resizeMarginRight: 0.14 // ratio of height
+    property real resizeMarginRight: 0.6 // ratio of avg beat width
+    property real resizeHandleOpacity: 0.40 // ratio of height
+
     // small extra mark inside resize handle (width = to prim border width)
-    property real resizeHandleSmallMarkHeight: 0.15 // ratio of height
+    property real resizeHandleSmallMarkHeight: 0.20 // ratio of height
 
     // TOOLTIP STYLE
     property real toolTipFontSize: 16.0 / 72.0 // ratio of height
@@ -371,7 +380,7 @@ QtObject {
     property real sliderHeight: 0.02 // ratio of window width
 
     // Play Slider
-    property real sliderHandleBorderWidth: 2 // border width
+    property real sliderHandleBorderWidth: 3 // border width
 
     // Play / Pause Buttons
     property real buttonHeight: 1.8 // ratio of sliderHeight
