@@ -216,7 +216,7 @@ Rectangle{
 
     onReleased: {
       // unless a drag is active, handle de- selection
-      if (!drag.active && !doResize) {
+      if (!drag.active && !doResize && isFromBar) {
         // if shift was pressed, we keep selecting and do not
         // deselect
         if(shiftPressed){
