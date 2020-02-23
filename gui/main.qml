@@ -85,6 +85,7 @@ Connections{
     onClicked: {
       handleSceneClick(mouse)
     }
+    enabled: backend.mp3Loaded
   }
 
   FileProcessPopup{
@@ -249,6 +250,7 @@ Connections{
             propagateComposedEvents = true
         }
       }
+      enabled: backend.mp3Loaded
     }
 
     property real sliderPosition: audioControl.sliderPosition
