@@ -31,9 +31,7 @@ RadioButton {
 
   indicator: Rectangle{
     id: indicatorBg
-    height: root.checked ?
-      root.height * Style.primitiveControl.typeRadioActiveHeightRatio
-      : root.height
+    height: root.height
     width: root.width
     radius: height * Style.primitiveControl.typeRadioRadius
     anchors.verticalCenter: root.verticalCenter
@@ -47,9 +45,10 @@ RadioButton {
 
     // continuous tab fix rectangle
     Rectangle{
-      height: 2 * parent.border.width
+      height: Style.primitiveControl.typeRadioToSettingsBox * appWindow.guiMargin
+              + parent.radius
       width: parent.width
-      y: parent.height - height
+      y: parent.height - parent.radius
       color: Style.palette.pc_settingsBoxBackground
       visible: root.checked
     }

@@ -86,13 +86,14 @@ Rectangle{
   Row{
     id: radios
     anchors.left: titleBarBorder.right
-    padding: appWindow.guiMargin
+    topPadding: appWindow.guiMargin
+    leftPadding: appWindow.guiMargin
+    rightPadding: appWindow.guiMargin
     anchors.top: titleBar.top
-    anchors.topMargin: 0.5 * appWindow.guiMargin
     width: root.width - titleBar.width - titleBarBorder.width
     property var radioHeight: root.width
                               * Style.primitiveControl.typeRadioHeight
-    spacing: (width - 2 * padding
+    spacing: (width - 2 * appWindow.guiMargin
               - knightRiderRadio.width
               - alternateRadio.width
               - blinkRadio.width
@@ -154,7 +155,8 @@ Rectangle{
     anchors.right: root.right
     // move box to hug the radios
     anchors.top: radios.bottom
-    anchors.topMargin: 0
+    anchors.topMargin: Style.primitiveControl.typeRadioToSettingsBox
+                       * appWindow.guiMargin
 
     property real contentLeftRightPadding: appWindow.guiMargin
     property real contentWidth: width - 2 * contentLeftRightPadding
@@ -171,7 +173,7 @@ Rectangle{
       anchors.leftMargin: settingsRectangle.contentLeftRightPadding
       anchors.top: parent.top
       anchors.topMargin: 2 * appWindow.guiMargin
-      spacing: sliderHeight * Style.primitiveControl.sliderVSpacing
+      spacing: appWindow.guiMargin
       property real sliderHeight: root.width * Style.primitiveControl.sliderHeight
       property real labelWidth: width * Style.primitiveControl.sliderLabelWidth
       property real iconWidth: width * Style.primitiveControl.sliderIconWidth

@@ -44,7 +44,9 @@ Rectangle{
                           * Style.primitiveControl.typeRadioHeight
 
   // size height to fit biggest controls, custom drive, exactly
-  height: radioHeight + 4 * sliderHeight + 11 * appWindow.guiMargin
+  height: radioHeight + 4 * sliderHeight 
+          + (10.0 + Style.primitiveControl.typeRadioToSettingsBox)
+            * appWindow.guiMargin
 
   onTypeChanged: {
     delegate.primitive.type = type
@@ -93,11 +95,12 @@ Rectangle{
   Row{
     id: radios
     anchors.left: titleBarBorder.right
-    padding: appWindow.guiMargin
+    topPadding: appWindow.guiMargin
+    leftPadding: appWindow.guiMargin
+    rightPadding: appWindow.guiMargin
     anchors.top: titleBar.top
-    anchors.topMargin: 0.5 * appWindow.guiMargin
     width: root.width - titleBar.width - titleBarBorder.width
-    spacing: (width - 2 * padding
+    spacing: (width - 2 * appWindow.guiMargin
               - twistRadio.width
               - spinRadio.width
               - backForthRadio.width
@@ -159,7 +162,8 @@ Rectangle{
     anchors.right: root.right
     // move box to hug the radios
     anchors.top: radios.bottom
-    anchors.topMargin: 0
+    anchors.topMargin: Style.primitiveControl.typeRadioToSettingsBox
+                       * appWindow.guiMargin
 
     property real contentLeftRightPadding: appWindow.guiMargin
     property real contentWidth: width - 2 * contentLeftRightPadding

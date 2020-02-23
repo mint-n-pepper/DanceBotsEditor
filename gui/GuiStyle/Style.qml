@@ -290,11 +290,12 @@ QtObject {
     property real typeRadioBorderWidth: 0.05 // ratio of radio height
     // when type radio is selected, border grows and flips to tab background
     // color, set ratio here:
-    property real typeRadioActiveBorderWidthRatio: 2.0 // ratio of border width
-    property real typeRadioActiveHeightRatio: 1.35 // ratio of border width
+    property real typeRadioActiveBorderWidthRatio: 2.6 // ratio of border width
     property real typeRadioTextPadding: 0.24 // ratio of radio height
     // ratio of available height = radio height - 2 * textPadding
     property real typeRadioTextHeight: 0.65
+    // distance type radio to settings box
+    property real typeRadioToSettingsBox: 0.5 // ratio of guimargin
 
     // primitive box
     property real primitiveBoxWidth: 0.2 // ratio of available width
@@ -315,9 +316,6 @@ QtObject {
     property real sliderFractionTextSize: 0.6 // ratio of slider height
     property real sliderIconWidth: 0.08 // ratio of box width
     property real sliderItemHSpacing: 0.4 // ratio of sliderHeight
-    // narrower spacing between direction and velocity sliders for custom type
-    property real dirToSliderSpacingCustom: 0.375 // ratio of sliderVSpacing
-
     // led toggles
     property real ledRadioDiameter: 0.8 // ratio of type radio diameter
     property real ledRadioSpacing: 0.35 // ratio of diameter
@@ -365,7 +363,7 @@ QtObject {
     property real borderWidth: 2.0 / 72.0 // ratio of height
     // margin of primitive at which a drag causes a size change
     // is capped at half primtive width
-    property real resizeMarginRight: 0.17 // ratio of height
+    property real resizeMarginRight: 0.6 // ratio of avg beat width
     property real resizeHandleOpacity: 0.40 // ratio of height
 
     // small extra mark inside resize handle (width = to prim border width)

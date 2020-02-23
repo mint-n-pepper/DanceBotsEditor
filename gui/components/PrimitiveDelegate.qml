@@ -68,15 +68,17 @@ Rectangle{
     height: root.height
     width: dragArea.resizeMargin
     visible: root.isFromBar
+  }
 
-    Rectangle{
-      height: Style.primitives.resizeHandleSmallMarkHeight * parent.height
-      radius: width / 2.0
-      opacity: 1.0
-      width: root.border.width
-      anchors.centerIn: parent
-      color: Style.palette.prim_resizeHandleSmallMark
-    }
+  Rectangle{
+    height: Style.primitives.resizeHandleSmallMarkHeight * root.height
+    radius: width / 2.0
+    width: root.border.width
+    anchors.left: resizeHandle.left
+    anchors.verticalCenter: root.verticalCenter
+    anchors.leftMargin: resizeHandle.width/2.0 - root.border.width
+    color: Style.palette.prim_resizeHandleSmallMark
+    visible: root.isFromBar
   }
 
   Rectangle{
@@ -123,13 +125,17 @@ Rectangle{
     property bool shiftPressed: false
     property bool dragActive: drag.active
 
-    property var resizeMargin: Style.primitives.resizeMarginRight * root.height
+    property var resizeMargin: Style.primitives.resizeMarginRight
+                              * appWindow.avgBeatWidth
     property bool doResize: false
     hoverEnabled: true
 
     onWidthChanged: {
       if(resizeMargin > width / 2){
         resizeMargin = width / 2
+      }else{
+        resizeMargin = Style.primitives.resizeMarginRight
+                              * appWindow.avgBeatWidth
       }
     }
 

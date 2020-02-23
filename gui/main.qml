@@ -64,8 +64,8 @@ ApplicationWindow {
   color: Style.palette.mw_background
 
   property int initAvgBeatFrames: 23000 // daft punk get lucky value
-  property real frameToPixels: width * Style.timerBar.beatSpacing
-                                    / initAvgBeatFrames
+  property real avgBeatWidth: width * Style.timerBar.beatSpacing
+  property real frameToPixels: avgBeatWidth / initAvgBeatFrames
 
   property real guiMargin: width * Style.main.margin
 
@@ -74,8 +74,7 @@ Connections{
   onDoneLoading:{
     if(result && backend.getAverageBeatFrames() > 0){
       // adjust frame to Pixels to get beat spacing independent of bpm
-      frameToPixels = width * Style.timerBar.beatSpacing
-                                    / backend.getAverageBeatFrames()
+      frameToPixels = avgBeatWidth / backend.getAverageBeatFrames()
     }
   }
 }
