@@ -14,7 +14,7 @@ The editor works as follows:
 # Build & Deployment Instructions
 ## Windows
 ### Prequisites
-1. Install [CMake](https://cmake.org/) 3.15 or above. 
+1. Install [CMake](https://cmake.org/) 3.15 or above.
    * Add `cmake`'s `bin` folder to the `PATH` environment variable
 
 2. Install [Visual Studio Community](https://visualstudio.microsoft.com/)
@@ -44,9 +44,9 @@ The editor works as follows:
    ```
    You may need to update the generator flag (-G) depending on the Visual Studio version that you are using. To check what generators are available, run `cmake -G`.
 
-3. The `build` folder should now contain a Visual Studio solution (.sln) and project files. You can build the project using the Visual Studio IDE or command line. 
-   
-   a. Using the Visual Studio IDE, open the `dancebots_gui.sln` file and build the `dancebotsEditor` project in `Release` and 64-bit (x64). 
+3. The `build` folder should now contain a Visual Studio solution (.sln) and project files. You can build the project using the Visual Studio IDE or command line.
+
+   a. Using the Visual Studio IDE, open the `dancebots_gui.sln` file and build the `dancebotsEditor` project in `Release` and 64-bit (x64).
 
    b. To build on the command line using `x64 Native Tools Command Prompt for VS 2019` (or whatever Visual Studio version you are using), navigate to `dancebots_gui/build/gui/` and run:
    ```
@@ -58,24 +58,6 @@ The editor works as follows:
    C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Current\Bin\MSBuild.exe .\dancebots_gui.sln /p:Configuration=Release /p:Platform=x64 /m
    ```
    You may need to edit the path depending on the Visual Studio version that you are using.
-
---------------------------------
-
-1.  CD into the cloned repository, create a ```build``` folder, and run ```cmake``` in it:
-	```bash
-	cd dancebots_gui
-	mkdir build
-	cd build
-	cmake -DCMAKE_PREFIX_PATH="C:\Qt\5.12.6\msvc2015_64" -G "Visual Studio 16 2019" ..
-	```
-	where you should adapt the ```CMAKE_PREFIX_PATH``` variable according to your installation. You may also have to update the generator flag (```-G```) depending on the Visual Studio version that you use. You may check what generators are available by running ```cmake -G```.
-
-7. CMAKE now generates Visual Studio solution and project files in the build folder. You may either compile using the Visual Studio IDE, or the command line (see below). In the IDE, open the ```dancebots_gui.sln``` solution and then build the ```dancebotsEditor``` project in ```Release``` and for 64-bit, i.e. ```x64```.
-8. In order to build on the command line, open the ```x64 Native Tools Command Prompt for VS 2019```, CD to ```dancebots_gui/build/gui``` and run
-	```bash
-	msbuild dancebotsEditor.vcxproj /p:Configuration=Release /p:Platform=x64
-	```
---------------------------------
 
 
 ### Deploy
