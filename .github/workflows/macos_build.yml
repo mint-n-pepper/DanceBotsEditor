@@ -47,11 +47,11 @@ jobs:
     - name: Deploy
       run: |
         cd gui/mac_os_rc/
-        sh deploy.sh ../../build/ "${Qt5_Dir}/bin/" ../ 
+        sh deploy.sh ../../build/ "${Qt5_Dir}/bin/" ../
         mv ../../build/Dancebots\ Editor.dmg ../../build/dancebots-editor-darwin.dmg
 
     - name: Upload Release Asset
-      id: upload-release-asset 
+      id: upload-release-asset
       if: startsWith(github.ref, 'refs/tags/')
       uses: actions/upload-release-asset@v1.0.1
       env:
