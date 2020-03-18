@@ -31,9 +31,9 @@ The editor works as follows:
    ```
 
 ### Build
-1. Navigate to the `dancebots_gui` directory and create a `build` directory:
+1. Navigate to the `DanceBotsEditor` directory and create a `build` directory:
    ```
-   cd dancebots_gui/
+   cd DanceBotsEditor/
    mkdir build
    ```
 
@@ -48,7 +48,7 @@ The editor works as follows:
 
    a. Using the Visual Studio IDE, open the `dancebots_gui.sln` file and build the `dancebotsEditor` project in `Release` and 64-bit (x64).
 
-   b. To build on the command line using `x64 Native Tools Command Prompt for VS 2019` (or whatever Visual Studio version you are using), navigate to `dancebots_gui/build/gui/` and run:
+   b. To build on the command line using `x64 Native Tools Command Prompt for VS 2019` (or whatever Visual Studio version you are using), navigate to `DanceBotsEditor/build/gui/` and run:
    ```
    msbuild dancebotsEditor.vcxproj /p:Configuration=Release /p:Platform=x64 /m
    ```
@@ -95,9 +95,9 @@ The editor works as follows:
    ```
 
 ### Build
-1. Navigate to the `dancebots_gui` directory and create a `build` directory:
+1. Navigate to the `DanceBotsEditor` directory and create a `build` directory:
    ```
-   cd dancebots_gui/
+   cd DanceBotsEditor/
    mkdir build
    ```
 
@@ -105,7 +105,7 @@ The editor works as follows:
    ```
    cd build/
    cmake -DCMAKE_PREFIX_PATH=/path/to/Qt/5.12.6/clang_64/ -DCMAKE_BUILD_TYPE=Release ../
-   make -j
+   make -j2
    ```
 
 ### Deploy
@@ -152,9 +152,9 @@ The script will create `Dancebots Editor.app` and `Dancebots Editor.dmg` in your
    ```
 
 ### Build
-1. Navigate to the `dancebots_gui` directory and create a `build` directory:
+1. Navigate to the `DanceBotsEditor` directory and create a `build` directory:
    ```
-   cd dancebots_gui/
+   cd DanceBotsEditor/
    mkdir build
    ```
 
@@ -162,7 +162,7 @@ The script will create `Dancebots Editor.app` and `Dancebots Editor.dmg` in your
    ```
    cd build/
    cmake -DCMAKE_PREFIX_PATH=/path/to/Qt/5.12.6/gcc_64 -DCMAKE_BUILD_TYPE=Release ../
-   make -j
+   make -j2
    ```
 
 The `dancebotsEditor` binary will be located in the `build/gui` directory.
