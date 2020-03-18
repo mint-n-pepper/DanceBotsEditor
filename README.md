@@ -1,6 +1,6 @@
-![Windows Build](https://github.com/philippReist/dancebots_gui/workflows/Windows%20Build/badge.svg)
-![macOS Build](https://github.com/philippReist/dancebots_gui/workflows/macOS%20Build/badge.svg)
-![Ubuntu Build](https://github.com/philippReist/dancebots_gui/workflows/Ubuntu%20Build/badge.svg)
+![Windows Build](https://github.com/philippReist/DanceBotsEditor/workflows/Windows%20Build/badge.svg)
+![macOS Build](https://github.com/philippReist/DanceBotsEditor/workflows/macOS%20Build/badge.svg)
+![Ubuntu Build](https://github.com/philippReist/DanceBotsEditor/workflows/Ubuntu%20Build/badge.svg)
 
 # Introduction
 The Dancebots Editor allows creating choreographies for Dancebots, which are small and inexpensive differential drive robots that can move and blink their eight LEDs. They are designed to be built from scratch by children, see [here](https://www.dancebots.ch/) for more information.
@@ -33,14 +33,14 @@ The editor works as follows:
 ### Build
 1. Navigate to the `DanceBotsEditor` directory and create a `build` directory:
    ```
-   cd DanceBotsEditor/
+   cd DanceBotsEditor\
    mkdir build
    ```
 
 2. Navigate to the `build` directory, configure for release:
    ```
-   cd build/
-   cmake -DCMAKE_PREFIX_PATH=/path/to/Qt/5.12.6/msvc2015_64/ -DCMAKE_BUILD_TYPE=Release -G "Visual Studio 16 2019" ../
+   cd build\
+   cmake -DCMAKE_PREFIX_PATH=C:\path\to\Qt\5.12.6\msvc2015_64\ -DCMAKE_BUILD_TYPE=Release -G "Visual Studio 16 2019" ..
    ```
    You may need to update the generator flag (-G) depending on the Visual Studio version that you are using. To check what generators are available, run `cmake -G`.
 
@@ -48,7 +48,7 @@ The editor works as follows:
 
    a. Using the Visual Studio IDE, open the `dancebots_gui.sln` file and build the `dancebotsEditor` project in `Release` and 64-bit (x64).
 
-   b. To build on the command line using `x64 Native Tools Command Prompt for VS 2019` (or whatever Visual Studio version you are using), navigate to `DanceBotsEditor/build/gui/` and run:
+   b. To build on the command line, use `x64 Native Tools Command Prompt for VS 2019` (or whatever Visual Studio version you are using), navigate to `DanceBotsEditor\build\gui\` and run:
    ```
    msbuild dancebotsEditor.vcxproj /p:Configuration=Release /p:Platform=x64 /m
    ```
@@ -61,17 +61,19 @@ The editor works as follows:
 
 
 ### Deploy
-1. Copy the ```.exe``` file to a deployment folder, or leave it in the ```build/gui/Release``` folder as shown below.
+1. Copy the `.exe` file to a deployment folder, or leave it in the `build/gui/Release` folder as shown below.
+
 2. Run the Qt deployment tool on the executable, pointing it to the QML folder and adding some extra flags:
    ```
-   windeployqt.exe C:\\Users\\philipp\\Git\\dbgui\\dancebots_gui\\build\\gui\\Release\\dancebotsEditor.exe --qmldir C:\\Users\\philipp\\Git\\dbgui\\dancebots_gui\\gui  --no-translations --release
+   windeployqt.exe C:\path\to\DanceBotsEditor\build\gui\Release\dancebotsEditor.exe --qmldir C:\path\to\DanceBotsEditor\gui  --no-translations --release
    ```
-   This adds all necessary Qt ```.dll``` and ```QML``` files to the deployment folder.
-3. From the Visual Studio install folder, go to the redistributable subfolder, e.g. ```C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Redist\MSVC\14.23.27820\x64\Microsoft.VC142.CRT```, and copy the following x64 ```.dll``` files to the deployment folder (same folder as executable), so that the users do not have to install the redistributable package:
-   ```bash
-      msvcp140.dll
-      vcruntime140.dll
-      vcruntime140_1.dll
+   This adds all necessary Qt `.dll` and `QML` files to the deployment folder.
+
+3. From the Visual Studio install folder, go to the redistributable subfolder, e.g. `C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Redist\MSVC\14.23.27820\x64\Microsoft.VC142.CRT`, and copy the following x64 `.dll` files to the deployment folder (same folder as executable), so that the users do not have to install the redistributable package:
+   ```
+   msvcp140.dll
+   vcruntime140.dll
+   vcruntime140_1.dll
    ```
 
 ## macOS
@@ -204,7 +206,7 @@ Use following template:
 ```
 
 ## Header Guards
-Use define guards following [Google Style](https://google.github.io/styleguide/cppguide.html#The__define_Guard) minus the project name, i.e. for the header file `audio_file.h` in folder `dancebots_gui/src` (where `dancebots_gui` is the repo root folder), use
+Use define guards following [Google Style](https://google.github.io/styleguide/cppguide.html#The__define_Guard) minus the project name, i.e. for the header file `audio_file.h` in folder `DanceBotsEditor/src`, use
 ```cpp
    #ifndef SRC_AUDIO_FILE_H_
    #define SRC_AUDIO_FILE_H_
