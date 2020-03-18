@@ -5,6 +5,7 @@ on:
     branches:
       - master
       - develop
+      - windows-deploy
   release:
     types:
       - published
@@ -49,4 +50,3 @@ jobs:
         # cp 'C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Redist\MSVC\14.24.28127\x64\Microsoft.VC142.CRT\msvcp140.dll' .
         # cp 'C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Redist\MSVC\14.24.28127\x64\Microsoft.VC142.CRT\vcruntime140.dll' .
         # cp 'C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Redist\MSVC\14.24.28127\x64\Microsoft.VC142.CRT\vcruntime140_1.dll' .
-        
