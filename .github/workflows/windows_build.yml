@@ -1,11 +1,13 @@
 name: Windows Build
 
 on:
+  push:
+    branches:
+      - windows-deploy
   pull_request:
     branches:
       - master
       - develop
-      - windows-deploy
   release:
     types:
       - published
