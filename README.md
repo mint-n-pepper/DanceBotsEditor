@@ -61,20 +61,26 @@ The editor works as follows:
 
 
 ### Deploy
-1. Copy the `.exe` file to a deployment folder, or leave it in the `build/gui/Release` folder as shown below.
-
-2. Run the Qt deployment tool on the executable, pointing it to the QML folder and adding some extra flags:
+1. Navigate to the deployment folder:
    ```
-   windeployqt.exe C:\path\to\DanceBotsEditor\build\gui\Release\dancebotsEditor.exe --qmldir C:\path\to\DanceBotsEditor\gui  --no-translations --release
+   cd DanceBotsEditor\build\gui\Release\
+   ```
+
+2. Run the Qt deployment tool on the executable, pointing it to the QML folder, and adding some flags:
+   ```
+   C:\path\to\Qt\5.12.6\msvc2015_64\bin\windeployqt.exe .\dancebotsEditor.exe --qmldir ..\..\..\gui  --no-translations --release
    ```
    This adds all necessary Qt `.dll` and `QML` files to the deployment folder.
 
-3. From the Visual Studio install folder, go to the redistributable subfolder, e.g. `C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Redist\MSVC\14.23.27820\x64\Microsoft.VC142.CRT`, and copy the following x64 `.dll` files to the deployment folder (same folder as executable), so that the users do not have to install the redistributable package:
+3. Copy the following x64 `.dll` files from the Visual Studio redistributable subfolder to the deployment folder so that the users do not need to install the redistributable package:
    ```
-   msvcp140.dll
-   vcruntime140.dll
-   vcruntime140_1.dll
+   cp 'C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Redist\MSVC\14.24.28127\x64\Microsoft.VC142.CRT\msvcp140.dll' .
+   cp 'C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Redist\MSVC\14.24.28127\x64\Microsoft.VC142.CRT\vcruntime140.dll' .
+   cp 'C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Redist\MSVC\14.24.28127\x64\Microsoft.VC142.CRT\vcruntime140_1.dll' .
    ```
+
+4. Your deployment folder can now be shared with other users.
+
 
 ## macOS
 ### Prequisites
