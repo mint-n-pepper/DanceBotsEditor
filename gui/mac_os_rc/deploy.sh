@@ -1,9 +1,9 @@
 #!/bin/sh
 #
-# Automatically creates an APK shortcut for temi's Launcher OS
+# Automtated deployment for macOS.
 #
 # Usage
-#   ./shortcut.sh <apk> <shortcut-name>
+#   ./deploy.sh <build-dir> <qt-bin-dir> <qml-dir>
 #
 
 # constants
