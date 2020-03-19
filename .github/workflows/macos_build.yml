@@ -1,6 +1,9 @@
 name: macOS Build
 
 on:
+  push:
+    branches:
+      - windows-deploy
   pull_request:
     branches:
       - master
@@ -20,8 +23,14 @@ jobs:
         qt_version: ['5.12.6']
 
     steps:
+    - name: Install Python 3.7 version
+      uses: actions/setup-python@v1
+      with:
+        python-version: '3.7'
+        architecture: 'x64'
+
     - name: Install Qt ${{ matrix.qt_version }}
-      uses: jurplel/install-qt-action@v2.3.0
+      uses: jurplel/install-qt-action@v2
       with:
         version: ${{ matrix.qt_version }}
         target: desktop

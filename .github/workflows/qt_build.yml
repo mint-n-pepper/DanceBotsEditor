@@ -3,7 +3,7 @@ name: Qt Build
 on:
   push:
     branches:
-      - windows-deploy
+      - master
 
 jobs:
   build:
