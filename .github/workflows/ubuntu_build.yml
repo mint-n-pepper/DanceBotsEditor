@@ -1,6 +1,9 @@
 name: Ubuntu Build
 
 on:
+  push:
+    branches:
+      - windows-deploy
   pull_request:
     branches:
       - master

@@ -1,6 +1,9 @@
 name: Windows Build
 
 on:
+  push:
+    branches:
+      - windows-deploy
   pull_request:
     branches:
       - master
@@ -36,7 +39,6 @@ jobs:
       with:
         version: ${{ matrix.qt_version }}
         target: desktop
-        arch: win64_mingw73
 
     - name: Checkout
       uses: actions/checkout@v2
