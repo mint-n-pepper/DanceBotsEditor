@@ -49,12 +49,12 @@ jobs:
         cmake -DCMAKE_PREFIX_PATH="${Qt5_Dir}" -DCMAKE_BUILD_TYPE=Release -G "Visual Studio 16 2019" ../
         & 'C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\MSBuild\Current\Bin\MSBuild.exe' .\dancebots_gui.sln /p:Configuration=Release /p:Platform=x64 /m
 
-    - name: Deploy
-      run: |
-        cd build\gui\Release\
-        "${Qt5_Dir}\bin\windeployqt.exe" .\dancebotsEditor.exe --qmldir ..\..\..\gui  --no-translations --release
-        cd 'C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Redist\MSVC\'
-        ls
-        # cp 'C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Redist\MSVC\14.24.28127\x64\Microsoft.VC142.CRT\msvcp140.dll' .
-        # cp 'C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Redist\MSVC\14.24.28127\x64\Microsoft.VC142.CRT\vcruntime140.dll' .
-        # cp 'C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Redist\MSVC\14.24.28127\x64\Microsoft.VC142.CRT\vcruntime140_1.dll' .
+    # - name: Deploy
+    #   run: |
+    #     cd build\gui\Release\
+    #     "${Qt5_Dir}\bin\windeployqt.exe" .\dancebotsEditor.exe --qmldir ..\..\..\gui  --no-translations --release
+    #     cd 'C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Redist\MSVC\'
+    #     ls
+    #     cp 'C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Redist\MSVC\14.24.28127\x64\Microsoft.VC142.CRT\msvcp140.dll' .
+    #     cp 'C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Redist\MSVC\14.24.28127\x64\Microsoft.VC142.CRT\vcruntime140.dll' .
+    #     cp 'C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Redist\MSVC\14.24.28127\x64\Microsoft.VC142.CRT\vcruntime140_1.dll' .
