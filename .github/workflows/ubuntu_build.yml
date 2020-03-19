@@ -1,9 +1,6 @@
 name: Ubuntu Build
 
 on:
-  push:
-    branches:
-      - fix-issue-59
   pull_request:
     branches:
       - master
