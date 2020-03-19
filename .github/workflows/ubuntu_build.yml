@@ -8,10 +8,10 @@ on:
     branches:
       - master
       - develop
-  release:
-    types:
-      - published
-      - prereleased
+  # release:
+  #   types:
+  #     - published
+  #     - prereleased
 
 jobs:
   build:
