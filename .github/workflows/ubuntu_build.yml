@@ -3,7 +3,7 @@ name: Ubuntu Build
 on:
   push:
     branches:
-      - windows-deploy
+      - fix-issue-59
   pull_request:
     branches:
       - master
