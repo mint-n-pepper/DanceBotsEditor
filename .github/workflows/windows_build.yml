@@ -3,7 +3,7 @@ name: Windows Build
 on:
   push:
     branches:
-      - windows-deploy
+      - fix-issue-59
   pull_request:
     branches:
       - master
