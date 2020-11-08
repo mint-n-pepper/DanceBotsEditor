@@ -341,11 +341,20 @@ int AudioFile::decode(void) {
 
   quint64 sum = 0u;  // running sum of ^2 pcm samples for rms calculation
 
+
+  // set data pointer targets based on swap channels and isDancefile:
+  qint16* leftBuffer = pcmBufL.data();
+  qint16* rightBuffer = pcmBufR.data();
+  if (mIsDanceFile && mSwapChannels) {
+    leftBuffer = pcmBufR.data();
+    rightBuffer = pcmBufL.data();
+  }
+
   while (buf != end) {
     size_t distToEnd = std::distance(buf, end);
     size_t nFeed = kDecodeStepSize > distToEnd ? distToEnd : kDecodeStepSize;
     int nRead = hip_decode(dcGFP, reinterpret_cast<unsigned char*>(&*buf),
-                           nFeed, pcmBufL.data(), pcmBufR.data());
+                           nFeed, leftBuffer, rightBuffer);
 
     if (nRead) {
       if (nRead < 0) {
@@ -510,19 +519,25 @@ auto AudioFile::encode(void) -> LameEncCodes {
   std::vector<unsigned char> encodeBuffer;
   encodeBuffer.resize(kMP3BufferSize);
 
-  const auto musicEnd = mFloatMusic.end();
-  auto musicIT = mFloatMusic.begin();
-  auto dataIT = mFloatData.begin();
+  const float* musicData = mFloatMusic.data();
+  const float* dataData = mFloatData.data();
+  const size_t dataLen = std::min(mFloatMusic.size(), mFloatData.size());
+
+  if (mSwapChannels) {
+    musicData = mFloatData.data();
+    dataData = mFloatMusic.data();
+  }
 
   auto mp3OutIt = tempMP3.begin();
-
-  while (musicIT != musicEnd) {
-    size_t distToEnd = std::distance(musicIT, musicEnd);
+  size_t dataIndex = 0u;
+  while (dataIndex < dataLen) {
+    size_t distToEnd = dataLen - dataIndex;
     size_t nFeed =
         kPCMEncodeStepSize > distToEnd ? distToEnd : kPCMEncodeStepSize;
 
     int nEncode = lame_encode_buffer_ieee_float(
-        gfp, &*musicIT, &*dataIT, nFeed, encodeBuffer.data(), kMP3BufferSize);
+        gfp, musicData + dataIndex, dataData + dataIndex,
+        nFeed, encodeBuffer.data(), kMP3BufferSize);
 
     if (nEncode) {
       if (nEncode < 0) {
@@ -533,8 +548,7 @@ auto AudioFile::encode(void) -> LameEncCodes {
       std::copy(encodeBuffer.begin(), encodeBuffer.begin() + nEncode, mp3OutIt);
       mp3OutIt += nEncode;
     }
-    musicIT += nFeed;
-    dataIT += nFeed;
+  dataIndex += nFeed;
   }
 
   // flush lame buffers:
@@ -588,9 +602,16 @@ int AudioFile::savePCM(const QString fileName) {
   std::vector<float> writeBuffer;
   writeBuffer.reserve(2 * mFloatData.size());
 
-  for (size_t i = 0; i < mFloatData.size(); ++i) {
-    writeBuffer.push_back(mFloatMusic[i]);
-    writeBuffer.push_back(mFloatData[i]);
+  if (mSwapChannels) {
+    for (size_t i = 0; i < mFloatData.size(); ++i) {
+      writeBuffer.push_back(mFloatData[i]);
+      writeBuffer.push_back(mFloatMusic[i]);
+    }
+  } else {
+    for (size_t i = 0; i < mFloatData.size(); ++i) {
+      writeBuffer.push_back(mFloatMusic[i]);
+      writeBuffer.push_back(mFloatData[i]);
+    }
   }
 
   sf_write_float(sndFile, writeBuffer.data(), writeBuffer.size());

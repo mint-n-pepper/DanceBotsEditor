@@ -204,6 +204,9 @@ class BackEnd : public QObject {
   int mAverageBeatFrames{23000};  // number from daft punk get lucky
   int mErrorDisplayTimeMS{3000};
 
+  // config file name
+  static const QString mConfigFileName;
+
   // song ID3 tag strings
   QString mSongArtist;
   QString mSongTitle;

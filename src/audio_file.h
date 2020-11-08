@@ -178,6 +178,20 @@ class AudioFile {
    */
   const char* getRawMP3Data(void) const { return mRawMP3Data.data(); }
 
+  /** \brief Sets swap channels property
+   *  By default, the music is put into the left channel and the robot command data into the right.
+   *
+   *  With this parameter set, the channels are swapped when saving and loading.
+   *
+   *  \param[in] swap Value to set swap channels property to (true: swap, false: do not swap)
+   */
+  void setSwapChannels(const bool swap) { mSwapChannels = swap; }
+
+  /** \brief Returns swap channels property
+   * \return Swap channels property (true = swap)
+   */
+  bool getSwapChannels(void) const { return mSwapChannels; }
+
   /** \brief Returns total length in frames
    * \return length in frames
    */
@@ -199,6 +213,8 @@ class AudioFile {
     NoPCMData = -6,
     LameInitFailed = -7
   };
+
+  bool mSwapChannels = false; /**< Enable to swap music and data channels
 
   /** MP3 file data container: */
   TagLib::ByteVector mRawMP3Data;
