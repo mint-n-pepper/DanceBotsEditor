@@ -26,6 +26,7 @@
 #include <QThread>
 #include <QtConcurrent>
 #include <QtDebug>
+#include <QSettings>
 
 #include "src/primitive.h"
 #include "src/primitive_to_signal.h"
@@ -48,7 +49,22 @@ BackEnd::BackEnd(QObject* parent)
           &BackEnd::handleDoneLoading);
   connect(&mSaveFutureWatcher, &QFutureWatcher<bool>::finished, this,
           &BackEnd::handleDoneSaving);
+
+  // see if there is a config file and parse it if available
+  QFile iniFile(mConfigFileName);
+  bool swapAudio = false;
+  if (iniFile.exists()) {
+    QSettings iniSettings(mConfigFileName, QSettings::IniFormat, this);
+    iniSettings.sync();
+    if (iniSettings.status() == QSettings::NoError
+       && iniSettings.contains("audio/swapChannels")) {
+      swapAudio = iniSettings.value("audio/swapChannels", false).toBool();
+    }
+  }
+  mAudioFile.setSwapChannels(swapAudio);
 }
+
+const QString BackEnd::mConfigFileName{"config.ini"};
 
 //** PROPERTY SETTERS GETTERS AND NOTIFIERS **//
 QString BackEnd::songTitle() { return mSongTitle; }
