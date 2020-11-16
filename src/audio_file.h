@@ -214,7 +214,7 @@ class AudioFile {
     LameInitFailed = -7
   };
 
-  bool mSwapChannels = false; /**< Enable to swap music and data channels
+  bool mSwapChannels = false; /**< Enable to swap music and data channels */
 
   /** MP3 file data container: */
   TagLib::ByteVector mRawMP3Data;
