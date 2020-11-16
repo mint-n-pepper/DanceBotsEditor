@@ -176,6 +176,16 @@ The script will create `Dancebots Editor.app` and `Dancebots Editor.dmg` in your
 The `dancebotsEditor` binary will be located in the `build/gui` directory.
 
 
+# Swap Channels
+By default, the left-channel plays audio and the right-channels plays data. However, in some cases it may be necessary to swap audio and data channels, e.g. [#62](https://github.com/philippReist/DanceBotsEditor/issues/62#issue-736202876). To do this, create a `config.ini` file alongside the executable. In the `.ini` file, write:
+```
+[audio]
+swapChannels=True
+```
+
+If there is no `config.ini` file, the default channel order will be used.
+
+
 # Style Guide
 
 We are using `cpplint` for static code analysis, and therefore (roughly) follow the [Google C++ Style Guide](https://google.github.io/styleguide/cppguide.html).
