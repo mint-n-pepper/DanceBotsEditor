@@ -5,23 +5,28 @@ on:
     branches:
       - master
       - develop
+
   release:
     types:
       - published
       - prereleased
 
+  push:
+    branches:
+      - update-actions
+
 jobs:
   build:
-    name: Test build on ${{ matrix.os }} with Qt ${{ matrix.qt_version }}
+    name: Build on ${{ matrix.os }} with Qt ${{ matrix.qt_version }}
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: ['windows-latest']
-        qt_version: ['5.12.6']
+        os: ['windows-2019']
+        qt_version: ['5.12.6', '5.12.9']
 
     steps:
     - name: Install Python 3.7 version
-      uses: actions/setup-python@v1
+      uses: actions/setup-python@v2
       with:
         python-version: '3.7'
         architecture: 'x64'

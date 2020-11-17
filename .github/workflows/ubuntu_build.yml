@@ -6,22 +6,22 @@ on:
       - master
       - develop
 
+  release:
+    types:
+      - published
+      - prereleased
+
   push:
     branches:
       - update-actions
-      
-  # release:
-  #   types:
-  #     - published
-  #     - prereleased
 
 jobs:
   build:
-    name: Test build on ${{ matrix.os }} with Qt ${{ matrix.qt_version }}
+    name: Build on ${{ matrix.os }} with Qt ${{ matrix.qt_version }}
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: ['ubuntu-latest']
+        os: ['ubuntu-18.04', 'ubuntu-20.04']
         qt_version: ['5.12.6', '5.12.9']
 
     steps:
