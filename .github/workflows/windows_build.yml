@@ -11,10 +11,6 @@ on:
       - published
       - prereleased
 
-  push:
-    branches:
-      - update-actions
-
 jobs:
   build:
     name: Build on ${{ matrix.os }} with Qt ${{ matrix.qt_version }}
