@@ -32,7 +32,7 @@ jobs:
         architecture: 'x64'
 
     - name: Install Qt ${{ matrix.qt_version }}
-      uses: jurple1/install-qt-action@v2
+      uses: jurplel/install-qt-action@v2
       with:
         version: ${{ matrix.qt_version }}
         target: desktop
