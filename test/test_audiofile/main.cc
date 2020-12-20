@@ -37,13 +37,15 @@ class AudioFileTest : public ::testing::Test {
     std::remove(fileTemp.toStdString().c_str());
   }
 
+  static constexpr float getPi(void) { return 3.14159265359f; }
+
   static const QString fileMusic44k;
   static const QString fileTemp;
   static const std::vector<QString> fileNames;
 };
 
-const QString AudioFileTest::fileMusic44k{testFolderPath + "in44100.mp3"};
-const QString AudioFileTest::fileTemp{testFolderPath + "temp_AT.mp3"};
+const QString AudioFileTest::fileMusic44k = testFolderPath + "in44100.mp3";
+const QString AudioFileTest::fileTemp = testFolderPath + "temp_AT.mp3";
 const std::vector<QString> AudioFileTest::fileNames{
     "in8000.mp3", "in11025.mp3", "in22050.mp3", "in32000.mp3", "in48000.mp3"};
 
@@ -200,6 +202,60 @@ TEST_F(AudioFileTest, testDeEnCodeCycles) {
     mp3FileCycleTest.save(fileTemp);
   }
 }
+
+static bool vectorIsZero(const std::vector<float>& data,
+                         const float tol = 0.001f) {
+  bool isZero = true;
+
+  for (const auto& e : data) {
+    isZero &= e < tol;
+  }
+  return isZero;
+}
+
+TEST_F(AudioFileTest, testSwapChannels) {
+  AudioFile mp3FileHeaderTest{};
+  mp3FileHeaderTest.load(fileMusic44k);
+
+  // save music:
+  const std::vector<float> musicCopy = mp3FileHeaderTest.mFloatMusic;
+  // load with swapped channels, should be equal:
+  mp3FileHeaderTest.setSwapChannels(true);
+  mp3FileHeaderTest.load(fileMusic44k);
+
+  EXPECT_TRUE(musicCopy == mp3FileHeaderTest.mFloatMusic);
+  mp3FileHeaderTest.setSwapChannels(false);  // reset
+
+  auto& data = mp3FileHeaderTest.mFloatData;
+  auto& music = mp3FileHeaderTest.mFloatMusic;
+
+  // make sure music is zero:
+  EXPECT_TRUE(vectorIsZero(data));
+  EXPECT_FALSE(vectorIsZero(music));
+
+  // save and load and check:
+  mp3FileHeaderTest.save(fileTemp);
+  mp3FileHeaderTest.load(fileTemp);
+
+  // make sure music is nonzero after loading:
+  EXPECT_FALSE(vectorIsZero(music));
+  // data will be zero by design because load zeros it
+  EXPECT_TRUE(vectorIsZero(data));
+
+  // load with swapped channels -> music will be zero because it is data:
+  mp3FileHeaderTest.setSwapChannels(true);
+  mp3FileHeaderTest.load(fileTemp);
+  EXPECT_TRUE(vectorIsZero(music));
+
+  // load music again and save with swapped channels:
+  mp3FileHeaderTest.load(fileMusic44k);
+  mp3FileHeaderTest.save(fileTemp);
+  mp3FileHeaderTest.setSwapChannels(false);
+  mp3FileHeaderTest.load(fileTemp);
+  // will be zero because swapped
+  EXPECT_TRUE(vectorIsZero(music));
+}
+
 }  // namespace
 
 int main(int argc, char* argv[]) {
