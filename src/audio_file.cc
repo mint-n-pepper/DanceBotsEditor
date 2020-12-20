@@ -113,6 +113,7 @@ auto AudioFile::load(const QString filePath) -> Result {
   // rewind file if it is not a dancefile but a regular mp3:
   if (!mIsDanceFile) {
     file.seek(0);
+    clear();
   }
 
   // allocate space for mp3 data:
