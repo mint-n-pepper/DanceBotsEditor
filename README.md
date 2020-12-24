@@ -7,7 +7,7 @@ The Dancebots Editor allows creating choreographies for Dancebots, which are sma
 
 The editor works as follows:
 1. The user can load an MP3 into the editor. The backend will decode the MP3 and extract the music beat locations from the audio.
-2. Next, the user can create a choreography by configuring and placing motion and LED primitives on the music timeline. Since the primitives use the extracted beats as their time unit, it is straightforward to create good-looking choreographies.
+2. Next, the user can create a choreography by configuring and placing motion and LED primitives on the music timeline. Since the primitives use the extracted beats as their time unit, it is straightforward to create beat-synchronized choreographies.
 3. When done with editing, the user saves the music and choreography to an MP3 file. In the left channel, the software re-encodes the music data (R+L channel are mixed when decoding); in the right channel, the software writes a signal that encodes the motion and LED commands for the robot to parse, see [here](https://www.dancebots.ch/?page_id=92) for more info.
 4. In addition to the music and choreography signal, the software pre-pends the primitive data that makes up the choreography to the MP3 data. This allows re-loading a Dancebot MP3 file and adapting the choreography further.
 
@@ -48,7 +48,7 @@ The editor works as follows:
 
    a. Using the Visual Studio IDE, open the `dancebots_gui.sln` file and build the `dancebotsEditor` project in `Release` and 64-bit (x64).
 
-   b. To build on the command line, use `x64 Native Tools Command Prompt for VS 2019` (or whatever Visual Studio version you are using), navigate to `DanceBotsEditor\build\gui\` and run:
+   b. To build on the command line using `x64 Native Tools Command Prompt for VS 2019` (or whatever Visual Studio version you are using), navigate to `DanceBotsEditor\build\gui\` and run:
    ```
    msbuild dancebotsEditor.vcxproj /p:Configuration=Release /p:Platform=x64 /m
    ```
