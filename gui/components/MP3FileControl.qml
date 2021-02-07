@@ -52,6 +52,7 @@ Rectangle{
       if(result){
         songTitleText.text = backend.songTitle
         songArtistText.text = backend.songArtist
+        swapChannel.checked = backend.swapAudioChannels
         setEnabled()
       }
 		}
@@ -287,6 +288,12 @@ Rectangle{
       {
         aboutPopup.open()
       }
+    }
+    CheckBox{
+      id: swapChannel
+      onCheckedChanged: backend.swapAudioChannels = checked
+      focusPolicy: Qt.NoFocus
+      text: qsTr("Swap Audio")
     }
   } // buttons row
 
