@@ -195,6 +195,7 @@ bool BackEnd::loadMP3Worker(const QString& filePath) {
     mFileStatus = "Dancebot file detected, reading data...";
     emit fileStatusChanged();
     QThread::msleep(250);
+    readBeatsFromPrependData();
   } else {
     mFileStatus = "Detecting Beats...";
     emit fileStatusChanged();
