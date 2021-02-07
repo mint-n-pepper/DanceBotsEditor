@@ -71,6 +71,13 @@ QString BackEnd::songTitle() { return mSongTitle; }
 
 QString BackEnd::songComment() { return mSongComment; }
 
+bool BackEnd::swapAudioChannels() {return mAudioFile.getSwapChannels(); }
+
+void BackEnd::setSwapAudioChannels(const bool swapAudioChannels)
+{
+  mAudioFile.setSwapChannels(swapAudioChannels);
+}
+
 QString BackEnd::songArtist() { return mSongArtist; }
 
 QString BackEnd::fileStatus() { return mFileStatus; }
@@ -188,7 +195,6 @@ bool BackEnd::loadMP3Worker(const QString& filePath) {
     mFileStatus = "Dancebot file detected, reading data...";
     emit fileStatusChanged();
     QThread::msleep(250);
-    readBeatsFromPrependData();
   } else {
     mFileStatus = "Detecting Beats...";
     emit fileStatusChanged();
@@ -341,6 +347,10 @@ bool BackEnd::writePrependData(void) {
 bool BackEnd::serializeBeatsAndPrimitives(QDataStream* const stream) {
   // write number of beats first:
   quint32 nBeats = static_cast<quint32>(mBeatFrames.size());
+  // process swap audio channels flag:
+  if (mAudioFile.getSwapChannels()) {
+    nBeats |= AudioFile::SWAP_CHANNEL_FLAG_MASK;
+  }
   *stream << nBeats;
 
   // write out beats:
@@ -377,8 +387,9 @@ bool BackEnd::readBeatsFromPrependData(void) {
   AudioFile::applyDataStreamSettings(&dataStream);
 
   // read number of beats first:
-  quint32 nBeats = 0;
-  dataStream >> nBeats;
+  quint32 nBeats = mAudioFile.getNumBeats();
+  // and seek to end of num beats:
+  dataStream.device()->seek(4u);
 
   // reserve memory for the beats
   mBeatFrames.reserve(nBeats);
@@ -399,9 +410,8 @@ bool BackEnd::readPrimitivesFromPrependData(void) {
   AudioFile::applyDataStreamSettings(&dataStream);
 
   // seek to end of beats:
-  quint32 nBeats = 0;
-  dataStream >> nBeats;  // read number of beats
-  dataStream.device()->seek(4u * static_cast<size_t>(nBeats + 1));
+  dataStream.device()->seek(
+    4u * (static_cast<size_t>(mAudioFile.getNumBeats()) + 1u));
 
   // next, read out motor primitives:
   quint32 nMotorPrimitives = 0;
