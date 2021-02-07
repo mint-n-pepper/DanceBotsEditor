@@ -229,31 +229,41 @@ TEST_F(AudioFileTest, testSwapChannels) {
   auto& data = mp3FileHeaderTest.mFloatData;
   auto& music = mp3FileHeaderTest.mFloatMusic;
 
-  // make sure music is zero:
   EXPECT_TRUE(vectorIsZero(data));
   EXPECT_FALSE(vectorIsZero(music));
 
-  // save and load and check:
-  mp3FileHeaderTest.save(fileTemp);
-  mp3FileHeaderTest.load(fileTemp);
+  // save with/without flag and ensure that loading is independent of
+  // file state:
+  for(uint saveWithFlag = 0u; saveWithFlag < 2u; ++saveWithFlag){
+    const bool swap = !!saveWithFlag;
+    mp3FileHeaderTest.setSwapChannels(swap);
+    // take care of header data:
+    mp3FileHeaderTest.mMP3PrependData.clear();
+    // create and open buffer to stream data into:
+    QDataStream dataStream(&mp3FileHeaderTest.mMP3PrependData,
+                           QIODevice::WriteOnly);
+    AudioFile::applyDataStreamSettings(&dataStream);
+    // write number of beats first:
+    quint32 nBeats = static_cast<quint32>(5u);
+    // process swap audio channels flag:
+    if (swap) {
+      nBeats |= AudioFile::SWAP_CHANNEL_FLAG_MASK;
+    }
+    dataStream << nBeats;
+    mp3FileHeaderTest.save(fileTemp);
 
-  // make sure music is nonzero after loading:
-  EXPECT_FALSE(vectorIsZero(music));
-  // data will be zero by design because load zeros it
-  EXPECT_TRUE(vectorIsZero(data));
+    mp3FileHeaderTest.setSwapChannels(true);
+    mp3FileHeaderTest.load(fileTemp);
+    EXPECT_EQ(swap, mp3FileHeaderTest.getSwapChannels());
+    EXPECT_FALSE(vectorIsZero(music));
+    EXPECT_TRUE(vectorIsZero(data));
 
-  // load with swapped channels -> music will be zero because it is data:
-  mp3FileHeaderTest.setSwapChannels(true);
-  mp3FileHeaderTest.load(fileTemp);
-  EXPECT_TRUE(vectorIsZero(music));
-
-  // load music again and save with swapped channels:
-  mp3FileHeaderTest.load(fileMusic44k);
-  mp3FileHeaderTest.save(fileTemp);
-  mp3FileHeaderTest.setSwapChannels(false);
-  mp3FileHeaderTest.load(fileTemp);
-  // will be zero because swapped
-  EXPECT_TRUE(vectorIsZero(music));
+    mp3FileHeaderTest.setSwapChannels(false);
+    mp3FileHeaderTest.load(fileTemp);
+    EXPECT_EQ(swap, mp3FileHeaderTest.getSwapChannels());
+    EXPECT_FALSE(vectorIsZero(music));
+    EXPECT_TRUE(vectorIsZero(data));
+  }
 }
 
 }  // namespace
