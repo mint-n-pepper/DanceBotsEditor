@@ -51,6 +51,9 @@ class AudioFile {
     NoDataToSave
   };
 
+  // Flag for swap audio channels flag in number of beats uint32:
+  static const quint32 SWAP_CHANNEL_FLAG_MASK = 0x80000000;
+
   /** String code at beginning and end of pre-pended header data */
   static const QByteArray danceFileHeaderCode;
 
@@ -201,6 +204,11 @@ class AudioFile {
    */
   static void applyDataStreamSettings(QDataStream* stream);
 
+   /** \brief Gets number of beats from dancefile header data
+   * \return number of beats in header data read from dancefile
+   */
+  quint32 getNumBeats(void) const;
+
  private:
   /** Lame encoding status enum */
   enum class LameEncCodes {
@@ -214,6 +222,7 @@ class AudioFile {
     LameInitFailed = -7
   };
 
+  quint32 mNumBeats = 0u; /**< Number of beats read from dancefile header */
   bool mSwapChannels = false; /**< Enable to swap music and data channels */
 
   /** MP3 file data container: */
