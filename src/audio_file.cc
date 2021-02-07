@@ -100,6 +100,15 @@ auto AudioFile::load(const QString filePath) -> Result {
     if (danceFileHeaderCode == headerEnd) {
       // code match
       mIsDanceFile = true;
+      // extract swapped audio channel flag:
+      QDataStream dataStream(&mMP3PrependData, QIODevice::ReadOnly);
+      AudioFile::applyDataStreamSettings(&dataStream);
+      // read number of beats:
+      quint32 nBeats = 0;
+      dataStream >> nBeats;
+      const bool swappedAudio = nBeats & SWAP_CHANNEL_FLAG_MASK;
+      setSwapChannels(swappedAudio);
+      mNumBeats = nBeats & ~SWAP_CHANNEL_FLAG_MASK;
     } else {
       // code mismatch, report corrupt header
       clear();
@@ -689,3 +698,5 @@ void AudioFile::applyDataStreamSettings(QDataStream* stream) {
   stream->setByteOrder(dataByteOrder);
   stream->setFloatingPointPrecision(dataFloatPrecision);
 }
+
+quint32 AudioFile::getNumBeats(void) const { return mNumBeats; }

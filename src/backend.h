@@ -38,6 +38,8 @@
  */
 class BackEnd : public QObject {
   Q_OBJECT;
+  Q_PROPERTY(bool swapAudioChannels READ swapAudioChannels WRITE
+                 setSwapAudioChannels NOTIFY swapAudioChannelsChanged);
   Q_PROPERTY(QString songArtist READ songArtist WRITE setSongArtist NOTIFY
                  songArtistChanged);
   Q_PROPERTY(QString songTitle READ songTitle WRITE setSongTitle NOTIFY
@@ -70,6 +72,13 @@ class BackEnd : public QObject {
    * \brief Get ID3-Tag song comment string
    */
   QString songComment(void);
+
+   /**
+   * \brief Gets state of audio file channel swapping.
+   * True: Audio channels swapped and music on right channel.
+   * False: Audio channels not swapped and music on default left channel.
+   */
+  bool swapAudioChannels(void);
 
   /**
    * \brief Get file load and save status string
@@ -110,6 +119,13 @@ class BackEnd : public QObject {
    * \brief Set ID3-Tag song comment string
    */
   void setSongComment(const QString& comment);
+
+   /**
+   * \brief Sets state of audio file channel swapping.
+   * True: Audio channels swapped and music on right channel.
+   * False: Audio channels not swapped and music on default left channel.
+   */
+  void setSwapAudioChannels(const bool swapAudioChannels);
 
   /**
    * \brief Load MP3 from given file path
@@ -182,6 +198,7 @@ class BackEnd : public QObject {
   // NOLINTNEXTLINE
  signals:
   void fileStatusChanged();
+  void swapAudioChannelsChanged();
   void songArtistChanged();
   void songTitleChanged();
   void songCommentChanged();
