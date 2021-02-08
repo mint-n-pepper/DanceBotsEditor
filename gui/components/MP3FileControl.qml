@@ -39,10 +39,12 @@ Rectangle{
 
 	function setEnabled(){
     textFields.enabled = true
+		swapChannel.enabled = true
 	}
 
 	function setDisabled(){
 		textFields.enabled = false
+		swapChannel.enabled = false
 	}
 
 	Connections{
@@ -125,6 +127,49 @@ Rectangle{
     anchors.rightMargin: appWindow.guiMargin
     anchors.verticalCenter: root.verticalCenter
     spacing: Style.fileControl.buttonSpacing * root.height
+
+		CheckBox{ //Swap Channel Checkbox
+			id: swapChannel
+			anchors.verticalCenter: parent.verticalCenter
+			onCheckedChanged: backend.swapAudioChannels = checked
+			focusPolicy: Qt.NoFocus
+			font.pixelSize: height * Style.fileControl.buttonTextHeight
+			text: qsTr("Swap Audio")
+
+			contentItem: Text {
+				text: swapChannel.text
+				font: swapChannel.font
+				opacity: enabled ? Style.fileControl.buttonOpacityEnabled : Style.fileControl.buttonOpacityDisabled
+        color: Style.palette.fc_buttonText
+				verticalAlignment: Text.AlignVCenter
+				leftPadding: swapChannel.indicator.width + swapChannel.spacing
+			}
+
+			indicator: Rectangle {
+				implicitWidth: 24
+				implicitHeight: 24
+				x: swapChannel.leftPadding
+				y: parent.height / 2 - height / 2
+				radius: 12
+				opacity: enabled ? Style.fileControl.buttonOpacityEnabled
+                         : Style.fileControl.buttonOpacityDisabled
+				color: parent.pressed ? Style.palette.fc_labelBoxBackground
+               								: Style.palette.fc_textfieldBoxBackground
+
+				Rectangle {
+					 width: 14
+					 height: 14
+					 x: 5
+					 y: 5
+					 radius: 7
+					 color: swapChannel.down ? Style.palette.fc_buttonPressed
+					  											 : Style.palette.fc_buttonEnabled
+					 visible: swapChannel.checked
+				}
+			}
+
+		}
+
     Button
     {
       id: loadButton
@@ -288,12 +333,6 @@ Rectangle{
       {
         aboutPopup.open()
       }
-    }
-    CheckBox{
-      id: swapChannel
-      onCheckedChanged: backend.swapAudioChannels = checked
-      focusPolicy: Qt.NoFocus
-      text: qsTr("Swap Audio")
     }
   } // buttons row
 
