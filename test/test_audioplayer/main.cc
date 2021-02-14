@@ -48,7 +48,19 @@ int main(int argc, char* argv[]) {
 
   DummyUI dummyUI{&player, &app};
 
-  player.setAudioData(mp3File44k.mFloatMusic, mp3File44k.sampleRate);
+  assert(mp3File44k.mFloatData.size() == mp3File44k.mFloatMusic.size());
+
+  float time = 0.0f;
+  float amp = 0.3f;
+  float freq = 440.0f;
+  float dt = 1.0f / mp3File44k.sampleRate;
+  for (float& sample : mp3File44k.mFloatData) {
+    sample = amp * sin(time * freq * 2.0f * 3.14159f);
+    time += dt;
+  }
+
+  player.setAudioData(mp3File44k.mFloatMusic,
+                      mp3File44k.mFloatData, mp3File44k.sampleRate);
 
   player.togglePlay();
 
