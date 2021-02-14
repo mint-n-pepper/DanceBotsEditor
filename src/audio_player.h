@@ -45,7 +45,8 @@ class AudioPlayer : public QObject {
    * \param[in] monoData - a vector of float audio data
    * \param[in] sampleRate - the audio sample rate
    */
-  void setAudioData(const std::vector<float>& monoData,
+  void setAudioData(const std::vector<float>& leftChannel,
+                    const std::vector<float>& rightChannel,
                     const int sampleRate = 44100);
 
   /**
@@ -139,11 +140,12 @@ class AudioPlayer : public QObject {
    */
   void connectAudioOutputSignals();
 
-  bool mIsPlaying{false};
-  qreal mVolumeLinear{1.0}; /**< Audio volume in linear representation */
-  int mSampleRate{0};
-  int mNotifyInterval{25}; /**< Audio time update interval in MS */
-  const QDataStream::ByteOrder mEndianness{QDataStream::LittleEndian};
+  const int numBytesPerFrame = 4;
+  bool mIsPlaying = false;
+  qreal mVolumeLinear = 1.0; /**< Audio volume in linear representation */
+  int mSampleRate = 0;
+  int mNotifyInterval = 25; /**< Audio time update interval in MS */
+  const QDataStream::ByteOrder mEndianness = QDataStream::LittleEndian;
   std::unique_ptr<QAudioOutput> mAudioOutput;
   QByteArray mRawAudio;
   QBuffer mRawAudioBuffer;

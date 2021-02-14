@@ -140,7 +140,8 @@ void BackEnd::handleDoneLoading(void) {
   }
 
   // setup audio player:
-  mAudioPlayer->setAudioData(mAudioFile.mFloatMusic, mAudioFile.sampleRate);
+  mAudioPlayer->setAudioData(mAudioFile.mFloatMusic, mAudioFile.mFloatMusic,
+                             mAudioFile.sampleRate);
 }
 
 void BackEnd::handleDoneSaving(void) { emit doneSaving(mSaveFuture.result()); }

@@ -24,8 +24,9 @@
 AudioPlayer::AudioPlayer(QObject* parent)
     : QObject{parent}, mRawAudioBuffer(&mRawAudio, this) {}
 
-void AudioPlayer::setAudioData(const std::vector<float>& monoData,
-                               const int sampleRate) {
+void AudioPlayer::setAudioData(const std::vector<float>& leftChannel,
+                               const std::vector<float>& rightChannel,
+                               const int sampleRate){
   // clear any existing audio data:
   mRawAudio.clear();
   mAudioOutput.reset(nullptr);  // delete audio output
@@ -37,19 +38,19 @@ void AudioPlayer::setAudioData(const std::vector<float>& monoData,
   QDataStream stream(&mRawAudio, QIODevice::WriteOnly);
   stream.setByteOrder(mEndianness);
 
-  // use 2^15 - 1 so that 1.0 is mapped to max value of int16
-  const float MAX_INT16 = 32767.0f;
-
-  for (const auto& e : monoData) {
-    // clamp data to -1.0, 1.0 range:
-    float rangeFloat = e > 1.0f ? 1.0f : e;
-    if (rangeFloat < -1.0f) rangeFloat = -1.0f;
-
-    // convert to int16
-    qint16 frame = static_cast<qint16>(e * MAX_INT16);
-
-    // push into stream:
-    stream << frame;
+  assert(leftChannel.size() == rightChannel.size());
+  mRawAudio.reserve(static_cast<int>(leftChannel.size() * numBytesPerFrame));
+  for (size_t i = 0u; i < leftChannel.size(); ++i) {
+    auto ClampToInt16 = [&](float in)->qint16{
+      if (in > 1.0f) in = 1.0f;
+      if (in < -1.0f) in = -1.0f;
+      // convert to int16 and push into stream
+      return static_cast<qint16>(in * 32767.0f);
+    };
+    // LEFT:
+    stream << ClampToInt16(leftChannel[i]);
+    // RIGHT:
+    stream << ClampToInt16(rightChannel[i]);
   }
 
   // use default device for output:
@@ -58,7 +59,7 @@ void AudioPlayer::setAudioData(const std::vector<float>& monoData,
   // setup output:
   QAudioFormat format;
   format.setSampleRate(mSampleRate);
-  format.setChannelCount(1);     // mono data
+  format.setChannelCount(2);     // mono data
   format.setSampleSize(16);      // 16 bit
   format.setCodec("audio/pcm");  // raw samples
   format.setByteOrder(static_cast<QAudioFormat::Endian>(mEndianness));
@@ -172,8 +173,8 @@ void AudioPlayer::handleAudioOutputNotify(void) {
     pos = 0;
   }
   // convert to MS:
-  // 1000 * pos / 2 / SampleRate - /2 for two bytes per frame
-  const int timeMS = 500 * pos / mSampleRate;
+  // 1000 * pos / 4 / SampleRate - /2 for two bytes per frame
+  const int timeMS = 1000 / numBytesPerFrame * pos / mSampleRate;
 
   // and inform subscribers
   emit notify(timeMS);
@@ -192,9 +193,10 @@ void AudioPlayer::seek(const int timeMS) {
   if (!mAudioOutput || timeMS < 0) {
     return;
   }
+  mAudioOutput->stop();
   // calculate buffer position based on time, sampling rate
   const size_t bufferPos =
-      ((static_cast<size_t>(timeMS) * mSampleRate) / 1000) * 2;
+      ((static_cast<size_t>(timeMS) * mSampleRate) / 1000) * numBytesPerFrame;
   if (bufferPos >= 0 && bufferPos < (mRawAudio.size() - 1)) {
     mRawAudioBuffer.seek(bufferPos);
   }
