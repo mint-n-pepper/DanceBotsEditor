@@ -39,15 +39,21 @@ class AudioPlayer : public QObject {
  public:
   explicit AudioPlayer(QObject* parent);
 
+    /**
+   * \brief Reset and setup the audio output - use before setting audio data.
+   */
+  void resetAudioOutput(const int sampleRate = 44100);
+
   /**
    * \brief Set the audio data to be played back
+   * 
+   * \note Use resetAudioOutput before calling this method.
    *
    * \param[in] monoData - a vector of float audio data
    * \param[in] sampleRate - the audio sample rate
    */
   void setAudioData(const std::vector<float>& leftChannel,
-                    const std::vector<float>& rightChannel,
-                    const int sampleRate = 44100);
+                    const std::vector<float>& rightChannel);
 
   /**
    * \brief Get current playback volume in logarithmic representation

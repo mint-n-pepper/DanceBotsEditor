@@ -23,10 +23,10 @@
 
 #include <QDataStream>
 #include <QEventLoop>
+#include <QSettings>
 #include <QThread>
 #include <QtConcurrent>
 #include <QtDebug>
-#include <QSettings>
 
 #include "src/primitive.h"
 #include "src/primitive_to_signal.h"
@@ -40,6 +40,8 @@ BackEnd::BackEnd(QObject* parent)
       mBeatDetector{static_cast<unsigned int>(mAudioFile.sampleRate)},
       mLoadFuture{},
       mLoadFutureWatcher{},
+      mSoundSetFuture{},
+      mSoundSetFutureWatcher{},
       mSaveFuture{},
       mSaveFutureWatcher{},
       mMotorPrimitives{new PrimitiveList{this}},
@@ -47,6 +49,8 @@ BackEnd::BackEnd(QObject* parent)
   // connect load and save thread finish signal to backend handler slots
   connect(&mLoadFutureWatcher, &QFutureWatcher<bool>::finished, this,
           &BackEnd::handleDoneLoading);
+  connect(&mSoundSetFutureWatcher, &QFutureWatcher<bool>::finished, this,
+          &BackEnd::handleDoneSettingSound);
   connect(&mSaveFutureWatcher, &QFutureWatcher<bool>::finished, this,
           &BackEnd::handleDoneSaving);
 
@@ -56,8 +60,8 @@ BackEnd::BackEnd(QObject* parent)
   if (iniFile.exists()) {
     QSettings iniSettings(mConfigFileName, QSettings::IniFormat, this);
     iniSettings.sync();
-    if (iniSettings.status() == QSettings::NoError
-       && iniSettings.contains("audio/swapChannels")) {
+    if (iniSettings.status() == QSettings::NoError &&
+        iniSettings.contains("audio/swapChannels")) {
       swapAudio = iniSettings.value("audio/swapChannels", false).toBool();
     }
   }
@@ -71,10 +75,9 @@ QString BackEnd::songTitle() { return mSongTitle; }
 
 QString BackEnd::songComment() { return mSongComment; }
 
-bool BackEnd::swapAudioChannels() {return mAudioFile.getSwapChannels(); }
+bool BackEnd::swapAudioChannels() { return mAudioFile.getSwapChannels(); }
 
-void BackEnd::setSwapAudioChannels(const bool swapAudioChannels)
-{
+void BackEnd::setSwapAudioChannels(const bool swapAudioChannels) {
   mAudioFile.setSwapChannels(swapAudioChannels);
 }
 
@@ -140,8 +143,8 @@ void BackEnd::handleDoneLoading(void) {
   }
 
   // setup audio player:
-  mAudioPlayer->setAudioData(mAudioFile.mFloatMusic, mAudioFile.mFloatMusic,
-                             mAudioFile.sampleRate);
+  mAudioPlayer->resetAudioOutput();
+  mAudioPlayer->setAudioData(mAudioFile.mFloatMusic, mAudioFile.mFloatMusic);
 }
 
 void BackEnd::handleDoneSaving(void) { emit doneSaving(mSaveFuture.result()); }
@@ -318,6 +321,50 @@ void BackEnd::printLedPrimitives(void) const {
   mLedPrimitives->printPrimitives();
 }
 
+void BackEnd::setPlayBackForRobots(void) {
+  mFileStatus =
+      "Compiling moves and lights and setting output sound for Dancebots...";
+  emit fileStatusChanged();
+
+  // stop audio playback:
+  mAudioPlayer->stop();
+  mAudioPlayer->resetAudioOutput();
+
+  mSoundSetFuture =
+      QtConcurrent::run(this, &BackEnd::setPlayBackForRobotsWorker);
+  mSoundSetFutureWatcher.setFuture(mSoundSetFuture);
+}
+
+void BackEnd::setPlayBackForHumans(void) {
+  mFileStatus = "Setting output sound for humans...";
+  emit fileStatusChanged();
+  // stop audio playback:
+  mAudioPlayer->stop();
+  mAudioPlayer->resetAudioOutput();
+
+  mSoundSetFuture =
+      QtConcurrent::run(this, &BackEnd::setPlayBackForHumansWorker);
+  mSoundSetFutureWatcher.setFuture(mSoundSetFuture);
+}
+
+void BackEnd::setPlayBackForHumansWorker(void) {
+  mAudioPlayer->setAudioData(mAudioFile.mFloatMusic, mAudioFile.mFloatMusic);
+}
+
+void BackEnd::setPlayBackForRobotsWorker(void) {
+  // instantiate primitive to audio signal converter
+  PrimitiveToSignal primitiveConverter(mBeatFrames, &mAudioFile);
+  primitiveConverter.convert(mMotorPrimitives->getData(),
+                             mLedPrimitives->getData());
+  if (mAudioFile.getSwapChannels()) {
+    mAudioPlayer->setAudioData(mAudioFile.mFloatData, mAudioFile.mFloatMusic);
+  } else {
+    mAudioPlayer->setAudioData(mAudioFile.mFloatMusic, mAudioFile.mFloatData);
+  }
+}
+
+void BackEnd::handleDoneSettingSound(void) { emit doneSettingSound(); }
+
 int BackEnd::getBeatAtFrame(const int frame) const {
   // run utility function to find beat
   size_t ind = 0;
@@ -413,7 +460,7 @@ bool BackEnd::readPrimitivesFromPrependData(void) {
 
   // seek to end of beats:
   dataStream.device()->seek(
-    4u * (static_cast<size_t>(mAudioFile.getNumBeats()) + 1u));
+      4u * (static_cast<size_t>(mAudioFile.getNumBeats()) + 1u));
 
   // next, read out motor primitives:
   quint32 nMotorPrimitives = 0;

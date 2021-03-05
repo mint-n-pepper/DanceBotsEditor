@@ -208,13 +208,17 @@ class BackEnd : public QObject {
   void audioPlayerChanged();
   void doneLoading(const bool result);
   void doneSaving(const bool result);
+  void doneSettingSound(void);
 
   // NOLINTNEXTLINE
  public slots:
   void handleDoneLoading(void);
   void handleDoneSaving(void);
+  void handleDoneSettingSound(void);
   void printMotPrimitives(void) const;
   void printLedPrimitives(void) const;
+  void setPlayBackForRobots(void);
+  void setPlayBackForHumans(void);
 
  private:
   // init to 100bpm
@@ -240,8 +244,12 @@ class BackEnd : public QObject {
   // to keep UI responsive / showing messages during loading and saving
   QFuture<bool> mLoadFuture;
   QFutureWatcher<bool> mLoadFutureWatcher;
+  QFuture<void> mSoundSetFuture;
+  QFutureWatcher<void> mSoundSetFutureWatcher;
   QFuture<bool> mSaveFuture;
   QFutureWatcher<bool> mSaveFutureWatcher;
+  void setPlayBackForRobotsWorker(void);
+  void setPlayBackForHumansWorker(void);
   bool loadMP3Worker(const QString& fileName);
   bool saveMP3Worker(const QString& fileName);
 

@@ -145,6 +145,11 @@ QtObject {
 
     // timer display
     property color ac_timerFont: "lightgrey"
+
+    // instaplay buttons
+    property color ac_instaPlayRobot: "orange"
+    property color ac_instaPlayRobotNeedsUpdate: "red"
+    property color ac_instaPlayHuman: mp_green
   }
 
   property QtObject motorPrimitive: QtObject{
