@@ -351,7 +351,6 @@ int AudioFile::decode(void) {
 
   quint64 sum = 0u;  // running sum of ^2 pcm samples for rms calculation
 
-
   // set data pointer targets based on swap channels and isDancefile:
   qint16* leftBuffer = pcmBufL.data();
   qint16* rightBuffer = pcmBufR.data();
@@ -546,8 +545,8 @@ auto AudioFile::encode(void) -> LameEncCodes {
         kPCMEncodeStepSize > distToEnd ? distToEnd : kPCMEncodeStepSize;
 
     int nEncode = lame_encode_buffer_ieee_float(
-        gfp, musicData + dataIndex, dataData + dataIndex,
-        nFeed, encodeBuffer.data(), kMP3BufferSize);
+        gfp, musicData + dataIndex, dataData + dataIndex, nFeed,
+        encodeBuffer.data(), kMP3BufferSize);
 
     if (nEncode) {
       if (nEncode < 0) {
@@ -558,7 +557,7 @@ auto AudioFile::encode(void) -> LameEncCodes {
       std::copy(encodeBuffer.begin(), encodeBuffer.begin() + nEncode, mp3OutIt);
       mp3OutIt += nEncode;
     }
-  dataIndex += nFeed;
+    dataIndex += nFeed;
   }
 
   // flush lame buffers:

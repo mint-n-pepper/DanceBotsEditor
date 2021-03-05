@@ -24,38 +24,10 @@
 AudioPlayer::AudioPlayer(QObject* parent)
     : QObject{parent}, mRawAudioBuffer(&mRawAudio, this) {}
 
-void AudioPlayer::setAudioData(const std::vector<float>& leftChannel,
-                               const std::vector<float>& rightChannel,
-                               const int sampleRate){
-  // clear any existing audio data:
-  mRawAudio.clear();
-  mAudioOutput.reset(nullptr);  // delete audio output
-
-  // set sample rate:
-  mSampleRate = sampleRate;
-
-  // create datastream with little endianness
-  QDataStream stream(&mRawAudio, QIODevice::WriteOnly);
-  stream.setByteOrder(mEndianness);
-
-  assert(leftChannel.size() == rightChannel.size());
-  mRawAudio.reserve(static_cast<int>(leftChannel.size() * numBytesPerFrame));
-  for (size_t i = 0u; i < leftChannel.size(); ++i) {
-    auto ClampToInt16 = [&](float in)->qint16{
-      if (in > 1.0f) in = 1.0f;
-      if (in < -1.0f) in = -1.0f;
-      // convert to int16 and push into stream
-      return static_cast<qint16>(in * 32767.0f);
-    };
-    // LEFT:
-    stream << ClampToInt16(leftChannel[i]);
-    // RIGHT:
-    stream << ClampToInt16(rightChannel[i]);
-  }
-
+void AudioPlayer::resetAudioOutput(const int sampleRate) {
   // use default device for output:
   const QAudioDeviceInfo deviceInfo{QAudioDeviceInfo::defaultOutputDevice()};
-
+  mSampleRate = sampleRate;
   // setup output:
   QAudioFormat format;
   format.setSampleRate(mSampleRate);
@@ -69,9 +41,32 @@ void AudioPlayer::setAudioData(const std::vector<float>& leftChannel,
     qDebug() << "Default format not supported - trying to use nearest";
     format = deviceInfo.nearestFormat(format);
   }
-
-  // make new output:
   mAudioOutput = std::make_unique<QAudioOutput>(format, this);
+}
+
+void AudioPlayer::setAudioData(const std::vector<float>& leftChannel,
+                               const std::vector<float>& rightChannel) {
+  // clear any existing audio data:
+  mRawAudio.clear();
+
+  // create datastream with little endianness
+  QDataStream stream(&mRawAudio, QIODevice::WriteOnly);
+  stream.setByteOrder(mEndianness);
+
+  assert(leftChannel.size() == rightChannel.size());
+  mRawAudio.reserve(static_cast<int>(leftChannel.size() * numBytesPerFrame));
+  for (size_t i = 0u; i < leftChannel.size(); ++i) {
+    auto ClampToInt16 = [&](float in) -> qint16 {
+      if (in > 1.0f) in = 1.0f;
+      if (in < -1.0f) in = -1.0f;
+      // convert to int16 and push into stream
+      return static_cast<qint16>(in * 32767.0f);
+    };
+    // LEFT:
+    stream << ClampToInt16(leftChannel[i]);
+    // RIGHT:
+    stream << ClampToInt16(rightChannel[i]);
+  }
 
   mAudioOutput->setBufferSize(8192);
 
