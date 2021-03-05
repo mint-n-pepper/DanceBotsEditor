@@ -284,6 +284,7 @@ Canvas{
   }
 
   function setOccupied(primitive){
+    setRobotDataChanged()
     var end = primitive.positionBeat + primitive.lengthBeat;
     for(var i = primitive.positionBeat; i < end; ++i){
       occupied[i] = true;
@@ -291,6 +292,7 @@ Canvas{
   }
 
   function freeOccupied(primitive){
+    setRobotDataChanged()
     var end = primitive.positionBeat + primitive.lengthBeat;
     for(var i = primitive.positionBeat; i < end; ++i){
       occupied[i] = false;

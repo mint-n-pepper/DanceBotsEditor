@@ -17,9 +17,9 @@
  *  LICENSE file included in the repository.
  */
 
+#include <gtest/gtest.h>
 #include <src/audio_file.h>
 
-#include <gtest/gtest.h>
 #include <QtCore/QFile>
 #include <string>
 
@@ -234,7 +234,7 @@ TEST_F(AudioFileTest, testSwapChannels) {
 
   // save with/without flag and ensure that loading is independent of
   // file state:
-  for(uint saveWithFlag = 0u; saveWithFlag < 2u; ++saveWithFlag){
+  for (uint saveWithFlag = 0u; saveWithFlag < 2u; ++saveWithFlag) {
     const bool swap = !!saveWithFlag;
     mp3FileHeaderTest.setSwapChannels(swap);
     // take care of header data:

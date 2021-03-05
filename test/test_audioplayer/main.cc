@@ -59,8 +59,8 @@ int main(int argc, char* argv[]) {
     time += dt;
   }
 
-  player.setAudioData(mp3File44k.mFloatMusic,
-                      mp3File44k.mFloatData, mp3File44k.sampleRate);
+  player.resetAudioOutput(mp3File44k.sampleRate);
+  player.setAudioData(mp3File44k.mFloatMusic, mp3File44k.mFloatData);
 
   player.togglePlay();
 

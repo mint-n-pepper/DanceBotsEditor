@@ -357,6 +357,10 @@ Connections{
     visible: !backend.mp3Loaded
   }
 
+  function setRobotDataChanged(){
+    audioControl.robotSoundNeedsUpdate = true
+  }
+
   function grabFocus(){
     keyCatcher.focus = true
   }

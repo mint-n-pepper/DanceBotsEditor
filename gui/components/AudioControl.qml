@@ -30,7 +30,7 @@ Item {
           + appWindow.guiMargin
 
   property int sliderHeight: width * Style.audioControl.sliderHeight
-
+  property var robotSoundNeedsUpdate: false
   property real songPositionMS: 0.0
 
   enabled: false
@@ -214,6 +214,108 @@ Item {
       font.pixelSize: Style.audioControl.timerFontSize
                       * root.sliderHeight
       color: Style.palette.ac_timerFont
+    }
+
+    Row{
+      id: robotHumanButtons
+      spacing: Style.audioControl.buttonSpacing * root.sliderHeight
+      anchors.verticalCenter: playControlItem.verticalCenter
+      anchors.right: playControlItem.right
+      property var runRobotSound: false
+
+      Connections{
+          target: backend
+          onDoneSettingSound:{
+            fileProcess.close()
+            if(robotHumanButtons.runRobotSound){
+              root.robotSoundNeedsUpdate = false
+            }
+          }
+      }
+
+      Button{
+        id: robotSound
+        focusPolicy: Qt.NoFocus
+        width: playControlItem.height * 0.5
+        height: playControlItem.height * 0.5
+        text: "R"
+        property color buttonColor: enabled ? updateColor
+          : Style.palette.fc_buttonDisabled
+        property color updateColor: parent.runRobotSound 
+                                    && root.robotSoundNeedsUpdate ?
+         Style.palette.ac_instaPlayRobotNeedsUpdate
+         : Style.palette.ac_instaPlayRobot
+
+        contentItem: Text{
+          text: parent.text
+          font: parent.font
+          opacity: enabled ? Style.fileControl.buttonOpacityEnabled
+                          : Style.fileControl.buttonOpacityDisabled
+          color: Style.palette.fc_buttonText
+          verticalAlignment: Text.AlignVCenter
+          horizontalAlignment: Text.AlignHCenter
+        }
+
+        background: Rectangle{
+          anchors.fill: parent
+          opacity: enabled ? Style.fileControl.buttonOpacityEnabled
+                          : Style.fileControl.buttonOpacityDisabled
+          color: parent.pressed ? Style.palette.fc_buttonPressed
+                : parent.buttonColor
+          border.color: Style.palette.fc_buttonText
+          border.width: Style.fileControl.buttonBorderWidth * parent.height
+          radius: height * Style.fileControl.buttonRadius
+
+        }
+
+        onPressed: appWindow.grabFocus()
+        onClicked:
+        {
+          fileProcess.open()
+          robotHumanButtons.runRobotSound = true
+          backend.setPlayBackForRobots()
+        }
+      }
+
+      Button{
+        id: humanSound
+        focusPolicy: Qt.NoFocus
+        width: playControlItem.height * 0.5
+        height: playControlItem.height * 0.5
+        text: "H"
+        property color buttonColor: enabled ? Style.palette.ac_instaPlayHuman
+          : Style.palette.fc_buttonDisabled
+
+        contentItem: Text{
+          text: parent.text
+          font: parent.font
+          opacity: enabled ? Style.fileControl.buttonOpacityEnabled
+                          : Style.fileControl.buttonOpacityDisabled
+          color: Style.palette.fc_buttonText
+          verticalAlignment: Text.AlignVCenter
+          horizontalAlignment: Text.AlignHCenter
+        }
+
+        background: Rectangle{
+          anchors.fill: parent
+          opacity: enabled ? Style.fileControl.buttonOpacityEnabled
+                          : Style.fileControl.buttonOpacityDisabled
+          color: parent.pressed ? Style.palette.fc_buttonPressed
+                : parent.buttonColor
+          border.color: Style.palette.fc_buttonText
+          border.width: Style.fileControl.buttonBorderWidth * parent.height
+          radius: height * Style.fileControl.buttonRadius
+
+        }
+
+        onPressed: appWindow.grabFocus()
+        onClicked:
+        {
+          fileProcess.open()
+          robotHumanButtons.runRobotSound = false          
+          backend.setPlayBackForHumans()
+        }
+      }
     }
   } // play control item
 }
