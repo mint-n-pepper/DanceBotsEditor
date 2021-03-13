@@ -30,7 +30,8 @@ Item {
           + appWindow.guiMargin
 
   property int sliderHeight: width * Style.audioControl.sliderHeight
-  property var robotSoundNeedsUpdate: false
+  property bool robotSoundNeedsUpdate: false
+  property bool startPlayAfterRobotSoundUpdate: false
   property real songPositionMS: 0.0
 
   enabled: false
@@ -56,6 +57,27 @@ Item {
       if(!songPositionSlider.pressed){
         songPositionMS = currentPosMS
       }
+    }
+  }
+
+  function togglePlay(){
+    // check if robot sound needs to be recompiled:
+    if(!backend.audioPlayer.isPlaying)
+    {
+      if(robotHumanButtons.runRobotSound && root.robotSoundNeedsUpdate)
+      {
+        fileProcess.open()
+        backend.setPlayBackForRobots()
+        root.startPlayAfterRobotSoundUpdate = true
+      }
+      else
+      {
+        backend.audioPlayer.togglePlay()
+      }
+    }
+    else
+    {
+      backend.audioPlayer.togglePlay()
     }
   }
 
@@ -153,7 +175,7 @@ Item {
         onPressed: appWindow.grabFocus()
         onClicked:
         {
-          backend.audioPlayer.togglePlay()
+          root.togglePlay()
         }
       }
       Button
@@ -229,6 +251,11 @@ Item {
             fileProcess.close()
             if(robotHumanButtons.runRobotSound){
               root.robotSoundNeedsUpdate = false
+              if(root.startPlayAfterRobotSoundUpdate)
+              {
+                backend.audioPlayer.togglePlay()
+                root.startPlayAfterRobotSoundUpdate = false
+              }
             }
           }
       }
@@ -239,12 +266,8 @@ Item {
         width: playControlItem.height * 0.5
         height: playControlItem.height * 0.5
         text: "R"
-        property color buttonColor: enabled ? updateColor
+        property color buttonColor: enabled ? Style.palette.ac_instaPlayRobot
           : Style.palette.fc_buttonDisabled
-        property color updateColor: parent.runRobotSound 
-                                    && root.robotSoundNeedsUpdate ?
-         Style.palette.ac_instaPlayRobotNeedsUpdate
-         : Style.palette.ac_instaPlayRobot
 
         contentItem: Text{
           text: parent.text
