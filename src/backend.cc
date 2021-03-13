@@ -21,6 +21,7 @@
 
 #include <stdio.h>
 
+#include <QApplication>
 #include <QDataStream>
 #include <QEventLoop>
 #include <QSettings>
@@ -325,10 +326,12 @@ void BackEnd::setPlayBackForRobots(void) {
   mFileStatus =
       "Compiling moves and lights and setting output sound for Dancebots...";
   emit fileStatusChanged();
+  mAudioPlayerTime = mAudioPlayer->getCurrentPlaybackTime();
 
   // stop audio playback:
-  mAudioPlayer->stop();
+  mAudioPlayer->stop(false);
   mAudioPlayer->resetAudioOutput();
+  qApp->processEvents();
 
   mSoundSetFuture =
       QtConcurrent::run(this, &BackEnd::setPlayBackForRobotsWorker);
@@ -338,9 +341,11 @@ void BackEnd::setPlayBackForRobots(void) {
 void BackEnd::setPlayBackForHumans(void) {
   mFileStatus = "Setting output sound for humans...";
   emit fileStatusChanged();
+  mAudioPlayerTime = mAudioPlayer->getCurrentPlaybackTime();
   // stop audio playback:
-  mAudioPlayer->stop();
+  mAudioPlayer->stop(false);
   mAudioPlayer->resetAudioOutput();
+  qApp->processEvents();
 
   mSoundSetFuture =
       QtConcurrent::run(this, &BackEnd::setPlayBackForHumansWorker);
@@ -363,7 +368,11 @@ void BackEnd::setPlayBackForRobotsWorker(void) {
   }
 }
 
-void BackEnd::handleDoneSettingSound(void) { emit doneSettingSound(); }
+void BackEnd::handleDoneSettingSound(void) {
+  mAudioPlayer->seek(mAudioPlayerTime);
+  emit mAudioPlayer->notify(mAudioPlayerTime);
+  emit doneSettingSound();
+}
 
 int BackEnd::getBeatAtFrame(const int frame) const {
   // run utility function to find beat

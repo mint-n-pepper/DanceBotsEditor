@@ -62,6 +62,13 @@ class AudioPlayer : public QObject {
    */
   Q_INVOKABLE qreal getCurrentLogVolume(void);
 
+   /**
+   * \brief Get current playback time in audio buffer in MS
+   *
+   * \return time in MS
+   */
+  Q_INVOKABLE qreal getCurrentPlaybackTime(void) const { return mTimeMS; }
+
   /**
    * \brief Get current play status
    *
@@ -96,8 +103,10 @@ class AudioPlayer : public QObject {
 
   /**
    * \brief Stops playback and rewinds playback data to start
+   * 
+   * \param[in] emitTimeUpdate: Emit time update signal
    */
-  void stop(void);
+  void stop(const bool emitTimeUpdate = true);
 
   /**
    * \brief Pauses playback
@@ -150,6 +159,7 @@ class AudioPlayer : public QObject {
   bool mIsPlaying = false;
   qreal mVolumeLinear = 1.0; /**< Audio volume in linear representation */
   int mSampleRate = 0;
+  int mTimeMS = 0;
   int mNotifyInterval = 25; /**< Audio time update interval in MS */
   const QDataStream::ByteOrder mEndianness = QDataStream::LittleEndian;
   std::unique_ptr<QAudioOutput> mAudioOutput;

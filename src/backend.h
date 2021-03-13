@@ -237,6 +237,7 @@ class BackEnd : public QObject {
   QString mFileStatus;
   AudioFile mAudioFile;
   AudioPlayer* mAudioPlayer;
+  int mAudioPlayerTime = 0;
   BeatDetector mBeatDetector;
   std::vector<int> mBeatFrames; /**< beat locations in audio frames */
 
