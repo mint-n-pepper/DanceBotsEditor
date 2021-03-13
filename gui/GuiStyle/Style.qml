@@ -148,7 +148,6 @@ QtObject {
 
     // instaplay buttons
     property color ac_instaPlayRobot: "orange"
-    property color ac_instaPlayRobotNeedsUpdate: "red"
     property color ac_instaPlayHuman: mp_green
   }
 

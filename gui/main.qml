@@ -388,7 +388,7 @@ Connections{
       ledDragger.deleteAll()
       break;
     case Qt.Key_Space:
-      backend.audioPlayer.togglePlay()
+      audioControl.togglePlay()
       break;
     }
   }

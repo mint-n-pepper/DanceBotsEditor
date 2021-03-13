@@ -139,12 +139,14 @@ void AudioPlayer::togglePlay(void) {
   }
 }
 
-void AudioPlayer::stop(void) {
+void AudioPlayer::stop(const bool emitTimeUpdate) {
   if (mAudioOutput) {
     mAudioOutput->stop();
     mRawAudioBuffer.reset();
     // emit change of position
-    handleAudioOutputNotify();
+    if (emitTimeUpdate) {
+      handleAudioOutputNotify();
+    }
   }
 }
 
@@ -169,10 +171,10 @@ void AudioPlayer::handleAudioOutputNotify(void) {
   }
   // convert to MS:
   // 1000 * pos / 4 / SampleRate - /2 for two bytes per frame
-  const int timeMS = 1000 / numBytesPerFrame * pos / mSampleRate;
+  mTimeMS = 1000 / numBytesPerFrame * pos / mSampleRate;
 
   // and inform subscribers
-  emit notify(timeMS);
+  emit notify(mTimeMS);
 }
 
 void AudioPlayer::connectAudioOutputSignals() {
