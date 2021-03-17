@@ -130,6 +130,7 @@ Rectangle{
 
 		CheckBox{ //Swap Channel Checkbox
 			id: swapChannel
+      height: root.height * Style.fileControl.itemHeight
 			anchors.verticalCenter: parent.verticalCenter
 			onCheckedChanged: backend.swapAudioChannels = checked
 			focusPolicy: Qt.NoFocus
@@ -142,6 +143,7 @@ Rectangle{
 				opacity: enabled ? Style.fileControl.buttonOpacityEnabled : Style.fileControl.buttonOpacityDisabled
         color: Style.palette.fc_buttonText
 				verticalAlignment: Text.AlignVCenter
+				horizontalAlignment: Text.AlignHCenter
 				leftPadding: swapChannel.indicator.width + swapChannel.spacing
 			}
 
