@@ -240,10 +240,12 @@ Item {
 
     Row{
       id: robotHumanButtons
-      spacing: Style.audioControl.buttonSpacing * root.sliderHeight
+      // spacing: Style.audioControl.buttonSpacing * root.sliderHeight
       anchors.verticalCenter: playControlItem.verticalCenter
       anchors.right: playControlItem.right
+      spacing: Style.fileControl.buttonSpacing * root.height * 0.3
       property var runRobotSound: false
+
 
       Connections{
           target: backend
@@ -260,12 +262,53 @@ Item {
           }
       }
 
+      Item{
+        width: playControlItem.height * 1.9
+        height: playControlItem.height * 0.7
+
+        Image{
+          id: instaIcon
+          source: "../icons/insta.svg"
+          sourceSize.width: parent.height * 0.5
+          antialiasing: true
+          visible: true
+        }
+
+        ColorOverlay{
+          anchors.fill: instaIcon
+          source: instaIcon
+          color: Style.palette.mp_yellow
+          antialiasing: true
+          visible: true
+        }
+
+
+        Item{
+          width: playControlItem.height * 1.7
+          height: playControlItem.height
+
+          Text {
+            id: instaText
+            text: qsTr("INSTA")
+            verticalAlignment: Text.AlignVCenter
+            horizontalAlignment: Text.AlignHCenter
+            topPadding: playControlItem.height * 0.1
+            leftPadding: playControlItem.height * 0.5
+            color: Style.palette.mp_yellow
+            font.pixelSize: parent.height * Style.fileControl.buttonTextHeight * 0.9
+          }
+        }
+
+      }
+
+
       Button{
         id: robotSound
         focusPolicy: Qt.NoFocus
-        width: playControlItem.height * 0.5
-        height: playControlItem.height * 0.5
-        text: "R"
+        width: playControlItem.height * 2
+        height: playControlItem.height * 0.8
+        text: qsTr("ROBOT")
+        font.pixelSize: height * Style.fileControl.buttonTextHeight * 1
         property color buttonColor: enabled ? Style.palette.ac_instaPlayRobot
           : Style.palette.fc_buttonDisabled
 
@@ -273,8 +316,9 @@ Item {
           text: parent.text
           font: parent.font
           opacity: enabled ? Style.fileControl.buttonOpacityEnabled
-                          : Style.fileControl.buttonOpacityDisabled
-          color: Style.palette.fc_buttonText
+                           : Style.fileControl.buttonOpacityDisabled
+          color: parent.pressed ? Style.palette.fc_buttonText
+                                : Style.palette.ac_instaPlayRobot
           verticalAlignment: Text.AlignVCenter
           horizontalAlignment: Text.AlignHCenter
         }
@@ -283,12 +327,11 @@ Item {
           anchors.fill: parent
           opacity: enabled ? Style.fileControl.buttonOpacityEnabled
                           : Style.fileControl.buttonOpacityDisabled
-          color: parent.pressed ? Style.palette.fc_buttonPressed
-                : parent.buttonColor
-          border.color: Style.palette.fc_buttonText
+          color: parent.pressed ? Style.palette.ac_instaPlayRobot
+                                : Style.palette.mw_background
+          border.color: Style.palette.ac_instaPlayRobot
           border.width: Style.fileControl.buttonBorderWidth * parent.height
           radius: height * Style.fileControl.buttonRadius
-
         }
 
         onPressed: appWindow.grabFocus()
@@ -303,9 +346,10 @@ Item {
       Button{
         id: humanSound
         focusPolicy: Qt.NoFocus
-        width: playControlItem.height * 0.5
-        height: playControlItem.height * 0.5
-        text: "H"
+        width: playControlItem.height * 2
+        height: playControlItem.height * 0.8
+        text: qsTr("HUMAN")
+        font.pixelSize: height * Style.fileControl.buttonTextHeight * 1
         property color buttonColor: enabled ? Style.palette.ac_instaPlayHuman
           : Style.palette.fc_buttonDisabled
 
@@ -313,8 +357,9 @@ Item {
           text: parent.text
           font: parent.font
           opacity: enabled ? Style.fileControl.buttonOpacityEnabled
-                          : Style.fileControl.buttonOpacityDisabled
-          color: Style.palette.fc_buttonText
+                           : Style.fileControl.buttonOpacityDisabled
+          color: parent.pressed ? Style.palette.fc_buttonText
+                                : Style.palette.ac_instaPlayHuman
           verticalAlignment: Text.AlignVCenter
           horizontalAlignment: Text.AlignHCenter
         }
@@ -323,19 +368,18 @@ Item {
           anchors.fill: parent
           opacity: enabled ? Style.fileControl.buttonOpacityEnabled
                           : Style.fileControl.buttonOpacityDisabled
-          color: parent.pressed ? Style.palette.fc_buttonPressed
-                : parent.buttonColor
-          border.color: Style.palette.fc_buttonText
+          color: parent.pressed ? Style.palette.ac_instaPlayHuman
+                                : Style.palette.mw_background
+          border.color: Style.palette.ac_instaPlayHuman
           border.width: Style.fileControl.buttonBorderWidth * parent.height
           radius: height * Style.fileControl.buttonRadius
-
         }
 
         onPressed: appWindow.grabFocus()
         onClicked:
         {
           fileProcess.open()
-          robotHumanButtons.runRobotSound = false          
+          robotHumanButtons.runRobotSound = false
           backend.setPlayBackForHumans()
         }
       }
