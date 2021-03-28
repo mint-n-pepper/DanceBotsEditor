@@ -124,18 +124,21 @@ Rectangle{
   Row{
     id: buttonRow
     anchors.right: root.right
-    anchors.rightMargin: appWindow.guiMargin
     anchors.verticalCenter: root.verticalCenter
     spacing: Style.fileControl.buttonSpacing * root.height
+		anchors.rightMargin: appWindow.guiMargin
 
 		CheckBox{ //Swap Channel Checkbox
 			id: swapChannel
-      height: root.height * Style.fileControl.itemHeight
+      height: root.height * Style.fileControl.itemHeight * 0.8
 			anchors.verticalCenter: parent.verticalCenter
 			onCheckedChanged: backend.swapAudioChannels = checked
 			focusPolicy: Qt.NoFocus
-			font.pixelSize: height * Style.fileControl.buttonTextHeight
+			font.pixelSize: height * Style.fileControl.buttonTextHeight * 1
 			text: qsTr("Swap Audio")
+			property color buttonColor: enabled ? Style.palette.fc_buttonDisabled
+                                          : Style.palette.fc_buttonDisabled
+			checked: false
 
 			contentItem: Text {
 				text: swapChannel.text
@@ -144,32 +147,36 @@ Rectangle{
         color: Style.palette.fc_buttonText
 				verticalAlignment: Text.AlignVCenter
 				horizontalAlignment: Text.AlignHCenter
-				leftPadding: swapChannel.indicator.width + swapChannel.spacing
+				leftPadding: swapChannel.indicator.width + swapChannel.spacing * 1.1
 			}
 
 			indicator: Rectangle {
-				implicitWidth: 24
-				implicitHeight: 24
+				width: root.height * Style.fileControl.itemHeight * 0.4
+				height: root.height * Style.fileControl.itemHeight * 0.4
 				x: swapChannel.leftPadding
 				y: parent.height / 2 - height / 2
-				radius: 12
+				radius: width / 2
 				opacity: enabled ? Style.fileControl.buttonOpacityEnabled
-                         : Style.fileControl.buttonOpacityDisabled
-				color: parent.pressed ? Style.palette.fc_labelBoxBackground
-               								: Style.palette.fc_textfieldBoxBackground
+												 : Style.fileControl.buttonOpacityDisabled
+				color: Style.palette.fc_textfieldBoxBackground
 
 				Rectangle {
-					 width: 14
-					 height: 14
-					 x: 5
-					 y: 5
-					 radius: 7
-					 color: swapChannel.down ? Style.palette.fc_buttonPressed
-					  											 : Style.palette.fc_buttonEnabled
-					 visible: swapChannel.checked
+					width: parent.width * 0.5
+					height: parent.width * 0.5
+					anchors.verticalCenter: parent.verticalCenter
+					anchors.horizontalCenter: parent.horizontalCenter
+					radius: width / 2
+					color: Style.palette.mp_yellow
+					visible: swapChannel.checked
 				}
 			}
 
+			background: Rectangle{
+				anchors.fill: parent
+				opacity: Style.fileControl.buttonOpacityDisabled
+				color: parent.buttonColor
+				radius: height * Style.fileControl.buttonRadius
+			}
 		}
 
     Button
