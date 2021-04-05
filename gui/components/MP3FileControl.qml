@@ -132,7 +132,14 @@ Rectangle{
 			id: swapChannel
       height: root.height * Style.fileControl.itemHeight * 0.8
 			anchors.verticalCenter: parent.verticalCenter
-			onCheckedChanged: backend.swapAudioChannels = checked
+			onCheckedChanged:
+      {
+        backend.swapAudioChannels = checked
+        setRobotDataChanged()
+        backend.audioPlayer.pause()
+        appWindow.grabFocus()
+
+      }
 			focusPolicy: Qt.NoFocus
 			font.pixelSize: height * Style.fileControl.buttonTextHeight * 1
 			text: qsTr("Swap Audio")
