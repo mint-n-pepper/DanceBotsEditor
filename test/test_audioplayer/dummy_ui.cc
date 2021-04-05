@@ -32,7 +32,6 @@ void DummyUI::receiveNotify(int timeMS) {
   if (timeMS > 2000) {
     qDebug() << "Rewinding to 1000ms";
     mAudioPlayer->seek(1000);
-    Sleep(10);
     mAudioPlayer->togglePlay();
     // quit application after two rewinds:
     if (count++ > 1) {
