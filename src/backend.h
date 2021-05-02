@@ -2,7 +2,7 @@
  *  Dancebots GUI - Create choreographies for Dancebots
  *  https://github.com/philippReist/dancebots_gui
  *
- *  Copyright 2020 - mint & pepper
+ *  Copyright 2019-2021 - mint & pepper
  *
  *  This program is free software : you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -24,7 +24,6 @@
 #include <QFutureWatcher>
 #include <QObject>
 #include <QString>
-
 #include <vector>
 
 #include "src/audio_file.h"
@@ -73,7 +72,7 @@ class BackEnd : public QObject {
    */
   QString songComment(void);
 
-   /**
+  /**
    * \brief Gets state of audio file channel swapping.
    * True: Audio channels swapped and music on right channel.
    * False: Audio channels not swapped and music on default left channel.
@@ -120,7 +119,7 @@ class BackEnd : public QObject {
    */
   void setSongComment(const QString& comment);
 
-   /**
+  /**
    * \brief Sets state of audio file channel swapping.
    * True: Audio channels swapped and music on right channel.
    * False: Audio channels not swapped and music on default left channel.

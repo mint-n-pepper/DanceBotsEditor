@@ -2,7 +2,7 @@
  *  Dancebots GUI - Create choreographies for Dancebots
  *  https://github.com/philippReist/dancebots_gui
  *
- *  Copyright 2020 - mint & pepper
+ *  Copyright 2019-2021 - mint & pepper
  *
  *  This program is free software : you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -39,14 +39,14 @@ class AudioPlayer : public QObject {
  public:
   explicit AudioPlayer(QObject* parent);
 
-    /**
+  /**
    * \brief Reset and setup the audio output - use before setting audio data.
    */
   void resetAudioOutput(const int sampleRate = 44100);
 
   /**
    * \brief Set the audio data to be played back
-   * 
+   *
    * \note Use resetAudioOutput before calling this method.
    *
    * \param[in] monoData - a vector of float audio data
@@ -62,7 +62,7 @@ class AudioPlayer : public QObject {
    */
   Q_INVOKABLE qreal getCurrentLogVolume(void);
 
-   /**
+  /**
    * \brief Get current playback time in audio buffer in MS
    *
    * \return time in MS
@@ -103,7 +103,7 @@ class AudioPlayer : public QObject {
 
   /**
    * \brief Stops playback and rewinds playback data to start
-   * 
+   *
    * \param[in] emitTimeUpdate: Emit time update signal
    */
   void stop(const bool emitTimeUpdate = true);

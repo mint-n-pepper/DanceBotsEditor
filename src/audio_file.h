@@ -2,7 +2,7 @@
  *  Dancebots GUI - Create choreographies for Dancebots
  *  https://github.com/philippReist/dancebots_gui
  *
- *  Copyright 2020 - mint & pepper
+ *  Copyright 2019-2021 - mint & pepper
  *
  *  This program is free software : you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -24,6 +24,7 @@
 #include <mpegfile.h>
 #include <mpegheader.h>
 #include <tbytevectorstream.h>
+
 #include <QDataStream>
 #include <QtCore/QFile>
 #include <string>
@@ -182,11 +183,13 @@ class AudioFile {
   const char* getRawMP3Data(void) const { return mRawMP3Data.data(); }
 
   /** \brief Sets swap channels property
-   *  By default, the music is put into the left channel and the robot command data into the right.
+   *  By default, the music is put into the left channel and the robot command
+   * data into the right.
    *
    *  With this parameter set, the channels are swapped when saving and loading.
    *
-   *  \param[in] swap Value to set swap channels property to (true: swap, false: do not swap)
+   *  \param[in] swap Value to set swap channels property to (true: swap, false:
+   * do not swap)
    */
   void setSwapChannels(const bool swap) { mSwapChannels = swap; }
 
@@ -204,7 +207,7 @@ class AudioFile {
    */
   static void applyDataStreamSettings(QDataStream* stream);
 
-   /** \brief Gets number of beats from dancefile header data
+  /** \brief Gets number of beats from dancefile header data
    * \return number of beats in header data read from dancefile
    */
   quint32 getNumBeats(void) const;
@@ -222,7 +225,7 @@ class AudioFile {
     LameInitFailed = -7
   };
 
-  quint32 mNumBeats = 0u; /**< Number of beats read from dancefile header */
+  quint32 mNumBeats = 0u;     /**< Number of beats read from dancefile header */
   bool mSwapChannels = false; /**< Enable to swap music and data channels */
 
   /** MP3 file data container: */
