@@ -46,7 +46,7 @@ The editor works as follows:
 
 3. The `build` folder should now contain a Visual Studio solution (.sln) and project files. You can build the project using the Visual Studio IDE or command line.
 
-   a. Using the Visual Studio IDE, open the `dancebots_gui.sln` file and build the `dancebotsEditor` project in `Release` and 64-bit (x64).
+   a. Using the Visual Studio IDE, open the `dancebotsEditor.sln` file and build the `dancebotsEditor` project in `Release` and 64-bit (x64).
 
    b. To build on the command line using `x64 Native Tools Command Prompt for VS 2019` (or whatever Visual Studio version you are using), navigate to `DanceBotsEditor\build\gui\` and run:
    ```
