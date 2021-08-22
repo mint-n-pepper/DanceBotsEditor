@@ -295,8 +295,8 @@ int AudioFile::writeTag(void) {
 
   // get the ID3V2 tag and set its fields according to data in file:
   auto tag = mpegFile.ID3v2Tag(true);
-  tag->setArtist(TagLib::String(mArtist));
-  tag->setTitle(TagLib::String(mTitle));
+  tag->setArtist(TagLib::String(mArtist, TagLib::String::Type::UTF8));
+  tag->setTitle(TagLib::String(mTitle, TagLib::String::Type::UTF8));
   if (mComment.empty()) {
     tag->setComment("Music for Dancebots, not humans.");
   } else {
