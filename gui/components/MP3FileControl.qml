@@ -54,6 +54,7 @@ Rectangle{
       if(result){
         songTitleText.text = backend.songTitle
         songArtistText.text = backend.songArtist
+        // update radio button from possible file-saved swap flag
         swapChannel.checked = backend.swapAudioChannels
         setEnabled()
       }
@@ -145,7 +146,7 @@ Rectangle{
 			text: qsTr("Swap Audio")
 			property color buttonColor: enabled ? Style.palette.fc_buttonDisabled
                                           : Style.palette.fc_buttonDisabled
-			checked: false
+      Component.onCompleted: checked = backend.swapAudioChannels // read initial swap state
 
 			contentItem: Text {
 				text: swapChannel.text
