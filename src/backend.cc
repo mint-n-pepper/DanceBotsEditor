@@ -28,6 +28,7 @@
 #include <QThread>
 #include <QtConcurrent>
 #include <QtDebug>
+#include <QSettings>
 
 #include "src/primitive.h"
 #include "src/primitive_to_signal.h"

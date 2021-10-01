@@ -548,6 +548,7 @@ auto AudioFile::encode(void) -> LameEncCodes {
         gfp, musicData + dataIndex, dataData + dataIndex, nFeed,
         encodeBuffer.data(), kMP3BufferSize);
 
+
     if (nEncode) {
       if (nEncode < 0) {
         // cast the return error code to the enum class return type
