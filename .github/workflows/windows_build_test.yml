@@ -1,15 +1,6 @@
 name: Windows Build
 
-on:
-  pull_request:
-    branches:
-      - master
-      - develop
-
-  release:
-    types:
-      - published
-      - prereleased
+on: [pull_request]
 
 jobs:
   build:
@@ -18,7 +9,7 @@ jobs:
     strategy:
       matrix:
         os: ['windows-2019']
-        qt_version: ['5.12.6', '5.12.9']
+        qt_version: ['5.12.6', '5.12.9', '5.15.2']
 
     steps:
     - name: Install Python 3.7 version

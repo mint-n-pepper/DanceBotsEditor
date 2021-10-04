@@ -1,15 +1,8 @@
-name: Ubuntu Build
+name: macOS Build
 
 on:
-  pull_request:
-    branches:
-      - master
-      - develop
-
   release:
-    types:
-      - published
-      - prereleased
+    types: [published]
 
 jobs:
   build:
@@ -17,8 +10,8 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: ['ubuntu-18.04', 'ubuntu-20.04']
-        qt_version: ['5.12.6', '5.12.9']
+        os: ['macos-latest']
+        qt_version: ['5.15.2']
 
     steps:
     - name: Install Python 3.7 version
@@ -33,11 +26,6 @@ jobs:
         version: ${{ matrix.qt_version }}
         target: desktop
 
-    - name: Install Libraries
-      run: |
-        sudo apt-get update
-        sudo apt-get install build-essential libpulse-dev libgl1-mesa-dev
-
     - name: Checkout
       uses: actions/checkout@v2
 
@@ -45,16 +33,11 @@ jobs:
       run: |
         git submodule update --init --recursive
 
-    - name: Download CMake 3.16.2
-      run: |
-        wget https://github.com/Kitware/CMake/releases/download/v3.16.2/cmake-3.16.2-Linux-x86_64.tar.gz
-        tar xvfz cmake-3.16.2-Linux-x86_64.tar.gz
-
     - name: Configure & Build
       run: |
         mkdir build
         cd build/
-        ../cmake-3.16.2-Linux-x86_64/bin/cmake -DCMAKE_PREFIX_PATH=${Qt5_Dir} -DCMAKE_BUILD_TYPE=Release ../
+        cmake -DCMAKE_PREFIX_PATH="${Qt5_Dir}" -DCMAKE_BUILD_TYPE=Release ../
         make -j
 
     - name: Unit Tests
@@ -63,9 +46,9 @@ jobs:
 
     - name: Deploy
       run: |
-        cd build/
-        mv gui/dancebotsEditor dancebots-editor
-        tar -zcvf dancebots-editor-ubuntu.tar.gz dancebots-editor
+        cd gui/mac_os_rc/
+        sh deploy.sh ../../build/ "${Qt5_Dir}/bin/" ../
+        mv ../../build/Dancebots\ Editor.dmg ../../build/dancebots-editor-darwin.dmg
 
     - name: Upload Release Asset
       id: upload-release-asset
@@ -75,7 +58,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: "https://uploads.github.com/repos/${{ github.repository }}/releases/${{ github.event.release.id }}/assets{?name,label}"
-        asset_path: build/dancebots-editor-ubuntu.tar.gz
-        asset_name: dancebots-editor-ubuntu.tar.gz
-        asset_content_type: application/zip
+        asset_path: build/dancebots-editor-darwin.dmg
+        asset_name: dancebots-editor-darwin.dmg
+        asset_content_type: application/x-apple-diskimage
 
