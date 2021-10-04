@@ -72,9 +72,9 @@ QtObject {
         <tr>
           <td>
       Instead of saving to an MP3 and playing from an MP3 player, you can <br>
-      play the choreo directly from the GUI to a Dancebot connected to the<br>
+      play the choreography directly from the GUI to a Dancebot connected to the<br>
       computer. Select the ROBOT option at the bottom right. Be careful<br>
-      not to listen to the signal with headohnes, the data signal is loud.
+      not to listen to the signal with headphones, the data signal is loud.
           </td>
         </tr>
       </table>
