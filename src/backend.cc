@@ -354,6 +354,7 @@ void BackEnd::setPlayBackForHumans(void) {
 
 void BackEnd::setPlayBackForHumansWorker(void) {
   mAudioPlayer->setAudioData(mAudioFile.mFloatMusic, mAudioFile.mFloatMusic);
+  QThread::msleep(250);
 }
 
 void BackEnd::setPlayBackForRobotsWorker(void) {
@@ -366,6 +367,7 @@ void BackEnd::setPlayBackForRobotsWorker(void) {
   } else {
     mAudioPlayer->setAudioData(mAudioFile.mFloatMusic, mAudioFile.mFloatData);
   }
+  QThread::msleep(250);
 }
 
 void BackEnd::handleDoneSettingSound(void) {
