@@ -3,7 +3,7 @@
 *  Dancebots GUI - Create choreographies for Dancebots
 *  https://github.com/philippReist/dancebots_gui
 *
-*  Copyright 2020 - mint & pepper
+*  Copyright 2019-2021 - mint & pepper
 *
 *  This program is free software : you can redistribute it and/or modify
 *  it under the terms of the GNU General Public License as published by
@@ -145,6 +145,10 @@ QtObject {
 
     // timer display
     property color ac_timerFont: "lightgrey"
+
+    // instaplay buttons
+    property color ac_instaPlayRobot: "orange"
+    property color ac_instaPlayHuman: mp_green
   }
 
   property QtObject motorPrimitive: QtObject{

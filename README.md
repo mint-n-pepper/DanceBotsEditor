@@ -1,6 +1,6 @@
-![Windows Build](https://github.com/philippReist/DanceBotsEditor/workflows/Windows%20Build/badge.svg)
-![macOS Build](https://github.com/philippReist/DanceBotsEditor/workflows/macOS%20Build/badge.svg)
-![Ubuntu Build](https://github.com/philippReist/DanceBotsEditor/workflows/Ubuntu%20Build/badge.svg)
+![Windows Build](https://github.com/philippReist/DanceBotsEditor/actions/workflows/windows_build_test.yml/badge.svg)
+![macOS Build](https://github.com/philippReist/DanceBotsEditor/actions/workflows/macos_build_test.yml/badge.svg)
+![Ubuntu Build](https://github.com/philippReist/DanceBotsEditor/actions/workflows/ubuntu_build_test.yml/badge.svg)
 
 # Introduction
 The Dancebots Editor allows creating choreographies for Dancebots, which are small and inexpensive differential drive robots that can move and blink their eight LEDs. They are designed to be built from scratch by children, see [here](https://www.dancebots.ch/) for more information.
@@ -46,7 +46,7 @@ The editor works as follows:
 
 3. The `build` folder should now contain a Visual Studio solution (.sln) and project files. You can build the project using the Visual Studio IDE or command line.
 
-   a. Using the Visual Studio IDE, open the `dancebots_gui.sln` file and build the `dancebotsEditor` project in `Release` and 64-bit (x64).
+   a. Using the Visual Studio IDE, open the `dancebotsEditor.sln` file and build the `dancebotsEditor` project in `Release` and 64-bit (x64).
 
    b. To build on the command line using `x64 Native Tools Command Prompt for VS 2019` (or whatever Visual Studio version you are using), navigate to `DanceBotsEditor\build\gui\` and run:
    ```
@@ -78,9 +78,27 @@ The editor works as follows:
    cp 'C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Redist\MSVC\14.24.28127\x64\Microsoft.VC142.CRT\vcruntime140.dll' .
    cp 'C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Redist\MSVC\14.24.28127\x64\Microsoft.VC142.CRT\vcruntime140_1.dll' .
    ```
+   This adds all necessary Qt `.dll` and `QML` files to the deployment folder.
+
+3. Copy the following x64 `.dll` files from the Visual Studio redistributable subfolder to the deployment folder so that the users do not need to install the redistributable package:
+   ```
+   cp 'C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Redist\MSVC\14.24.28127\x64\Microsoft.VC142.CRT\msvcp140.dll' .
+   cp 'C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Redist\MSVC\14.24.28127\x64\Microsoft.VC142.CRT\vcruntime140.dll' .
+   cp 'C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Redist\MSVC\14.24.28127\x64\Microsoft.VC142.CRT\vcruntime140_1.dll' .
+   ```
 
 4. Your deployment folder can now be shared with other users.
 
+
+4. Your deployment folder can now be shared with other users.
+
+5. *Expert* If you want to generate an MSI installer, this can be done using a Python script that is copied to the `gui` folder in the build folder. Install the [WIX Toolset](https://wixtoolset.org/releases/), and then generate the installer with the following steps from the `gui` folder:
+   ```
+   python .\generateWix.py
+   candle.exe .\dancebots.wxs
+   light.exe -ext WixUIExtension .\dancebots.wixobj
+   ```
+The script will just create an installer with the exact same folder structure that you have in the `Release` folder of the `gui` folder. So you may add additional files there that will be packaged with the installer, too.
 
 ## macOS
 ### Prequisites

@@ -2,7 +2,7 @@
  *  Dancebots GUI - Create choreographies for Dancebots
  *  https://github.com/philippReist/dancebots_gui
  *
- *  Copyright 2020 - mint & pepper
+ *  Copyright 2019-2021 - mint & pepper
  *
  *  This program is free software : you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -21,12 +21,13 @@
 
 #include <stdio.h>
 
+#include <QApplication>
 #include <QDataStream>
 #include <QEventLoop>
+#include <QSettings>
 #include <QThread>
 #include <QtConcurrent>
 #include <QtDebug>
-#include <QSettings>
 
 #include "src/primitive.h"
 #include "src/primitive_to_signal.h"
@@ -40,6 +41,8 @@ BackEnd::BackEnd(QObject* parent)
       mBeatDetector{static_cast<unsigned int>(mAudioFile.sampleRate)},
       mLoadFuture{},
       mLoadFutureWatcher{},
+      mSoundSetFuture{},
+      mSoundSetFutureWatcher{},
       mSaveFuture{},
       mSaveFutureWatcher{},
       mMotorPrimitives{new PrimitiveList{this}},
@@ -47,6 +50,8 @@ BackEnd::BackEnd(QObject* parent)
   // connect load and save thread finish signal to backend handler slots
   connect(&mLoadFutureWatcher, &QFutureWatcher<bool>::finished, this,
           &BackEnd::handleDoneLoading);
+  connect(&mSoundSetFutureWatcher, &QFutureWatcher<bool>::finished, this,
+          &BackEnd::handleDoneSettingSound);
   connect(&mSaveFutureWatcher, &QFutureWatcher<bool>::finished, this,
           &BackEnd::handleDoneSaving);
 
@@ -56,8 +61,8 @@ BackEnd::BackEnd(QObject* parent)
   if (iniFile.exists()) {
     QSettings iniSettings(mConfigFileName, QSettings::IniFormat, this);
     iniSettings.sync();
-    if (iniSettings.status() == QSettings::NoError
-       && iniSettings.contains("audio/swapChannels")) {
+    if (iniSettings.status() == QSettings::NoError &&
+        iniSettings.contains("audio/swapChannels")) {
       swapAudio = iniSettings.value("audio/swapChannels", false).toBool();
     }
   }
@@ -70,6 +75,12 @@ const QString BackEnd::mConfigFileName{"config.ini"};
 QString BackEnd::songTitle() { return mSongTitle; }
 
 QString BackEnd::songComment() { return mSongComment; }
+
+bool BackEnd::swapAudioChannels() { return mAudioFile.getSwapChannels(); }
+
+void BackEnd::setSwapAudioChannels(const bool swapAudioChannels) {
+  mAudioFile.setSwapChannels(swapAudioChannels);
+}
 
 QString BackEnd::songArtist() { return mSongArtist; }
 
@@ -133,7 +144,8 @@ void BackEnd::handleDoneLoading(void) {
   }
 
   // setup audio player:
-  mAudioPlayer->setAudioData(mAudioFile.mFloatMusic, mAudioFile.sampleRate);
+  mAudioPlayer->resetAudioOutput();
+  mAudioPlayer->setAudioData(mAudioFile.mFloatMusic, mAudioFile.mFloatMusic);
 }
 
 void BackEnd::handleDoneSaving(void) { emit doneSaving(mSaveFuture.result()); }
@@ -310,6 +322,56 @@ void BackEnd::printLedPrimitives(void) const {
   mLedPrimitives->printPrimitives();
 }
 
+void BackEnd::setPlayBackForRobots(void) {
+  mFileStatus =
+      "Compiling moves and lights and setting output sound for Dancebots...";
+  emit fileStatusChanged();
+  QThread::msleep(250);
+
+  mAudioPlayerTime = mAudioPlayer->getCurrentPlaybackTime();
+  // stop audio playback:
+  mAudioPlayer->stop(false);
+  mSoundSetFuture =
+      QtConcurrent::run(this, &BackEnd::setPlayBackForRobotsWorker);
+  mSoundSetFutureWatcher.setFuture(mSoundSetFuture);
+}
+
+void BackEnd::setPlayBackForHumans(void) {
+  mFileStatus = "Setting output sound for humans...";
+  emit fileStatusChanged();
+  QThread::msleep(250);
+
+  mAudioPlayerTime = mAudioPlayer->getCurrentPlaybackTime();
+  // stop audio playback:
+  mAudioPlayer->stop(false);
+
+  mSoundSetFuture =
+      QtConcurrent::run(this, &BackEnd::setPlayBackForHumansWorker);
+  mSoundSetFutureWatcher.setFuture(mSoundSetFuture);
+}
+
+void BackEnd::setPlayBackForHumansWorker(void) {
+  mAudioPlayer->setAudioData(mAudioFile.mFloatMusic, mAudioFile.mFloatMusic);
+}
+
+void BackEnd::setPlayBackForRobotsWorker(void) {
+  // instantiate primitive to audio signal converter
+  PrimitiveToSignal primitiveConverter(mBeatFrames, &mAudioFile);
+  primitiveConverter.convert(mMotorPrimitives->getData(),
+                             mLedPrimitives->getData());
+  if (mAudioFile.getSwapChannels()) {
+    mAudioPlayer->setAudioData(mAudioFile.mFloatData, mAudioFile.mFloatMusic);
+  } else {
+    mAudioPlayer->setAudioData(mAudioFile.mFloatMusic, mAudioFile.mFloatData);
+  }
+}
+
+void BackEnd::handleDoneSettingSound(void) {
+  mAudioPlayer->seek(mAudioPlayerTime);
+  emit mAudioPlayer->notify(mAudioPlayerTime);
+  emit doneSettingSound();
+}
+
 int BackEnd::getBeatAtFrame(const int frame) const {
   // run utility function to find beat
   size_t ind = 0;
@@ -341,6 +403,10 @@ bool BackEnd::writePrependData(void) {
 bool BackEnd::serializeBeatsAndPrimitives(QDataStream* const stream) {
   // write number of beats first:
   quint32 nBeats = static_cast<quint32>(mBeatFrames.size());
+  // process swap audio channels flag:
+  if (mAudioFile.getSwapChannels()) {
+    nBeats |= AudioFile::SWAP_CHANNEL_FLAG_MASK;
+  }
   *stream << nBeats;
 
   // write out beats:
@@ -377,8 +443,9 @@ bool BackEnd::readBeatsFromPrependData(void) {
   AudioFile::applyDataStreamSettings(&dataStream);
 
   // read number of beats first:
-  quint32 nBeats = 0;
-  dataStream >> nBeats;
+  quint32 nBeats = mAudioFile.getNumBeats();
+  // and seek to end of num beats:
+  dataStream.device()->seek(4u);
 
   // reserve memory for the beats
   mBeatFrames.reserve(nBeats);
@@ -399,9 +466,8 @@ bool BackEnd::readPrimitivesFromPrependData(void) {
   AudioFile::applyDataStreamSettings(&dataStream);
 
   // seek to end of beats:
-  quint32 nBeats = 0;
-  dataStream >> nBeats;  // read number of beats
-  dataStream.device()->seek(4u * static_cast<size_t>(nBeats + 1));
+  dataStream.device()->seek(
+      4u * (static_cast<size_t>(mAudioFile.getNumBeats()) + 1u));
 
   // next, read out motor primitives:
   quint32 nMotorPrimitives = 0;

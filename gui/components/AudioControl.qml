@@ -2,7 +2,7 @@
 *  Dancebots GUI - Create choreographies for Dancebots
 *  https://github.com/philippReist/dancebots_gui
 *
-*  Copyright 2020 - mint & pepper
+*  Copyright 2019-2021 - mint & pepper
 *
 *  This program is free software : you can redistribute it and/or modify
 *  it under the terms of the GNU General Public License as published by
@@ -30,7 +30,8 @@ Item {
           + appWindow.guiMargin
 
   property int sliderHeight: width * Style.audioControl.sliderHeight
-
+  property bool robotSoundNeedsUpdate: false
+  property bool startPlayAfterRobotSoundUpdate: false
   property real songPositionMS: 0.0
 
   enabled: false
@@ -56,6 +57,27 @@ Item {
       if(!songPositionSlider.pressed){
         songPositionMS = currentPosMS
       }
+    }
+  }
+
+  function togglePlay(){
+    // check if robot sound needs to be recompiled:
+    if(!backend.audioPlayer.isPlaying)
+    {
+      if(robotHumanButtons.runRobotSound && root.robotSoundNeedsUpdate)
+      {
+        fileProcess.open()
+        backend.setPlayBackForRobots()
+        root.startPlayAfterRobotSoundUpdate = true
+      }
+      else
+      {
+        backend.audioPlayer.togglePlay()
+      }
+    }
+    else
+    {
+      backend.audioPlayer.togglePlay()
     }
   }
 
@@ -153,7 +175,7 @@ Item {
         onPressed: appWindow.grabFocus()
         onClicked:
         {
-          backend.audioPlayer.togglePlay()
+          root.togglePlay()
         }
       }
       Button
@@ -214,6 +236,153 @@ Item {
       font.pixelSize: Style.audioControl.timerFontSize
                       * root.sliderHeight
       color: Style.palette.ac_timerFont
+    }
+
+    Row{
+      id: robotHumanButtons
+      // spacing: Style.audioControl.buttonSpacing * root.sliderHeight
+      anchors.verticalCenter: playControlItem.verticalCenter
+      anchors.right: playControlItem.right
+      spacing: Style.fileControl.buttonSpacing * root.height * 0.3
+      property var runRobotSound: false
+
+
+      Connections{
+          target: backend
+          onDoneSettingSound:{
+            fileProcess.close()
+            if(robotHumanButtons.runRobotSound){
+              root.robotSoundNeedsUpdate = false
+              if(root.startPlayAfterRobotSoundUpdate)
+              {
+                backend.audioPlayer.togglePlay()
+                root.startPlayAfterRobotSoundUpdate = false
+              }
+            }
+          }
+      }
+
+      Item{
+        width: playControlItem.height * 1.9
+        height: playControlItem.height * 0.7
+
+        Image{
+          id: instaIcon
+          source: "../icons/insta.svg"
+          sourceSize.width: parent.height * 0.5
+          antialiasing: true
+          visible: true
+        }
+
+        ColorOverlay{
+          anchors.fill: instaIcon
+          source: instaIcon
+          color: Style.palette.mp_yellow
+          antialiasing: true
+          visible: true
+        }
+
+
+        Item{
+          width: playControlItem.height * 1.7
+          height: playControlItem.height
+
+          Text {
+            id: instaText
+            text: qsTr("INSTA")
+            verticalAlignment: Text.AlignVCenter
+            horizontalAlignment: Text.AlignHCenter
+            topPadding: playControlItem.height * 0.1
+            leftPadding: playControlItem.height * 0.5
+            color: Style.palette.mp_yellow
+            font.pixelSize: parent.height * Style.fileControl.buttonTextHeight * 0.9
+          }
+        }
+
+      }
+
+
+      Button{
+        id: robotSound
+        focusPolicy: Qt.NoFocus
+        width: playControlItem.height * 2
+        height: playControlItem.height * 0.8
+        text: qsTr("ROBOT")
+        font.pixelSize: height * Style.fileControl.buttonTextHeight * 1
+        property color buttonColor: enabled ? Style.palette.ac_instaPlayRobot
+          : Style.palette.fc_buttonDisabled
+
+        contentItem: Text{
+          text: parent.text
+          font: parent.font
+          opacity: enabled ? Style.fileControl.buttonOpacityEnabled
+                           : Style.fileControl.buttonOpacityDisabled
+          color: robotHumanButtons.runRobotSound ? Style.palette.fc_buttonText
+                                : Style.palette.ac_instaPlayRobot
+          verticalAlignment: Text.AlignVCenter
+          horizontalAlignment: Text.AlignHCenter
+        }
+
+        background: Rectangle{
+          anchors.fill: parent
+          opacity: enabled ? Style.fileControl.buttonOpacityEnabled
+                          : Style.fileControl.buttonOpacityDisabled
+          color: robotHumanButtons.runRobotSound ? Style.palette.ac_instaPlayRobot
+                                : Style.palette.mw_background
+          border.color: Style.palette.ac_instaPlayRobot
+          border.width: Style.fileControl.buttonBorderWidth * parent.height
+          radius: height * Style.fileControl.buttonRadius
+        }
+
+        onPressed: appWindow.grabFocus()
+        onClicked:
+        {
+          fileProcess.open()
+          robotHumanButtons.runRobotSound = true
+          backend.setPlayBackForRobots()
+        }
+      }
+
+      Button{
+        id: humanSound
+        focusPolicy: Qt.NoFocus
+        width: playControlItem.height * 2
+        height: playControlItem.height * 0.8
+        text: qsTr("HUMAN")
+        font.pixelSize: height * Style.fileControl.buttonTextHeight * 1
+        property color buttonColor: enabled ? Style.palette.ac_instaPlayHuman
+          : Style.palette.fc_buttonDisabled
+
+        contentItem: Text{
+          text: parent.text
+          font: parent.font
+          opacity: enabled ? Style.fileControl.buttonOpacityEnabled
+                           : Style.fileControl.buttonOpacityDisabled
+          color: robotHumanButtons.runRobotSound ? Style.palette.ac_instaPlayHuman
+                                : Style.palette.fc_buttonText
+          verticalAlignment: Text.AlignVCenter
+          horizontalAlignment: Text.AlignHCenter
+        }
+
+        background: Rectangle{
+          anchors.fill: parent
+          opacity: enabled ? Style.fileControl.buttonOpacityEnabled
+                          : Style.fileControl.buttonOpacityDisabled
+          color: robotHumanButtons.runRobotSound ? Style.palette.mw_background
+                                : Style.palette.ac_instaPlayHuman
+          border.color: Style.palette.ac_instaPlayHuman
+          border.width: Style.fileControl.buttonBorderWidth * parent.height
+          radius: height * Style.fileControl.buttonRadius
+        }
+
+        onPressed: appWindow.grabFocus()
+        onClicked:
+        {
+          fileProcess.open()
+          robotHumanButtons.runRobotSound = false
+          backend.setPlayBackForHumans()
+        }
+      }
     }
   } // play control item
 }

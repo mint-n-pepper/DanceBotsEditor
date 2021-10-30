@@ -2,7 +2,7 @@
  *  Dancebots GUI - Create choreographies for Dancebots
  *  https://github.com/philippReist/dancebots_gui
  *
- *  Copyright 2020 - mint & pepper
+ *  Copyright 2019-2021 - mint & pepper
  *
  *  This program is free software : you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -24,7 +24,6 @@
 #include <QFutureWatcher>
 #include <QObject>
 #include <QString>
-
 #include <vector>
 
 #include "src/audio_file.h"
@@ -38,6 +37,8 @@
  */
 class BackEnd : public QObject {
   Q_OBJECT;
+  Q_PROPERTY(bool swapAudioChannels READ swapAudioChannels WRITE
+                 setSwapAudioChannels NOTIFY swapAudioChannelsChanged);
   Q_PROPERTY(QString songArtist READ songArtist WRITE setSongArtist NOTIFY
                  songArtistChanged);
   Q_PROPERTY(QString songTitle READ songTitle WRITE setSongTitle NOTIFY
@@ -70,6 +71,13 @@ class BackEnd : public QObject {
    * \brief Get ID3-Tag song comment string
    */
   QString songComment(void);
+
+  /**
+   * \brief Gets state of audio file channel swapping.
+   * True: Audio channels swapped and music on right channel.
+   * False: Audio channels not swapped and music on default left channel.
+   */
+  bool swapAudioChannels(void);
 
   /**
    * \brief Get file load and save status string
@@ -110,6 +118,13 @@ class BackEnd : public QObject {
    * \brief Set ID3-Tag song comment string
    */
   void setSongComment(const QString& comment);
+
+  /**
+   * \brief Sets state of audio file channel swapping.
+   * True: Audio channels swapped and music on right channel.
+   * False: Audio channels not swapped and music on default left channel.
+   */
+  void setSwapAudioChannels(const bool swapAudioChannels);
 
   /**
    * \brief Load MP3 from given file path
@@ -182,6 +197,7 @@ class BackEnd : public QObject {
   // NOLINTNEXTLINE
  signals:
   void fileStatusChanged();
+  void swapAudioChannelsChanged();
   void songArtistChanged();
   void songTitleChanged();
   void songCommentChanged();
@@ -191,13 +207,17 @@ class BackEnd : public QObject {
   void audioPlayerChanged();
   void doneLoading(const bool result);
   void doneSaving(const bool result);
+  void doneSettingSound(void);
 
   // NOLINTNEXTLINE
  public slots:
   void handleDoneLoading(void);
   void handleDoneSaving(void);
+  void handleDoneSettingSound(void);
   void printMotPrimitives(void) const;
   void printLedPrimitives(void) const;
+  void setPlayBackForRobots(void);
+  void setPlayBackForHumans(void);
 
  private:
   // init to 100bpm
@@ -216,6 +236,7 @@ class BackEnd : public QObject {
   QString mFileStatus;
   AudioFile mAudioFile;
   AudioPlayer* mAudioPlayer;
+  int mAudioPlayerTime = 0;
   BeatDetector mBeatDetector;
   std::vector<int> mBeatFrames; /**< beat locations in audio frames */
 
@@ -223,8 +244,12 @@ class BackEnd : public QObject {
   // to keep UI responsive / showing messages during loading and saving
   QFuture<bool> mLoadFuture;
   QFutureWatcher<bool> mLoadFutureWatcher;
+  QFuture<void> mSoundSetFuture;
+  QFutureWatcher<void> mSoundSetFutureWatcher;
   QFuture<bool> mSaveFuture;
   QFutureWatcher<bool> mSaveFutureWatcher;
+  void setPlayBackForRobotsWorker(void);
+  void setPlayBackForHumansWorker(void);
   bool loadMP3Worker(const QString& fileName);
   bool saveMP3Worker(const QString& fileName);
 

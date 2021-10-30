@@ -53,11 +53,21 @@ else()
 endif()
 
 # configure visual studio user file to binary folder to have
-# qt in debug path:
+# qt in debug path, and copy wix source files and icon:
 if(WIN32)
   configure_file(${CMAKE_SOURCE_DIR}/template.vcxproj.in
                  ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.vcxproj.user
                  @ONLY)
+  configure_file(${CMAKE_SOURCE_DIR}/src/wix/generateWix.py
+                 ${CMAKE_CURRENT_BINARY_DIR}/generateWix.py
+                 COPYONLY)
+  configure_file(${CMAKE_SOURCE_DIR}/src/wix/LICENSE.rtf
+                 ${CMAKE_CURRENT_BINARY_DIR}/LICENSE.rtf
+                 COPYONLY)                 
+  # for use in wix for uninstaller
+  configure_file(${CMAKE_SOURCE_DIR}/gui/rc/applogo.ico
+                 ${CMAKE_CURRENT_BINARY_DIR}/applogo.ico
+                 COPYONLY)                 
 endif()
 
 # assign version number

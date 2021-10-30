@@ -2,7 +2,7 @@
 *  Dancebots GUI - Create choreographies for Dancebots
 *  https://github.com/philippReist/dancebots_gui
 *
-*  Copyright 2020 - mint & pepper
+*  Copyright 2019-2021 - mint & pepper
 *
 *  This program is free software : you can redistribute it and/or modify
 *  it under the terms of the GNU General Public License as published by
@@ -357,6 +357,10 @@ Connections{
     visible: !backend.mp3Loaded
   }
 
+  function setRobotDataChanged(){
+    audioControl.robotSoundNeedsUpdate = true
+  }
+
   function grabFocus(){
     keyCatcher.focus = true
   }
@@ -384,7 +388,7 @@ Connections{
       ledDragger.deleteAll()
       break;
     case Qt.Key_Space:
-      backend.audioPlayer.togglePlay()
+      audioControl.togglePlay()
       break;
     }
   }
