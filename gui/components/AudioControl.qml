@@ -317,7 +317,7 @@ Item {
           font: parent.font
           opacity: enabled ? Style.fileControl.buttonOpacityEnabled
                            : Style.fileControl.buttonOpacityDisabled
-          color: parent.pressed ? Style.palette.fc_buttonText
+          color: robotHumanButtons.runRobotSound ? Style.palette.fc_buttonText
                                 : Style.palette.ac_instaPlayRobot
           verticalAlignment: Text.AlignVCenter
           horizontalAlignment: Text.AlignHCenter
@@ -327,7 +327,7 @@ Item {
           anchors.fill: parent
           opacity: enabled ? Style.fileControl.buttonOpacityEnabled
                           : Style.fileControl.buttonOpacityDisabled
-          color: parent.pressed ? Style.palette.ac_instaPlayRobot
+          color: robotHumanButtons.runRobotSound ? Style.palette.ac_instaPlayRobot
                                 : Style.palette.mw_background
           border.color: Style.palette.ac_instaPlayRobot
           border.width: Style.fileControl.buttonBorderWidth * parent.height
@@ -358,8 +358,8 @@ Item {
           font: parent.font
           opacity: enabled ? Style.fileControl.buttonOpacityEnabled
                            : Style.fileControl.buttonOpacityDisabled
-          color: parent.pressed ? Style.palette.fc_buttonText
-                                : Style.palette.ac_instaPlayHuman
+          color: robotHumanButtons.runRobotSound ? Style.palette.ac_instaPlayHuman
+                                : Style.palette.fc_buttonText
           verticalAlignment: Text.AlignVCenter
           horizontalAlignment: Text.AlignHCenter
         }
@@ -368,8 +368,8 @@ Item {
           anchors.fill: parent
           opacity: enabled ? Style.fileControl.buttonOpacityEnabled
                           : Style.fileControl.buttonOpacityDisabled
-          color: parent.pressed ? Style.palette.ac_instaPlayHuman
-                                : Style.palette.mw_background
+          color: robotHumanButtons.runRobotSound ? Style.palette.mw_background
+                                : Style.palette.ac_instaPlayHuman
           border.color: Style.palette.ac_instaPlayHuman
           border.width: Style.fileControl.buttonBorderWidth * parent.height
           radius: height * Style.fileControl.buttonRadius
