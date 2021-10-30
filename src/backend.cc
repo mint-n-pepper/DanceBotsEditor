@@ -326,12 +326,9 @@ void BackEnd::setPlayBackForRobots(void) {
   mFileStatus =
       "Compiling moves and lights and setting output sound for Dancebots...";
   emit fileStatusChanged();
-  mAudioPlayerTime = mAudioPlayer->getCurrentPlaybackTime();
+  QThread::msleep(250);
 
-  // stop audio playback:
-  mAudioPlayer->stop(false);
-  mAudioPlayer->resetAudioOutput();
-  qApp->processEvents();
+  mAudioPlayerTime = mAudioPlayer->getCurrentPlaybackTime();
 
   mSoundSetFuture =
       QtConcurrent::run(this, &BackEnd::setPlayBackForRobotsWorker);
@@ -341,11 +338,9 @@ void BackEnd::setPlayBackForRobots(void) {
 void BackEnd::setPlayBackForHumans(void) {
   mFileStatus = "Setting output sound for humans...";
   emit fileStatusChanged();
+  QThread::msleep(250);
+
   mAudioPlayerTime = mAudioPlayer->getCurrentPlaybackTime();
-  // stop audio playback:
-  mAudioPlayer->stop(false);
-  mAudioPlayer->resetAudioOutput();
-  qApp->processEvents();
 
   mSoundSetFuture =
       QtConcurrent::run(this, &BackEnd::setPlayBackForHumansWorker);
@@ -353,11 +348,17 @@ void BackEnd::setPlayBackForHumans(void) {
 }
 
 void BackEnd::setPlayBackForHumansWorker(void) {
+  // stop audio playback:
+  mAudioPlayer->stop(false);
+  mAudioPlayer->resetAudioOutput();
   mAudioPlayer->setAudioData(mAudioFile.mFloatMusic, mAudioFile.mFloatMusic);
-  QThread::msleep(250);
 }
 
 void BackEnd::setPlayBackForRobotsWorker(void) {
+  // stop audio playback:
+  mAudioPlayer->stop(false);
+  mAudioPlayer->resetAudioOutput();
+
   // instantiate primitive to audio signal converter
   PrimitiveToSignal primitiveConverter(mBeatFrames, &mAudioFile);
   primitiveConverter.convert(mMotorPrimitives->getData(),
@@ -367,7 +368,6 @@ void BackEnd::setPlayBackForRobotsWorker(void) {
   } else {
     mAudioPlayer->setAudioData(mAudioFile.mFloatMusic, mAudioFile.mFloatData);
   }
-  QThread::msleep(250);
 }
 
 void BackEnd::handleDoneSettingSound(void) {
