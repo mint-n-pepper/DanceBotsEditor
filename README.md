@@ -81,6 +81,13 @@ The editor works as follows:
 
 4. Your deployment folder can now be shared with other users.
 
+5. *Expert* If you want to generate an MSI installer, this can be done using a Python script that is copied to the `gui` folder in the build folder. Install the [WIX Toolset](https://wixtoolset.org/releases/), and then generate the installer with the following steps from the `gui` folder:
+   ```
+   python .\generateWix.py
+   candle.exe .\dancebots.wxs
+   light.exe -ext WixUIExtension .\dancebots.wixobj
+   ```
+The script will just create an installer with the exact same folder structure that you have in the `Release` folder of the `gui` folder. So you may add additional files there that will be packaged with the installer, too.
 
 ## macOS
 ### Prequisites
