@@ -2,7 +2,7 @@
  *  Dancebots GUI - Create choreographies for Dancebots
  *  https://github.com/philippReist/dancebots_gui
  *
- *  Copyright 2020 - mint & pepper
+ *  Copyright 2019-2021 - mint & pepper
  *
  *  This program is free software : you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -19,7 +19,6 @@
 
 #include <QDebug>
 #include <QGuiApplication>
-
 #include <string>
 
 #include "src/audio_file.h"
@@ -48,7 +47,19 @@ int main(int argc, char* argv[]) {
 
   DummyUI dummyUI{&player, &app};
 
-  player.setAudioData(mp3File44k.mFloatMusic, mp3File44k.sampleRate);
+  assert(mp3File44k.mFloatData.size() == mp3File44k.mFloatMusic.size());
+
+  float time = 0.0f;
+  float amp = 0.3f;
+  float freq = 440.0f;
+  float dt = 1.0f / mp3File44k.sampleRate;
+  for (float& sample : mp3File44k.mFloatData) {
+    sample = amp * sin(time * freq * 2.0f * 3.14159f);
+    time += dt;
+  }
+
+  player.resetAudioOutput(mp3File44k.sampleRate);
+  player.setAudioData(mp3File44k.mFloatMusic, mp3File44k.mFloatData);
 
   player.togglePlay();
 

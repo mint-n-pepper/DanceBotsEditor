@@ -1,6 +1,6 @@
-![Windows Build](https://github.com/philippReist/DanceBotsEditor/workflows/Windows%20Build/badge.svg)
-![macOS Build](https://github.com/philippReist/DanceBotsEditor/workflows/macOS%20Build/badge.svg)
-![Ubuntu Build](https://github.com/philippReist/DanceBotsEditor/workflows/Ubuntu%20Build/badge.svg)
+![Windows Build](https://github.com/philippReist/DanceBotsEditor/actions/workflows/windows_build_test.yml/badge.svg)
+![macOS Build](https://github.com/philippReist/DanceBotsEditor/actions/workflows/macos_build_test.yml/badge.svg)
+![Ubuntu Build](https://github.com/philippReist/DanceBotsEditor/actions/workflows/ubuntu_build_test.yml/badge.svg)
 
 # Introduction
 The Dancebots Editor allows creating choreographies for Dancebots, which are small and inexpensive differential drive robots that can move and blink their eight LEDs. They are designed to be built from scratch by children, see [here](https://www.dancebots.ch/) for more information.
@@ -46,7 +46,7 @@ The editor works as follows:
 
 3. The `build` folder should now contain a Visual Studio solution (.sln) and project files. You can build the project using the Visual Studio IDE or command line.
 
-   a. Using the Visual Studio IDE, open the `dancebots_gui.sln` file and build the `dancebotsEditor` project in `Release` and 64-bit (x64).
+   a. Using the Visual Studio IDE, open the `dancebotsEditor.sln` file and build the `dancebotsEditor` project in `Release` and 64-bit (x64).
 
    b. To build on the command line using `x64 Native Tools Command Prompt for VS 2019` (or whatever Visual Studio version you are using), navigate to `DanceBotsEditor\build\gui\` and run:
    ```

@@ -2,7 +2,7 @@
 *  Dancebots GUI - Create choreographies for Dancebots
 *  https://github.com/philippReist/dancebots_gui
 *
-*  Copyright 2020 - mint & pepper
+*  Copyright 2019-2021 - mint & pepper
 *
 *  This program is free software : you can redistribute it and/or modify
 *  it under the terms of the GNU General Public License as published by
@@ -26,11 +26,16 @@ QtObject {
   <html>
     <head>
       <style>
+      h3 {
+        font-size: medium;
+        margin-top:0px;
+      }
       li {
         padding-top: 2px;
       }
       th, td {
         padding: 2px 10px;
+        font-size: small;
       }
       </style>
     </head>
@@ -52,11 +57,25 @@ QtObject {
         </tr>
         <tr>
           <td>4.</td>
-          <td>Play on an MP3 player connected to a Dancebot</td>
+          <td>
+          Play the file on an MP3 player connected to a Dancebot
+          </td>
         </tr>
         <tr>
           <td>5.</td>
           <td>Reload the MP3 and keep editing your choreography</td>
+        </tr>
+      </table>
+
+      <h3>Instaplay</h3>
+      <table style="width:100%;">
+        <tr>
+          <td>
+      Instead of saving to an MP3 and playing from an MP3 player, you can <br>
+      play the choreography directly from the GUI to a Dancebot connected to the<br>
+      computer. Select the ROBOT option at the bottom right. Be careful<br>
+      not to listen to the signal with headphones, the data signal is loud.
+          </td>
         </tr>
       </table>
 
@@ -86,6 +105,16 @@ QtObject {
           <td>Deselect all</td>
         </tr>
       </table>
+
+      <h3>Swap Channels</h3>
+      <table style="width:100%;">
+        <tr>
+          <td>
+      Use the radio button to swap data and music channels for both MP3 file and
+      instaplay.
+          </td>
+        </tr>
+      </table>
     </body>
   </html>
   '
@@ -103,7 +132,7 @@ QtObject {
     <html>
     <body>
       <p>
-      Copyright &copy; 2020 — mint & pepper —
+      Copyright &copy; 2019-2021 — mint & pepper —
       <a href="https://www.mintpepper.ch">https://www.mintpepper.ch</a>
       </p>
       
