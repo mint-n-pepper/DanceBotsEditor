@@ -1,5 +1,5 @@
-import QtQuick 2.6
-import QtQuick.Controls 2.12
+import QtQuick 2.12
+import QtQuick.Controls 2.15
 import QtGraphicalEffects 1.12
 
 import '../GuiStyle'
@@ -18,7 +18,9 @@ Row{
   property var toolTipText: "SET THIS WHERE YOU USE IT"
 
   onValueChanged: {
-    delegate.primitive.frequency = value
+    if(delegate !== null){
+      delegate.primitive.frequency = value
+    }
   }
 
   Text{

@@ -17,8 +17,8 @@
 *  LICENSE file included in the repository.
 */
 
-import QtQuick 2.6
-import QtQuick.Controls 2.12
+import QtQuick 2.12
+import QtQuick.Controls 2.15
 import QtQuick.Dialogs 1.3
 import QtGraphicalEffects 1.12
 
@@ -49,7 +49,8 @@ Rectangle{
 
 	Connections{
 		target: backend
-		onDoneLoading:{
+		function onDoneLoading(result){
+      
       fileProcess.close()
       if(result){
         songTitleText.text = backend.songTitle
@@ -63,7 +64,7 @@ Rectangle{
 
   Connections{
     target: backend
-    onDoneSaving:{
+    function onDoneSaving(result){
       fileProcess.close()
     }
   }

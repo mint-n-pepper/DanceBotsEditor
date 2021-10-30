@@ -17,10 +17,10 @@
 *  LICENSE file included in the repository.
 */
 
-import QtQuick 2.6
-import QtQuick.Controls 2.12
+import QtQuick 2.12
+import QtQuick.Controls 2.15
 import QtQuick.Dialogs 1.3
-import QtQuick.Window 2.1
+import QtQuick.Window 2.15
 
 import "components"
 import "GuiStyle"
@@ -71,7 +71,7 @@ ApplicationWindow {
 
 Connections{
   target: backend
-  onDoneLoading:{
+  function onDoneLoading(result){
     if(result && backend.getAverageBeatFrames() > 0){
       // adjust frame to Pixels to get beat spacing independent of bpm
       frameToPixels = avgBeatWidth / backend.getAverageBeatFrames()
@@ -161,12 +161,16 @@ Connections{
 
     Connections{
       target: motDragger
-      onDragXChanged: timerBarFlickable.processMouseMove(minChildX, maxChildX)
+      function onDragXChanged(minChildX, maxChildX){
+        timerBarFlickable.processMouseMove(minChildX, maxChildX)
+      }
     }
 
     Connections{
       target: ledDragger
-      onDragXChanged: timerBarFlickable.processMouseMove(minChildX, maxChildX)
+      function onDragXChanged(minChildX, maxChildX){
+        timerBarFlickable.processMouseMove(minChildX, maxChildX)
+      }
     }
 
     function hoverScroll(){

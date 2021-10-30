@@ -17,8 +17,8 @@
 *  LICENSE file included in the repository.
 */
 
-import QtQuick 2.6
-import QtQuick.Controls 2.12
+import QtQuick 2.12
+import QtQuick.Controls 2.15
 import QtQuick.Dialogs 1.3
 import QtGraphicalEffects 1.12
 import dancebots.backend 1.0
@@ -55,7 +55,7 @@ Rectangle{
 
   Connections{
 	  target: backend
-	  onDoneLoading:{
+	  function onDoneLoading(result){
       if(result){
         // calculate average beat distance:
         averageBeatFrames = backend.getAverageBeatFrames();
@@ -650,6 +650,9 @@ Rectangle{
     // set the first beat at a fixed pixel distance from the left border of the
     // control box:
     setDummyBeats()
+    if(delegate === null){
+      createDelegate()
+    }
     delegate.updatePrimitive()
   }
 

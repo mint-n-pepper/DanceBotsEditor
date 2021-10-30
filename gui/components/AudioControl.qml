@@ -17,8 +17,8 @@
 *  LICENSE file included in the repository.
 */
 
-import QtQuick 2.6
-import QtQuick.Controls 2.12
+import QtQuick 2.12
+import QtQuick.Controls 2.15
 import dancebots.backend 1.0
 import QtGraphicalEffects 1.12
 import "../GuiStyle"
@@ -38,7 +38,7 @@ Item {
 
   Connections{
     target: backend
-    onDoneLoading:{
+    function onDoneLoading(result){
       if(result){
         enabled = true
         backend.audioPlayer.setNotifyInterval(30);
@@ -51,7 +51,7 @@ Item {
 
   Connections{
     target: backend.audioPlayer
-    onNotify:{
+    function onNotify(currentPosMS){
       // set slider to current position in music,
       // but only if user is not dragging slider at the moment:
       if(!songPositionSlider.pressed){
@@ -249,7 +249,7 @@ Item {
 
       Connections{
           target: backend
-          onDoneSettingSound:{
+          function onDoneSettingSound(){
             fileProcess.close()
             if(robotHumanButtons.runRobotSound){
               root.robotSoundNeedsUpdate = false
@@ -337,9 +337,12 @@ Item {
         onPressed: appWindow.grabFocus()
         onClicked:
         {
-          fileProcess.open()
-          robotHumanButtons.runRobotSound = true
-          backend.setPlayBackForRobots()
+          if(!robotHumanButtons.runRobotSound)
+          {
+            fileProcess.open()
+            robotHumanButtons.runRobotSound = true
+            backend.setPlayBackForRobots()
+          }
         }
       }
 
@@ -378,9 +381,12 @@ Item {
         onPressed: appWindow.grabFocus()
         onClicked:
         {
-          fileProcess.open()
-          robotHumanButtons.runRobotSound = false
-          backend.setPlayBackForHumans()
+          if(robotHumanButtons.runRobotSound)
+          {
+            fileProcess.open()
+            backend.setPlayBackForHumans()
+            robotHumanButtons.runRobotSound = false
+          }
         }
       }
     }
