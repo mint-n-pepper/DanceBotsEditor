@@ -329,7 +329,8 @@ void BackEnd::setPlayBackForRobots(void) {
   QThread::msleep(250);
 
   mAudioPlayerTime = mAudioPlayer->getCurrentPlaybackTime();
-
+  // stop audio playback:
+  mAudioPlayer->stop(false);
   mSoundSetFuture =
       QtConcurrent::run(this, &BackEnd::setPlayBackForRobotsWorker);
   mSoundSetFutureWatcher.setFuture(mSoundSetFuture);
@@ -341,6 +342,8 @@ void BackEnd::setPlayBackForHumans(void) {
   QThread::msleep(250);
 
   mAudioPlayerTime = mAudioPlayer->getCurrentPlaybackTime();
+  // stop audio playback:
+  mAudioPlayer->stop(false);
 
   mSoundSetFuture =
       QtConcurrent::run(this, &BackEnd::setPlayBackForHumansWorker);
@@ -348,17 +351,10 @@ void BackEnd::setPlayBackForHumans(void) {
 }
 
 void BackEnd::setPlayBackForHumansWorker(void) {
-  // stop audio playback:
-  mAudioPlayer->stop(false);
-  mAudioPlayer->resetAudioOutput();
   mAudioPlayer->setAudioData(mAudioFile.mFloatMusic, mAudioFile.mFloatMusic);
 }
 
 void BackEnd::setPlayBackForRobotsWorker(void) {
-  // stop audio playback:
-  mAudioPlayer->stop(false);
-  mAudioPlayer->resetAudioOutput();
-
   // instantiate primitive to audio signal converter
   PrimitiveToSignal primitiveConverter(mBeatFrames, &mAudioFile);
   primitiveConverter.convert(mMotorPrimitives->getData(),
