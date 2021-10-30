@@ -4,7 +4,6 @@ import xml.etree.ElementTree as ET
 
 _UPGRADECODE = "23AE508C-B901-4871-8680-08E21EF226C0"
 _GENERATEUUIDSTR = "GENERATE_NEW_UUID"
-_SOURCE_FOLDER = "Release"
 
 _productAttributes = {
     "Id":_GENERATEUUIDSTR,
