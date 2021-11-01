@@ -20,7 +20,7 @@ The editor works as follows:
 2. Install [Visual Studio Community](https://visualstudio.microsoft.com/)
    * Install `Desktop development with C++` workload, see [here for instructions](https://devblogs.microsoft.com/cppblog/windows-desktop-development-with-c-in-visual-studio/)
 
-3. Install [Qt](https://www.qt.io/) 5.12.9 LTS. The easiest is to use the [online installer](https://www.qt.io/download). Take note of the installation directory as you will need it later on.
+3. Install [Qt](https://www.qt.io/) 5.12.11 LTS. The easiest is to use the [online installer](https://www.qt.io/download). Take note of the installation directory as you will need it later on.
    * You will only need the `MSVC 2017 64-bit` version
 
 4. Install [Git](https://git-scm.com/download/win). The commands in the following steps are run in the `Git Bash`.
@@ -40,7 +40,7 @@ The editor works as follows:
 2. Navigate to the `build` directory, configure for release:
    ```
    cd build\
-   cmake -DCMAKE_PREFIX_PATH=C:\path\to\Qt\5.12.9\msvc2017_64\ -DCMAKE_BUILD_TYPE=Release -G "Visual Studio 16 2019" ..
+   cmake -DCMAKE_PREFIX_PATH=C:\path\to\Qt\5.12.11\msvc2017_64\ -DCMAKE_BUILD_TYPE=Release -G "Visual Studio 16 2019" ..
    ```
    You may need to update the generator flag (-G) depending on the Visual Studio version that you are using. To check what generators are available, run `cmake -G`.
 
@@ -68,7 +68,7 @@ The editor works as follows:
 
 2. Run the Qt deployment tool on the executable, pointing it to the QML folder, and adding some flags:
    ```
-   C:\path\to\Qt\5.12.9\msvc2017_64\bin\windeployqt.exe .\dancebotsEditor.exe --qmldir ..\..\..\gui  --no-translations --release
+   C:\path\to\Qt\5.12.11\msvc2017_64\bin\windeployqt.exe .\dancebotsEditor.exe --qmldir ..\..\..\gui  --no-translations --release
    ```
    This adds all necessary Qt `.dll` and `QML` files to the deployment folder.
 
@@ -102,7 +102,7 @@ The script will just create an installer with the exact same folder structure th
    brew install cmake
    ```
 
-3. Install [Qt](https://www.qt.io/) 5.12.9 LTS. The easiest is to use the [online installer](https://www.qt.io/download). Take note of the installation directory as you will need it later on.
+3. Install [Qt](https://www.qt.io/) 5.12.11 LTS. The easiest is to use the [online installer](https://www.qt.io/download). Take note of the installation directory as you will need it later on.
 
 4. Clone the repository and update submodules:
    ```
@@ -119,7 +119,7 @@ The script will just create an installer with the exact same folder structure th
 2. Navigate to the `build` directory, configure for release, and build the project:
    ```
    cd build/
-   cmake -DCMAKE_PREFIX_PATH=/path/to/Qt/5.12.9/clang_64/ -DCMAKE_BUILD_TYPE=Release ../
+   cmake -DCMAKE_PREFIX_PATH=/path/to/Qt/5.12.11/clang_64/ -DCMAKE_BUILD_TYPE=Release ../
    make -j2
    ```
 
@@ -141,7 +141,7 @@ positional arguments:
 For example:
 ```
 cd gui/mac_os_rc/
-./deploy.sh ../../build/ ~/Qt/5.12.9/clang_64/bin/ ../
+./deploy.sh ../../build/ ~/Qt/5.12.11/clang_64/bin/ ../
 ```
 
 The script will create `Dancebots Editor.app` and `Dancebots Editor.dmg` in your `build` directory.
@@ -159,7 +159,7 @@ The script will create `Dancebots Editor.app` and `Dancebots Editor.dmg` in your
    sudo apt-get install cmake
    ```
 
-3. Install the Qt 5.12.9 LTS Desktop gcc 64-bit component. The easiest is to use the [online installer](https://www.qt.io/download). Take note of the installation directory as you will need it in the Build step.
+3. Install the Qt 5.12.11 LTS Desktop gcc 64-bit component. The easiest is to use the [online installer](https://www.qt.io/download). Take note of the installation directory as you will need it in the Build step.
 
 4. Clone the repository and update submodules:
    ```
@@ -176,7 +176,7 @@ The script will create `Dancebots Editor.app` and `Dancebots Editor.dmg` in your
 2. Navigate to the `build` directory, configure for release, and build the project:
    ```
    cd build/
-   cmake -DCMAKE_PREFIX_PATH=/path/to/Qt/5.12.9/gcc_64 -DCMAKE_BUILD_TYPE=Release ../
+   cmake -DCMAKE_PREFIX_PATH=/path/to/Qt/5.12.11/gcc_64 -DCMAKE_BUILD_TYPE=Release ../
    make -j2
    ```
 
