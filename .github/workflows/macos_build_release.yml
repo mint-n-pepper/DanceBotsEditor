@@ -1,15 +1,8 @@
-name: macOS Build
+name: macOS Build Release
 
 on:
-  pull_request:
-    branches:
-      - master
-      - develop
-
   release:
-    types:
-      - published
-      - prereleased
+    types: [published]
 
 jobs:
   build:
@@ -17,8 +10,8 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: ['macos-10.15', 'macos-11.0']
-        qt_version: ['5.12.6', '5.12.9']
+        os: ['macos-latest']
+        qt_version: ['5.12.11']
 
     steps:
     - name: Install Python 3.7 version

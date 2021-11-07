@@ -2,7 +2,7 @@
  *  Dancebots GUI - Create choreographies for Dancebots
  *  https://github.com/philippReist/dancebots_gui
  *
- *  Copyright 2020 - mint & pepper
+ *  Copyright 2019-2021 - mint & pepper
  *
  *  This program is free software : you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -100,6 +100,15 @@ auto AudioFile::load(const QString filePath) -> Result {
     if (danceFileHeaderCode == headerEnd) {
       // code match
       mIsDanceFile = true;
+      // extract swapped audio channel flag:
+      QDataStream dataStream(&mMP3PrependData, QIODevice::ReadOnly);
+      AudioFile::applyDataStreamSettings(&dataStream);
+      // read number of beats:
+      quint32 nBeats = 0;
+      dataStream >> nBeats;
+      const bool swappedAudio = nBeats & SWAP_CHANNEL_FLAG_MASK;
+      setSwapChannels(swappedAudio);
+      mNumBeats = nBeats & ~SWAP_CHANNEL_FLAG_MASK;
     } else {
       // code mismatch, report corrupt header
       clear();
@@ -286,8 +295,8 @@ int AudioFile::writeTag(void) {
 
   // get the ID3V2 tag and set its fields according to data in file:
   auto tag = mpegFile.ID3v2Tag(true);
-  tag->setArtist(TagLib::String(mArtist));
-  tag->setTitle(TagLib::String(mTitle));
+  tag->setArtist(TagLib::String(mArtist, TagLib::String::Type::UTF8));
+  tag->setTitle(TagLib::String(mTitle, TagLib::String::Type::UTF8));
   if (mComment.empty()) {
     tag->setComment("Music for Dancebots, not humans.");
   } else {
@@ -341,7 +350,6 @@ int AudioFile::decode(void) {
   size_t skipCount = 0;
 
   quint64 sum = 0u;  // running sum of ^2 pcm samples for rms calculation
-
 
   // set data pointer targets based on swap channels and isDancefile:
   qint16* leftBuffer = pcmBufL.data();
@@ -537,8 +545,8 @@ auto AudioFile::encode(void) -> LameEncCodes {
         kPCMEncodeStepSize > distToEnd ? distToEnd : kPCMEncodeStepSize;
 
     int nEncode = lame_encode_buffer_ieee_float(
-        gfp, musicData + dataIndex, dataData + dataIndex,
-        nFeed, encodeBuffer.data(), kMP3BufferSize);
+        gfp, musicData + dataIndex, dataData + dataIndex, nFeed,
+        encodeBuffer.data(), kMP3BufferSize);
 
     if (nEncode) {
       if (nEncode < 0) {
@@ -549,7 +557,7 @@ auto AudioFile::encode(void) -> LameEncCodes {
       std::copy(encodeBuffer.begin(), encodeBuffer.begin() + nEncode, mp3OutIt);
       mp3OutIt += nEncode;
     }
-  dataIndex += nFeed;
+    dataIndex += nFeed;
   }
 
   // flush lame buffers:
@@ -689,3 +697,5 @@ void AudioFile::applyDataStreamSettings(QDataStream* stream) {
   stream->setByteOrder(dataByteOrder);
   stream->setFloatingPointPrecision(dataFloatPrecision);
 }
+
+quint32 AudioFile::getNumBeats(void) const { return mNumBeats; }

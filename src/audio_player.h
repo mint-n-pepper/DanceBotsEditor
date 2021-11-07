@@ -2,7 +2,7 @@
  *  Dancebots GUI - Create choreographies for Dancebots
  *  https://github.com/philippReist/dancebots_gui
  *
- *  Copyright 2020 - mint & pepper
+ *  Copyright 2019-2021 - mint & pepper
  *
  *  This program is free software : you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -40,13 +40,20 @@ class AudioPlayer : public QObject {
   explicit AudioPlayer(QObject* parent);
 
   /**
+   * \brief Reset and setup the audio output - use before setting audio data.
+   */
+  void resetAudioOutput(const int sampleRate = 44100);
+
+  /**
    * \brief Set the audio data to be played back
+   *
+   * \note Use resetAudioOutput before calling this method.
    *
    * \param[in] monoData - a vector of float audio data
    * \param[in] sampleRate - the audio sample rate
    */
-  void setAudioData(const std::vector<float>& monoData,
-                    const int sampleRate = 44100);
+  void setAudioData(const std::vector<float>& leftChannel,
+                    const std::vector<float>& rightChannel);
 
   /**
    * \brief Get current playback volume in logarithmic representation
@@ -54,6 +61,13 @@ class AudioPlayer : public QObject {
    * \return log volume
    */
   Q_INVOKABLE qreal getCurrentLogVolume(void);
+
+  /**
+   * \brief Get current playback time in audio buffer in MS
+   *
+   * \return time in MS
+   */
+  Q_INVOKABLE qreal getCurrentPlaybackTime(void) const { return mTimeMS; }
 
   /**
    * \brief Get current play status
@@ -89,8 +103,10 @@ class AudioPlayer : public QObject {
 
   /**
    * \brief Stops playback and rewinds playback data to start
+   *
+   * \param[in] emitTimeUpdate: Emit time update signal
    */
-  void stop(void);
+  void stop(const bool emitTimeUpdate = true);
 
   /**
    * \brief Pauses playback
@@ -139,11 +155,13 @@ class AudioPlayer : public QObject {
    */
   void connectAudioOutputSignals();
 
-  bool mIsPlaying{false};
-  qreal mVolumeLinear{1.0}; /**< Audio volume in linear representation */
-  int mSampleRate{0};
-  int mNotifyInterval{25}; /**< Audio time update interval in MS */
-  const QDataStream::ByteOrder mEndianness{QDataStream::LittleEndian};
+  const int numBytesPerFrame = 4;
+  bool mIsPlaying = false;
+  qreal mVolumeLinear = 1.0; /**< Audio volume in linear representation */
+  int mSampleRate = 0;
+  int mTimeMS = 0;
+  int mNotifyInterval = 25; /**< Audio time update interval in MS */
+  const QDataStream::ByteOrder mEndianness = QDataStream::LittleEndian;
   std::unique_ptr<QAudioOutput> mAudioOutput;
   QByteArray mRawAudio;
   QBuffer mRawAudioBuffer;

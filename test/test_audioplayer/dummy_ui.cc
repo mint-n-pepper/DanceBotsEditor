@@ -2,7 +2,7 @@
  *  Dancebots GUI - Create choreographies for Dancebots
  *  https://github.com/philippReist/dancebots_gui
  *
- *  Copyright 2020 - mint & pepper
+ *  Copyright 2019-2021 - mint & pepper
  *
  *  This program is free software : you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -32,6 +32,7 @@ void DummyUI::receiveNotify(int timeMS) {
   if (timeMS > 2000) {
     qDebug() << "Rewinding to 1000ms";
     mAudioPlayer->seek(1000);
+    mAudioPlayer->togglePlay();
     // quit application after two rewinds:
     if (count++ > 1) {
       mApp->quit();

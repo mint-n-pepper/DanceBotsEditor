@@ -1,0 +1,50 @@
+name: macOS Build Test
+
+on: [pull_request]
+
+jobs:
+  build:
+    name: Build on ${{ matrix.os }} with Qt ${{ matrix.qt_version }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: ['macos-10.15', 'macos-11.0']
+        qt_version: ['5.12.11']
+
+    steps:
+    - name: Install Python 3.7 version
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.7'
+        architecture: 'x64'
+
+    - name: Install Qt ${{ matrix.qt_version }}
+      uses: jurplel/install-qt-action@v2
+      with:
+        version: ${{ matrix.qt_version }}
+        target: desktop
+
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Update git submodules
+      run: |
+        git submodule update --init --recursive
+
+    - name: Configure & Build
+      run: |
+        mkdir build
+        cd build/
+        cmake -DCMAKE_PREFIX_PATH="${Qt5_Dir}" -DCMAKE_BUILD_TYPE=Release ../
+        make -j
+
+    - name: Unit Tests
+      run: |
+        sh scripts/run_tests.sh build
+
+    - name: Test Deploy Script
+      run: |
+        cd gui/mac_os_rc/
+        sh deploy.sh ../../build/ "${Qt5_Dir}/bin/" ../
+        mv ../../build/Dancebots\ Editor.dmg ../../build/dancebots-editor-darwin.dmg
+
