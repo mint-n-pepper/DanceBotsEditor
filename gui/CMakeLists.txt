@@ -70,6 +70,15 @@ if(WIN32)
                  COPYONLY)                 
 endif()
 
+# copy sample MP3 files:
+# for use in wix for uninstaller
+configure_file(${CMAKE_SOURCE_DIR}/mp3_files/FASSounds-80sDisco.mp3
+               ${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_BUILD_TYPE}/mp3_files/FASSounds-80sDisco.mp3
+               COPYONLY)
+configure_file(${CMAKE_SOURCE_DIR}/mp3_files/FASSounds-TheParade.mp3
+               ${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_BUILD_TYPE}/mp3_files/FASSounds-TheParade.mp3
+               COPYONLY)
+
 # assign version number
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/lib/cmake")
 include(version)

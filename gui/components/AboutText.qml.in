@@ -134,13 +134,9 @@ QtObject {
       <p>
       Copyright &copy; 2019-2021 — mint & pepper —
       <a href="https://www.mintpepper.ch">https://www.mintpepper.ch</a>
-      </p>
-      
-      <p>
+      <br>
       Authors: Philipp Reist, Robin Hanhart, and Raymond Oung
-      </p>
-      
-      <p>
+      <br>
       Source code and more info available at
       <a href="https://www.dancebots.ch">https://www.dancebots.ch</a>
       </p>

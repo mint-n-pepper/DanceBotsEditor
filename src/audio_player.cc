@@ -68,7 +68,7 @@ void AudioPlayer::setAudioData(const std::vector<float>& leftChannel,
     stream << ClampToInt16(rightChannel[i]);
   }
 
-  mAudioOutput->setBufferSize(8192);
+  mAudioOutput->setBufferSize(16384);
 
   // set notify interval:
   mAudioOutput->setNotifyInterval(mNotifyInterval);
@@ -191,6 +191,7 @@ void AudioPlayer::seek(const int timeMS) {
     return;
   }
   mAudioOutput->stop();
+  mTimeMS = timeMS;
   // calculate buffer position based on time, sampling rate
   const size_t bufferPos =
       ((static_cast<size_t>(timeMS) * mSampleRate) / 1000) * numBytesPerFrame;
