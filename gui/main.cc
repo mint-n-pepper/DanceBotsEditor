@@ -37,6 +37,8 @@ int main(int argc, char* argv[]) {
 
   QQmlApplicationEngine engine;
   engine.rootContext()->setContextProperty("backend", &backend);
+  engine.rootContext()->setContextProperty(
+      "applicationDirPath", QGuiApplication::applicationDirPath());
   engine.load(QUrl(QStringLiteral("qrc:/qml/main.qml")));
 
   return app.exec();

@@ -108,7 +108,7 @@ Rectangle{
 
 	FileDialog {
 		id: loadDialog
-		folder: shortcuts.desktop
+		folder: "file:///" + applicationDirPath + "/mp3_samples"
 		nameFilters: [ "MP3 Files (*.mp3)"]
 		title: "Select MP3 File to Load"
 		selectExisting: true

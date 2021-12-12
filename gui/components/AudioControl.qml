@@ -337,7 +337,6 @@ Item {
         onPressed: appWindow.grabFocus()
         onClicked:
         {
-          fileProcess.open()
           robotHumanButtons.runRobotSound = true
           backend.setPlayBackForRobots()
         }
@@ -378,7 +377,6 @@ Item {
         onPressed: appWindow.grabFocus()
         onClicked:
         {
-          fileProcess.open()
           robotHumanButtons.runRobotSound = false
           backend.setPlayBackForHumans()
         }

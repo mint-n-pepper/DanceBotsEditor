@@ -72,11 +72,14 @@ endif()
 
 # copy sample MP3 files:
 # for use in wix for uninstaller
-configure_file(${CMAKE_SOURCE_DIR}/mp3_files/FASSounds-80sDisco.mp3
-               ${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_BUILD_TYPE}/mp3_files/FASSounds-80sDisco.mp3
+configure_file(${CMAKE_SOURCE_DIR}/mp3_file_samples/FASSounds-80sDisco.mp3
+               ${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_BUILD_TYPE}/mp3_samples/FASSounds-80sDisco.mp3
                COPYONLY)
-configure_file(${CMAKE_SOURCE_DIR}/mp3_files/FASSounds-TheParade.mp3
-               ${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_BUILD_TYPE}/mp3_files/FASSounds-TheParade.mp3
+configure_file(${CMAKE_SOURCE_DIR}/mp3_file_samples/FASSounds-TheParade.mp3
+               ${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_BUILD_TYPE}/mp3_samples/FASSounds-TheParade.mp3
+               COPYONLY)
+configure_file(${CMAKE_SOURCE_DIR}/mp3_file_samples/samples_credits.txt
+               ${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_BUILD_TYPE}/mp3_samples/samples_credits.txt
                COPYONLY)
 
 # assign version number

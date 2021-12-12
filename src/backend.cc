@@ -323,11 +323,6 @@ void BackEnd::printLedPrimitives(void) const {
 }
 
 void BackEnd::setPlayBackForRobots(void) {
-  mFileStatus =
-      "Compiling moves and lights and setting output sound for Dancebots...";
-  emit fileStatusChanged();
-  QThread::msleep(250);
-
   mAudioPlayerTime = mAudioPlayer->getCurrentPlaybackTime();
   // stop audio playback:
   mAudioPlayer->stop(false);
@@ -337,10 +332,6 @@ void BackEnd::setPlayBackForRobots(void) {
 }
 
 void BackEnd::setPlayBackForHumans(void) {
-  mFileStatus = "Setting output sound for humans...";
-  emit fileStatusChanged();
-  QThread::msleep(250);
-
   mAudioPlayerTime = mAudioPlayer->getCurrentPlaybackTime();
   // stop audio playback:
   mAudioPlayer->stop(false);
