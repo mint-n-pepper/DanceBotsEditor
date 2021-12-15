@@ -60,12 +60,14 @@ fi
 echo "Creating app and resources directory..."
 mkdir -vp "${BUILD_DIR}/${APP_NAME}.app/Contents/MacOS"
 mkdir -vp "${BUILD_DIR}/${APP_NAME}.app/Contents/Resources"
+mkdir -vp "${BUILD_DIR}/${APP_NAME}.app/Contents/MacOS/mp3_samples"
 
-# copy executable, Info.plist, and Icon file
+# copy executable, Info.plist, Icon file, and MP3 samples
 echo "Copying resources..."
 cp -vf "${BUILD_DIR}/gui/dancebotsEditor" "${BUILD_DIR}/${APP_NAME}.app/Contents/MacOS/${APP_NAME}"
 cp -vf ./applogo.icns "${BUILD_DIR}/${APP_NAME}.app/Contents/Resources/"
 cp -vf ./Info.plist "${BUILD_DIR}/${APP_NAME}.app/Contents"
+cp -vf ../../mp3_file_samples/* "${BUILD_DIR}/${APP_NAME}.app/Contents/MacOS/mp3_samples" 
 
 # copy the appropriate frameworks to the app and generate DMG file
 echo "Copying frameworks..."
