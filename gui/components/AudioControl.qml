@@ -66,7 +66,6 @@ Item {
     {
       if(robotHumanButtons.runRobotSound && root.robotSoundNeedsUpdate)
       {
-        fileProcess.open()
         backend.setPlayBackForRobots()
         root.startPlayAfterRobotSoundUpdate = true
       }
